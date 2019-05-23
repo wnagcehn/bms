@@ -69,6 +69,7 @@
       </PropertyDef>
       <PropertyDef name="customerid">
         <Property></Property>
+        <Property name="label">商家id</Property>
       </PropertyDef>
       <PropertyDef name="sortNo">
         <Property name="dataType">Integer</Property>
@@ -94,6 +95,7 @@
       </PropertyDef>
       <PropertyDef name="customername">
         <Property></Property>
+        <Property name="label">商家全称</Property>
       </PropertyDef>
       <PropertyDef name="mkInvoiceName">
         <Property></Property>
@@ -186,7 +188,7 @@ var currentEitity = view.get(&quot;#dataTreeGroup&quot;).get(&quot;currentEntity
 data.set(&quot;groupId&quot;,currentEitity.get(&quot;id&quot;));&#xD;
 data.set(&quot;groupName&quot;,currentEitity.get(&quot;groupName&quot;));&#xD;
 data.set(&quot;groupCode&quot;,currentEitity.get(&quot;groupCode&quot;));&#xD;
-</ClientEvent>
+data.set(&quot;bizType&quot;,currentEitity.get(&quot;bizType&quot;));</ClientEvent>
       <Property name="width">280</Property>
       <Property name="dataSet">dsGroup</Property>
       <Property name="currentNodeDataPath">currentGroup</Property>
@@ -207,8 +209,23 @@ data.set(&quot;groupCode&quot;,currentEitity.get(&quot;groupCode&quot;));&#xD;
         </DataPilot>
         <Separator/>
         <ToolBarButton>
-          <ClientEvent name="onClick">var data=view.get(&quot;#dsBmsGroupSubjectQuery.data&quot;).current;&#xD;
-view.get(&quot;#dsBmsGroupSubject&quot;).set(&quot;parameter&quot;,data).flushAsync();</ClientEvent>
+          <ClientEvent name="onClick">//dsBmsGroupCustomerQuery&#xD;
+&#xD;
+&#xD;
+var data=view.get(&quot;#dsBmsGroupCustomerQuery.data&quot;).current;&#xD;
+//var currentEitity = view.get(&quot;#dataTreeGroup&quot;).get(&quot;currentEntity&quot;);&#xD;
+//data.set(&quot;groupId&quot;,currentEitity.get(&quot;id&quot;));&#xD;
+&#xD;
+&#xD;
+//data.set(&quot;groupName&quot;,currentEitity.get(&quot;groupName&quot;));&#xD;
+&#xD;
+&#xD;
+//data.set(&quot;groupCode&quot;,currentEitity.get(&quot;groupCode&quot;));&#xD;
+//data.set(&quot;bizType&quot;,currentEitity.get(&quot;bizType&quot;));&#xD;
+&#xD;
+if(data.get(&quot;groupCode&quot;)){&#xD;
+	view.get(&quot;#dsBmsGroupCustomer&quot;).set(&quot;parameter&quot;,data).flushAsync();&#xD;
+}</ClientEvent>
           <Property name="caption">查询</Property>
           <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
         </ToolBarButton>
@@ -262,7 +279,7 @@ if(data){&#xD;
           <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
         </ToolBarButton>
       </ToolBar>
-      <AutoForm>
+      <AutoForm id="formCondition1">
         <Property name="dataSet">dsBmsGroupCustomerQuery</Property>
         <Property name="cols">*,*,*,*</Property>
         <AutoFormElement>
@@ -275,6 +292,26 @@ if(data){&#xD;
           <Property name="property">groupCode</Property>
           <Property name="name">groupCode</Property>
           <Property name="readOnly">true</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="name">customerid</Property>
+          <Property name="property">customerid</Property>
+          <Property name="trigger">triggerCus</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="property">groupId</Property>
+          <Property name="name">groupId</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="visible">false</Property>
+          <Editor/>
+        </AutoFormElement>
+        <AutoFormElement>
+          <Property name="property">bizType</Property>
+          <Property name="name">bizType</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="visible">false</Property>
           <Editor/>
         </AutoFormElement>
       </AutoForm>
@@ -566,6 +603,31 @@ if (data != null) {&#xD;
       <Buttons/>
       <Children>
         <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerCus">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCus&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCus">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer1.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	//var entity = this.get(&quot;#dsBmsGroupCustomerQuery&quot;).getData(&quot;#&quot;);&#xD;
+	view.get(&quot;#formCondition1.entity&quot;).set(&quot;customerid&quot;,data.get(&quot;customerid&quot;));&#xD;
+	//view.get(&quot;#formCondition.entity&quot;).set(&quot;customerName&quot;,data.get(&quot;customername&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer1">
           <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
         </SubViewHolder>
       </Children>

@@ -169,6 +169,7 @@ template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit,
 				continue_pirce_rate = #{continuePirceRate,jdbcType=DOUBLE},
 				unit_price = #{unitPrice,jdbcType=DOUBLE},
 				unit_price_rate = #{unitPriceRate,jdbcType=DOUBLE},
+				service_type_code = #{serviceTypeCode,jdbcType=VARCHAR},
 			<if test=" creator != null and creator !='' ">
 				creator = #{creator,jdbcType=VARCHAR},
 			</if>
@@ -183,9 +184,6 @@ template_code, start_time, end_time, warehouse_code, warehouse_name, down_limit,
 			</if>
 			<if test=" delFlag != null and delFlag !='' ">
 				del_flag = #{delFlag,jdbcType=VARCHAR},
-			</if>
-			<if test=" serviceTypeCode != null and serviceTypeCode !='' ">
-				service_type_code = #{serviceTypeCode,jdbcType=VARCHAR},
 			</if>
         </trim>
         where id = #{id}

@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
@@ -534,4 +535,35 @@ public class BmsGroupController {
 		
 		return result;
 	}
+
+   @DataProvider
+    public Map<String,String> getAddFeeSubject(String groupCode){
+       Map<String,String> map = new LinkedHashMap<>();
+       map.put("", "");
+       Map<String,String> resultMap = bmsGroupSubjectService.getWmsValueAddSubjectGroups();
+       for (String key : resultMap.keySet()) {
+           map.put(key, resultMap.get(key));
+        }
+        return map;
+    }
+
+   @DataProvider
+   public List<Map<String, String>> getAddFeeType(Map<String, Object> parameter) {
+       String firstSubject = (String) parameter.get("firstSubject");
+       if(StringUtils.isBlank(firstSubject)){
+           return null;
+       }
+       Map<String, String> map = bmsGroupSubjectService.getWmsValueAddSubjectDetails(firstSubject);
+       if(CollectionUtils.isEmpty(map)){
+           return null;
+       }
+       List<Map<String, String>> list = new ArrayList<>();
+       for (String key : map.keySet()) {
+           Map<String, String> bean = new HashMap<>();
+           bean.put("feesType", key);
+           bean.put("feesTypeName", map.get(key));
+           list.add(bean);
+        }
+       return list;
+   }
 }

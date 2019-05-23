@@ -36,6 +36,9 @@
 		<if test="(groupId != null and groupId !='')" >
 				and group_id = #{groupId}
 		</if>
+		<if test="(customerid != null and customerid !='')" >
+				and customerid = #{customerid}
+		</if>
 	</select>
 	<insert id="insertEntity" parameterType="com.jiuyescm.bms.base.group.BmsGroupCustomerEntity">
 	    insert into bms_group_customer(group_id, customerid, sort_no, creator, create_time, last_modifier, last_modify_time, del_flag)

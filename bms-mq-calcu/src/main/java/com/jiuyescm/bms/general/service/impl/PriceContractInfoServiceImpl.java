@@ -27,14 +27,13 @@ public class PriceContractInfoServiceImpl extends MyBatisDao implements IPriceCo
      */
 	@Override
 	public List<PriceContractInfoEntity> queryContract(Map<String, Object> cond) {
-		/*try{
-			return this.getSqlSessionTemplate("BMS").selectList("com.jiuyescm.omstodms.OmsSendDmsMapper.queryContract", cond);
+		try{
+			return this.selectList("com.jiuyescm.bms.general.PriceContractInfoMapper.queryContract", cond);
 		}
 		catch(Exception ex){
-			XxlJobLogger.log("查询单个合同异常--"+ex.getMessage());
+		    logger.error("查询单个合同异常--"+ex.getMessage());
 			return null;
-		}*/
-		return null;
+		}
 	}
 
 	@Override

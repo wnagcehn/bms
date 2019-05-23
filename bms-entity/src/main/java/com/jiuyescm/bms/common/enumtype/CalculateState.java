@@ -19,7 +19,7 @@ public enum CalculateState {
 	No_Exe("5","不计算"),
 	Other("10", "其他"),
 	Quote_More("6", "多个报价"),
-	Retry("99","未计算");
+	Retry("99","待重算");
 	
 	private String code;
 	private String desc;

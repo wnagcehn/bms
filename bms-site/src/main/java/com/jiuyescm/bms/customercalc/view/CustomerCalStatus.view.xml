@@ -147,7 +147,7 @@
       </PropertyDef>
       <PropertyDef name="uncalcuCount">
         <Property name="dataType">Integer</Property>
-        <Property name="label">待计算</Property>
+        <Property name="label">待重算</Property>
       </PropertyDef>
       <PropertyDef name="sysErrorCount">
         <Property name="dataType">Integer</Property>

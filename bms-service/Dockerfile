@@ -14,4 +14,20 @@ WORKDIR /usr/local/dubbo/
 
 EXPOSE 20814
 
+ENV CONFIG_HOST="192.168.0.58:8084"
+ENV CONFIG_ENV="dev"
+ENV LOG_HOME="/usr/local/dubbo/logs"
+ENV JAVA_OPTS="\
+-Dfile.encoding=UTF8 \
+-server \
+-Xms512m \
+-Xmx512m \
+-XX:PermSize=512m \
+-XX:MaxPermSize=512m \
+-Xss512k \
+-XX:+UseParallelGC \
+-XX:MaxGCPauseMillis=1500 \
+-XX:GCTimeRatio=9 \
+-XX:+DisableExplicitGC"
+
 ENTRYPOINT ["./entrypoint.sh"]

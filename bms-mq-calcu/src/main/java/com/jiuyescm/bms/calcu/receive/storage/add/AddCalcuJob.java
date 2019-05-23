@@ -23,6 +23,7 @@ import com.jiuyescm.bms.calcu.receive.ContractCalcuService;
 import com.jiuyescm.bms.calcu.receive.BmsContractBase;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuService;
 import com.jiuyescm.bms.calculate.vo.BmsFeesQtyVo;
+import com.jiuyescm.bms.calculate.vo.CalcuContractVo;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.drools.IFeesCalcuService;
 import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
@@ -81,11 +82,11 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	
 	@Override
 	public void getQuoTemplete(){
-		Map<String, Object> map = new HashMap<>();
+		/*Map<String, Object> map = new HashMap<>();
 		if(quoTempleteCode!=null){
 			map.put("templateCode", quoTempleteCode);
 			addQuoTemplete = genericTemplateRepository.query(map);
-		}
+		}*/
 	}
 	
 	@Override
@@ -191,24 +192,51 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	@Override
 	public void calcuForBms(BizAddFeeEntity entity,FeesReceiveStorageEntity fee){
 		//合同校验
-		if(contractInfo == null){
+		if(contractList.size()<=0){
 			fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			fee.setCalcuMsg("bms合同缺失");
 			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "bms合同缺失", null, cbiVo);
 			return;
 		}
 		
+		//业务时间和合同时间进行匹配
+        //合同
+        CalcuContractVo contract=null;
+        for(CalcuContractVo con:contractList){
+            if(con.getStartDate().getTime()<=entity.getCreateTime().getTime() && entity.getCreateTime().getTime()<=con.getExpireDate().getTime()){
+                contract=con;
+                break;
+            }
+        }
+		     
+        if(contract==null){
+            fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
+            fee.setCalcuMsg("bms合同缺失");
+            return;
+        }
+        
+
+        //模板编号
+        String quoTempleteCode=contract.getModelNo();
+        
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			fee.setCalcuMsg("未签约服务");
-			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "未签约服务", contractInfo, cbiVo);
+			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "未签约服务", contract, cbiVo);
 			return;
 		}
+		
+	    //查询报价模板
+		Map<String, Object> map = new HashMap<>();
+        if(quoTempleteCode!=null){
+            map.put("templateCode", quoTempleteCode);
+            addQuoTemplete = genericTemplateRepository.query(map);
+        }
 		
 		if(addQuoTemplete == null){
 			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
 			fee.setCalcuMsg("报价模板缺失");
-			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "报价模板缺失", contractInfo, cbiVo);
+			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "报价模板缺失", contract, cbiVo);
 			return;
 		}
 		

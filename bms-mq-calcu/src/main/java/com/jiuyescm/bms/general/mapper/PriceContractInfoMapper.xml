@@ -24,37 +24,12 @@
 
 
 	<!-- cjw by 2017-06-06  条件：未撤销且当前时间必须在合同生效日期和失效日期之间 -->
-    <select id="queryContract" parameterType="java.util.Map" resultType="com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity">
-        select contract_code,contract_type_code,customerId,customerName,contract_obj,paper_contract_no,del_flag 
+    <select id="queryContract" parameterType="java.util.Map" resultMap="baseResultMap">
+       select contract_code,contract_type_code,customerId,customerName,contract_obj,paper_contract_no,del_flag,start_date,expire_date
         from price_contract_info 
-        where del_flag = 0 and <![CDATA[start_date < current_timestamp()]]>  and <![CDATA[expire_date >= current_timestamp()]]> 
-        <if test="(id != null and id !='')" >
-				and id = #{id}
-		</if>
-		<if test="(contractCode != null and contractCode !='')" >
-				and contract_code = #{contractCode}
-		</if>
-		<if test="(customerId != null and customerId !='')" >
-				and customerId = #{customerId}
-		</if>
-		<if test="(customerName != null and customerName !='')" >
-				and customerName = #{customerName}
-		</if>
-		<if test="(contractObj != null and contractObj !='')" >
-				and contract_obj = #{contractObj}
-		</if>
-		<if test="(paperContractNo != null and paperContractNo !='')" >
-				and paper_contract_no = #{paperContractNo}
-		</if>
-		<if test="(startDate != null and startDate !='')" >
-			    and start_date >= #{startDate} add <![CDATA[start_date <= #{startDate}]]>
-		</if>
-		<if test="(expireDate != null and expireDate !='')" >
-			    and expire_date >= #{expireDate} add <![CDATA[expire_date <= #{expireDate}]]>
-		</if>
-		<if test="(delFlag != null and delFlag !='')" >
-				and del_flag = #{delFlag}
-		</if>
+        where del_flag = '0' 
+		and <![CDATA[start_date <#{endDate}]]> and <![CDATA[expire_date >=#{startDate}]]>
+        and customerid=#{customerid} and contract_type_code=#{contractTypeCode} and contract_state='1'
     </select>
     
     <!-- cjw by 2017-06-06 条件：未撤销且当前时间必须在合同生效日期和失效日期之间 -->

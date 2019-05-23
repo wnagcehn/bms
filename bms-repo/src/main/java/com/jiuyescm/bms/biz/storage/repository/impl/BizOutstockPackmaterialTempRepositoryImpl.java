@@ -110,4 +110,11 @@ public class BizOutstockPackmaterialTempRepositoryImpl extends MyBatisDao<BizOut
         return selectList("com.jiuyescm.bms.biz.storage.BizOutstockPackmaterialTempEntityMapper.queryWaybillByTaskId", map);
     }
 	
+   @Override
+    public List<BizOutstockPackmaterialTempEntity> queryDistinctWaybillNoBytaskId(String batchNum) {
+        Map<String,String> map = new HashMap<String, String>();
+        map.put("batchNum", batchNum);
+        return selectList("com.jiuyescm.bms.biz.storage.BizOutstockPackmaterialTempEntityMapper.queryDistinctWaybillNoBytaskId", map);
+    }
+	
 }

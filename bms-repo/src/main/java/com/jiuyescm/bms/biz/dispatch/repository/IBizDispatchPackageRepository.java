@@ -60,4 +60,6 @@ public interface IBizDispatchPackageRepository {
      */
     PageInfo<BizDispatchPackageEntity> queryToExport(Map<String, Object> condition, int pageNo, int pageSize);
 
+    
+
 }

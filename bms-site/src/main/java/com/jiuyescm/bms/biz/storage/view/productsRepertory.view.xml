@@ -641,7 +641,7 @@ if (data != null) {&#xD;
       <Buttons/>
       <Children>
         <SubViewHolder id="viewSelectCustomer2">
-          <Property name="subView">com.jiuyescm.bms.lookup.view.CustomerLookup</Property>
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
         </SubViewHolder>
       </Children>
       <Tools/>
