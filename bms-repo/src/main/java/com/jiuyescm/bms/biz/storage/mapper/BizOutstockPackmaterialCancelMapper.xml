@@ -159,6 +159,7 @@ waybill_no_import, waybill_no_package, status, descrip, customer_id, customer_na
   		</foreach>
   		ON DUPLICATE KEY UPDATE 
   		waybill_no_import = VALUES(waybill_no_import),
+  		`status` = VALUES(`status`),
   		mod_time = VALUES(write_time)
     </insert>
     
