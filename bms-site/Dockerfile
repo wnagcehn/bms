@@ -22,3 +22,5 @@ RUN rm -rf $JAVA_HOME/lib/security/cacerts && \
     keytool -list -keystore $JAVA_HOME/lib/security/jssecacerts -storepass changeit
     
 ADD target/bms-site*.war /usr/local/tomcat/webapps/ROOT.war
+
+RUN unzip /usr/local/tomcat/webapps/ROOT.war -d /usr/local/tomcat/webapps/ROOT
