@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -38,9 +39,9 @@ public class AddFeeServiceImpl implements IAddFeeService {
         if(CollectionUtils.isEmpty(listVo)){
             return null;
         }
-        logger.info("OMS入参：" + listVo.toString());
         List<BizAddFeeEntity> list = new ArrayList<BizAddFeeEntity>();
         for(BizAddFeeVo vo : listVo) {
+            logger.info("OMS入参：" + vo.toString());
             BizAddFeeEntity paramEntity = new BizAddFeeEntity();
             try {
                 PropertyUtils.copyProperties(paramEntity, vo);
@@ -55,6 +56,8 @@ public class AddFeeServiceImpl implements IAddFeeService {
         List<FeesReceiveStorageEntity> feelist = new ArrayList<>();
         Map<String, Object> param = new HashMap<>();
         Map<String, String> resultMap = new HashMap<>();
+        //校验payNo集合
+        HashSet<String> payNoSet  = new HashSet<>();
         // 校验
         for (BizAddFeeEntity bizAddFeeEntity : list) {
             String payNo = bizAddFeeEntity.getPayNo();
@@ -62,6 +65,10 @@ public class AddFeeServiceImpl implements IAddFeeService {
                 resultMap.put(payNo, "增值费编号为空");
                 continue;
             }
+            if(payNoSet.contains(payNo)){
+                continue;
+            }
+            payNoSet.add(payNo);
             if (null == bizAddFeeEntity.getCreateTime()) {
                 resultMap.put(payNo, "业务时间为空");
                 continue;
@@ -118,7 +125,7 @@ public class AddFeeServiceImpl implements IAddFeeService {
             param.put("payNo", payNo);
             // 校验payNo是否存在
             BizAddFeeEntity checkEntity = bizAddFeeRepository.queryPayNo(param);
-            if (null != checkEntity && StringUtils.isEmpty(checkEntity.getPayNo())) {
+            if (null == checkEntity) {
                 // 如果一口价大于0，生成费用
                 if (fixedAmount > 0) {
                     FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
@@ -154,6 +161,7 @@ public class AddFeeServiceImpl implements IAddFeeService {
                     //不生成费用，业务数据计算状态为0
                     bizAddFeeEntity.setIsCalculated("0");
                 }
+                bizAddFeeEntity.setDelFlag("0");
                 addlist.add(bizAddFeeEntity);
             }
             resultMap.put(payNo, "SUCCESS");
