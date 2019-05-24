@@ -18,6 +18,10 @@ ENV JAVA_OPTS="-Dhttps.protocols=TLSv1.1,TLSv1.2 -Djava.net.preferIPv4Stack=true
 RUN rm -rf /usr/local/tomcat/webapps/*
 
 ADD target/classes/jssecacerts $JAVA_HOME/lib/security/jssecacerts
+
+ADD target/classes/local_policy.jar $JAVA_HOME/lib/security/local_policy.jar
+ADD target/classes/US_export_policy.jar $JAVA_HOME/lib/security/US_export_policy.jar
+
 RUN rm -rf $JAVA_HOME/lib/security/cacerts && \
     keytool -list -keystore $JAVA_HOME/lib/security/jssecacerts -storepass changeit
     
