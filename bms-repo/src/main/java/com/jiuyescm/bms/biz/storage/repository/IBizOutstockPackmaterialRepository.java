@@ -153,14 +153,38 @@ public interface IBizOutstockPackmaterialRepository {
 	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition);
 
 	/**
-	 * 作废使用标准包装方案运单的耗材
-	 * <耗材只作废泡沫箱，干冰，冰袋>
+	 * 作废使用标准包装方案运单的耗材 或者 将作废的耗材状态重置（del_flag从2变成0）
 	 * 
 	 * @author wangchen870
 	 * @date 2019年4月19日 下午1:51:23
 	 *
-	 * @param waybillNos
+	 * @param list
 	 * @return
 	 */
-    int deleteMaterialForUsePackage(List<String> waybillNos);
+    int deleteOrRevertMaterialStatus(List<BizOutstockPackmaterialEntity> list);
+
+    /**
+     * 通过运单号查询
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年5月20日 上午11:51:01
+     *
+     * @param list
+     * @return
+     */
+    List<BizOutstockPackmaterialEntity> queryByWaybillNo(List<String> list);
+
+    /**
+     * 作废费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年5月20日 下午5:58:02
+     *
+     * @param list
+     * @return
+     */
+    int delFees(List<BizOutstockPackmaterialEntity> list);
+
 }

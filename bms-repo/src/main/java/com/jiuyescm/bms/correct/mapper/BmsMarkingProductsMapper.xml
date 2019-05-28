@@ -13,11 +13,11 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, waybill_no, products_mark, weight, correct_weight, pmxzx_mark, bwd_mark, material_type
+        id, waybill_no, products_mark, weight, correct_weight, bwd_mark
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-waybill_no, products_mark, weight, correct_weight, pmxzx_mark, bwd_mark, material_type
+waybill_no, products_mark, weight, correct_weight, bwd_mark
     </sql>
 
 	<!-- 根据id查询 -->
@@ -50,14 +50,8 @@ waybill_no, products_mark, weight, correct_weight, pmxzx_mark, bwd_mark, materia
         	<if test=" correctWeight != null and correctWeight !='' ">
 				and correct_weight = #{correctWeight}
 			</if>
-        	<if test=" pmxzxMark != null and pmxzxMark !='' ">
-				and pmxzx_mark = #{pmxzxMark}
-			</if>
         	<if test=" bwdMark != null and bwdMark !='' ">
 				and bwd_mark = #{bwdMark}
-			</if>
-        	<if test=" materialType != null and materialType !='' ">
-				and material_type = #{materialType}
 			</if>
     </select>
 
@@ -72,9 +66,7 @@ waybill_no, products_mark, weight, correct_weight, pmxzx_mark, bwd_mark, materia
 			#{productsMark,jdbcType=VARCHAR}, 
 			#{weight,jdbcType=DECIMAL}, 
 			#{correctWeight,jdbcType=DECIMAL}, 
-			#{pmxzxMark,jdbcType=VARCHAR}, 
-			#{bwdMark,jdbcType=VARCHAR}, 
-			#{materialType,jdbcType=VARCHAR}
+			#{bwdMark,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -94,14 +86,8 @@ waybill_no, products_mark, weight, correct_weight, pmxzx_mark, bwd_mark, materia
 			<if test=" correctWeight != null and correctWeight !='' ">
 				correct_weight = #{correctWeight,jdbcType=DECIMAL},
 			</if>
-			<if test=" pmxzxMark != null and pmxzxMark !='' ">
-				pmxzx_mark = #{pmxzxMark,jdbcType=VARCHAR},
-			</if>
 			<if test=" bwdMark != null and bwdMark !='' ">
 				bwd_mark = #{bwdMark,jdbcType=VARCHAR},
-			</if>
-			<if test=" materialType != null and materialType !='' ">
-				material_type = #{materialType,jdbcType=VARCHAR},
 			</if>
         </trim>
         where id = #{id}

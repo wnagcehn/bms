@@ -94,6 +94,8 @@ public class BizOutstockPackmaterialEntity implements IEntity {
 	private int rowExcelNo;
 	private String rowExcelName;
 	
+	private String materialType;
+	
 	public String getUnitPrice() {
 		return unitPrice;
 	}
@@ -408,5 +410,13 @@ public class BizOutstockPackmaterialEntity implements IEntity {
 	public void setCostRemark(String costRemark) {
 		this.costRemark = costRemark;
 	}
-	
+
+    public String getMaterialType() {
+        return materialType;
+    }
+
+    public void setMaterialType(String materialType) {
+        this.materialType = materialType;
+    }
+    
 }

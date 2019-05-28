@@ -1,8 +1,6 @@
 package com.jiuyescm.bms.base.customer.web;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,37 +13,54 @@ import com.jiuyescm.bms.base.customer.entity.PubCustomerLookupEntity;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.bms.base.dict.vo.PubCustomerVo;
 import com.jiuyescm.bms.quotation.system.service.IBmsJiuyeQuotationSystemService;
-import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
-import com.jiuyescm.mdm.customer.vo.CustomerVo;
 
 @Controller("customerController")
 public class CustomerController {
 
-	@Autowired private ICustomerService customerService;
-	
-	@Autowired
-	private IBmsJiuyeQuotationSystemService bmsCustomerService;
-	@Autowired
-	private ICustomerDictService customerDictService;
-	
-	@DataProvider
-	public void query(Page<PubCustomerVo> page,Map<String,Object> parameter) {
-		if(null==parameter)parameter=new HashMap<String,Object>();
-		PageInfo<PubCustomerVo> pageInfo = customerDictService.queryPubCustomer(parameter, page.getPageNo(), page.getPageSize());
-		if(null!=page){
-			page.setEntities(pageInfo.getList());
-			page.setEntityCount((int)pageInfo.getTotal());
-		}
-	}
-	
-	@DataProvider
-	public void queryLookup(Page<PubCustomerLookupEntity> page,Map<String,Object> parameter) {
-		if(null==parameter)parameter=new HashMap<String,Object>();
-		PageInfo<PubCustomerLookupEntity> pageInfo = customerDictService.queryPubCustomerLookup(parameter, page.getPageNo(), page.getPageSize());
-		if(null!=page){
-			page.setEntities(pageInfo.getList());
-			page.setEntityCount((int)pageInfo.getTotal());
-		}
-	}
+    @Autowired
+    private ICustomerService customerService;
+
+    @Autowired
+    private IBmsJiuyeQuotationSystemService bmsCustomerService;
+    @Autowired
+    private ICustomerDictService customerDictService;
+
+    @DataProvider
+    public void query(Page<PubCustomerVo> page, Map<String, Object> parameter) {
+        if (null == parameter){
+            parameter = new HashMap<String, Object>();   
+        }
+        PageInfo<PubCustomerVo> pageInfo = customerDictService.queryPubCustomer(parameter, page.getPageNo(),
+                page.getPageSize());
+        if (null != page) {
+            page.setEntities(pageInfo.getList());
+            page.setEntityCount((int) pageInfo.getTotal());
+        }
+    }
+
+    @DataProvider
+    public void queryLookup(Page<PubCustomerLookupEntity> page, Map<String, Object> parameter) {
+        if (null == parameter){
+            parameter = new HashMap<String, Object>();   
+        }
+        String customername = (String) parameter.get("customername");
+        String mkInvoiceName = (String) parameter.get("mkInvoiceName");
+        String shortname = (String) parameter.get("shortname");
+        if (null != customername) {
+            parameter.put("customername", customername.trim());
+        }
+        if (null != mkInvoiceName) {
+            parameter.put("mkInvoiceName", mkInvoiceName.trim());
+        }
+        if (null != shortname) {
+            parameter.put("shortname", shortname.trim());
+        }
+        PageInfo<PubCustomerLookupEntity> pageInfo = customerDictService.queryPubCustomerLookup(parameter,
+                page.getPageNo(), page.getPageSize());
+        if (null != page) {
+            page.setEntities(pageInfo.getList());
+            page.setEntityCount((int) pageInfo.getTotal());
+        }
+    }
 }

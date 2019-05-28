@@ -200,7 +200,7 @@
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
         select a.customer_name,a.warehouse_name,COUNT(DISTINCT a.waybill_no) as num
 		from  biz_outstock_packmaterial a
-		LEFT JOIN fees_receive_storage b on a.del_flag='0' and a.fees_no=b.fees_no
+		LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
         where a.del_flag = 0 
         <if test="(feesNo != null and feesNo !='')" >
 			and a.fees_no = #{feesNo,jdbcType=VARCHAR}
@@ -236,8 +236,8 @@
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
 		select a.customer_id,a.customer_name,a.warehouse_code, a.warehouse_name,a.consumer_material_code,
 		a.consumer_material_name,b.is_calculated,count(0) as num from biz_outstock_packmaterial a
-		LEFT JOIN fees_receive_storage b on a.del_flag='0' and a.fees_no=b.fees_no
-		where 1=1
+		LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no  and b.del_flag='0'
+		where 1=1 and a.del_flag='0'
 		<if test="isCalculated != null" >
 			and b.is_calculated = #{isCalculated,jdbcType=VARCHAR}
 		</if>
@@ -263,7 +263,7 @@
         resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
         select a.customer_name,a.warehouse_name,a.consumer_material_code,b.is_calculated,count(0) as num  
         FROM biz_outstock_packmaterial a
-        LEFT JOIN fees_receive_storage b on a.del_flag='0' and a.fees_no=b.fees_no
+        LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
 		where 1=1  and a.del_flag = '0'
 		 <if test="(feesNo != null and feesNo !='')" >
 			and a.fees_no = #{feesNo,jdbcType=VARCHAR}
@@ -301,7 +301,7 @@
         select a.waybill_no from biz_outstock_packmaterial a
 		inner join fees_receive_storage b on a.fees_no = b.fees_no
 		inner join fees_bill c on b.bill_no = c.billno and c.delflag = 0
-		where a.del_flag = 0 
+		where a.del_flag = 0 and b.del_flag = 0
 		<include refid="baseSelectColumns" />
 		LIMIT 1
     </select>
@@ -315,7 +315,8 @@
 	
 	<update id="retryForCalcu" parameterType="java.util.Map">
 		update fees_receive_storage s 
-		INNER JOIN biz_outstock_packmaterial a on s.fees_no=a.fees_no set s.is_calculated='99'
+		INNER JOIN biz_outstock_packmaterial a on s.fees_no=a.fees_no 
+		set s.is_calculated='99', s.calcu_msg=''
 		where s.del_flag='0' and a.del_flag='0'
 		<if test="(feesNo != null and feesNo !='')" >
 				and a.fees_no = #{feesNo}
@@ -397,7 +398,7 @@
     
     <select id="queryMaterialCodeByBillNo" parameterType="java.util.Map"
         resultType="java.util.Map">
-		SELECT b.product_no as  code  from  (SELECT product_no from fees_receive_storage  where bill_no = #{billNo,jdbcType=VARCHAR} and subject_code = 'wh_material_use') b GROUP BY b.product_no
+		SELECT b.product_no as  code  from  (SELECT product_no from fees_receive_storage  where bill_no = #{billNo,jdbcType=VARCHAR} and subject_code = 'wh_material_use' and del_flag='0') b GROUP BY b.product_no
     </select>
     <select id="queryPackMaterialByOutstockNo" parameterType="java.util.Map" resultMap="BaseResultMap">
     	select * from biz_outstock_packmaterial where waybill_no in
@@ -652,7 +653,7 @@
     	select IFNULL(MAX(c.volumn),0) from (
 		select b.material_type_name,sum(b.out_volume*a.adjust_num) volumn from biz_outstock_packmaterial a 
 		left JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
-		where a.del_flag='0' and a.waybill_no=#{waybillNo} and (b.material_type_name='泡沫箱' or b.material_type_name='纸箱') 
+		where a.del_flag in ('0','3') and a.waybill_no=#{waybillNo} and (b.material_type_name='泡沫箱' or b.material_type_name='纸箱') 
 		GROUP BY b.material_type_name) c
     </select>
     
@@ -821,20 +822,56 @@
     	GROUP BY a.customer_id,b.subject_code,DATE_FORMAT(a.create_time,'%Y%m');  
     </select>
     
-    <!-- 只作废泡沫箱，干冰，冰袋 -->
-    <update id="deleteMaterialForUsePackage" parameterType="java.util.Map">
+    <!-- 作废耗材,通过标准包装方案作废的状态为2 ; 将通过配置表作废的耗材恢复到不作废-->
+    <!-- 如果是缓冲材料，只作废气泡枕和葫芦球 -->
+    <update id="deleteOrRevertMaterialStatus" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
     	UPDATE biz_outstock_packmaterial a
 		LEFT JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
-		SET a.del_flag='1'
-		WHERE 1=1
-		and b.material_type in (
-			'PLATIC_BOX',
-			'DRY_ICE',
-			'ICE_BAG'
-		)
-		and a.waybill_no in 
-		<foreach collection="waybillNos" index="index" item="item" open="(" separator="," close=")">
-	        #{item}
-	    </foreach>	
+		<set>
+			<if test="isCalculated != null" >a.is_calculated=#{isCalculated,jdbcType=VARCHAR},</if>
+			<if test="delFlag != null" >a.del_flag=#{delFlag,jdbcType=VARCHAR}</if>	
+		</set>
+		WHERE 1=1 
+		and a.del_flag in ('0','3')
+		and b.material_type = #{materialType}
+		and a.waybill_no = #{waybillNo}
+		<if test='materialType == "CUSHIONING_MATERIAL"' >
+			and a.consumer_material_code in (
+				'JY-HLQ','JYQPZ','JY-QPZ','QPZ'
+			)
+		</if>
     </update>
+    
+    <select id="queryByWaybillNo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+    	select a.id, a.waybill_no as waybillNo,
+    	a.consumer_material_code as consumerMaterialCode,
+	    a.consumer_material_name as consumerMaterialName, 
+	    a.is_calculated as isCalculated, a.del_flag as delFlag,
+    	b.material_type as materialType 
+    	from biz_outstock_packmaterial a
+    	LEFT JOIN pub_material_info b on a.consumer_material_code=b.material_code and b.del_flag='0'
+    	where 1=1
+    	and a.del_flag in ('0','3')
+		and a.waybill_no in
+		<foreach collection="list" item="item" separator="," open="(" close=")">
+         	#{item}
+        </foreach>
+        <!-- group by a.waybill_no, b.material_type -->
+    </select>
+    
+   <update id="delFees" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+    	UPDATE fees_receive_storage a
+    	INNER JOIN biz_outstock_packmaterial b on a.fees_no = b.fees_no and b.del_flag != '1' and b.del_flag != '2'
+		LEFT JOIN pub_material_info c on b.consumer_material_code=c.material_code and c.del_flag='0'
+		SET a.del_flag='1'
+		WHERE 1=1 
+		and c.material_type = #{materialType}
+		and b.waybill_no = #{waybillNo}
+		<if test='materialType == "CUSHIONING_MATERIAL"' >
+			and b.consumer_material_code in (
+				'JY-HLQ','JYQPZ'
+			)
+		</if>
+    </update>
+
 </mapper>

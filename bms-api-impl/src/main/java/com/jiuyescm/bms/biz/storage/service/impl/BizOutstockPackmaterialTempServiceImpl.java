@@ -93,4 +93,9 @@ public class BizOutstockPackmaterialTempServiceImpl implements IBizOutstockPackm
 		return bizOutstockPackmaterialTempRepository.queryContainsList(batchNum,errorCount);
 	}
 	
+	@Override
+	public List<BizOutstockPackmaterialTempEntity> queryDistinctWaybillNoBytaskId(String batchNum) {
+	    return bizOutstockPackmaterialTempRepository.queryDistinctWaybillNoBytaskId(batchNum);
+	}
+	
 }

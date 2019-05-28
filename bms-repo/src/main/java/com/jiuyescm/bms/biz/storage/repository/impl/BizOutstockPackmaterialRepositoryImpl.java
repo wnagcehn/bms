@@ -357,9 +357,30 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 	}
 
 	@Override
-	public int deleteMaterialForUsePackage(List<String> waybillNos){
-	    Map<String, Object> condition = new HashMap<String, Object>();
-	    condition.put("waybillNos", waybillNos);
-	    return update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.deleteMaterialForUsePackage", condition);
+	public int deleteOrRevertMaterialStatus(List<BizOutstockPackmaterialEntity> list){
+	    return updateBatch("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.deleteOrRevertMaterialStatus", list);
 	}
+	
+	/**
+     * 通过运单号批量查询
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年5月17日 下午6:36:14
+     *
+     * @param list
+     * @return
+     */
+    @Override
+    public List<BizOutstockPackmaterialEntity> queryByWaybillNo(List<String> list){
+        Map<String, Object> cond = new HashMap<String, Object>();
+        cond.put("list", list);
+        return this.selectList("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.queryByWaybillNo", cond);
+    }
+    
+    @Override
+    public int delFees(List<BizOutstockPackmaterialEntity> list){
+        return updateBatch("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.delFees", list);
+    }
+
 }

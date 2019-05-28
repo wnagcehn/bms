@@ -64,7 +64,7 @@
         <Property name="defaultValue">0</Property>
       </PropertyDef>
       <PropertyDef name="operationTime">
-        <Property name="label">日期</Property>
+        <Property name="label">操作时间</Property>
         <Property name="dataType">DateTime</Property>
       </PropertyDef>
       <PropertyDef name="startTime">
@@ -142,6 +142,22 @@
         <Property name="label">金额</Property>
         <Property name="dataType">Double</Property>
       </PropertyDef>
+      <PropertyDef name="payNo">
+        <Property></Property>
+        <Property name="label">增值单编号</Property>
+      </PropertyDef>
+      <PropertyDef name="fixedAmount">
+        <Property></Property>
+        <Property name="label">一口价金额</Property>
+      </PropertyDef>
+      <PropertyDef name="firstSubject">
+        <Property></Property>
+        <Property name="label">增值主科目编码</Property>
+      </PropertyDef>
+      <PropertyDef name="firstSubjectName">
+        <Property></Property>
+        <Property name="label">增值主科目名称</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dataTypeCondition">
       <PropertyDef name="dataNum">
@@ -186,11 +202,19 @@
         </Property>
         <Property name="label">数据类型</Property>
       </PropertyDef>
-      <PropertyDef name="feesType">
-        <Property name="label">费用类型</Property>
+      <PropertyDef name="firstSubject">
+        <Property name="label">增值主科目</Property>
         <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getSubject&quot;).getResult(&quot;receive_wh_valueadd_subject&quot;)}</Property>
+          <Property name="mapValues">${dorado.getDataProvider(&quot;bmsGroupController#getAddFeeSubject&quot;).getResult()}</Property>
         </Property>
+      </PropertyDef>
+      <PropertyDef name="feesType">
+        <Property></Property>
+        <Property name="label">费用类型</Property>
+      </PropertyDef>
+      <PropertyDef name="feesTypeName">
+        <Property></Property>
+        <Property name="label">费用类型</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtErrorMessageVo">
@@ -318,6 +342,16 @@
         <Property name="label">数量</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="dtFeesType">
+      <PropertyDef name="feesType">
+        <Property></Property>
+        <Property name="label">费用类型</Property>
+      </PropertyDef>
+      <PropertyDef name="feesTypeName">
+        <Property></Property>
+        <Property name="label">费用类型名称</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <ClientEvent name="onReady">var customerid = GetQueryString(&quot;customerId&quot;);&#xD;
@@ -395,6 +429,10 @@ view.get(&quot;#dataSetCondition&quot;).getData().insert();&#xD;
       <Property name="dataType">[dtBizAddFeeGroup]</Property>
       <Property name="dataProvider">bizAddFeeController#queryGroup</Property>
       <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsFeesType">
+      <Property name="dataType">[dtFeesType]</Property>
+      <Property name="dataProvider">bmsGroupController#getAddFeeType</Property>
     </DataSet>
     <ToolBar>
       <DataPilot>
@@ -537,7 +575,7 @@ var nowdays = new Date();&#xD;
 		endTime:lastDay&#xD;
 	});&#xD;
 </ClientEvent>
-      <Property name="cols">*,*,*</Property>
+      <Property name="cols">*,*,*,*</Property>
       <Property name="dataType">dataTypeCondition</Property>
       <Property name="dataSet">dataSetCondition</Property>
       <Property name="labelWidth">100</Property>
@@ -553,11 +591,6 @@ var nowdays = new Date();&#xD;
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
-        <Property name="name">isCalculated</Property>
-        <Property name="property">isCalculated</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
         <Property name="name">startTime</Property>
         <Property name="property">startTime</Property>
         <Editor/>
@@ -568,8 +601,33 @@ var nowdays = new Date();&#xD;
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
+        <Property name="name">isCalculated</Property>
+        <Property name="property">isCalculated</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <ClientEvent name="onFocus">var entity = view.id(&quot;queryFormProductPalletStorage&quot;).get(&quot;entity&quot;);&#xD;
+entity.set(&quot;feesType&quot;,&quot;&quot;);&#xD;
+entity.set(&quot;feesTypeName&quot;,&quot;&quot;);</ClientEvent>
+        <Property name="name">firstSubject</Property>
+        <Property name="property">firstSubject</Property>
+        <Property name="readOnly">false</Property>
+        <Property name="visible">true</Property>
+        <Property name="editable">false</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">feesTypeName</Property>
+        <Property name="property">feesTypeName</Property>
+        <Property name="trigger">ddropDowmQuerySubject</Property>
+        <Property name="visible">true</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
         <Property name="name">feesType</Property>
         <Property name="property">feesType</Property>
+        <Property name="trigger">ddropDowmQuerySubject</Property>
+        <Property name="visible">false</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -607,6 +665,11 @@ if(data.current){&#xD;
         <Property name="selectionMode">multiRows</Property>
         <RowNumColumn/>
         <DataColumn>
+          <Property name="property">payNo</Property>
+          <Property name="width">120</Property>
+          <Property name="name">payNo</Property>
+        </DataColumn>
+        <DataColumn>
           <Property name="name">feesNo</Property>
           <Property name="property">feesNo</Property>
           <Property name="width">120</Property>
@@ -623,6 +686,12 @@ if(data.current){&#xD;
         <DataColumn name="customerName">
           <Property name="property">customerName</Property>
           <Property name="width">140</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">firstSubjectName</Property>
+          <Property name="width">120</Property>
+          <Property name="name">firstSubjectName</Property>
+          <Property name="visible">true</Property>
         </DataColumn>
         <DataColumn name="feesType">
           <Property name="property">feesType</Property>
@@ -674,6 +743,11 @@ if(data.current){&#xD;
           <Property name="name">isCalculated</Property>
           <Property name="width">80</Property>
         </DataColumn>
+        <DataColumn>
+          <Property name="property">fixedAmount</Property>
+          <Property name="width">120</Property>
+          <Property name="name">fixedAmount</Property>
+        </DataColumn>
         <DataColumn name="remarkContent">
           <Property name="property">remarkContent</Property>
           <Property name="width">140</Property>
@@ -687,6 +761,18 @@ if(data.current){&#xD;
           <Property name="property">calculateTime</Property>
           <Property name="width">120</Property>
           <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="name">operationTime</Property>
+          <Property name="property">operationTime</Property>
+          <Property name="width">120</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">firstSubject</Property>
+          <Property name="width">120</Property>
+          <Property name="name">firstSubject</Property>
+          <Property name="visible">false</Property>
         </DataColumn>
       </DataGrid>
     </Container>
@@ -1158,5 +1244,22 @@ arg.data=view.get(&quot;#dataGridProductPalletStorage&quot;).get(&quot;selection
       <Property name="dataFontSize">10</Property>
       <Property name="maxSize">100000</Property>
     </Export2ReportAction>
+    <DataSetDropDown id="ddropDowmQuerySubject">
+      <ClientEvent name="beforeExecute">var data = view.get(&quot;#dataSetCondition&quot;).getData(&quot;#&quot;).get(&quot;firstSubject&quot;);&#xD;
+var parameter={&#xD;
+		firstSubject:data&#xD;
+	};&#xD;
+view.get(&quot;#dsFeesType&quot;).set(&quot;parameter&quot;,parameter).flushAsync();</ClientEvent>
+      <ClientEvent name="onValueSelect">var data = this.get(&quot;#dataSetCondition&quot;).getData(&quot;#&quot;);&#xD;
+data.set(&quot;feesType&quot;,arg.selectedValue.get(&quot;feesType&quot;));&#xD;
+data.set(&quot;feesTypeName&quot;,arg.selectedValue.get(&quot;feesTypeName&quot;));&#xD;
+arg.processDefault = false;&#xD;
+</ClientEvent>
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dsFeesType</Property>
+      <Property name="displayProperty">feesTypeName</Property>
+      <Property name="editable">false</Property>
+      <Property name="useEmptyItem">true</Property>
+    </DataSetDropDown>
   </View>
 </ViewConfig>
