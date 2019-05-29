@@ -1,6 +1,8 @@
 package com.jiuyescm.bms.quotation.contract.web;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -92,6 +94,18 @@ public class CustomerContractController {
 			if("999".equals(parameter.get("contractState"))){
 				parameter.put("contractState","");
 			}
+			if(parameter.get("startTime")!=""){
+			    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+                String dateString=formatter.format(parameter.get("startTime"));
+                dateString=dateString+" 00:00:00";
+                parameter.put("startTime", Timestamp.valueOf(dateString));
+			}
+			if(parameter.get("endTime")!=""){
+			    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+                String dateString=formatter.format(parameter.get("endTime"));
+                dateString=dateString+" 23:59:59";
+                parameter.put("endTime", Timestamp.valueOf(dateString));
+            }
 		}else{
 			parameter=new HashMap<String,Object>();
 		}
@@ -169,6 +183,19 @@ public class CustomerContractController {
 					temp.setDelFlag("0");
 					temp.setCreator(userid);
 					temp.setCreateTime(nowdate);
+					if(temp.getStartDate()!=null){
+			            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+			            String dateString=formatter.format(temp.getStartDate());
+			            dateString=dateString+" 00:00:00";
+			            temp.setStartDate(Timestamp.valueOf(dateString));
+			        }
+			        if(temp.getExpireDate()!=null){
+			            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+			            String dateString=formatter.format(temp.getExpireDate());
+			            dateString=dateString+" 23:59:59";
+			            temp.setExpireDate(Timestamp.valueOf(dateString));
+			        }
+					
 					int result=priceContractService.createContract(temp);
 					if(result>0){
 						try{
@@ -195,6 +222,18 @@ public class CustomerContractController {
 					//此为修改商家合同信息
 					temp.setLastModifier(userid);
 					temp.setLastModifyTime(nowdate);
+					if(temp.getStartDate()!=null){
+                        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+                        String dateString=formatter.format(temp.getStartDate());
+                        dateString=dateString+" 00:00:00";
+                        temp.setStartDate(Timestamp.valueOf(dateString));
+                    }
+                    if(temp.getExpireDate()!=null){
+                        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+                        String dateString=formatter.format(temp.getExpireDate());
+                        dateString=dateString+" 23:59:59";
+                        temp.setExpireDate(Timestamp.valueOf(dateString));
+                    }
 					int result=priceContractService.updateContract(temp);
 					if(result>0){
 						try{

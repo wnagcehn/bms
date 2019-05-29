@@ -62,5 +62,11 @@ public class BizDispatchPackageServiceImpl extends MyBatisDao<BizDispatchPackage
         cond.put("list", list);
         return this.selectList("com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper.queryByWaybillNo", cond);
     }
+
+    @Override
+    public BizDispatchPackageEntity queryOne(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return (BizDispatchPackageEntity) selectOne("com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper.queryOne", condition);
+    }
 	
 }

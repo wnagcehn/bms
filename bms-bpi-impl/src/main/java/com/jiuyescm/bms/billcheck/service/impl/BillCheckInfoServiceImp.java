@@ -26,6 +26,7 @@ import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.appconfig.TenantConfig;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRecordRepository;
@@ -964,5 +965,11 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
             logger.error("转换失败:{0}", ex);
         }
         return null;
+    }
+
+    @Override
+    public PubCustomerBaseEntity queryMk(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return billCheckInfoRepository.queryMk(condition);
     }
 }
