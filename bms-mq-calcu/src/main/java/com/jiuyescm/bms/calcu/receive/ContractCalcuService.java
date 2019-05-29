@@ -133,7 +133,7 @@ public class ContractCalcuService {
             if (rtnQuoteInfoVo.getQuoteMaps().size() > 1) {
             
                 //非耗材和非配送
-                if(!"wh_material_use".equals(vo.getSubjectCode()) && !"de_delivery_amount".equals(vo.getSubjectCode())){
+                if(!"wh_material_use".equals(vo.getSubjectCode()) && !"de_delivery_amount".equals(vo.getSubjectCode()) && !"wh_stand_material_use".equals(vo.getSubjectCode())){
                     logger.info("taskId={} 费用编号={} 合同在线匹配多条报价，不进行计算，系统错误 ", vo.getTaskId(), feesNo);
                     errorMap.put("success", "fail");
                     errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
@@ -158,7 +158,7 @@ public class ContractCalcuService {
                     }else{
                         rtnQuoteInfoVo.setQuoteMaps(priceList);
                     }
-                }         
+                }
             }
 
             // 调用规则计算费用
