@@ -335,7 +335,8 @@ public class BizDispatchPackageController {
             }
         }
 
-        return exporter.saveFile(UUID.randomUUID().toString()+".xlsx");
+        SystemCodeEntity sc = getSystemCode("GLOABL_PARAM","EXPORT_PACKAGE_BIZ");
+        return exporter.saveFile(sc.getExtattr1(), UUID.randomUUID().toString()+".xlsx");
     }
     
     /**
