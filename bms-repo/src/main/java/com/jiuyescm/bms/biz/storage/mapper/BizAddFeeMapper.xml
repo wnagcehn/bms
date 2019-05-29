@@ -401,8 +401,11 @@
 		<if test="(warehouseCode != null and warehouseCode !='')" >
 			and a.warehouse_code = #{warehouseCode}
 		</if>
-		<if test="(createTime != null and createTime !='')" >
-		    and a.create_time >= #{createTime} add <![CDATA[a.create_time <= #{createTime}]]>
+		<if test="startTime != null and startTime !='' " >
+			and <![CDATA[a.create_time >= #{startTime}]]>
+		</if>
+		<if test="endTime != null and endTime !='' " >
+			and <![CDATA[a.create_time <= #{endTime}]]>
 		</if>
 		<if test="(feesType != null and feesType !='')" >
 			and a.fees_type = #{feesType}

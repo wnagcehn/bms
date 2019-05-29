@@ -396,6 +396,27 @@ dorado.MessageBox.confirm(&quot;是否取消订购？&quot;, function(){&#xD;
         <Property name="caption">取消订阅</Property>
         <Property name="icon">url(>skin>common/icons.gif) -240px -20px</Property>
       </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var retryAction = view.get(&quot;#retryAction&quot;);&#xD;
+var currentDatas = view.get(&quot;#dsCustomerCalStatus.data&quot;).current;&#xD;
+var queryDatas = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+&#xD;
+if(currentDatas){&#xD;
+	dorado.MessageBox.confirm(&quot;是否对商家下的所有费用重算?&quot;,function(){&#xD;
+		retryAction.set(&quot;parameter&quot;,currentDatas).execute(function(result){&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+			with (view.get(&quot;#dsCustomerCalStatus&quot;)){&#xD;
+				set(&quot;parameter&quot;, queryDatas);&#xD;
+				flushAsync();&#xD;
+			}&#xD;
+		});&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择一条记录！&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">重算</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -280px -220px</Property>
+      </ToolBarButton>
     </ToolBar>
     <Container>
       <AutoForm id="queryForm">
@@ -1020,6 +1041,9 @@ action.set(&quot;parameter&quot;, query).execute(function(result){&#xD;
     </AjaxAction>
     <AjaxAction id="cancelAction">
       <Property name="service">bmsUserCustomerListenerController#cancel</Property>
+    </AjaxAction>
+    <AjaxAction id="retryAction">
+      <Property name="service">bmsAsynCalcuTaskController#reCalculate</Property>
     </AjaxAction>
   </View>
 </ViewConfig>

@@ -76,6 +76,17 @@
         <Property></Property>
         <Property name="label">备注</Property>
       </PropertyDef>
+      <PropertyDef name="templateType">
+        <Property name="label">模板类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="system">系统模板</Property>
+              <Property name="wms">WMS模板</Property>
+            </Entity>
+          </Property>
+        </Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="taskName">
@@ -273,6 +284,7 @@ view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;endTime&quot;,end
         <Property name="name">taskType</Property>
         <Property name="property">taskType</Property>
         <Property name="readOnly">false</Property>
+        <Property name="editable">true</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -322,6 +334,11 @@ view.get(&quot;#dsCondition&quot;).getData().current.set(&quot;endTime&quot;,end
           <Property name="property">taskType</Property>
           <Property name="width">120</Property>
           <Property name="name">taskType</Property>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">templateType</Property>
+          <Property name="width">120</Property>
+          <Property name="name">templateType</Property>
         </DataColumn>
         <DataColumn>
           <Property name="property">fileRows</Property>

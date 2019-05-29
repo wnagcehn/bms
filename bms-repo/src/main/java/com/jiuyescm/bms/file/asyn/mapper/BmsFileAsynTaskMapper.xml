@@ -20,10 +20,11 @@
 	    <result column="result_file_name" property="resultFileName" jdbcType="VARCHAR" />
 	    <result column="result_file_path" property="resultFilePath" jdbcType="VARCHAR" />
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="template_type" property="templateType" jdbcType="VARCHAR" />
     </resultMap>
   
     <sql id="baseColumns">
-        id, task_id, task_name, task_rate, task_status, biz_type, task_type, file_rows, creator_id, creator, create_time, finish_time, origin_file_name, origin_file_path, result_file_name, result_file_path, remark
+        id, task_id, task_name, task_rate, task_status, biz_type, task_type, file_rows, creator_id, creator, create_time, finish_time, origin_file_name, origin_file_path, result_file_name, result_file_path, remark, template_type
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -75,6 +76,9 @@
 		<if test="(remark != null and remark !='')" >
 				and remark = #{remark}
 		</if>
+		<if test="(templateType != null and templateType !='')" >
+				and template_type = #{templateType}
+		</if>
     </sql>
 	  
     <select id="query" parameterType="java.util.Map" resultMap="baseResultMap">
@@ -94,7 +98,7 @@
     </select>
 
     <insert id="save" parameterType="com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity">
-        insert into bms_file_asyn_task(task_id, task_name, task_rate, task_status, biz_type, task_type, file_rows, creator_id, creator, create_time, finish_time, origin_file_name, origin_file_path, result_file_name, result_file_path, remark)
+        insert into bms_file_asyn_task(task_id, task_name, task_rate, task_status, biz_type, task_type, file_rows, creator_id, creator, create_time, finish_time, origin_file_name, origin_file_path, result_file_name, result_file_path, remark, template_type)
         values (
 			#{taskId,jdbcType=VARCHAR}, 
 			#{taskName,jdbcType=VARCHAR}, 
@@ -111,7 +115,8 @@
 			#{originFilePath,jdbcType=VARCHAR}, 
 			#{resultFileName,jdbcType=VARCHAR}, 
 			#{resultFilePath,jdbcType=VARCHAR}, 
-			#{remark,jdbcType=VARCHAR}
+			#{remark,jdbcType=VARCHAR},
+			#{templateType,jdbcType=VARCHAR}
         )
     </insert>
 

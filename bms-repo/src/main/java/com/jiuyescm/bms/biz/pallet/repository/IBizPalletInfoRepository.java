@@ -74,6 +74,18 @@ public interface IBizPalletInfoRepository {
 	 */
 	List<BmsAsynCalcuTaskEntity> queryPalletTask(Map<String, Object> condition);
 
+	/**
+	 * 重算(为了重算商家下所有的)
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年5月29日 下午5:36:43
+	 *
+	 * @param param
+	 * @return
+	 */
+    int reCalculate(Map<String, Object> param);
+
 
 
 }

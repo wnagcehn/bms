@@ -315,4 +315,57 @@ public class BmsEnums {
 		}	
 	}
 	
+	/**
+     * 模板类型
+     * @author wangchen
+     * system-系统模板  wms-wms模板
+     */
+    public enum templateType{
+        system("system","系统模板"),wms("wms","wms模板");
+        private String code;
+        private String desc;
+        private templateType(String code, String desc){
+            this.code = code;
+            this.desc = desc;
+        }
+        
+        public String getCode(){
+            return code;
+        }
+        
+        public String getDesc(){
+            return desc;
+        }
+        
+        private static Map<String,String> mapKey =new LinkedHashMap<String,String>();
+        private static Map<String,String> mapValue =new LinkedHashMap<String,String>();
+        static{
+            mapKey.put(system.code, system.desc);
+            mapKey.put(wms.code, wms.desc);
+            mapValue.put(system.desc,system.code);
+            mapValue.put(wms.desc, wms.code);
+        }
+        public static Map<String,String> getMap(){
+            return mapKey;
+        }
+        
+        public static String getDesc(String code)
+        {
+            if (mapKey.containsKey(code))
+            {
+                return mapKey.get(code);
+            }
+            return null;
+        }
+        
+        public static String getCode(String desc)
+        {
+            if (mapValue.containsKey(desc))
+            {
+                return mapValue.get(desc);
+            }
+            return null;
+        }   
+    }
+	
 }

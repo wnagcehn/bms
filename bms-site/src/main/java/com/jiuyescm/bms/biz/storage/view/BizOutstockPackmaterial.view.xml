@@ -908,10 +908,10 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
             <ClientEvent name="onClick">var data={&#xD;
 	bizType:&quot;IMPORT&quot;&#xD;
 }&#xD;
-var taskType = &quot;BMS.QUEUE.PRODUCT_PACK_STORAGE_IMPORT.TASK&quot;;&#xD;
+var taskType = &quot;BMS.QUEUE.PACKMATERIALIMPORT.TASK&quot;;&#xD;
 var param=&quot;?taskType=&quot;+taskType;&#xD;
 view.get(&quot;#detailFrame&quot;).set(&quot;userData&quot;,data);&#xD;
-view.get(&quot;#detailFrame&quot;).set(&quot;path&quot;,&quot;com.jiuyescm.bms.file.upload.view.BmsFileAsynTaskLookUp.d&quot;);&#xD;
+view.get(&quot;#detailFrame&quot;).set(&quot;path&quot;,&quot;com.jiuyescm.bms.file.upload.view.BmsFileAsynTaskLookUp.d&quot;+param);&#xD;
 &#xD;
 var dialog = view.get(&quot;#dialogAsynDownloadDetails&quot;);&#xD;
 dialog.set(&quot;width&quot;, document.body.clientWidth-150);&#xD;

@@ -61,6 +61,7 @@ import com.jiuyescm.bms.common.tool.Tools;
 import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
 import com.jiuyescm.framework.lock.Lock;
@@ -527,6 +528,7 @@ public class BizOutstockPackmaterialImportBatchController {
 		taskEntity.setTaskStatus(FileAsynTaskStatusEnum.WAIT.getCode());
 		taskEntity.setTaskType(BmsPackmaterialTaskTypeNewEnum.IMPORT.getCode());
 		taskEntity.setBizType(ExeclOperateTypeEnum.IMPORT.getCode());
+		taskEntity.setTemplateType(BmsEnums.templateType.system.getCode());
 //		taskEntity.setFileRows(xssfSheet.getLastRowNum());
 		taskEntity.setOriginFileName(fileName);
 		taskEntity.setOriginFilePath(fullPath);
