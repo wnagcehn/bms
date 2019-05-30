@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
 import com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.BillReceiptFollowEntity;
@@ -317,4 +318,12 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
        PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
        return page;
    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public PubCustomerBaseEntity queryMk(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        PubCustomerBaseEntity entity=(PubCustomerBaseEntity) selectOne("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryMk", condition);
+        return entity;
+    }
 }

@@ -19,11 +19,11 @@
       </PropertyDef>
       <PropertyDef name="startTime">
         <Property name="label">有效期</Property>
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="endTime">
         <Property name="label">-</Property>
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="customerId">
         <Property name="label">商家id</Property>
@@ -65,12 +65,12 @@
       </PropertyDef>
       <PropertyDef name="startDate">
         <Property name="label">生效日期</Property>
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
         <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="expireDate">
         <Property name="label">失效日期</Property>
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
         <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="description">
@@ -990,14 +990,22 @@ with (view.get(&quot;#dsContractDetailDiscount&quot;)){&#xD;
       <Buttons>
         <Button id="btnContractSave">
           <ClientEvent name="onClick">var entity = view.get(&quot;#formContractEdit&quot;).get(&quot;entity&quot;);	&#xD;
+&#xD;
 //获取生效日期&#xD;
-var startTime=entity.get(&quot;startDate&quot;);&#xD;
+var startDate=entity.get(&quot;startDate&quot;);&#xD;
+if(isNullOrEmpty(startDate)){&#xD;
+	dorado.MessageBox.alert(&quot;生效日期必填&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
 //获取失效日期&#xD;
 var expireDate=entity.get(&quot;expireDate&quot;);&#xD;
-var oDate1 = new Date(startTime);&#xD;
-var oDate2 = new Date(expireDate);&#xD;
+if(isNullOrEmpty(expireDate)){&#xD;
+	dorado.MessageBox.alert(&quot;失效日期必填&quot;);&#xD;
+	return;&#xD;
+}&#xD;
 &#xD;
-if(oDate1.getTime() > oDate2.getTime()){&#xD;
+if(startDate.getTime() > expireDate.getTime()){&#xD;
     dorado.MessageBox.alert(&quot;失效日期必须大于生效日期!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
