@@ -15,6 +15,7 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -189,16 +190,18 @@ public class CorrectJob  extends IJobHandler{
 						if("weight_correct".equals(entity.getBizType())){
 							//发送重量调整MQ
 							task = BMS_CORRECT_WEIGHT_TASK;
-						}else if("material_correct".equals(entity.getBizType())) {
+						}else if("material_correct".equals(entity.getBizType()) && !dispatchPackgeList.contains(entity.getCustomerId())) {
 							//发送耗材调整MQ
 							task = BMS_CORRECT_MATERIAL_TASK;
 						}
-						jmsQueueTemplate.send(task, new MessageCreator() {
-							@Override
-							public Message createMessage(Session session) throws JMSException {
-								return session.createTextMessage(msg);
-							}
-						});
+						if(StringUtils.isNotBlank(task)){
+		                      jmsQueueTemplate.send(task, new MessageCreator() {
+		                            @Override
+		                            public Message createMessage(Session session) throws JMSException {
+		                                return session.createTextMessage(msg);
+		                            }
+		                       });
+						}
 					} catch (Exception e) {
 						XxlJobLogger.log("send MQ:", e);
 						XxlJobLogger.log("fail", "MQ发送失败！");
