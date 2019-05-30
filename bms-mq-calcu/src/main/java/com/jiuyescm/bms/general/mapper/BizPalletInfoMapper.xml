@@ -232,7 +232,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 			and a.create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
 		</if>
 		<if test="(endTime != null and endTime !='')" >
-			and a.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+			and a.create_time <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
 		</if>
 		<if test="(customerId != null and customerId !='')" >
 			and a.customer_id = #{customerId,jdbcType=VARCHAR}
