@@ -28,7 +28,9 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
+import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
+import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchPackageRepository;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -59,6 +61,8 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
     private ISequenceService sequenceService1;
     @Autowired
     private IBizDispatchBillRepository bizDispatchBillRepository;
+    @Autowired
+    private IBizDispatchPackageRepository bizDispatchPackageRepository;
 
     @Override
     public PageInfo<BmsCorrectAsynTaskVo> query(Map<String, Object> condition, int pageNo, int pageSize)
@@ -307,12 +311,21 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
             return "创建失败：当前商家当前月份不存在业务";
         }
         
+        //判断该商家是否为使用标准包装方案的商家
+        boolean flag=false;
+        BizDispatchPackageEntity diapatchPackage=bizDispatchPackageRepository.queryOne(bizParam);
+        if(diapatchPackage!=null){
+            flag=true;
+        }
 
         Timestamp createTime = JAppContext.currentTimestamp();
         BmsCorrectAsynTaskEntity entity1 = createEntity(creMonth, createTime, startDate, endDate, customerId,
                 "weight_correct", creator);
         BmsCorrectAsynTaskEntity entity2 = createEntity(creMonth, createTime, startDate, endDate, customerId,
                 "material_correct", creator);
+        if(flag){
+            entity2.setRemark("使用了标准包装方案的商家，不纠正耗材");
+        }
         List<BmsCorrectAsynTaskEntity> listEntities = new ArrayList<>();
         listEntities.add(entity1);
         listEntities.add(entity2);
@@ -324,16 +337,19 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
                 if("weight_correct".equals(entity.getBizType())){
                     //发送重量调整MQ
                     task = BMS_CORRECT_WEIGHT_TASK;
-                }else if("material_correct".equals(entity.getBizType())) {
+                }else if("material_correct".equals(entity.getBizType()) && !flag) {
                     //发送耗材调整MQ
                     task = BMS_CORRECT_MATERIAL_TASK;
                 }
-                jmsQueueTemplate.send(task, new MessageCreator() {
-                    @Override
-                    public Message createMessage(Session session) throws JMSException {
-                        return session.createTextMessage(msg);
-                    }
-                });
+                if(StringUtils.isNotBlank(task)){
+                    jmsQueueTemplate.send(task, new MessageCreator() {
+                        @Override
+                        public Message createMessage(Session session) throws JMSException {
+                            return session.createTextMessage(msg);
+                        }
+                    });
+                }
+           
             } catch (Exception e) {
                 logger.info("send MQ fail:", e);
                 return "MQ发送失败！";
