@@ -52,7 +52,7 @@
 			and  <![CDATA[a.create_time >= #{beginTime}]]>
 		</if>
 		<if test="(endTime != null and endTime !='')" >
-			and  <![CDATA[a.create_time <= #{endTime}]]>
+			and  <![CDATA[a.create_time < #{endTime}]]>
 		</if>
 		<if test="(isCalculated != null and isCalculated !='')" >
 			and b.is_calculated =concat(${isCalculated})

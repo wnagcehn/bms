@@ -123,7 +123,7 @@
 			and a.create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
 		</if>
 		<if test="(endTime != null and endTime !='')" >
-			and a.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+			and a.create_time <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
 		</if>
 		<if test="(customerId != null and customerId !='')" >
 			and a.customerid = #{customerId,jdbcType=VARCHAR}
