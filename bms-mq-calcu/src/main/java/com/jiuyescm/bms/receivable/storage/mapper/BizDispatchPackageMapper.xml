@@ -39,8 +39,8 @@
 		 from biz_dispatch_package a 
 		INNER JOIN fees_receive_storage b on a.fees_no=b.fees_no
 		where a.del_flag='0' and b.del_flag='0'
-		<if test=" customerid != null and customerid !='' ">
-			and a.customerid = #{customerid}
+		<if test=" customerId != null and customerId !='' ">
+			and a.customerid = #{customerId}
 		</if>
 		<if test=" warehouseCode != null and warehouseCode !='' ">
 			and a.warehouse_code = #{warehouseCode}
@@ -55,7 +55,7 @@
 			and a.cre_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
 		</if>
 		<if test="(endTime != null and endTime !='')" >
-			and a.cre_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+			and a.cre_time <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
 		</if>
 		LIMIT #{num}
     </select>
