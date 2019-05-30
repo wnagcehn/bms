@@ -116,6 +116,18 @@ public class BizProductStorageRepositoryImpl extends MyBatisDao implements IBizP
 			return 0;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+    @Override
+    public int reCalculateForAll(Map<String, Object> param) {
+        try{
+            update("com.jiuyescm.bms.biz.storage.BizProductStorageEntityMapper.reCalculate", param);
+            return 1;
+        }
+        catch(Exception ex){
+            return 0;
+        }
+    }
 
 	@Override
     public List<BizProductStorageEntity> queryList(Map<String, Object> condition) {

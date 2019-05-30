@@ -58,4 +58,16 @@ public interface IBmsBizInstockInfoRepository {
 
 	List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition);
 
+	/**
+	 * 传map的重算
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年5月29日 下午5:20:56
+	 *
+	 * @param param
+	 * @return
+	 */
+    int reCalculate(Map<String, Object> param);
+
 }

@@ -2,18 +2,17 @@ package com.jiuyescm.bms.biz.pallet.repository.impl;
 
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.biz.pallet.repository.IBizPalletInfoRepository;
-import com.jiuyescm.bms.biz.storage.entity.BizProductPalletStorageTempEntity;
-import com.jiuyescm.bms.biz.storage.entity.BmsBizInstockInfoEntity;
+import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 /**
  * ..RepositoryImpl
@@ -93,6 +92,24 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
 			logger.error("重算异常:", ex);
 			return 0;
 		}
+	}
+	
+	/**
+	 * 重算(为了重算商家下所有的)
+	 * @param param
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int reCalculate(Map<String, Object> param) {
+	    try{
+	        update("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.retryForCalcuNew", param);
+	        return 1;
+	    }
+	    catch(Exception ex){
+	        logger.error("重算异常:", ex);
+	        return 0;
+	    }
 	}
 	
     /**

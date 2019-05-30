@@ -42,6 +42,8 @@ public class BmsFileAsynTaskEntity implements IEntity {
 	private String resultFilePath;
 	// 备注
 	private String remark;
+	//模板类型
+	private String templateType;
 
 	public BmsFileAsynTaskEntity() {
 
@@ -302,5 +304,13 @@ public class BmsFileAsynTaskEntity implements IEntity {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+
+    public String getTemplateType() {
+        return templateType;
+    }
+
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
     
 }

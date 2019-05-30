@@ -1,9 +1,12 @@
 package com.jiuyescm.bms.customercalc.controller;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -16,6 +19,7 @@ import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -26,13 +30,14 @@ import com.jiuyescm.exception.BizException;
 @Controller("bmsAsynCalcuTaskController")
 public class BmsAsynCalcuTaskController {
 
-	//private static final Logger logger = LoggerFactory.getLogger(BmsAsynCalcuTaskController.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(BmsAsynCalcuTaskController.class.getName());
 
 	@Autowired
 	private IBmsCalcuTaskService bmsAsynCalcuTaskService;
 	@Autowired
 	private ISystemCodeService systemCodeService;
 
+	
 	/**
 	 * 分页查询
 	 * @param page
@@ -77,4 +82,54 @@ public class BmsAsynCalcuTaskController {
 		map.put("icon",sysEntity.getExtattr2());
 		return map;
 	}
+	
+	/**
+	 * 对商家下所有费用重算
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年5月29日 下午4:43:02
+	 *
+	 * @param taskVo
+	 * @return
+	 */
+	@Expose
+	public String reCalculate(BmsCalcuTaskVo taskVo){
+	    if (null == taskVo) {
+	        throw new BizException("参数不能为空，请选择一条数据！");
+        }
+	    Integer creMonth = taskVo.getCreMonth();
+	    String startTime = creMonth.toString().substring(0, 4) + "-" + creMonth.toString().substring(4, 6) + "-" + "01";
+	    String endTime = DateUtil.getFirstDayOfGivenMonth(startTime, 1, "yyyy-MM-dd");
+	    
+	    //各科目参数组装
+	    Map<String, Object> cond = new HashMap<String, Object>();
+	    cond.put("customerId", taskVo.getCustomerId());
+	    cond.put("customerid", taskVo.getCustomerId());
+	    cond.put("merchantId", taskVo.getCustomerId());
+	    cond.put("createTime", Timestamp.valueOf(startTime + " 00:00:00"));
+	    cond.put("createEndTime", Timestamp.valueOf(endTime + " 00:00:00"));
+	    cond.put("creTime", Timestamp.valueOf(startTime + " 00:00:00"));
+	    cond.put("creEndTime", Timestamp.valueOf(endTime + " 00:00:00"));
+	    cond.put("startTime", Timestamp.valueOf(startTime + " 00:00:00"));
+	    cond.put("endTime", Timestamp.valueOf(endTime + " 00:00:00"));
+	    String result = bmsAsynCalcuTaskService.reCalculate(cond);
+	    if (!"ok".equals(result)) {
+            return result;
+        }else {
+	        List<BmsCalcuTaskVo> taskVos = bmsAsynCalcuTaskService.queryAllSubjectTask(cond);
+            for (BmsCalcuTaskVo calcuTaskVo : taskVos) {
+                calcuTaskVo.setCrePerson(ContextHolder.getLoginUser().getCname());
+                calcuTaskVo.setCrePersonId(ContextHolder.getLoginUserName());
+                try {
+                    bmsAsynCalcuTaskService.sendTask(calcuTaskVo);
+                    logger.info("mq发送成功,商家id:"+calcuTaskVo.getCustomerId()+",年月:"+calcuTaskVo.getCreMonth()+",科目id:"+calcuTaskVo.getSubjectCode());
+                } catch (Exception e) {
+                    logger.error("mq发送失败:", e);
+                }
+            }
+        }
+	    return "操作成功! 正在重算...";
+	}
+	
 }
