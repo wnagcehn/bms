@@ -1,6 +1,8 @@
 package com.jiuyescm.bms.customercalc.controller;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,8 @@ import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.bms.biz.storage.service.IAddFeeService;
+import com.jiuyescm.bms.biz.storage.vo.BizAddFeeVo;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
@@ -36,6 +40,8 @@ public class BmsAsynCalcuTaskController {
 	private IBmsCalcuTaskService bmsAsynCalcuTaskService;
 	@Autowired
 	private ISystemCodeService systemCodeService;
+	@Autowired
+	private IAddFeeService addFeeService;
 
 	
 	/**
@@ -92,15 +98,16 @@ public class BmsAsynCalcuTaskController {
 	 *
 	 * @param taskVo
 	 * @return
+	 * @throws ParseException 
 	 */
 	@Expose
-	public String reCalculate(BmsCalcuTaskVo taskVo){
+	public String reCalculate(BmsCalcuTaskVo taskVo) throws ParseException{
 	    if (null == taskVo) {
 	        throw new BizException("参数不能为空，请选择一条数据！");
         }
 	    Integer creMonth = taskVo.getCreMonth();
 	    String startTime = creMonth.toString().substring(0, 4) + "-" + creMonth.toString().substring(4, 6) + "-" + "01";
-	    String endTime = DateUtil.getFirstDayOfGivenMonth(startTime, 1, "yyyy-MM-dd");
+	    String endTime = DateUtil.getLastDay(startTime);
 	    
 	    //各科目参数组装
 	    Map<String, Object> cond = new HashMap<String, Object>();
@@ -108,15 +115,18 @@ public class BmsAsynCalcuTaskController {
 	    cond.put("customerid", taskVo.getCustomerId());
 	    cond.put("merchantId", taskVo.getCustomerId());
 	    cond.put("createTime", Timestamp.valueOf(startTime + " 00:00:00"));
-	    cond.put("createEndTime", Timestamp.valueOf(endTime + " 00:00:00"));
+	    cond.put("createEndTime", Timestamp.valueOf(endTime + " 23:59:59"));
 	    cond.put("creTime", Timestamp.valueOf(startTime + " 00:00:00"));
-	    cond.put("creEndTime", Timestamp.valueOf(endTime + " 00:00:00"));
+	    cond.put("creEndTime", Timestamp.valueOf(endTime + " 23:59:59"));
 	    cond.put("startTime", Timestamp.valueOf(startTime + " 00:00:00"));
-	    cond.put("endTime", Timestamp.valueOf(endTime + " 00:00:00"));
+	    cond.put("endTime", Timestamp.valueOf(endTime + " 23:59:59"));
+	    cond.put("isCalculate", "99");
+	    //重算所有科目
 	    String result = bmsAsynCalcuTaskService.reCalculate(cond);
 	    if (!"ok".equals(result)) {
             return result;
         }else {
+            //汇总商家该月份下所有科目需要发送的任务
 	        List<BmsCalcuTaskVo> taskVos = bmsAsynCalcuTaskService.queryAllSubjectTask(cond);
             for (BmsCalcuTaskVo calcuTaskVo : taskVos) {
                 calcuTaskVo.setCrePerson(ContextHolder.getLoginUser().getCname());
@@ -130,6 +140,31 @@ public class BmsAsynCalcuTaskController {
             }
         }
 	    return "操作成功! 正在重算...";
+	}
+	
+	@Expose
+	public void test(){
+	    List<BizAddFeeVo> bizAddFeeVoList = new ArrayList<BizAddFeeVo>();
+        BizAddFeeVo bizAddFeeVo = new BizAddFeeVo();
+        bizAddFeeVo.setPayNo("FBB01000000069");               //增值单编号
+        bizAddFeeVo.setExternalNo("Z120000213359");    //外部订单号
+        bizAddFeeVo.setCreateTime(Timestamp.valueOf("2019-05-12 14:56:16"));     //业务时间
+        bizAddFeeVo.setOperationTime(Timestamp.valueOf("2019-05-01 14:53:12"));//操作时间
+        bizAddFeeVo.setWarehouseCode("B01");    //仓库号
+        bizAddFeeVo.setWarehouseName("北京01仓");
+        bizAddFeeVo.setCustomerid("1100002217");
+        bizAddFeeVo.setCustomerName("北京魁星恒信商贸有限公司");
+        bizAddFeeVo.setFeesUnit("个");
+        bizAddFeeVo.setNum(1500d);
+        bizAddFeeVo.setFixedAmount(0d);
+        bizAddFeeVo.setFirstSubject("100001");
+        bizAddFeeVo.setFirstSubjectName("全检费");
+        bizAddFeeVo.setFeesType("wh_check_qty");
+        bizAddFeeVo.setFeesTypeName("全检费-产品数量检查");
+        bizAddFeeVo.setRemark(null);
+        bizAddFeeVo.setServiceContent("到货全检");
+        bizAddFeeVoList.add(bizAddFeeVo);
+        addFeeService.save(bizAddFeeVoList);
 	}
 	
 }

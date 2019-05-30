@@ -459,20 +459,14 @@
 		<if test="(creator != null and creator !='')" >
 				and a.creator = #{creator}
 		</if>
-		<if test="(createTime != null and createTime !='')" >
-			    and a.create_time >= #{createTime} add <![CDATA[a.create_time <= #{createTime}]]>
+		<if test="startTime != null and startTime !='' " >
+			and <![CDATA[a.create_time >= #{startTime}]]>
+		</if>
+		<if test="endTime != null and endTime !='' " >
+			and <![CDATA[a.create_time <= #{endTime}]]>
 		</if>
 		<if test="(lastModifier != null and lastModifier !='')" >
 				and a.last_modifier = #{lastModifier}
-		</if>
-		<if test="(lastModifyTime != null and lastModifyTime !='')" >
-			    and a.last_modify_time >= #{lastModifyTime} add <![CDATA[a.last_modify_time <= #{lastModifyTime}]]>
-		</if>
-		<if test="(calculateTime != null and calculateTime !='')" >
-			    and a.calculate_time >= #{calculateTime} add <![CDATA[a.calculate_time <= #{calculateTime}]]>
-		</if>
-		<if test="(writeTime != null and writeTime !='')" >
-			    and a.write_time >= #{writeTime} add <![CDATA[a.write_time <= #{writeTime}]]>
 		</if>
 		<if test="(adjustNum != null and adjustNum !='')" >
 				and a.adjust_num = #{adjustNum}

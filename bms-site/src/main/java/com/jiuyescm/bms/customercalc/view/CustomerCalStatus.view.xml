@@ -417,6 +417,14 @@ if(currentDatas){&#xD;
         <Property name="caption">重算</Property>
         <Property name="icon">url(>skin>common/icons.gif) -280px -220px</Property>
       </ToolBarButton>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var action = view.get(&quot;#test&quot;);&#xD;
+&#xD;
+action.execute(function(){&#xD;
+	&#xD;
+});</ClientEvent>
+        <Property name="caption">test</Property>
+      </ToolBarButton>
     </ToolBar>
     <Container>
       <AutoForm id="queryForm">
@@ -1044,6 +1052,9 @@ action.set(&quot;parameter&quot;, query).execute(function(result){&#xD;
     </AjaxAction>
     <AjaxAction id="retryAction">
       <Property name="service">bmsAsynCalcuTaskController#reCalculate</Property>
+    </AjaxAction>
+    <AjaxAction id="test">
+      <Property name="service">bmsAsynCalcuTaskController#test</Property>
     </AjaxAction>
   </View>
 </ViewConfig>
