@@ -216,6 +216,10 @@
         <Property></Property>
         <Property name="label">费用类型</Property>
       </PropertyDef>
+      <PropertyDef name="payNo">
+        <Property></Property>
+        <Property name="label">增值单编号</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtErrorMessageVo">
       <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
@@ -530,12 +534,12 @@ if(data.get(&quot;startTime&quot;)==&quot;&quot;||data.get(&quot;startTime&quot;
 var queryForm=view.get(&quot;#queryFormProductPalletStorage&quot;);&#xD;
 var retryAction = view.get(&quot;#RetryAction&quot;);&#xD;
 var datas = view.get(&quot;#dataSetCondition.data&quot;).current;&#xD;
-if(datas.get(&quot;customerid&quot;)==&quot;&quot;||datas.get(&quot;customerid&quot;)==null)&#xD;
+/*if(datas.get(&quot;customerid&quot;)==&quot;&quot;||datas.get(&quot;customerid&quot;)==null)&#xD;
 {&#xD;
 	dorado.MessageBox.alert(&quot;商家不能为空!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-&#xD;
+*/&#xD;
 retryAction.set(&quot;parameter&quot;,datas);&#xD;
 &#xD;
 dorado.MessageBox.confirm(&quot;是否确定重算?&quot;,function(){&#xD;
@@ -601,6 +605,11 @@ var nowdays = new Date();&#xD;
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
+        <Property name="name">payNo</Property>
+        <Property name="property">payNo</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
         <Property name="name">isCalculated</Property>
         <Property name="property">isCalculated</Property>
         <Editor/>
@@ -628,6 +637,7 @@ entity.set(&quot;feesTypeName&quot;,&quot;&quot;);</ClientEvent>
         <Property name="property">feesType</Property>
         <Property name="trigger">ddropDowmQuerySubject</Property>
         <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
