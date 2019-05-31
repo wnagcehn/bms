@@ -718,12 +718,12 @@ public class PalletHandler {
                         tempEntity.setCustomerName(dc.getColValue());
                         //如果没找到，报错
                         if (customerMap.containsKey(dc.getColValue())) {
-                            //如果导入的商家不在 《使用导入商品托数的商家》中, 报错提示<此商家使用商品系统托数,不能重复导入
-                            if (cusNames.contains(dc.getColValue())) {
+                           /* //如果导入的商家不在 《使用导入商品托数的商家》中, 报错提示<此商家使用商品系统托数,不能重复导入
+                            if (cusNames.contains(dc.getColValue())) {*/
                                 tempEntity.setCustomerId(customerMap.get(dc.getColValue()));
-                            }else {
+                            /*}else {
                                 errorMsg+="此商家使用商品系统托数,不能重复导入;";
-                            }
+                            }*/
                         }else {
                             errorMsg+="商家不存在;";
                         }
