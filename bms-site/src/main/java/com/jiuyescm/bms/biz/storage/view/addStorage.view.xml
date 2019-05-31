@@ -216,6 +216,10 @@
         <Property></Property>
         <Property name="label">费用类型</Property>
       </PropertyDef>
+      <PropertyDef name="payNo">
+        <Property></Property>
+        <Property name="label">增值单编号</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtErrorMessageVo">
       <Property name="creationType">com.jiuyescm.bms.common.entity.ErrorMessageVo</Property>
@@ -601,6 +605,11 @@ var nowdays = new Date();&#xD;
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
+        <Property name="name">payNo</Property>
+        <Property name="property">payNo</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
         <Property name="name">isCalculated</Property>
         <Property name="property">isCalculated</Property>
         <Editor/>
@@ -628,6 +637,7 @@ entity.set(&quot;feesTypeName&quot;,&quot;&quot;);</ClientEvent>
         <Property name="property">feesType</Property>
         <Property name="trigger">ddropDowmQuerySubject</Property>
         <Property name="visible">false</Property>
+        <Property name="hideMode">display</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
