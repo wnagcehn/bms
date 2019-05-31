@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.asyn.service;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +15,7 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +33,12 @@ import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchPackageRepository;
+import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.framework.sequence.api.ISequenceService;
+import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 
 @Service("bmsCorrectAsynTaskService")
 public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService {
@@ -63,6 +67,8 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
     private IBizDispatchBillRepository bizDispatchBillRepository;
     @Autowired
     private IBizDispatchPackageRepository bizDispatchPackageRepository;
+    @Autowired
+    private ISnowflakeSequenceService snowflakeSequenceService;
 
     @Override
     public PageInfo<BmsCorrectAsynTaskVo> query(Map<String, Object> condition, int pageNo, int pageSize)
@@ -292,20 +298,27 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
         if (CollectionUtils.isNotEmpty(notCorCustList) && notCorCustList.contains(customerId)) {
             return "创建失败：当前商家为不需要运单纠正的商家";
         }
-        // 创建任务
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, yearInteger);
-        cal.set(Calendar.MONTH, monthInteger-1);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        Date startDate = cal.getTime();
-        cal.roll(Calendar.DATE, -1);
-        Date endDate = cal.getTime();
         
-        //查询此商家此月份是否存在业务
         Map<String, Object> bizParam = new HashMap<>();
+        Timestamp startDate=null;
+        Timestamp endDate=null;
+        try {
+            // 创建任务
+            String startDateStr = year + "-" + month + "-01 00:00:00";
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date startTime = sdf.parse(startDateStr);
+            Date endTime = DateUtils.addMonths(startTime, 1);
+            startDate= new Timestamp(startTime.getTime());
+            endDate = new Timestamp(endTime.getTime());
+            bizParam.put("startTime", startDate);
+            bizParam.put("endTime", endDate);
+        } catch (Exception e1) {
+            logger.error("时间转换异常", e1);
+            return "创建失败：时间转换异常";
+        }
+        //查询此商家此月份是否存在业务
         bizParam.put("customerid", customerId);
-        bizParam.put("startTime", startDate);
-        bizParam.put("endTime", endDate);
+
         List<BizDispatchBillEntity> entityList=  bizDispatchBillRepository.queryBizByCusid(bizParam);
         if(CollectionUtils.isEmpty(entityList)){
             return "创建失败：当前商家当前月份不存在业务";
@@ -324,6 +337,8 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
         BmsCorrectAsynTaskEntity entity2 = createEntity(creMonth, createTime, startDate, endDate, customerId,
                 "material_correct", creator);
         if(flag){
+            entity2.setTaskRate(100);
+            entity2.setTaskStatus(BmsCorrectAsynTaskStatusEnum.NOTCORRECT.getCode());
             entity2.setRemark("使用了标准包装方案的商家，不纠正耗材");
         }
         List<BmsCorrectAsynTaskEntity> listEntities = new ArrayList<>();
@@ -365,19 +380,14 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
         entity.setCreateTime(createTime);
         entity.setDelFlag("0");
         entity.setTaskRate(0);
-        entity.setTaskStatus("WAIT");
+        entity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
         entity.setCreateMonth(createMonth);
         entity.setStartDate(startDate);
         entity.setEndDate(endDate);
         entity.setCustomerId(customerid);
         entity.setBizType(bizType);
-        String id1 = String.valueOf(sequenceService1.nextSeq("BMS.CORRECT"));
-        String taskId1 = "CT";
-        for (int j = 1; j <= 10 - id1.length(); j++) {
-            taskId1 += "0";
-        }
-        taskId1 += id1;
-        entity.setTaskId(taskId1);
+        String taskId =  "STO" + snowflakeSequenceService.nextStringId();
+        entity.setTaskId(taskId);
         return entity;
     }
 

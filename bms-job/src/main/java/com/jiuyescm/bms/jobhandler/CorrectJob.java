@@ -27,6 +27,7 @@ import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
+import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.bms.receivable.storage.service.IBizDispatchPackageService;
@@ -177,6 +178,8 @@ public class CorrectJob  extends IJobHandler{
 					BmsCorrectAsynTaskEntity entity2 = createEntity(taskStartDate,createTime,startDate,end,customerid,"material_correct");
 					entity2.setTaskId(taskId2);
 					if(dispatchPackgeList.contains(customerid)){
+					    entity2.setTaskRate(100);
+					    entity2.setTaskStatus(BmsCorrectAsynTaskStatusEnum.NOTCORRECT.getCode());
 					    entity2.setRemark("使用了标准包装方案的商家，不纠正耗材");
 					}
 					list.add(entity2);
@@ -218,7 +221,7 @@ public class CorrectJob  extends IJobHandler{
 			entity.setCreateTime(createTime);
 			entity.setDelFlag("0");
 			entity.setTaskRate(0);
-			entity.setTaskStatus("WAIT");
+			entity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
 			entity.setCreateMonth(createMonth);
 			entity.setStartDate(startDate);
 			entity.setEndDate(endDate);
