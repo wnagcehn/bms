@@ -416,6 +416,9 @@
 		<if test="(isCalculated != null and isCalculated !='')" >
 			and s.is_calculated = #{isCalculated}
 		</if>
+		<if test="(payNo != null and payNo !='')" >
+		    and a.pay_no = #{payNo}
+		</if>
     </update>
     
     <select id="queryTask" parameterType="java.util.Map" resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
