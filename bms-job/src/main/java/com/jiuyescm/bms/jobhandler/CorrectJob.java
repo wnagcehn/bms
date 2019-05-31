@@ -15,6 +15,7 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -26,6 +27,7 @@ import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
+import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
 import com.jiuyescm.bms.receivable.storage.service.IBizDispatchPackageService;
@@ -176,6 +178,8 @@ public class CorrectJob  extends IJobHandler{
 					BmsCorrectAsynTaskEntity entity2 = createEntity(taskStartDate,createTime,startDate,end,customerid,"material_correct");
 					entity2.setTaskId(taskId2);
 					if(dispatchPackgeList.contains(customerid)){
+					    entity2.setTaskRate(100);
+					    entity2.setTaskStatus(BmsCorrectAsynTaskStatusEnum.NOTCORRECT.getCode());
 					    entity2.setRemark("使用了标准包装方案的商家，不纠正耗材");
 					}
 					list.add(entity2);
@@ -189,16 +193,18 @@ public class CorrectJob  extends IJobHandler{
 						if("weight_correct".equals(entity.getBizType())){
 							//发送重量调整MQ
 							task = BMS_CORRECT_WEIGHT_TASK;
-						}else if("material_correct".equals(entity.getBizType())) {
+						}else if("material_correct".equals(entity.getBizType()) && !dispatchPackgeList.contains(entity.getCustomerId())) {
 							//发送耗材调整MQ
 							task = BMS_CORRECT_MATERIAL_TASK;
 						}
-						jmsQueueTemplate.send(task, new MessageCreator() {
-							@Override
-							public Message createMessage(Session session) throws JMSException {
-								return session.createTextMessage(msg);
-							}
-						});
+						if(StringUtils.isNotBlank(task)){
+		                      jmsQueueTemplate.send(task, new MessageCreator() {
+		                            @Override
+		                            public Message createMessage(Session session) throws JMSException {
+		                                return session.createTextMessage(msg);
+		                            }
+		                       });
+						}
 					} catch (Exception e) {
 						XxlJobLogger.log("send MQ:", e);
 						XxlJobLogger.log("fail", "MQ发送失败！");
@@ -215,7 +221,7 @@ public class CorrectJob  extends IJobHandler{
 			entity.setCreateTime(createTime);
 			entity.setDelFlag("0");
 			entity.setTaskRate(0);
-			entity.setTaskStatus("WAIT");
+			entity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
 			entity.setCreateMonth(createMonth);
 			entity.setStartDate(startDate);
 			entity.setEndDate(endDate);

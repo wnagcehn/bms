@@ -1157,6 +1157,6 @@ FROM bill_check_info
         	<if test=" sourceId != null and sourceId !='' ">
 				and source_id = #{sourceId}
 			</if>
-   	
+   	    limit 1
    </select>
 </mapper>
