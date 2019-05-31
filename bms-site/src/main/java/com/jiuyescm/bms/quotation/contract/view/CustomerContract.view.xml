@@ -527,9 +527,6 @@
         <ClientEvent name="onClick">var tmpDataSet=view.get(&quot;#dsPriceContractInfoEntity&quot;);&#xD;
 var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
 &#xD;
-var tmpDataSet=view.get(&quot;#dsPriceContractInfoEntity&quot;);&#xD;
-var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
-&#xD;
 var cre=tmpFormCondition.get(&quot;entity&quot;).get(&quot;startTime&quot;);&#xD;
 var end=tmpFormCondition.get(&quot;entity&quot;).get(&quot;endTime&quot;);&#xD;
 if(!isNullOrEmpty(cre) &amp;&amp; !isNullOrEmpty(end)){&#xD;
