@@ -2,7 +2,6 @@ package com.jiuyescm.bms.customercalc.controller;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
@@ -22,7 +23,6 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.biz.storage.service.IAddFeeService;
-import com.jiuyescm.bms.biz.storage.vo.BizAddFeeVo;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
@@ -100,6 +100,7 @@ public class BmsAsynCalcuTaskController {
 	 * @return
 	 * @throws ParseException 
 	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Expose
 	public String reCalculate(BmsCalcuTaskVo taskVo) throws ParseException{
 	    if (null == taskVo) {
@@ -124,8 +125,10 @@ public class BmsAsynCalcuTaskController {
 	    //重算所有科目
 	    String result = bmsAsynCalcuTaskService.reCalculate(cond);
 	    if (!"ok".equals(result)) {
+	        logger.info(result);
             return result;
         }else {
+            logger.info("重算成功，开始发送MQ……");
             //汇总商家该月份下所有科目需要发送的任务
 	        List<BmsCalcuTaskVo> taskVos = bmsAsynCalcuTaskService.queryAllSubjectTask(cond);
             for (BmsCalcuTaskVo calcuTaskVo : taskVos) {
@@ -140,31 +143,6 @@ public class BmsAsynCalcuTaskController {
             }
         }
 	    return "操作成功! 正在重算...";
-	}
-	
-	@Expose
-	public void test(){
-	    List<BizAddFeeVo> bizAddFeeVoList = new ArrayList<BizAddFeeVo>();
-        BizAddFeeVo bizAddFeeVo = new BizAddFeeVo();
-        bizAddFeeVo.setPayNo("FBB01000000069");               //增值单编号
-        bizAddFeeVo.setExternalNo("Z120000213359");    //外部订单号
-        bizAddFeeVo.setCreateTime(Timestamp.valueOf("2019-05-12 14:56:16"));     //业务时间
-        bizAddFeeVo.setOperationTime(Timestamp.valueOf("2019-05-01 14:53:12"));//操作时间
-        bizAddFeeVo.setWarehouseCode("B01");    //仓库号
-        bizAddFeeVo.setWarehouseName("北京01仓");
-        bizAddFeeVo.setCustomerid("1100002217");
-        bizAddFeeVo.setCustomerName("北京魁星恒信商贸有限公司");
-        bizAddFeeVo.setFeesUnit("个");
-        bizAddFeeVo.setNum(1500d);
-        bizAddFeeVo.setFixedAmount(0d);
-        bizAddFeeVo.setFirstSubject("100001");
-        bizAddFeeVo.setFirstSubjectName("全检费");
-        bizAddFeeVo.setFeesType("wh_check_qty");
-        bizAddFeeVo.setFeesTypeName("全检费-产品数量检查");
-        bizAddFeeVo.setRemark(null);
-        bizAddFeeVo.setServiceContent("到货全检");
-        bizAddFeeVoList.add(bizAddFeeVo);
-        addFeeService.save(bizAddFeeVoList);
 	}
 	
 }

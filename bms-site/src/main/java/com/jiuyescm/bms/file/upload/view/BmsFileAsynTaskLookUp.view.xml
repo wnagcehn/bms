@@ -242,7 +242,7 @@ if(isNullOrEmpty(data)){&#xD;
 }</ClientEvent>
         <Property name="caption">再次导入</Property>
         <Property name="icon">url(>skin>common/icons.gif) -240px -240px</Property>
-        <Property name="visible">true</Property>
+        <Property name="visible">false</Property>
       </ToolBarButton>
     </ToolBar>
     <AutoForm id="formCondition">
