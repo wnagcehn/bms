@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.customercalc.controller;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
@@ -19,6 +22,7 @@ import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
+import com.jiuyescm.bms.biz.storage.service.IAddFeeService;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.exception.BizException;
 
@@ -36,6 +40,8 @@ public class BmsAsynCalcuTaskController {
 	private IBmsCalcuTaskService bmsAsynCalcuTaskService;
 	@Autowired
 	private ISystemCodeService systemCodeService;
+	@Autowired
+	private IAddFeeService addFeeService;
 
 	
 	/**
@@ -92,15 +98,17 @@ public class BmsAsynCalcuTaskController {
 	 *
 	 * @param taskVo
 	 * @return
+	 * @throws ParseException 
 	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	@Expose
-	public String reCalculate(BmsCalcuTaskVo taskVo){
+	public String reCalculate(BmsCalcuTaskVo taskVo) throws ParseException{
 	    if (null == taskVo) {
 	        throw new BizException("参数不能为空，请选择一条数据！");
         }
 	    Integer creMonth = taskVo.getCreMonth();
 	    String startTime = creMonth.toString().substring(0, 4) + "-" + creMonth.toString().substring(4, 6) + "-" + "01";
-	    String endTime = DateUtil.getFirstDayOfGivenMonth(startTime, 1, "yyyy-MM-dd");
+	    String endTime = DateUtil.getLastDay(startTime);
 	    
 	    //各科目参数组装
 	    Map<String, Object> cond = new HashMap<String, Object>();
@@ -108,15 +116,20 @@ public class BmsAsynCalcuTaskController {
 	    cond.put("customerid", taskVo.getCustomerId());
 	    cond.put("merchantId", taskVo.getCustomerId());
 	    cond.put("createTime", Timestamp.valueOf(startTime + " 00:00:00"));
-	    cond.put("createEndTime", Timestamp.valueOf(endTime + " 00:00:00"));
+	    cond.put("createEndTime", Timestamp.valueOf(endTime + " 23:59:59"));
 	    cond.put("creTime", Timestamp.valueOf(startTime + " 00:00:00"));
-	    cond.put("creEndTime", Timestamp.valueOf(endTime + " 00:00:00"));
+	    cond.put("creEndTime", Timestamp.valueOf(endTime + " 23:59:59"));
 	    cond.put("startTime", Timestamp.valueOf(startTime + " 00:00:00"));
-	    cond.put("endTime", Timestamp.valueOf(endTime + " 00:00:00"));
+	    cond.put("endTime", Timestamp.valueOf(endTime + " 23:59:59"));
+	    cond.put("isCalculate", "99");
+	    //重算所有科目
 	    String result = bmsAsynCalcuTaskService.reCalculate(cond);
 	    if (!"ok".equals(result)) {
+	        logger.info(result);
             return result;
         }else {
+            logger.info("重算成功，开始发送MQ……");
+            //汇总商家该月份下所有科目需要发送的任务
 	        List<BmsCalcuTaskVo> taskVos = bmsAsynCalcuTaskService.queryAllSubjectTask(cond);
             for (BmsCalcuTaskVo calcuTaskVo : taskVos) {
                 calcuTaskVo.setCrePerson(ContextHolder.getLoginUser().getCname());

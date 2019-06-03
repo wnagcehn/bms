@@ -640,6 +640,19 @@ public class DateUtil {
 		return cal.getTime();
 	}
 	
+	public static String getLastDay(String date) throws ParseException{
+        // 今天的时间
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        cal.setTime(sdf.parse(date));
+        // 获取本月的最大天数
+        int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        // 设置创造新日期，这个日期是本月的最后一天
+        cal.set(Calendar.DATE, days);
+        Date newD = cal.getTime();
+        return new SimpleDateFormat("yyyy-MM-dd").format(newD);
+    }
+	
     public static List<String> getBetweenDate(String begin,String end){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         List<String> betweenList = new ArrayList<String>();
