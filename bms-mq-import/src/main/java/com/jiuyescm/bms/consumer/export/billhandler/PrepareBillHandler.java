@@ -2261,6 +2261,7 @@ public class PrepareBillHandler {
                         materialEntity.getReceiveDetailAddress());
                 //新增标准包装方案字段
                 dataItem.put("packPlanNo", materialEntity.getPackPlanNo());
+                dataItem.put("packGroupNo", materialEntity.getPackGroupNo());
                 dataItem.put("packPlanName", materialEntity.getPackPlanName());
                 dataItem.put("packPlanCost", materialEntity.getPackPlanCost());
 

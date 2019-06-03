@@ -46,7 +46,7 @@ public interface IBizOutstockPackmaterialCancelRepository {
      *
      * @return
      */
-    List<BizOutstockPackmaterialCancelEntity> queryNeedCancel();
+    List<BizOutstockPackmaterialCancelEntity> queryNeedCancel(Integer batchNum);
 
     /**
      * 批量更新状态
