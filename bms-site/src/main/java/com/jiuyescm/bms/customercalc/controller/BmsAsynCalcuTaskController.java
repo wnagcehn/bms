@@ -123,6 +123,7 @@ public class BmsAsynCalcuTaskController {
 	    cond.put("endTime", Timestamp.valueOf(endTime + " 23:59:59"));
 	    cond.put("isCalculate", "99");
 	    //重算所有科目
+	    logger.info("开始重算所有科目！");
 	    String result = bmsAsynCalcuTaskService.reCalculate(cond);
 	    if (!"ok".equals(result)) {
 	        logger.info(result);
