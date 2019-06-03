@@ -2087,9 +2087,10 @@ public class PrepareBillHandler {
         map.put("receiveCityId", "收件人市");
         map.put("receiveDetailAddress", "收件人地址");
         map.put("packPlanNo", "包材方案编号");
+        map.put("packGroupNo", "包材组编号");
         map.put("packPlanName", "包材方案名称");
         map.put("packPlanCost", "包材方案金额");
-
+        
         // 按序号获取systemCode表中的类别并排序
         Map<String, Object> param = new HashMap<>();
         param.put("typeCode", "PACKMAGERIAL_SORT");
