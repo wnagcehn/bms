@@ -377,7 +377,7 @@ public class PrepareBillHandler {
         headMapDict.put("shopName", "店铺名称");
         headMapDict.put("orderNo", "九曳订单号");
         headMapDict.put("externalNo", "商家订单号");
-        headMapDict.put("waybillNo", "转寄后运单号");
+        headMapDict.put("waybillNo", "运单号");
         headMapDict.put("createTime", "运单生成时间");
 //        headMapDict.put("zexpressNum", "转寄后运单号");
         headMapDict.put("totalWeight", "运单重量");
