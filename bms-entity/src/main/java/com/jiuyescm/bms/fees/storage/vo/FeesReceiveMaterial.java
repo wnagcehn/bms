@@ -76,10 +76,11 @@ public class FeesReceiveMaterial implements IEntity {
 	private String outstockNo;
 	private String specDesc;
 	
-	//包材方案编号，名称
+	//包材方案编号，名称，包材组编号
 	private String packPlanNo;
 	private String packPlanName;
 	private Double packPlanCost;
+	private String packGroupNo;
 	
 	public FeesReceiveMaterial(){
 		
@@ -339,6 +340,14 @@ public class FeesReceiveMaterial implements IEntity {
 
     public void setPackPlanCost(Double packPlanCost) {
         this.packPlanCost = packPlanCost;
+    }
+
+    public String getPackGroupNo() {
+        return packGroupNo;
+    }
+
+    public void setPackGroupNo(String packGroupNo) {
+        this.packGroupNo = packGroupNo;
     }
 	
 }

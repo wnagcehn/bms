@@ -198,22 +198,25 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 	@Override
 	public FeesReceiveStorageEntity initFee(BizPalletInfoEntity entity) {
 		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();	
-		//如果商家不在《使用导入商品托数的商家》, 更新计费来源是系统, 同时使用系统托数计费
-		//如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
+		//如果托数类型是商品托数，如果商家不在《使用导入商品托数的商家》, 更新计费来源是系统, 同时使用系统托数计费
+		//如果托数类型是商品托数，如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
 		//**** 以上逻辑可以放在定时任务中
 		double num = 0d;
-		if (cusNames.contains(entity.getCustomerId())) {
-			entity.setChargeSource("import");
+		if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())) {
+		    entity.setChargeSource("system");	
 		}else {
-			entity.setChargeSource("system");
+		    entity.setChargeSource("import");
 		}
 		//调整托数优先级最高
+		//如果托数类型是商品托数，商家在《使用导入商品托数的商家》，计费数量用导入托数
+		//如果托数类型是商品托数，商家不在《使用导入商品托数的商家》，计费数量用系统托数
+		//托数类型为耗材托数，入库托数等，都使用导入托数
 		if (DoubleUtil.isBlank(entity.getAdjustPalletNum())) {
-			if (cusNames.contains(entity.getCustomerId())) {
-				num = entity.getPalletNum();
-			}else {
+			if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())){
 				num = entity.getSysPalletNum();
-			}
+			}else {
+			    num = entity.getPalletNum();
+            }
 		}else {
 			num = entity.getAdjustPalletNum();
 		}
