@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.biz.storage.repository.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
@@ -95,8 +96,10 @@ public class BizOutstockPackmaterialCancelRepositoryImpl extends MyBatisDao<BizO
      * 查询需要作废的
      */
     @Override
-    public List<BizOutstockPackmaterialCancelEntity> queryNeedCancel(){
-        return selectList("com.jiuyescm.bms.biz.storage.BizOutstockPackmaterialCancelMapper.queryNeedCancel", null);
+    public List<BizOutstockPackmaterialCancelEntity> queryNeedCancel(Integer batchNum){
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("batchNum", batchNum);
+        return selectList("com.jiuyescm.bms.biz.storage.BizOutstockPackmaterialCancelMapper.queryNeedCancel", map);
     }
 
     /**

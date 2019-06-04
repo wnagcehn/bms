@@ -581,6 +581,7 @@
 		IFNULL(c.cost,0) as cost,
 		c.unit_price as unitPrice,
 		d.pack_plan_no as packPlanNo,
+		d.pack_group_no as packGroupNo,
 		d.pack_plan_name as packPlanName,
 		e.cost as packPlanCost
 		from  biz_dispatch_bill a 

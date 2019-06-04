@@ -54,6 +54,7 @@ public class MaterialToDelJob extends IJobHandler {
     
     private static final String NODEL = "NODEL";
     private static final String DEL = "DEL";
+    private static final Integer batchNum = 2000;
     
     @Override
     public ReturnT<String> execute(String... params) throws Exception {
@@ -68,7 +69,7 @@ public class MaterialToDelJob extends IJobHandler {
         
         XxlJobLogger.log("从cancel表获取 状态为初始&&导入运单号=包材组运单号 的数据");
         //1.从cancel表捞取 状态=BEGIN && 导入运单号=包材组运单号
-        List<BizOutstockPackmaterialCancelEntity> cancelList = bizOutstockPackmaterialCancelService.queryNeedCancel();
+        List<BizOutstockPackmaterialCancelEntity> cancelList = bizOutstockPackmaterialCancelService.queryNeedCancel(batchNum);
         if (CollectionUtils.isEmpty(cancelList)) {
             return printLog("没有需要作废的运单", sw);
         }
@@ -79,26 +80,37 @@ public class MaterialToDelJob extends IJobHandler {
         List<String> contractWaybillNoList = new ArrayList<String>();
         //修改配置表（如：去掉一个耗材），通过配置表中作废的耗材变成未作废，触发重算
         List<BizOutstockPackmaterialEntity> delToNoDels = new ArrayList<BizOutstockPackmaterialEntity>();
+        //状态为"初始"，导入运单号和拉取运单号不相等，直接改为不作废
+        List<BizOutstockPackmaterialCancelEntity> updateNoDelList = new ArrayList<BizOutstockPackmaterialCancelEntity>(); 
         for (BizOutstockPackmaterialCancelEntity cancelEntity : cancelList) {
-            if ("1".equals(cancelEntity.getContractAttr())) {
-                cancelEntity.setDescrip("合同归属为BMS, 不作废");
+            if (!cancelEntity.getWaybillNoImport().equals(cancelEntity.getWaybillNoPackage())) {
                 cancelEntity.setStatus(NODEL);
                 cancelEntity.setModTime(new Timestamp(System.currentTimeMillis()));
-                bmsList.add(cancelEntity);
-            }
-            if ("2".equals(cancelEntity.getContractAttr())) {
-                cancelEntity.setStatus(DEL);
-                cancelEntity.setModTime(new Timestamp(System.currentTimeMillis()));
-                contractList.add(cancelEntity);
-                contractWaybillNoList.add(cancelEntity.getWaybillNo());
-            }
+                updateNoDelList.add(cancelEntity);
+            }else {
+                if ("1".equals(cancelEntity.getContractAttr())) {
+                    cancelEntity.setDescrip("合同归属为BMS, 不作废");
+                    cancelEntity.setStatus(NODEL);
+                    cancelEntity.setModTime(new Timestamp(System.currentTimeMillis()));
+                    bmsList.add(cancelEntity);
+                }
+                if ("2".equals(cancelEntity.getContractAttr())) {
+                    cancelEntity.setStatus(DEL);
+                    cancelEntity.setModTime(new Timestamp(System.currentTimeMillis()));
+                    contractList.add(cancelEntity);
+                    contractWaybillNoList.add(cancelEntity.getWaybillNo());
+                }
+            }    
         }
             
-        XxlJobLogger.log("统计合同归属为'BMS'的，并将状态更新为'不作废'");
-        //合同归属为"BMS"的状态更新为"不作废"
-        if (CollectionUtils.isNotEmpty(bmsList)) {
-            bizOutstockPackmaterialCancelService.updateBatchStatus(bmsList);
+        //a.如果状态为"初始"，导入运单号和拉取运单号不相等，直接改为不作废（后面导入或者拉取会将状态修改为"初始"）
+        //b.合同归属为"BMS"的状态也更新为不作废
+        XxlJobLogger.log("统计合同归属为'BMS'的和不需要作废的，并将状态更新为'不作废'");
+        updateNoDelList.addAll(bmsList);
+        if (CollectionUtils.isNotEmpty(updateNoDelList)) {
+            bizOutstockPackmaterialCancelService.updateBatchStatus(updateNoDelList);
         }
+
         //合同归属为"合同在线"的数据一条都没有，就没有需要作废的
         if (CollectionUtils.isEmpty(contractWaybillNoList)) {
             return printLog("没有需要作废的运单", sw);
@@ -189,7 +201,13 @@ public class MaterialToDelJob extends IJobHandler {
             bizOutstockPackmaterialRepository.deleteOrRevertMaterialStatus(delToNoDels);
         }
         
+//        if (cancelList == null || cancelList.size() == 0) {
+//            return printLog("任务完成", sw);
+//        }else {
+//            return calcJob(params);
+//        }
         return printLog("任务完成", sw);
+
     }
 
     /**

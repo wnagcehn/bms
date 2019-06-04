@@ -197,17 +197,17 @@ public class PalletInitJob extends IJobHandler {
 		// 如果商家不在《使用导入商品托数的商家》, 更新计费来源是系统, 同时使用系统托数计费
 		// 如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
 		double num = 0d;
-		if (cusNames.contains(entity.getCustomerId())) {
-			entity.setChargeSource("import");
-		} else {
+		if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())) {
 			entity.setChargeSource("system");
-		}
+		}else {
+		    entity.setChargeSource("import");
+        }
 		// 调整托数优先级最高
 		if (DoubleUtil.isBlank(entity.getAdjustPalletNum())) {
-			if (cusNames.contains(entity.getCustomerId())) {
-				num = entity.getPalletNum();
-			} else {
+			if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())) {
 				num = entity.getSysPalletNum();
+			} else {
+			    num = entity.getPalletNum();
 			}
 		} else {
 			num = entity.getAdjustPalletNum();

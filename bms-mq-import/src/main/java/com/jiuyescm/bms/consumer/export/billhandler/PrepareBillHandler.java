@@ -377,7 +377,7 @@ public class PrepareBillHandler {
         headMapDict.put("shopName", "店铺名称");
         headMapDict.put("orderNo", "九曳订单号");
         headMapDict.put("externalNo", "商家订单号");
-        headMapDict.put("waybillNo", "转寄后运单号");
+        headMapDict.put("waybillNo", "运单号");
         headMapDict.put("createTime", "运单生成时间");
 //        headMapDict.put("zexpressNum", "转寄后运单号");
         headMapDict.put("totalWeight", "运单重量");
@@ -2087,9 +2087,10 @@ public class PrepareBillHandler {
         map.put("receiveCityId", "收件人市");
         map.put("receiveDetailAddress", "收件人地址");
         map.put("packPlanNo", "包材方案编号");
+        map.put("packGroupNo", "包材组编号");
         map.put("packPlanName", "包材方案名称");
         map.put("packPlanCost", "包材方案金额");
-
+        
         // 按序号获取systemCode表中的类别并排序
         Map<String, Object> param = new HashMap<>();
         param.put("typeCode", "PACKMAGERIAL_SORT");
@@ -2260,6 +2261,7 @@ public class PrepareBillHandler {
                         materialEntity.getReceiveDetailAddress());
                 //新增标准包装方案字段
                 dataItem.put("packPlanNo", materialEntity.getPackPlanNo());
+                dataItem.put("packGroupNo", materialEntity.getPackGroupNo());
                 dataItem.put("packPlanName", materialEntity.getPackPlanName());
                 dataItem.put("packPlanCost", materialEntity.getPackPlanCost());
 

@@ -164,12 +164,14 @@ waybill_no_import, waybill_no_package, status, descrip, customer_id, customer_na
     </insert>
     
     <!-- 查询需要作废 -->
-    <select id="queryNeedCancel" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity">
-    	select a.waybill_no,a.waybill_no_import,a.waybill_no_package,a.customer_id,b.contract_attr as contractAttr from biz_outstock_packmaterial_cancel a
+    <select id="queryNeedCancel" parameterType="java.util.Map"
+    	resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity">
+    	select a.waybill_no as waybillNo,IFNULL(a.waybill_no_import,'') as waybillNoImport,
+    	IFNULL(a.waybill_no_package,'') as waybillNoPackage,a.customer_id,b.contract_attr as contractAttr from biz_outstock_packmaterial_cancel a
 		LEFT JOIN pub_customer b on a.customer_id=b.customer_id and b.del_flag='0'
 		WHERE 1=1
 		and a.`status`='BEGIN'
-		and a.waybill_no_import=a.waybill_no_package
+		limit #{batchNum}
     </select>
     
     <!-- 更新 -->
