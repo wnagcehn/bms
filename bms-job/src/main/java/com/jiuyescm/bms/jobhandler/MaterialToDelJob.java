@@ -26,6 +26,7 @@ import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialRepository;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialCancelService;
+import com.jiuyescm.bms.common.JobParameterHandler;
 import com.jiuyescm.bms.receivable.storage.service.IBizDispatchPackageService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -65,7 +66,7 @@ public class MaterialToDelJob extends IJobHandler {
     private ReturnT<String> calcJob(String[] params) {
         StopWatch sw = new StopWatch();
         sw.start();
-        
+
         XxlJobLogger.log("从cancel表获取 状态为初始&&导入运单号=包材组运单号 的数据");
         //1.从cancel表捞取 状态=BEGIN && 导入运单号=包材组运单号
         List<BizOutstockPackmaterialCancelEntity> cancelList = bizOutstockPackmaterialCancelService.queryNeedCancel();

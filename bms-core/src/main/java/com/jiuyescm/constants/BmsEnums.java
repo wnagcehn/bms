@@ -367,5 +367,75 @@ public class BmsEnums {
             return null;
         }   
     }
+    
+    /**
+     * 异常计算状态
+     * 
+     */
+    public enum errorCalcuStatus{
+        All("", "全部"),
+        Sys_Error("2", "系统错误"),
+        Contract_Miss("3", "合同不存在"),
+        Quote_Miss("4", "报价缺失"),
+        No_Exe("5","不计算"),
+        Other("10", "其他"),
+        Quote_More("6", "多个报价"),
+        Retry("99","待重算");
+        
+        private String code;
+        private String desc;
+        private errorCalcuStatus(String code, String desc){
+            this.code = code;
+            this.desc = desc;
+        }
+        
+        public String getCode(){
+            return code;
+        }
+        
+        public String getDesc(){
+            return desc;
+        }
+        
+        private static Map<String,String> mapKey =new LinkedHashMap<String,String>();
+        private static Map<String,String> mapValue =new LinkedHashMap<String,String>();
+        static{
+            mapKey.put(All.getCode(), All.getDesc());
+            mapKey.put(Sys_Error.getCode(), Sys_Error.getDesc());
+            mapKey.put(Contract_Miss.getCode(),Contract_Miss.getDesc());
+            mapKey.put(Quote_Miss.getCode(),Quote_Miss.getDesc());
+            mapKey.put(No_Exe.getCode(),No_Exe.getDesc());
+            mapKey.put(Other.getCode(), Other.getDesc());
+            mapKey.put(Retry.getCode(), Retry.getDesc());
+            mapValue.put(All.getCode(), All.getDesc());
+            mapValue.put(Sys_Error.getCode(), Sys_Error.getDesc());
+            mapValue.put(Contract_Miss.getCode(),Contract_Miss.getDesc());
+            mapValue.put(Quote_Miss.getCode(),Quote_Miss.getDesc());
+            mapValue.put(No_Exe.getCode(),No_Exe.getDesc());
+            mapValue.put(Other.getCode(), Other.getDesc());
+            mapValue.put(Retry.getCode(), Retry.getDesc());
+        }
+        public static Map<String,String> getMap(){
+            return mapKey;
+        }
+        
+        public static String getDesc(String code)
+        {
+            if (mapKey.containsKey(code))
+            {
+                return mapKey.get(code);
+            }
+            return null;
+        }
+        
+        public static String getCode(String desc)
+        {
+            if (mapValue.containsKey(desc))
+            {
+                return mapValue.get(desc);
+            }
+            return null;
+        }   
+    }
 	
 }

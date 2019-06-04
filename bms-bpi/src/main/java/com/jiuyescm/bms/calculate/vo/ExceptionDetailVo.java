@@ -3,13 +3,20 @@
  */
 package com.jiuyescm.bms.calculate.vo;
 
+import com.jiuyescm.cfm.domain.IEntity;
+
 /**
  * <功能描述>
  * 
  * @author caojianwei
  * @date 2019年6月3日 下午4:21:48
  */
-public class ExceptionDetailVo {
+public class ExceptionDetailVo implements IEntity{
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8426100318476419706L;
     /**
      * 商家ID
 

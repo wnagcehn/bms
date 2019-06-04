@@ -106,25 +106,40 @@ public class BmsAsynCalcuTaskController {
 	    if (null == taskVo) {
 	        throw new BizException("参数不能为空，请选择一条数据！");
         }
-	    Integer creMonth = taskVo.getCreMonth();
-	    String startTime = creMonth.toString().substring(0, 4) + "-" + creMonth.toString().substring(4, 6) + "-" + "01";
-	    String endTime = DateUtil.getLastDay(startTime);
-	    
-	    //各科目参数组装
-	    Map<String, Object> cond = new HashMap<String, Object>();
-	    cond.put("customerId", taskVo.getCustomerId());
-	    cond.put("customerid", taskVo.getCustomerId());
-	    cond.put("merchantId", taskVo.getCustomerId());
-	    cond.put("createTime", Timestamp.valueOf(startTime + " 00:00:00"));
-	    cond.put("createEndTime", Timestamp.valueOf(endTime + " 23:59:59"));
-	    cond.put("creTime", Timestamp.valueOf(startTime + " 00:00:00"));
-	    cond.put("creEndTime", Timestamp.valueOf(endTime + " 23:59:59"));
-	    cond.put("startTime", Timestamp.valueOf(startTime + " 00:00:00"));
-	    cond.put("endTime", Timestamp.valueOf(endTime + " 23:59:59"));
-	    cond.put("isCalculate", "99");
+	    Integer creMonth = 0;
+	    String startTime = "";
+	    String endTime = "";
+	    Map<String, Object> cond = null;
+	    try {
+	        creMonth = taskVo.getCreMonth();
+	        startTime = creMonth.toString().substring(0, 4) + "-" + creMonth.toString().substring(4, 6) + "-" + "01";
+	        endTime = DateUtil.getLastDay(startTime);
+	        //各科目参数组装
+	        cond = new HashMap<String, Object>();
+	        cond.put("customerId", taskVo.getCustomerId());
+	        cond.put("customerid", taskVo.getCustomerId());
+	        cond.put("merchantId", taskVo.getCustomerId());
+	        cond.put("createTime", Timestamp.valueOf(startTime + " 00:00:00"));
+	        cond.put("createEndTime", Timestamp.valueOf(endTime + " 23:59:59"));
+	        cond.put("creTime", Timestamp.valueOf(startTime + " 00:00:00"));
+	        cond.put("creEndTime", Timestamp.valueOf(endTime + " 23:59:59"));
+	        cond.put("startTime", Timestamp.valueOf(startTime + " 00:00:00"));
+	        cond.put("endTime", Timestamp.valueOf(endTime + " 23:59:59"));
+	        cond.put("isCalculate", "99");
+        } catch (Exception e) {
+            logger.error("参数组装异常：", e);
+        }
+    
 	    //重算所有科目
 	    logger.info("开始重算所有科目！");
-	    String result = bmsAsynCalcuTaskService.reCalculate(cond);
+	    String result = "";
+	    try {
+	        result = bmsAsynCalcuTaskService.reCalculate(cond);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result = e.getMessage();
+        }
+	    
 	    if (!"ok".equals(result)) {
 	        logger.info(result);
             return result;
