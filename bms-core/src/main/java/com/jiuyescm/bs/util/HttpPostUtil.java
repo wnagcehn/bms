@@ -11,6 +11,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+
 public class HttpPostUtil {
 
 	private static final int TIMEOUT = 60000;
@@ -150,4 +157,27 @@ public class HttpPostUtil {
 		
 		return paramsString.toString();
 	}
+	
+	public static String post(String url,String json,Map<String,String> header) throws Exception{
+        
+        String returnData="";
+        try{
+            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpPost httpPost = new HttpPost(url);
+            StringEntity requestEntity = new StringEntity(json,"utf-8");
+            requestEntity.setContentEncoding("UTF-8"); 
+            httpPost.setHeader("Content-type", "application/json");
+            if(header!=null){
+                for(Map.Entry<String, String> entry:header.entrySet()){
+                    httpPost.setHeader(entry.getKey(),entry.getValue());
+                }
+            }
+            httpPost.setEntity(requestEntity);
+            returnData = httpClient.execute(httpPost,responseHandler); //调接口获取返回值时，必须用此方
+            return returnData;
+        }catch (Exception e) {
+            throw e;
+        }
+    }
 }
