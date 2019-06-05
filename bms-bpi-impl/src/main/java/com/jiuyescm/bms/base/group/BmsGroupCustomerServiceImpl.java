@@ -36,13 +36,21 @@ public class BmsGroupCustomerServiceImpl implements IBmsGroupCustomerService {
 
 	@Autowired
 	private IBmsGroupCustomerRepository bmsGroupCustomerRepository;
+	@Autowired
 	private IBizAddFeeRepository bizAddFeeRepositoryImpl;//增值
+	@Autowired
 	private IBizDispatchBillRepository bizDispatchBillRepositoryImp;//配送
+	@Autowired
 	private IBmsBizInstockInfoRepository bizInstockInfoRepositoryImpl;//入库
+	@Autowired
 	private IBizOutstockMasterRepository bizOutstockMasterRepositoryImpl;//出库
-	private IBizProductStorageRepository bizProductStorageRepositoryImpl;//商品存储费按件
+	@Autowired
+	private IBizProductStorageRepository bizProductStorageRepositoryImpl;//商品存储费按件	
+	@Autowired
 	private IBizPalletInfoRepository bizPalletInfoRepositoryImpl;//托数
+	@Autowired
 	private IBizOutstockPackmaterialRepository bizOutstockPackmaterialRepositoryImpl;//耗材出库明细
+	@Autowired
 	private IBizDispatchPackageRepository bizDispatchPackageRepositoryImpl;//标准包装方案
 	
 	@Override

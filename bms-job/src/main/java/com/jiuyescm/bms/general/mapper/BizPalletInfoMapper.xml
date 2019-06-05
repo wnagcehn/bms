@@ -254,6 +254,7 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 			<if test="calculateTime != null" >calculate_time=#{calculateTime,jdbcType=TIMESTAMP},</if>
 			<if test="chargeSource != null" >charge_source=#{chargeSource,jdbcType=VARCHAR},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 		</set>
         where id=#{id}
     </update>

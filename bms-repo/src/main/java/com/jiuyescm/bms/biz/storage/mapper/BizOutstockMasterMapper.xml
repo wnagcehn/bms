@@ -541,7 +541,7 @@
     <update id="restoreCustomerBiz" parameterType="java.util.Map">
 	    update biz_outstock_master
 		set del_flag='0',is_calculated='0'
-		where del_flag='4' and a.create_time>=#{beginTime} and  <![CDATA[a.create_time<#{endTime}]]>
+		where del_flag='4' and create_time>=#{beginTime} and  <![CDATA[create_time<#{endTime}]]>
 		and customerid=#{customerId}
     </update>
 </mapper>

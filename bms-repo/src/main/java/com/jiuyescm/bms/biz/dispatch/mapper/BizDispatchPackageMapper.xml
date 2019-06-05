@@ -371,12 +371,17 @@ waybill_no, outstock_no, warehouse_code, warehouse_name, customerid, customer_na
       update biz_dispatch_package a 
       left JOIN fees_receive_storage b on a.fees_no=b.fees_no
       set a.del_flag='4',b.del_flag='1'
-      where a.del_flag='0' and b.del_flag='0' and a.customerid=#{customerId} and a.create_time>=#{beginTime} and  <![CDATA[a.create_time<#{endTime}]]>   
+      where a.del_flag='0' and b.del_flag='0' and a.cre_time>=#{beginTime} and  <![CDATA[a.cre_time<#{endTime}]]>
+      and a.customerid in
+      <foreach collection="customerList" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+         
     </update>
     
     <update id="restoreCustomerBiz" parameterType="java.util.Map">
       update biz_dispatch_package
       set del_flag='0',is_calculated='0'
-      where del_flag='4' and a.customerid=#{customerId} and a.create_time>=#{beginTime} and  <![CDATA[a.create_time<#{endTime}]]>    
+      where del_flag='4' and customerid=#{customerId} and cre_time>=#{beginTime} and  <![CDATA[cre_time<#{endTime}]]>    
     </update>
 </mapper>

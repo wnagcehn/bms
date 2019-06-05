@@ -73,6 +73,8 @@ public class AddFeeInitJob extends IJobHandler{
 			map.put("num", num);
 		}
 		
+		initConf();
+		
 		//查询所有状态为0的业务数据
 		map.put("isCalculated", "0");	
 		Map<String, Object> taskVoMap = new HashMap<>();	
