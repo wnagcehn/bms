@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author caojianwei
  * @date 2019年6月3日 下午5:42:16
  */
-@Component
+@Component("druidConfig")
 public class DruidConfig {
 
     private String url;

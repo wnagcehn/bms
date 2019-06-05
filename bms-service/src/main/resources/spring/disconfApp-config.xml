@@ -17,7 +17,7 @@
 	</bean>
 	
 	<!-- 使用disconf必须添加以下配置 -->
-	<bean id="DruidConfig" class="com.jiuyescm.bms.appconfig.DruidConfig" >
+	<bean id="druidConfig" class="com.jiuyescm.bms.appconfig.DruidConfig" >
 		<!--九曳租户ID -->
 		<property name="url" value="${druid.exception.url}" />
 	</bean>

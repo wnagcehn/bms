@@ -612,48 +612,43 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 	/**
 	 * 重算商家在某个月份下所有科目的费用
 	 */
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor={BizException.class})
     @Override
     public String reCalculate(Map<String, Object> cond) {
-	    String msg = "";
         //耗材重算
         if (bizOutstockPackmaterialRepository.reCalculate(cond) == 0) {
-            msg += "托数重算异常!";
+            throw new BizException("托数重算异常!");
         }
         //出库重算
         if (bizOutstockMasterRepository.reCalculate(cond) == 0) {
-            msg += "出库单重算异常！";
+            throw new BizException("出库单重算异常！");
         }
         //配送重算
         if (bizDispatchBillRepository.reCalculate(cond) == 0) {
-            msg += "配送费重算异常！";
+            throw new BizException("配送费重算异常！");
         }
         //标准包装方案重算
         if (bizDispatchPackageRepository.reCalculate(cond) == 0) {
-            msg += "标准包装方案重算异常！";
+            throw new BizException("标准包装方案重算异常！");
         }
         //入库重算
         if (bmsBizInstockInfoRepository.reCalculate(cond) == 0) {
-            msg += "入库单重算异常！";
+            throw new BizException("入库单重算异常！");
         }
         //商品按件重算
         if (bizProductStorageRepository.reCalculateForAll(cond) == 0) {
-            msg += "商品按件重算异常！";
+            throw new BizException("商品按件重算异常！");
         }
         //增值重算
         if (bizAddFeeRepository.retryCalcu(cond) == 0) {
-            msg += "增值费重算异常！";
+            throw new BizException("增值费重算异常！");
         }
         //托数重算
         if (bizPalletInfoRepository.reCalculate(cond) == 0) {
-            msg += "托数重算异常！";
+            throw new BizException("托数重算异常！");
         }
         
-        if ("".equals(msg)) {
-            return "ok";
-        }else {
-            return msg;
-        }
+        return "ok";
     }
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)

@@ -3,21 +3,31 @@
  */
 package com.jiuyescm.bms.calculate.vo;
 
+import com.jiuyescm.bms.excel.annotation.ExcelAnnotation.ExcelField;
+import com.jiuyescm.cfm.domain.IEntity;
+
 /**
  * <功能描述>
  * 
  * @author caojianwei
  * @date 2019年6月3日 下午4:21:48
  */
-public class ExceptionDetailVo {
+public class ExceptionDetailVo implements IEntity{
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8426100318476419706L;
     /**
      * 商家ID
 
      */
+    @ExcelField(title = "商家ID", num = 1)
     private String customerId;
     /**
      * 商家名称
      */
+    @ExcelField(title = "商家名称", num = 2)
     private String customerName;
     /**
      * 主商家id
@@ -26,10 +36,12 @@ public class ExceptionDetailVo {
     /**
      * 主商家名称
      */
+    @ExcelField(title = "主商家名称", num = 3)
     private String mkInvoiceName;
     /**
      * 合同归属
      */
+    @ExcelField(title = "合同归属", num = 4)
     private String contractAttr;
     /**
      * 科目编码
@@ -38,10 +50,12 @@ public class ExceptionDetailVo {
     /**
      * 科目名称
      */
+    @ExcelField(title = "费用科目", num = 5)
     private String subjectName;
     /**
      * 计费单位
      */
+    @ExcelField(title = "计费单位", num = 6)
     private String chargeUnit;
     /**
      * 仓库编码
@@ -50,18 +64,22 @@ public class ExceptionDetailVo {
     /**
      * 仓库名称
      */
+    @ExcelField(title = "仓库", num = 7)
     private String warehouseName;
     /**
      * 业务时间
      */
+    @ExcelField(title = "业务时间", num = 8)
     private String createTime;
     /**
      * 出库单号
      */
+    @ExcelField(title = "九曳订单号", num = 9)
     private String outstockNo;
     /**
      * 运单号
      */
+    @ExcelField(title = "运单号", num = 10)
     private String waybillNo;
     /**
      * 服务产品类型编码
@@ -70,30 +88,37 @@ public class ExceptionDetailVo {
     /**
      * 服务产品类型名称
      */
+    @ExcelField(title = "物流产品类型", num = 11)
     private String serviceTypeName;
     /**
      * 月结账号
      */
+    @ExcelField(title = "月结账号", num = 12)
     private String monthFeeCount;
     /**
      * 发件省
      */
+    @ExcelField(title = "发件省", num = 13)
     private String sendProvince;
     /**
      * 发件市
      */
+    @ExcelField(title = "发件市", num = 14)
     private String sendCity;
     /**
      * 收件省
      */
+    @ExcelField(title = "收件省", num = 15)
     private String receiveProvince;
     /**
      * 收件市
      */
+    @ExcelField(title = "收件市", num = 16)
     private String receiveCity;
     /**
      * 收件区
      */
+    @ExcelField(title = "收件区", num = 17)
     private String receiveDistrict;
     /**
      * 物流商ID
@@ -102,6 +127,7 @@ public class ExceptionDetailVo {
     /**
      * 物流商名称
      */
+    @ExcelField(title = "实际物流商", num = 18)
     private String carrierName;
     /**
      * 宅配商ID
@@ -110,18 +136,22 @@ public class ExceptionDetailVo {
     /**
      * 宅配商名称
      */
+    @ExcelField(title = "宅配商", num = 19)
     private String deliverName;
     /**
      * 耗材编码
      */
+    @ExcelField(title = "耗材条码", num = 20)
     private String consumerMaterialCode;
     /**
      * 耗材名称
      */
+    @ExcelField(title = "耗材名称", num = 21)
     private String consumerMaterialName;
     /**
      * 包材组编号
      */
+    @ExcelField(title = "包材组编号", num = 22)
     private String packGroupNo;
     /**
      * 计算状态编码
@@ -130,10 +160,12 @@ public class ExceptionDetailVo {
     /**
      * 计算状态
      */
+    @ExcelField(title = "计算状态", num = 23)
     private String calcuStatus;
     /**
      * 计算描述
      */
+    @ExcelField(title = "计算描述", num = 24)
     private String calcuMsg;
     /**
      * 每页显示的数据条数

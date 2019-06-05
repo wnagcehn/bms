@@ -1,15 +1,16 @@
 package com.jiuyescm.bms.biz.storage.repository.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialCancelRepository;
+import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 
 /**
  * ..RepositoryImpl
@@ -96,9 +97,7 @@ public class BizOutstockPackmaterialCancelRepositoryImpl extends MyBatisDao<BizO
      * 查询需要作废的
      */
     @Override
-    public List<BizOutstockPackmaterialCancelEntity> queryNeedCancel(Integer batchNum){
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("batchNum", batchNum);
+    public List<BizOutstockPackmaterialCancelEntity> queryNeedCancel(Map<String, Object> map){
         return selectList("com.jiuyescm.bms.biz.storage.BizOutstockPackmaterialCancelMapper.queryNeedCancel", map);
     }
 

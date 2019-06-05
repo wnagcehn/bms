@@ -16,6 +16,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.appconfig.DruidConfig;
+import com.jiuyescm.bms.appconfig.TenantConfig;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuExceptionService;
 import com.jiuyescm.bms.calculate.vo.ExceptionDetailVo;
 import com.jiuyescm.bs.util.HttpPostUtil;
@@ -30,8 +31,11 @@ import com.jiuyescm.exception.BizException;
 @Service("bmsCalcuExceptionService")
 public class BmsCalcuExceptionServiceImpl implements IBmsCalcuExceptionService {
 
-    @Autowired private Logger logger = LoggerFactory.getLogger(BmsCalcuExceptionServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(BmsCalcuExceptionServiceImpl.class);
+    
     @Autowired private DruidConfig druidConfig;
+    
+    @Autowired private TenantConfig tenantConfig;
     
     @Override
     public PageInfo<ExceptionDetailVo> query(Map<String, Object> condition, int pageNo, int pageSize) throws BizException {

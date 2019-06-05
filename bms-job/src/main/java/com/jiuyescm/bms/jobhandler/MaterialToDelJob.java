@@ -26,6 +26,7 @@ import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialCancelEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialRepository;
 import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialCancelService;
+import com.jiuyescm.bms.common.JobParameterHandler;
 import com.jiuyescm.bms.receivable.storage.service.IBizDispatchPackageService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -65,15 +66,34 @@ public class MaterialToDelJob extends IJobHandler {
     
     private ReturnT<String> calcJob(String[] params) {
         StopWatch sw = new StopWatch();
-        sw.start();
+
+        //获取定时任务参数
+        sw.start("获取定时任务参数");
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (params != null && params.length > 0) {
+            try {
+                map = JobParameterHandler.handler(params);// 处理定时任务参数
+            } catch (Exception e) {
+                sw.stop();
+                XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："
+                        + sw.getTotalTimeMillis() + "毫秒");
+                return ReturnT.FAIL;
+            }
+        } else {
+            // 未配置最多执行多少运单
+            map.put("num", batchNum);
+        }
+        printTime(sw);
         
-        XxlJobLogger.log("从cancel表获取 状态为初始&&导入运单号=包材组运单号 的数据");
+        sw.start("从cancel表获取 状态为初始的数据");
         //1.从cancel表捞取 状态=BEGIN && 导入运单号=包材组运单号
-        List<BizOutstockPackmaterialCancelEntity> cancelList = bizOutstockPackmaterialCancelService.queryNeedCancel(batchNum);
+        List<BizOutstockPackmaterialCancelEntity> cancelList = bizOutstockPackmaterialCancelService.queryNeedCancel(map);
+        printTime(sw);
         if (CollectionUtils.isEmpty(cancelList)) {
             return printLog("没有需要作废的运单", sw);
         }
         
+        sw.start("组装需要作废的和不需要作废的数据");
         //2.判断合同归属是"BMS"还是"合同在线"，"BMS"的直接变成'不作废'，"合同在线"继续往下执行
         List<BizOutstockPackmaterialCancelEntity> bmsList = new ArrayList<BizOutstockPackmaterialCancelEntity>();
         List<BizOutstockPackmaterialCancelEntity> contractList = new ArrayList<BizOutstockPackmaterialCancelEntity>(); 
@@ -82,6 +102,7 @@ public class MaterialToDelJob extends IJobHandler {
         List<BizOutstockPackmaterialEntity> delToNoDels = new ArrayList<BizOutstockPackmaterialEntity>();
         //状态为"初始"，导入运单号和拉取运单号不相等，直接改为不作废
         List<BizOutstockPackmaterialCancelEntity> updateNoDelList = new ArrayList<BizOutstockPackmaterialCancelEntity>(); 
+        
         for (BizOutstockPackmaterialCancelEntity cancelEntity : cancelList) {
             if (!cancelEntity.getWaybillNoImport().equals(cancelEntity.getWaybillNoPackage())) {
                 cancelEntity.setStatus(NODEL);
@@ -102,14 +123,16 @@ public class MaterialToDelJob extends IJobHandler {
                 }
             }    
         }
-            
+        printTime(sw);
+        
         //a.如果状态为"初始"，导入运单号和拉取运单号不相等，直接改为不作废（后面导入或者拉取会将状态修改为"初始"）
         //b.合同归属为"BMS"的状态也更新为不作废
-        XxlJobLogger.log("统计合同归属为'BMS'的和不需要作废的，并将状态更新为'不作废'");
+        sw.start("统计合同归属为'BMS'的和不需要作废的，批量更新状态为'不作废'");
         updateNoDelList.addAll(bmsList);
         if (CollectionUtils.isNotEmpty(updateNoDelList)) {
             bizOutstockPackmaterialCancelService.updateBatchStatus(updateNoDelList);
         }
+        printTime(sw);
 
         //合同归属为"合同在线"的数据一条都没有，就没有需要作废的
         if (CollectionUtils.isEmpty(contractWaybillNoList)) {
@@ -117,9 +140,11 @@ public class MaterialToDelJob extends IJobHandler {
         }
         
         //通过商家归属为'合同在线'的运单号，查出对应耗材
+        sw.start("通过商家归属为'合同在线'的运单号，查出对应耗材");
         List<BizOutstockPackmaterialEntity> materialLists = bizOutstockPackmaterialRepository.queryByWaybillNo(contractWaybillNoList);
-
-        XxlJobLogger.log("从配置表中查出所有的配置进行组装............");
+        printTime(sw);
+        
+        sw.start("从配置表中查出所有的配置进行组装");
         //3.从配置表中查出所有的未作废的配置，开始匹配
         Map<String, Object> con = new HashMap<String, Object>();
         con.put("delFlag", "0");
@@ -139,8 +164,9 @@ public class MaterialToDelJob extends IJobHandler {
         if (CollectionUtils.isEmpty(packDickList)) {
             return printLog("配置表无配置数据", sw);
         }
-        XxlJobLogger.log("配置表组装完成,开始进行匹配打分............");
+        printTime(sw);
         
+        sw.start("对运单进行匹配打分");
         //4.通过捞的运单号去标准包装方案表中查, 然后开始进行匹配打分
         List<BizDispatchPackageEntity> disPacList = bizDispatchPackageService.queryByWaybillNo(contractWaybillNoList);
         //用来存储运单号和耗材的对应关系，用来作废
@@ -170,16 +196,16 @@ public class MaterialToDelJob extends IJobHandler {
             }
             
         }
-        XxlJobLogger.log("匹配打分完成！");
+        printTime(sw);
         
         //5.根据运单号作废使用标准包装方案的耗材
-        XxlJobLogger.log("开始作废耗材，修改作废表状态.........");
+        sw.start("作废耗材，作废费用，修改作废表状态...");
         try {
             bizOutstockPackmaterialCancelService.updateBatchStatusAndDelMaterial(contractList, delMaterialList);
         } catch (Exception e) {
             XxlJobLogger.log(e.getMessage());
-        }    
-        XxlJobLogger.log("作废耗材&修改状态完成！");
+        }
+        printTime(sw);
         
         //组装需要恢复成未作废状态的耗材（耗材不在需要作废耗材的里面并且之前作废状态是3）
         for (BizOutstockPackmaterialEntity material : materialLists) {
@@ -198,16 +224,27 @@ public class MaterialToDelJob extends IJobHandler {
             
         //将需要恢复成未作废状态的耗材的业务数据计算状态更新成'0'，然后走Job进行初始化重算
         if (CollectionUtils.isNotEmpty(delToNoDels)) {
+            sw.start("部分耗材恢复成未作废状态");
             bizOutstockPackmaterialRepository.deleteOrRevertMaterialStatus(delToNoDels);
+            printTime(sw);
         }
         
-//        if (cancelList == null || cancelList.size() == 0) {
-//            return printLog("任务完成", sw);
-//        }else {
-//            return calcJob(params);
-//        }
         return printLog("任务完成", sw);
 
+    }
+
+    /**
+     * 打印耗时
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月5日 上午10:56:47
+     *
+     * @param sw
+     */
+    private void printTime(StopWatch sw) {
+        sw.stop();
+        XxlJobLogger.log(sw.getLastTaskName() + ", 耗时：" + sw.getLastTaskTimeMillis() + "毫秒");
     }
 
     /**
@@ -230,35 +267,30 @@ public class MaterialToDelJob extends IJobHandler {
             if (bizEntity.getSeason().equals(dicEntity.getSeason())) {
                 level += 1;
             }else if (StringUtils.isNotBlank(dicEntity.getSeason()) && !bizEntity.getSeason().equals(dicEntity.getSeason())) {
-                level = -1;
                 continue;
             }
             //保温时效
             if (bizEntity.getHoldingTime().equals(dicEntity.getHoldingTime())) {
                 level += 1;
             }else if (StringUtils.isNotBlank(dicEntity.getHoldingTime()) && !bizEntity.getHoldingTime().equals(dicEntity.getHoldingTime())) {
-                level = -1;
                 continue;
             }
             //配送温区
             if (bizEntity.getTransportTemperatureType().equals(dicEntity.getTransportTemperatureType())) {
                 level += 1;
             }else if (StringUtils.isNotBlank(dicEntity.getTransportTemperatureType()) && !bizEntity.getTransportTemperatureType().equals(dicEntity.getTransportTemperatureType())) {
-                level = -1;
                 continue;
             }
             //运输方式
             if (bizEntity.getTransportType().equals(dicEntity.getTransportType())) {
                 level += 1;
             }else if (StringUtils.isNotBlank(dicEntity.getTransportType()) && !bizEntity.getTransportType().equals(dicEntity.getTransportType())) {
-                level = -1;
                 continue;
             }
             //操作分类
             if (bizEntity.getPackOperateType().equals(dicEntity.getPackOperateType())) {
                 level += 1;
             }else if (StringUtils.isNotBlank(dicEntity.getPackOperateType()) && !bizEntity.getPackOperateType().equals(dicEntity.getPackOperateType())) {
-                level = -1;
                 continue;
             }
             
