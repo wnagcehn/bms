@@ -48,7 +48,7 @@ public interface IBizOutstockPackmaterialCancelService {
      *
      * @return
      */
-    List<BizOutstockPackmaterialCancelEntity> queryNeedCancel(Integer batchNum);
+    List<BizOutstockPackmaterialCancelEntity> queryNeedCancel(Map<String, Object> map);
 
     /**
      * 批量更新状态
