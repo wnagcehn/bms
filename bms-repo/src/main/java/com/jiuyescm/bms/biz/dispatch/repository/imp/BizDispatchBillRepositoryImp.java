@@ -228,4 +228,16 @@ public class BizDispatchBillRepositoryImp extends MyBatisDao implements IBizDisp
         List<BizDispatchBillEntity> list = this.selectList("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.queryBizByCusid", condition);
         return list;
     }
+
+    @Override
+    public int cancalCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.cancalCustomerBiz", map);
+    }
+
+    @Override
+    public int restoreCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.dispatch.mapper.BizDispatchBillMapper.restoreCustomerBiz", map);
+    }
 }

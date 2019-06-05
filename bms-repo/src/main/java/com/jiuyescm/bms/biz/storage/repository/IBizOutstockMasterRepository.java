@@ -65,4 +65,7 @@ public interface IBizOutstockMasterRepository {
 	 */
 	List<BmsAsynCalcuTaskEntity> queryOutstockTask(Map<String, Object> condition);
 
+    int cancalCustomerBiz(Map<String,Object> map);
+	 
+	int restoreCustomerBiz(Map<String,Object> map);
 }

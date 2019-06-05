@@ -69,5 +69,8 @@ public interface IBmsBizInstockInfoRepository {
 	 * @return
 	 */
     int reCalculate(Map<String, Object> param);
-
+    
+    int cancalCustomerBiz(Map<String,Object> map);
+    
+    int restoreCustomerBiz(Map<String,Object> map);
 }

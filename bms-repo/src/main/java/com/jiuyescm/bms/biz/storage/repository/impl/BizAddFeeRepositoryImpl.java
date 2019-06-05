@@ -176,4 +176,18 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao implements IBizAddFeeRep
     public int feesave(List<FeesReceiveStorageEntity> feeList) {
         return insertBatch("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.feesave",feeList);
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public int cancalCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.cancalCustomerBiz", map);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public int restoreCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.restoreCustomerBiz", map);
+    }
 }

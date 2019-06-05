@@ -363,6 +363,20 @@ waybill_no, outstock_no, warehouse_code, warehouse_name, customerid, customer_na
     	season, pack_box_type as packBoxType, pack_group_no as packGroupNo, pack_plan_no as packPlanNo, pack_plan_name as packPlanName, 
     	fees_no as feesNo, is_calculated as isCalculated, del_flag as delFlag, write_time as writeTime, calculate_time as calculateTime, remark
     	from biz_dispatch_package
-    	where 1=1 and customerid = #{customerid} limit 1   
+    	where 1=1 and customerid = #{customerid} and cre_time>=#{startTime} and <![CDATA[cre_time<#{endTime}]]> limit 1   
     </select>
+    
+    
+    <update id="cancalCustomerBiz" parameterType="java.util.Map">
+      update biz_dispatch_package a 
+      left JOIN fees_receive_storage b on a.fees_no=b.fees_no
+      set a.del_flag='4',b.del_flag='1'
+      where a.del_flag='0' and b.del_flag='0' and a.customerid=#{customerId} and a.create_time>=#{beginTime} and  <![CDATA[a.create_time<#{endTime}]]>   
+    </update>
+    
+    <update id="restoreCustomerBiz" parameterType="java.util.Map">
+      update biz_dispatch_package
+      set del_flag='0',is_calculated='0'
+      where del_flag='4' and a.customerid=#{customerId} and a.create_time>=#{beginTime} and  <![CDATA[a.create_time<#{endTime}]]>    
+    </update>
 </mapper>

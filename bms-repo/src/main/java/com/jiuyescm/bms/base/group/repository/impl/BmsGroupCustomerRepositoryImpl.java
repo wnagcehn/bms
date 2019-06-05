@@ -69,4 +69,12 @@ public class BmsGroupCustomerRepositoryImpl extends MyBatisDao<BmsGroupCustomerE
 		return session.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupCustomerMapper.queryCustomerByGroupId", groupId);
 	}
 
+    @Override
+    public List<String> queryCustomerByGroupCode(String groupCode) {
+        // TODO Auto-generated method stub
+        SqlSession session = getSqlSessionTemplate();
+        return session.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupCustomerMapper.queryCustomerByGroupCode", groupCode);
+    
+    }
+
 }

@@ -63,5 +63,8 @@ public interface IBizDispatchPackageRepository {
 
     BizDispatchPackageEntity queryOne(Map<String, Object> condition);
  
+    int cancalCustomerBiz(Map<String,Object> map);
+
+    int restoreCustomerBiz(Map<String,Object> map);
 
 }

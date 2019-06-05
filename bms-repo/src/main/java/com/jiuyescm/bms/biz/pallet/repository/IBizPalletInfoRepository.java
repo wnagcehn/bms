@@ -2,6 +2,7 @@ package com.jiuyescm.bms.biz.pallet.repository;
 
 import java.util.Map;
 import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
@@ -86,6 +87,7 @@ public interface IBizPalletInfoRepository {
 	 */
     int reCalculate(Map<String, Object> param);
 
-
-
+    int cancalCustomerBiz(Map<String,Object> map);
+    
+    int restoreCustomerBiz(Map<String,Object> map);
 }

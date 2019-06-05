@@ -332,4 +332,25 @@ cur_time, biz_type, warehouse_code, warehouse_name, customer_id, customer_name, 
 			GROUP BY p.customer_id,s.subject_code,DATE_FORMAT(p.create_time,'%Y%m')
     </select>
     
+    
+    <update id="cancalCustomerBiz" parameterType="java.util.Map">
+	    update biz_pallet_info a 
+	    left JOIN fees_receive_storage b on a.fees_no=b.fees_no
+	    set a.del_flag='4',b.del_flag='1'
+	    where a.del_flag='0' and b.del_flag='0'
+	    and a.create_time>=#{beginTime} and  <![CDATA[a.create_time<#{endTime}]]>
+	    and a.customer_id in
+		<foreach collection="customerList" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </update>
+    
+    <update id="restoreCustomerBiz" parameterType="java.util.Map">
+	    update biz_pallet_info
+	    set del_flag='0',is_calculated='0'
+	    where del_flag='4'
+	    and create_time>=#{beginTime} and  <![CDATA[create_time<#{endTime}]]>
+	    and customer_id=#{customerId}
+    </update>
+    
 </mapper>
