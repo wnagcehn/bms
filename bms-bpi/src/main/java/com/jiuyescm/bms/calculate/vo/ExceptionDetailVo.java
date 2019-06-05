@@ -98,27 +98,27 @@ public class ExceptionDetailVo implements IEntity{
     /**
      * 发件省
      */
-    @ExcelField(title = "发件省", num = 13)
+    @ExcelField(title = "发货省", num = 13)
     private String sendProvince;
     /**
      * 发件市
      */
-    @ExcelField(title = "发件市", num = 14)
+    @ExcelField(title = "发货市", num = 14)
     private String sendCity;
     /**
      * 收件省
      */
-    @ExcelField(title = "收件省", num = 15)
+    @ExcelField(title = "收货省", num = 15)
     private String receiveProvince;
     /**
      * 收件市
      */
-    @ExcelField(title = "收件市", num = 16)
+    @ExcelField(title = "收货市", num = 16)
     private String receiveCity;
     /**
      * 收件区
      */
-    @ExcelField(title = "收件区", num = 17)
+    @ExcelField(title = "收货区", num = 17)
     private String receiveDistrict;
     /**
      * 物流商ID
