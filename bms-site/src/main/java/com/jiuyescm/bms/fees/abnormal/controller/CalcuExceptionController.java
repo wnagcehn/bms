@@ -131,9 +131,12 @@ public class CalcuExceptionController {
             return "结束时间不能为空!";
         }
         
+        String today = "";
         //给结束日期加一天
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sd = new SimpleDateFormat("yyyyMMdd");
+            today = sd.format(new Date());
             Calendar c1 = Calendar.getInstance();
             Calendar c2 = Calendar.getInstance();
             c1.setTime((Date) param.get("startDate"));
@@ -151,7 +154,7 @@ public class CalcuExceptionController {
             entity.setStartTime(Timestamp.valueOf(param.get("startDate") + " 00:00:00"));
             entity.setEndTime(Timestamp.valueOf(param.get("endDate")+ " 23:59:59"));
             
-            String taskName = sequenceService.getBillNoOne("", param.get("startDate").toString(), "000");
+            String taskName = sequenceService.getBillNoOne(today, today, "000");
             entity.setTaskName(taskName);
             
             entity.setTaskType(FileTaskTypeEnum.Calcu_Error.getCode());

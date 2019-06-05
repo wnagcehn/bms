@@ -130,11 +130,11 @@
       </PropertyDef>
       <PropertyDef name="sendProvince">
         <Property/>
-        <Property name="label">发件省</Property>
+        <Property name="label">发货省</Property>
       </PropertyDef>
       <PropertyDef name="sendCity">
         <Property/>
-        <Property name="label">发件市</Property>
+        <Property name="label">发货市</Property>
       </PropertyDef>
       <PropertyDef name="receiveProvince">
         <Property/>
@@ -301,6 +301,10 @@
         <ClientEvent name="onClick">var data = view.get(&quot;#dsCalcuExceptionQuery.data&quot;).current;&#xD;
 var startDate = data.get(&quot;startDate&quot;).getFullYear() + &quot;-&quot; + data.get(&quot;startDate&quot;).getMonth();&#xD;
 var endDate = data.get(&quot;endDate&quot;).getFullYear() + &quot;-&quot; + data.get(&quot;endDate&quot;).getMonth();&#xD;
+if(data.get(&quot;startDate&quot;) > data.get(&quot;endDate&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;开始日期不能大于结束日期!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
 if(startDate != endDate){&#xD;
 	dorado.MessageBox.alert(&quot;请查询同一月份的数据!&quot;);&#xD;
 	return;&#xD;
@@ -316,12 +320,23 @@ if(startDate != endDate){&#xD;
       <Separator/>
       <ToolBarButton id="btnExport">
         <ClientEvent name="onClick">var data = view.get(&quot;#dsCalcuExceptionQuery.data&quot;).current;&#xD;
-view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,data).execute(&#xD;
-	function(result){&#xD;
-		dorado.MessageBox.alert(result);&#xD;
-	}&#xD;
-);&#xD;
-</ClientEvent>
+var startDate = data.get(&quot;startDate&quot;).getFullYear() + &quot;-&quot; + data.get(&quot;startDate&quot;).getMonth();&#xD;
+var endDate = data.get(&quot;endDate&quot;).getFullYear() + &quot;-&quot; + data.get(&quot;endDate&quot;).getMonth();&#xD;
+if(data.get(&quot;startDate&quot;) > data.get(&quot;endDate&quot;)){&#xD;
+	dorado.MessageBox.alert(&quot;开始日期不能大于结束日期!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+if(startDate != endDate){&#xD;
+	dorado.MessageBox.alert(&quot;请导出同一月份的数据!&quot;);&#xD;
+	return;&#xD;
+}else{&#xD;
+	var data = view.get(&quot;#dsCalcuExceptionQuery.data&quot;).current;&#xD;
+	view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,data).execute(&#xD;
+		function(result){&#xD;
+			dorado.MessageBox.alert(result);&#xD;
+		}&#xD;
+	);&#xD;
+}</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
       </ToolBarButton>
