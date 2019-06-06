@@ -74,10 +74,8 @@ public class MaterialToDelJob extends IJobHandler {
             return printLog("没有需要作废的运单", sw);
         }
         
-        //2.判断合同归属是"BMS"还是"合同在线"，"BMS"的直接变成'不作废'，"合同在线"继续往下执行
-        List<BizOutstockPackmaterialCancelEntity> bmsList = new ArrayList<BizOutstockPackmaterialCancelEntity>();
-        List<BizOutstockPackmaterialCancelEntity> contractList = new ArrayList<BizOutstockPackmaterialCancelEntity>(); 
-        List<String> contractWaybillNoList = new ArrayList<String>();
+        List<BizOutstockPackmaterialCancelEntity> delList = new ArrayList<BizOutstockPackmaterialCancelEntity>(); 
+        List<String> waybillNoList = new ArrayList<String>();
         //修改配置表（如：去掉一个耗材），通过配置表中作废的耗材变成未作废，触发重算
         List<BizOutstockPackmaterialEntity> delToNoDels = new ArrayList<BizOutstockPackmaterialEntity>();
         //状态为"初始"，导入运单号和拉取运单号不相等，直接改为不作废
@@ -88,36 +86,25 @@ public class MaterialToDelJob extends IJobHandler {
                 cancelEntity.setModTime(new Timestamp(System.currentTimeMillis()));
                 updateNoDelList.add(cancelEntity);
             }else {
-                if ("1".equals(cancelEntity.getContractAttr())) {
-                    cancelEntity.setDescrip("合同归属为BMS, 不作废");
-                    cancelEntity.setStatus(NODEL);
-                    cancelEntity.setModTime(new Timestamp(System.currentTimeMillis()));
-                    bmsList.add(cancelEntity);
-                }
-                if ("2".equals(cancelEntity.getContractAttr())) {
-                    cancelEntity.setStatus(DEL);
-                    cancelEntity.setModTime(new Timestamp(System.currentTimeMillis()));
-                    contractList.add(cancelEntity);
-                    contractWaybillNoList.add(cancelEntity.getWaybillNo());
-                }
+                cancelEntity.setStatus(DEL);
+                cancelEntity.setModTime(new Timestamp(System.currentTimeMillis()));
+                delList.add(cancelEntity);
+                waybillNoList.add(cancelEntity.getWaybillNo());
             }    
         }
             
-        //a.如果状态为"初始"，导入运单号和拉取运单号不相等，直接改为不作废（后面导入或者拉取会将状态修改为"初始"）
-        //b.合同归属为"BMS"的状态也更新为不作废
-        XxlJobLogger.log("统计合同归属为'BMS'的和不需要作废的，并将状态更新为'不作废'");
-        updateNoDelList.addAll(bmsList);
+        XxlJobLogger.log("统计不需要作废的，并将状态更新为'不作废'");
         if (CollectionUtils.isNotEmpty(updateNoDelList)) {
             bizOutstockPackmaterialCancelService.updateBatchStatus(updateNoDelList);
         }
 
-        //合同归属为"合同在线"的数据一条都没有，就没有需要作废的
-        if (CollectionUtils.isEmpty(contractWaybillNoList)) {
+        //没有需要作废的
+        if (CollectionUtils.isEmpty(waybillNoList)) {
             return printLog("没有需要作废的运单", sw);
         }
         
-        //通过商家归属为'合同在线'的运单号，查出对应耗材
-        List<BizOutstockPackmaterialEntity> materialLists = bizOutstockPackmaterialRepository.queryByWaybillNo(contractWaybillNoList);
+        //通过运单号，查出对应耗材
+        List<BizOutstockPackmaterialEntity> materialLists = bizOutstockPackmaterialRepository.queryByWaybillNo(waybillNoList);
 
         XxlJobLogger.log("从配置表中查出所有的配置进行组装............");
         //3.从配置表中查出所有的未作废的配置，开始匹配
@@ -142,7 +129,7 @@ public class MaterialToDelJob extends IJobHandler {
         XxlJobLogger.log("配置表组装完成,开始进行匹配打分............");
         
         //4.通过捞的运单号去标准包装方案表中查, 然后开始进行匹配打分
-        List<BizDispatchPackageEntity> disPacList = bizDispatchPackageService.queryByWaybillNo(contractWaybillNoList);
+        List<BizDispatchPackageEntity> disPacList = bizDispatchPackageService.queryByWaybillNo(waybillNoList);
         //用来存储运单号和耗材的对应关系，用来作废
         List<BizOutstockPackmaterialEntity> delMaterialList = new ArrayList<BizOutstockPackmaterialEntity>();
         for (BizDispatchPackageEntity bizEntity : disPacList) {
@@ -175,7 +162,7 @@ public class MaterialToDelJob extends IJobHandler {
         //5.根据运单号作废使用标准包装方案的耗材
         XxlJobLogger.log("开始作废耗材，修改作废表状态.........");
         try {
-            bizOutstockPackmaterialCancelService.updateBatchStatusAndDelMaterial(contractList, delMaterialList);
+            bizOutstockPackmaterialCancelService.updateBatchStatusAndDelMaterial(delList, delMaterialList);
         } catch (Exception e) {
             XxlJobLogger.log(e.getMessage());
         }    
