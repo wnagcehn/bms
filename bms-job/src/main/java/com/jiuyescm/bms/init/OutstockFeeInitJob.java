@@ -17,6 +17,7 @@ import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockMasterEntity;
 import com.jiuyescm.bms.common.JobParameterHandler;
@@ -45,6 +46,7 @@ public class OutstockFeeInitJob extends IJobHandler{
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired private IBmsGroupSubjectService bmsGroupSubjectService;
 	@Autowired private ISystemCodeService systemCodeService;
+    @Autowired private IBmsGroupCustomerService bmsGroupCustomerService;
 
 	
 	/**
@@ -52,6 +54,8 @@ public class OutstockFeeInitJob extends IJobHandler{
 	 */
 	public String[] subjects = null;
 	Map<String, String> temMap = null;
+    List<String> noCalculateList=null;
+
 	
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -107,6 +111,11 @@ public class OutstockFeeInitJob extends IJobHandler{
 			if (CollectionUtils.isNotEmpty(bizList)) {
 			    List<String> feesNos=new ArrayList<>();
 				for (BizOutstockMasterEntity entity : bizList) {
+				    //如果是不计费的商家，则直接更新业务计算状态为4
+                    if(noCalculateList.size()>0 && noCalculateList.contains(entity.getCustomerid())){
+                        entity.setDelFlag("4");
+                        continue;
+                    }
 				    if(StringUtils.isNotBlank(entity.getFeesNo())){
                         feesNos.add(entity.getFeesNo());
                     }
@@ -160,7 +169,9 @@ public class OutstockFeeInitJob extends IJobHandler{
 				temMap.put(systemCodeList.get(i).getCode(), systemCodeList.get(i).getCodeName());
 			}
 		}
-		
+		//不计算商家集合
+        noCalculateList=bmsGroupCustomerService.queryCustomerByGroupCode("no_calculate_customer");
+
 		
 	}
 	

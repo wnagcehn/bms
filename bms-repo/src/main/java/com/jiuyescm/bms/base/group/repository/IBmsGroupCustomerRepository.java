@@ -23,4 +23,6 @@ public interface IBmsGroupCustomerRepository {
 	int queryCustomerCountByGroupId(int groupId);
 
 	List<String> queryCustomerByGroupId(int groupId);
+	
+	List<String> queryCustomerByGroupCode(String groupCode);
 }

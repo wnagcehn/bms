@@ -52,8 +52,13 @@ public interface IBizProductStorageRepository {
 	 * @author wangchen870
 	 * @date 2019年5月29日 下午5:29:08
 	 *
-	 * @param param
+	 * @param param 
 	 * @return
 	 */
     int reCalculateForAll(Map<String, Object> param);
+    
+    int cancalCustomerBiz(Map<String,Object> map);
+    
+    int restoreCustomerBiz(Map<String,Object> map);
+
 }

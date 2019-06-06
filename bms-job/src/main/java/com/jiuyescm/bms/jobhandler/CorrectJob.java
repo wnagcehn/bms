@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.jobhandler;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,6 +17,7 @@ import javax.jms.Session;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -147,9 +149,25 @@ public class CorrectJob  extends IJobHandler{
 			if(CollectionUtils.isNotEmpty(customeridSet)){
 				List<BmsCorrectAsynTaskEntity> list = new ArrayList<>();
 				taskStartDate=taskStartDate.substring(0,7);
+				String creMonth=taskStartDate;
 				taskStartDate=taskStartDate.replace("-","");
 				Date startDate = DateUtil.getFirstDayOfMonth(1);
 				Date endDate = DateUtil.getFirstDayOfMonth(0);
+				
+				Timestamp beginTime1=null;
+				Timestamp endTime1=null;
+				try {
+				    String startDateStr = creMonth + "-01 00:00:00";
+	                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	                Date startTime = sdf.parse(startDateStr);
+	                Date endTime = DateUtils.addMonths(startTime, 1);
+	                beginTime1= new Timestamp(startTime.getTime());
+	                endTime1 = new Timestamp(endTime.getTime());
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    XxlJobLogger.log("时间获取异常:", e);
+                }
+                
 				
 				//使用了包装方案的商家
 				List<String> dispatchPackgeList=new ArrayList<String>();
@@ -157,12 +175,14 @@ public class CorrectJob  extends IJobHandler{
 					//判断该商家是否使用了包装方案，如果使用了生成mq，重量纠正，耗材不纠正，备注里面标记该商家是标准包装方案商家不纠正   
 				    Map<String,Object> condition=new HashMap<>();
 				    condition.put("customerid", customerid);
+				    condition.put("beginTime", beginTime1);
+                    condition.put("endTime", endTime1);
+		    
 				    BizDispatchPackageEntity dispatchPack=bizDispatchPackageService.queryOne(condition);
 				    if(dispatchPack!=null){
 				        dispatchPackgeList.add(customerid);
 				    }
-				    
-			
+				   			
                     //任务的结束时间为开始时间的月份最后一天
                     Calendar calendar = Calendar.getInstance();  
                     calendar.setTime(endDate);  

@@ -140,4 +140,16 @@ public class BizProductStorageRepositoryImpl extends MyBatisDao implements IBizP
 	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition) {
 		return this.selectList("com.jiuyescm.bms.biz.storage.BizProductStorageEntityMapper.queryTask", condition);
 	}
+
+    @Override
+    public int cancalCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.BizProductStorageEntityMapper.cancalCustomerBiz", map);
+    }
+
+    @Override
+    public int restoreCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.BizProductStorageEntityMapper.restoreCustomerBiz", map);
+    }
 }

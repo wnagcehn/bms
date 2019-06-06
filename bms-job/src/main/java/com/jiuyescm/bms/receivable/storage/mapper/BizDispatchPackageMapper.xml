@@ -191,7 +191,7 @@
     	season, pack_box_type as packBoxType, pack_group_no as packGroupNo, pack_plan_no as packPlanNo, pack_plan_name as packPlanName, 
     	fees_no as feesNo, is_calculated as isCalculated, del_flag as delFlag, write_time as writeTime, calculate_time as calculateTime, remark
     	from biz_dispatch_package
-    	where 1=1 and customerid = #{customerid} limit 1   
+    	where 1=1 and customerid = #{customerid} and cre_time>=#{beginTime} and <![CDATA[cre_time<#{endTime}]]> limit 1   
     </select>
     
 </mapper>

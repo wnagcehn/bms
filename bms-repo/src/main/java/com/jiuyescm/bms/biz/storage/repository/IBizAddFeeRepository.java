@@ -72,4 +72,8 @@ public interface IBizAddFeeRepository {
     public BizAddFeeEntity queryPayNo(Map<String, Object> param);
 
     int feesave(List<FeesReceiveStorageEntity> feeList);
+    
+    int cancalCustomerBiz(Map<String,Object> map);
+
+    int restoreCustomerBiz(Map<String,Object> map);
 }

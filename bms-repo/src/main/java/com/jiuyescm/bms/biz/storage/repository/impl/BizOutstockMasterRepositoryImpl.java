@@ -164,4 +164,16 @@ public class BizOutstockMasterRepositoryImpl extends MyBatisDao implements IBizO
 	public List<BmsAsynCalcuTaskEntity> queryOutstockTask(Map<String, Object> condition) {
 		return selectList("com.jiuyescm.bms.biz.storage.BizOutstockMasterEntityMapper.queryOutstockTask", condition);
 	}
+
+    @Override
+    public int cancalCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.BizOutstockMasterEntityMapper.cancalCustomerBiz",map);
+    }
+
+    @Override
+    public int restoreCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.BizOutstockMasterEntityMapper.restoreCustomerBiz",map);
+    }
 }

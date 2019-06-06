@@ -181,4 +181,16 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
     public List<BmsAsynCalcuTaskEntity> queryPalletTask(Map<String, Object> condition){
 		return selectList("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.queryPalletTask", condition);
 	}
+
+    @Override
+    public int cancalCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.cancalCustomerBiz",map);
+    }
+
+    @Override
+    public int restoreCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.restoreCustomerBiz",map);
+    }
 }
