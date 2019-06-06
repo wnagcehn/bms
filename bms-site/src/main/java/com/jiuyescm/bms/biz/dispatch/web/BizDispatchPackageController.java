@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.biz.dispatch.web;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -266,6 +267,12 @@ public class BizDispatchPackageController {
         String path = "";
         StopWatch sw = new StopWatch();
         sw.start();
+        
+        //如果存放上传文件的目录不存在就新建
+        File storeFolder=new File(path);
+        if(!storeFolder.isDirectory()){
+            storeFolder.mkdirs();
+        }
 
         logger.info("====标准包装方案导出：写入Excel begin.");
         fileExportTaskService.updateExportTask(taskId, null, 30);
