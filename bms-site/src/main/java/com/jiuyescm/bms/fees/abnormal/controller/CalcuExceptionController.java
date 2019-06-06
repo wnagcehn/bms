@@ -4,6 +4,7 @@
  */
 package com.jiuyescm.bms.fees.abnormal.controller;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -219,6 +220,12 @@ public class CalcuExceptionController {
         StopWatch sw = new StopWatch();
         sw.start();
 
+        //如果存放上传文件的目录不存在就新建
+        File storeFolder=new File(path);
+        if(!storeFolder.isDirectory()){
+            storeFolder.mkdirs();
+        }
+        
         logger.info("====计费异常数据导出：写入Excel begin.");
         fileExportTaskService.updateExportTask(taskId, null, 30);
        
