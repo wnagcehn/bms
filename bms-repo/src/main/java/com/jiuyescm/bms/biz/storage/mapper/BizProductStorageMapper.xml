@@ -564,9 +564,9 @@ a.extattr2, a.extattr3, a.extattr4, a.extattr5, b.is_calculated
     
     <update id="cancalCustomerBiz" parameterType="java.util.Map">
       update biz_product_storage a 
-      left JOIN fees_receive_storage b on a.fees_no=b.fees_no
+      left JOIN fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
       set a.del_flag='4',b.del_flag='1'
-      where a.del_flag='0' and b.del_flag='0'
+      where a.del_flag='0' 
       and a.create_time>=#{beginTime} and  <![CDATA[a.create_time<#{endTime}]]>
    	  and a.customerid in
 	  <foreach collection="customerList" index="index" item="item" open="(" separator="," close=")">
