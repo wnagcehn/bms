@@ -220,6 +220,13 @@ public class CalcuExceptionController {
         StopWatch sw = new StopWatch();
         sw.start();
         
+        //如果存放上传文件的目录不存在就新建
+        SystemCodeEntity sc = getSystemCode("GLOABL_PARAM","EXPORT_CALCU_ERROR");
+        File storeFolder=new File(sc.getExtattr1());
+        if(!storeFolder.isDirectory()){
+            storeFolder.mkdirs();
+        }
+        
         logger.info("====计费异常数据导出：写入Excel begin.");
         fileExportTaskService.updateExportTask(taskId, null, 30);
        
@@ -229,12 +236,6 @@ public class CalcuExceptionController {
             path = handBiz(param);
         } catch (Exception e) {
            logger.error(e.getMessage());
-        }
-        
-        //如果存放上传文件的目录不存在就新建
-        File storeFolder=new File(path);
-        if(!storeFolder.isDirectory()){
-            storeFolder.mkdirs();
         }
         
         // 最后写到文件
