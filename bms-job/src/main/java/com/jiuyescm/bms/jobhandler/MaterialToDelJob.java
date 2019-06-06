@@ -90,6 +90,7 @@ public class MaterialToDelJob extends IJobHandler {
         List<BizOutstockPackmaterialCancelEntity> cancelList = bizOutstockPackmaterialCancelService.queryNeedCancel(map);
         printTime(sw);
         if (CollectionUtils.isEmpty(cancelList)) {
+            sw.start("结束1");
             return printLog("没有需要作废的运单", sw);
         }
         
@@ -136,6 +137,7 @@ public class MaterialToDelJob extends IJobHandler {
 
         //合同归属为"合同在线"的数据一条都没有，就没有需要作废的
         if (CollectionUtils.isEmpty(contractWaybillNoList)) {
+            sw.start("结束2");
             return printLog("没有需要作废的运单", sw);
         }
         
@@ -162,6 +164,7 @@ public class MaterialToDelJob extends IJobHandler {
         }
         //配置表一定会配置数据，这一步可能多余
         if (CollectionUtils.isEmpty(packDickList)) {
+            sw.start("结束3");
             return printLog("配置表无配置数据", sw);
         }
         printTime(sw);
@@ -229,6 +232,7 @@ public class MaterialToDelJob extends IJobHandler {
             printTime(sw);
         }
         
+        sw.start("任务完成");
         return printLog("任务完成", sw);
 
     }
