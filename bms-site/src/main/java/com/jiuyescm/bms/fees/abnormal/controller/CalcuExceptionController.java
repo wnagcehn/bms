@@ -223,7 +223,7 @@ public class CalcuExceptionController {
         //如果存放上传文件的目录不存在就新建
         SystemCodeEntity sc = getSystemCode("GLOABL_PARAM","EXPORT_CALCU_ERROR");
         File storeFolder=new File(sc.getExtattr1());
-        if(!storeFolder.isDirectory()){
+        if(!storeFolder.exists()){
             storeFolder.mkdirs();
         }
         

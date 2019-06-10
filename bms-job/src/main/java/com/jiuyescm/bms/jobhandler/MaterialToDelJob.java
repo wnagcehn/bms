@@ -101,13 +101,13 @@ public class MaterialToDelJob extends IJobHandler {
         List<BizOutstockPackmaterialCancelEntity> updateNoDelList = new ArrayList<BizOutstockPackmaterialCancelEntity>(); 
         
         for (BizOutstockPackmaterialCancelEntity cancelEntity : cancelList) {
+            cancelEntity.setDescrip("");
+            cancelEntity.setModTime(new Timestamp(System.currentTimeMillis()));
             if (!cancelEntity.getWaybillNoImport().equals(cancelEntity.getWaybillNoPackage())) {
                 cancelEntity.setStatus(NODEL);
-                cancelEntity.setModTime(new Timestamp(System.currentTimeMillis()));
                 updateNoDelList.add(cancelEntity);
             }else {
                 cancelEntity.setStatus(DEL);
-                cancelEntity.setModTime(new Timestamp(System.currentTimeMillis()));
                 delList.add(cancelEntity);
                 waybillNoList.add(cancelEntity.getWaybillNo());
             }    
