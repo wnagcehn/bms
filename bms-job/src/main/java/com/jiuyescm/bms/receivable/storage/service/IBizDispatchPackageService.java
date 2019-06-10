@@ -29,4 +29,5 @@ public interface IBizDispatchPackageService {
      */
     List<BizDispatchPackageEntity> queryByWaybillNo(List<String> contractList);
     
+    BizDispatchPackageEntity queryOne(Map<String, Object> condition);
 }

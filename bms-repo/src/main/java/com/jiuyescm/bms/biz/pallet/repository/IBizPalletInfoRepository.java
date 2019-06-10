@@ -2,6 +2,7 @@ package com.jiuyescm.bms.biz.pallet.repository;
 
 import java.util.Map;
 import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
@@ -74,6 +75,19 @@ public interface IBizPalletInfoRepository {
 	 */
 	List<BmsAsynCalcuTaskEntity> queryPalletTask(Map<String, Object> condition);
 
+	/**
+	 * 重算(为了重算商家下所有的)
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年5月29日 下午5:36:43
+	 *
+	 * @param param
+	 * @return
+	 */
+    int reCalculate(Map<String, Object> param);
 
-
+    int cancalCustomerBiz(Map<String,Object> map);
+    
+    int restoreCustomerBiz(Map<String,Object> map);
 }

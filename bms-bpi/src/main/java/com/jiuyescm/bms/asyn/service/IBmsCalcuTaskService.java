@@ -94,4 +94,28 @@ public interface IBmsCalcuTaskService {
 	 * @return
 	 */
     List<BmsCalcuTaskVo> queryPackageTask(Map<String, Object> condition);
+
+    /**
+     * 对商家下所有的费用进行重算
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年5月29日 下午4:43:23
+     *
+     * @param cond
+     * @return
+     */
+    String reCalculate(Map<String, Object> cond);
+
+    /**
+     * 对商家在该月份下所有需要重算的科目的任务汇总
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年5月29日 下午6:56:06
+     *
+     * @param param
+     * @return
+     */
+    List<BmsCalcuTaskVo> queryAllSubjectTask(Map<String, Object> param);
 }

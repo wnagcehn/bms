@@ -8,14 +8,18 @@
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 
-	
-
 	<!-- 使用disconf必须添加以下配置 -->
 	<bean id="tenantConfig" class="com.jiuyescm.bms.appconfig.TenantConfig" >
 		<!--九曳租户ID -->
 		<property name="tenantId" value="${tenantId}" />
 		<!--九曳租户名称 -->
 		<property name="tenantName" value="${tenantName}" />
+	</bean>
+	
+	<!-- 使用disconf必须添加以下配置 -->
+	<bean id="druidConfig" class="com.jiuyescm.bms.appconfig.DruidConfig" >
+		<!--九曳租户ID -->
+		<property name="url" value="${druid.exception.url}" />
 	</bean>
 
 </beans>

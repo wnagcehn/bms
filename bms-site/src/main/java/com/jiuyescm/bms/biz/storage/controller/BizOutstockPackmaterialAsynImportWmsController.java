@@ -41,6 +41,7 @@ import com.jiuyescm.bms.common.tool.Tools;
 import com.jiuyescm.bms.file.asyn.BmsFileAsynTaskEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
 import com.jiuyescm.framework.lock.Lock;
@@ -194,6 +195,7 @@ public class BizOutstockPackmaterialAsynImportWmsController {
 		taskEntity.setCreator(JAppContext.currentUserName());
 		taskEntity.setCreatorId(JAppContext.currentUserID());
 		taskEntity.setCreateTime(JAppContext.currentTimestamp());
+		taskEntity.setTemplateType(BmsEnums.templateType.wms.getCode());
 		int saveNum = bmsFileAsynTaskService.save(taskEntity);
 		if (saveNum <= 0) {
 			setProgress("6");

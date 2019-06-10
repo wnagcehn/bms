@@ -82,4 +82,5 @@
 	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.IPubPackageDictService" ref="pubPackageDictService"/>
 	
 	<dubbo:service interface="com.jiuyescm.bms.biz.storage.service.IAddFeeService" ref="addFeeService" />
+	<dubbo:service interface="com.jiuyescm.bms.calculate.api.IBmsCalcuExceptionService" ref="bmsCalcuExceptionService" />
 </beans>

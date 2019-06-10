@@ -16,6 +16,7 @@ import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.common.JobParameterHandler;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
@@ -45,13 +46,16 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 	@Autowired private IPubMaterialInfoService pubMaterialInfoService;
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
+    @Autowired private IBmsGroupCustomerService bmsGroupCustomerService;
 	
 	Map<String,PubMaterialInfoVo> materialMap = null;
 	Map<String, String> temMap = null;
+    List<String> noCalculateList=null;
 
 
 	protected void initConf(){
 		materialMap=queryAllMaterial();
+        noCalculateList=bmsGroupCustomerService.queryCustomerByGroupCode("no_calculate_customer");
 	}
 
 	@Override
@@ -107,6 +111,12 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 			        if(StringUtils.isNotBlank(entity.getFeesNo())){
                         feesNos.add(entity.getFeesNo());
                     }
+			        //如果是不计费的商家，则直接更新业务计算状态为4
+	                if(noCalculateList.size()>0 && noCalculateList.contains(entity.getCustomerId())){
+	                    entity.setDelFlag("4");
+	                    continue;
+	                }
+			     
 			        FeesReceiveStorageEntity fee = initFees(entity);
 					feesList.add(fee);					
 					String customerId = entity.getCustomerId();

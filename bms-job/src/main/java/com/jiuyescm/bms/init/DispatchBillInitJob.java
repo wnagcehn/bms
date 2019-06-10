@@ -14,6 +14,7 @@ import org.springframework.util.StopWatch;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
 import com.jiuyescm.bms.common.JobParameterHandler;
@@ -39,6 +40,8 @@ public class DispatchBillInitJob extends IJobHandler {
 
 	@Autowired
 	private IBmsGroupSubjectService bmsGroupSubjectService;
+    @Autowired
+    private IBmsGroupCustomerService bmsGroupCustomerService;
 	@Autowired
 	private IBizDispatchBillService bizDispatchBillService;
 	@Autowired
@@ -50,6 +53,7 @@ public class DispatchBillInitJob extends IJobHandler {
 	private String _subjectCode = "de_delivery_amount";
 
 	String[] subjects = null;
+	List<String> noCalculateList=null;
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -107,6 +111,12 @@ public class DispatchBillInitJob extends IJobHandler {
 			        if(StringUtils.isNotBlank(entity.getFeesNo())){
                         feesNos.add(entity.getFeesNo());
                     }
+			        //如果是不计费的商家，则直接更新业务计算状态为4
+			        if(noCalculateList.size()>0 && noCalculateList.contains(entity.getCustomerid())){
+			            entity.setDelFlag("4");
+			            continue;
+			        }
+			
 					FeesReceiveDispatchEntity fee = initFees(entity);
 					feesList.add(fee);				
 					String customerId = entity.getCustomerid();
@@ -183,8 +193,11 @@ public class DispatchBillInitJob extends IJobHandler {
 
 	private void initConf() {
 		subjects = initSubjects();
+		noCalculateList=bmsGroupCustomerService.queryCustomerByGroupCode("no_calculate_customer");
 	}
 
+
+	
 	private String[] initSubjects() {
 		// 这里的科目应该在科目组中配置,动态查询
 		// de_delivery_amount(运费 )

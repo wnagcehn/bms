@@ -1,6 +1,7 @@
 package com.jiuyescm.bms.jobhandler;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,6 +16,8 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -24,12 +27,16 @@ import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
+import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchBillRepository;
+import com.jiuyescm.bms.common.enumtype.BmsCorrectAsynTaskStatusEnum;
 import com.jiuyescm.bms.file.asyn.BmsCorrectAsynTaskEntity;
 import com.jiuyescm.bms.file.asyn.repository.IBmsCorrectAsynTaskRepository;
+import com.jiuyescm.bms.receivable.storage.service.IBizDispatchPackageService;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.framework.sequence.api.ISequenceService;
+import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 //import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -56,6 +63,10 @@ public class CorrectJob  extends IJobHandler{
 		private IBmsGroupCustomerService bmsGroupCustomerService;
 		@Autowired
 		private IBmsGroupService bmsGroupService;
+		@Autowired
+		private ISnowflakeSequenceService snowflakeSequenceService;
+		@Autowired
+		private IBizDispatchPackageService bizDispatchPackageService;
 		
 		private static final String BMS_CORRECT_WEIGHT_TASK = "BMS.CORRECT.WEIGHT.ASYN.TASK";
 		private static final String BMS_CORRECT_MATERIAL_TASK = "BMS.CORRECT.MATERIAL.ASYN.TASK";
@@ -138,53 +149,59 @@ public class CorrectJob  extends IJobHandler{
 			if(CollectionUtils.isNotEmpty(customeridSet)){
 				List<BmsCorrectAsynTaskEntity> list = new ArrayList<>();
 				taskStartDate=taskStartDate.substring(0,7);
+				String creMonth=taskStartDate;
 				taskStartDate=taskStartDate.replace("-","");
 				Date startDate = DateUtil.getFirstDayOfMonth(1);
 				Date endDate = DateUtil.getFirstDayOfMonth(0);
 				
-				/*long ids[] = new long[customeridSet.size()*2];
-				ids = snowflakeSequenceService.nextId(customeridSet.size()*2);*/
-				int i = 0;
+				Timestamp beginTime1=null;
+				Timestamp endTime1=null;
+				try {
+				    String startDateStr = creMonth + "-01 00:00:00";
+	                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	                Date startTime = sdf.parse(startDateStr);
+	                Date endTime = DateUtils.addMonths(startTime, 1);
+	                beginTime1= new Timestamp(startTime.getTime());
+	                endTime1 = new Timestamp(endTime.getTime());
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    XxlJobLogger.log("时间获取异常:", e);
+                }
+                
+				
+				//使用了包装方案的商家
+				List<String> dispatchPackgeList=new ArrayList<String>();
 				for (String customerid : customeridSet) {
-					/*String id = String.valueOf(sequenceService.nextSeq("BMS.CORRECT")) ;
-					String taskId = "CT";
-					for(int i = 1;i<=10-id.length();i++){
-						taskId +="0";
-					}
-					taskId += id;
-					BmsCorrectAsynTaskEntity entity = createEntity(taskStartDate,createTime,startDate,endDate,customerid,"weight_correct");
-					entity.setTaskId(ids[i]+"");
-					i++;
-					list.add(entity);
-					BmsCorrectAsynTaskEntity entity2 = createEntity(taskStartDate,createTime,startDate,endDate,customerid,"material_correct");
-					entity2.setTaskId(ids[i]+"");
-					i++;
-					list.add(entity2);*/
-					
-					String id1 = String.valueOf(sequenceService1.nextSeq("BMS.CORRECT")) ;
-					String taskId1 = "CT";
-					//任务的结束时间为开始时间的月份最后一天
-					Calendar calendar = Calendar.getInstance();  
-					calendar.setTime(endDate);  
-					calendar.add(Calendar.DAY_OF_MONTH, -1);  
-					Date end = calendar.getTime();
-					for(int j = 1;j<=10-id1.length();j++){
-						taskId1 +="0";
-					}
-					taskId1 += id1;
+					//判断该商家是否使用了包装方案，如果使用了生成mq，重量纠正，耗材不纠正，备注里面标记该商家是标准包装方案商家不纠正   
+				    Map<String,Object> condition=new HashMap<>();
+				    condition.put("customerid", customerid);
+				    condition.put("beginTime", beginTime1);
+                    condition.put("endTime", endTime1);
+		    
+				    BizDispatchPackageEntity dispatchPack=bizDispatchPackageService.queryOne(condition);
+				    if(dispatchPack!=null){
+				        dispatchPackgeList.add(customerid);
+				    }
+				   			
+                    //任务的结束时间为开始时间的月份最后一天
+                    Calendar calendar = Calendar.getInstance();  
+                    calendar.setTime(endDate);  
+                    calendar.add(Calendar.DAY_OF_MONTH, -1);  
+                    Date end = calendar.getTime();
+				    
+					String taskId1 = "STO" + snowflakeSequenceService.nextStringId();
 					BmsCorrectAsynTaskEntity entity = createEntity(taskStartDate,createTime,startDate,end,customerid,"weight_correct");
 					entity.setTaskId(taskId1);
-					i++;
 					list.add(entity);
+					
+	                String taskId2 =  "STO" + snowflakeSequenceService.nextStringId();
 					BmsCorrectAsynTaskEntity entity2 = createEntity(taskStartDate,createTime,startDate,end,customerid,"material_correct");
-					String id2 = String.valueOf(sequenceService1.nextSeq("BMS.CORRECT")) ;
-					String taskId2 = "CT";
-					for(int j = 1;j<=10-id2.length();j++){
-						taskId2 +="0";
-					}
-					taskId2 += id2;
 					entity2.setTaskId(taskId2);
-					i++;
+					if(dispatchPackgeList.contains(customerid)){
+					    entity2.setTaskRate(100);
+					    entity2.setTaskStatus(BmsCorrectAsynTaskStatusEnum.NOTCORRECT.getCode());
+					    entity2.setRemark("使用了标准包装方案的商家，不纠正耗材");
+					}
 					list.add(entity2);
 				}
 				bmsCorrectAsynTaskRepository.saveBatch(list);
@@ -196,16 +213,18 @@ public class CorrectJob  extends IJobHandler{
 						if("weight_correct".equals(entity.getBizType())){
 							//发送重量调整MQ
 							task = BMS_CORRECT_WEIGHT_TASK;
-						}else if("material_correct".equals(entity.getBizType())) {
+						}else if("material_correct".equals(entity.getBizType()) && !dispatchPackgeList.contains(entity.getCustomerId())) {
 							//发送耗材调整MQ
 							task = BMS_CORRECT_MATERIAL_TASK;
 						}
-						jmsQueueTemplate.send(task, new MessageCreator() {
-							@Override
-							public Message createMessage(Session session) throws JMSException {
-								return session.createTextMessage(msg);
-							}
-						});
+						if(StringUtils.isNotBlank(task)){
+		                      jmsQueueTemplate.send(task, new MessageCreator() {
+		                            @Override
+		                            public Message createMessage(Session session) throws JMSException {
+		                                return session.createTextMessage(msg);
+		                            }
+		                       });
+						}
 					} catch (Exception e) {
 						XxlJobLogger.log("send MQ:", e);
 						XxlJobLogger.log("fail", "MQ发送失败！");
@@ -222,7 +241,7 @@ public class CorrectJob  extends IJobHandler{
 			entity.setCreateTime(createTime);
 			entity.setDelFlag("0");
 			entity.setTaskRate(0);
-			entity.setTaskStatus("WAIT");
+			entity.setTaskStatus(BmsCorrectAsynTaskStatusEnum.WAIT.getCode());
 			entity.setCreateMonth(createMonth);
 			entity.setStartDate(startDate);
 			entity.setEndDate(endDate);

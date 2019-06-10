@@ -71,6 +71,7 @@ public class BmsGroupCustomerController {
 			for(BmsGroupVo groupVo:groupList){
 				if(groupVo.getId()==customerVo.getGroupId()){
 					customerVo.setGroupName(groupVo.getGroupName());
+					customerVo.setGroupCode(groupVo.getGroupCode());
 					break;
 				}
 			}
@@ -92,6 +93,21 @@ public class BmsGroupCustomerController {
 		subjectVo.setLastModifyTime(JAppContext.currentTimestamp());
 		int k=bmsGroupCustomerService.delGroupCustomer(subjectVo);
 		if(k>0){
+		    //不计费的商家特殊处理
+            if("不计费商家".equals(subjectVo.getGroupName())){
+                try {
+                   int result= bmsGroupCustomerService.restoreCustomerBiz(subjectVo.getCustomerid());
+                   if(result<=0){
+                        return "作废商家业务数据失败";
+                   }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    logger.error("作废商家业务数据失败",e);
+                    return "作废商家业务数据失败";
+                }
+            }
+		    
+		    
 			return "删除成功!";
 		}else{
 			return "删除失败!";
@@ -126,6 +142,20 @@ public class BmsGroupCustomerController {
 		}else{
 			int k=bmsGroupCustomerService.addBatch(customerVoList);
 			if(k==customerVoList.size()){
+			    //不计费的商家特殊处理
+			    if("no_calculate_customer".equals(customerVo.getGroupCode())){
+			        try {
+			           int result= bmsGroupCustomerService.cancalCustomerBiz(customerVoList);
+			           if(result<=0){
+	                        return "作废商家业务数据失败";
+			           }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        logger.error("作废商家业务数据失败",e);
+                        return "作废商家业务数据失败";
+                    }
+			    }
+			    
 				return "保存成功!";
 			}else{
 				return "保存失败";

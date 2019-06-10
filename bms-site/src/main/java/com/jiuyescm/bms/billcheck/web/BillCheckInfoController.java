@@ -37,6 +37,7 @@ import com.bstek.dorado.uploader.UploadFile;
 import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupUserService;
@@ -383,8 +384,13 @@ public class BillCheckInfoController{
 				if(EntityState.MODIFIED.equals(EntityUtils.getState(temp))){				
 					//验证商家合同名称是否存在
 					//获取所有商家
-					Map<String, Object> customerInfoMap=getCusMap();
-					if(!customerInfoMap.containsKey(temp.getInvoiceName())){
+					/*Map<String, Object> customerInfoMap=getCusMap();*/
+				    Map<String,Object> map=new HashMap<>();
+	                map.put("mkInvoiceName", temp.getInvoiceName());
+	                
+	                PubCustomerBaseEntity mkInvoiceName=billCheckInfoService.queryMk(map);
+	                
+	                if(mkInvoiceName==null){
 						return "商家合同名称:"+temp.getInvoiceName()+"不存在";
 					}
 					

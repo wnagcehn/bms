@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.common.JobParameterHandler;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
@@ -44,8 +45,11 @@ public class ProductStorageInitJob extends IJobHandler {
 	private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired
 	private IBmsCalcuTaskService bmsCalcuTaskService;
+	@Autowired
+	private IBmsGroupCustomerService bmsGroupCustomerService;
 
 	private static final String FEE_1 = "wh_product_storage";
+    List<String> noCalculateList=null;
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -72,6 +76,8 @@ public class ProductStorageInitJob extends IJobHandler {
 			// 未配置最多执行多少运单
 			map.put("num", num);
 		}
+		
+		initConf();
 		// 查询所有状态为0的业务数据
 		long currentTime = System.currentTimeMillis();
 		map.put("isCalculated", "0");
@@ -106,6 +112,11 @@ public class ProductStorageInitJob extends IJobHandler {
 			for (BizProductStorageEntity entity : bizList) {
 			    if(StringUtils.isNotBlank(entity.getFeesNo())){
                     feesNos.add(entity.getFeesNo());
+                }
+			    //如果是不计费的商家，则直接更新业务计算状态为4
+                if(noCalculateList.size()>0 && noCalculateList.contains(entity.getCustomerid())){
+                    entity.setDelFlag("4");
+                    continue;
                 }
 				//封装key
 				String customerId = entity.getCustomerid();
@@ -221,4 +232,10 @@ public class ProductStorageInitJob extends IJobHandler {
 		}
 	}
 
+	
+	   private void initConf() {
+	        //不计费商家
+	        noCalculateList=bmsGroupCustomerService.queryCustomerByGroupCode("no_calculate_customer");
+
+	    }
 }

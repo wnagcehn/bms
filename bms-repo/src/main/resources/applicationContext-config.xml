@@ -35,6 +35,7 @@
 			    <value>classpath:/rocketmq.operation.flag</value>
 			    <value>classpath:/rocketmq.email.flag</value>
 			    <value>classpath:/tenant.properties</value>
+			    <value>classpath:/druid.properties</value>
 			</list>
 		</property>
 	</bean>

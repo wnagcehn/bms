@@ -465,20 +465,14 @@
 		<if test="(creator != null and creator !='')" >
 				and a.creator = #{creator}
 		</if>
-		<if test="(createTime != null and createTime !='')" >
-			    and a.create_time >= #{createTime} add <![CDATA[a.create_time <= #{createTime}]]>
+		<if test="startTime != null and startTime !='' " >
+			and <![CDATA[a.create_time >= #{startTime}]]>
+		</if>
+		<if test="endTime != null and endTime !='' " >
+			and <![CDATA[a.create_time <= #{endTime}]]>
 		</if>
 		<if test="(lastModifier != null and lastModifier !='')" >
 				and a.last_modifier = #{lastModifier}
-		</if>
-		<if test="(lastModifyTime != null and lastModifyTime !='')" >
-			    and a.last_modify_time >= #{lastModifyTime} add <![CDATA[a.last_modify_time <= #{lastModifyTime}]]>
-		</if>
-		<if test="(calculateTime != null and calculateTime !='')" >
-			    and a.calculate_time >= #{calculateTime} add <![CDATA[a.calculate_time <= #{calculateTime}]]>
-		</if>
-		<if test="(writeTime != null and writeTime !='')" >
-			    and a.write_time >= #{writeTime} add <![CDATA[a.write_time <= #{writeTime}]]>
 		</if>
 		<if test="(adjustNum != null and adjustNum !='')" >
 				and a.adjust_num = #{adjustNum}
@@ -578,4 +572,24 @@
 			#{continuePrice,jdbcType=DOUBLE}
         )
     </insert>
+    
+    <update id="cancalCustomerBiz" parameterType="java.util.Map">
+        update biz_add_fee a 
+		left JOIN fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
+		set a.del_flag='4',b.del_flag='1'
+		where a.del_flag='0'
+		and a.create_time>=#{beginTime} and  <![CDATA[a.create_time<#{endTime}]]> 
+		and a.customerid in
+		<foreach collection="customerList" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </update>
+    
+    <update id="restoreCustomerBiz" parameterType="java.util.Map">
+        update biz_add_fee
+		set del_flag='0',is_calculated='0'
+		where del_flag='4'
+		and create_time>=#{beginTime} and  <![CDATA[create_time<#{endTime}]]> 
+		and customerid=#{customerId}
+    </update>
 </mapper>

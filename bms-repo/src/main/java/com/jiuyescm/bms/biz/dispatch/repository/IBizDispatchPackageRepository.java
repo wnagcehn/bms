@@ -2,6 +2,7 @@ package com.jiuyescm.bms.biz.dispatch.repository;
 
 import java.util.Map;
 import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
@@ -60,6 +61,10 @@ public interface IBizDispatchPackageRepository {
      */
     PageInfo<BizDispatchPackageEntity> queryToExport(Map<String, Object> condition, int pageNo, int pageSize);
 
-    
+    BizDispatchPackageEntity queryOne(Map<String, Object> condition);
+ 
+    int cancalCustomerBiz(Map<String,Object> map);
+
+    int restoreCustomerBiz(Map<String,Object> map);
 
 }

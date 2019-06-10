@@ -111,8 +111,8 @@ public class BizOutstockPackmaterialCancelServiceImpl implements IBizOutstockPac
     * @param param
     */
     @Override
-    public List<BizOutstockPackmaterialCancelEntity> queryNeedCancel(Integer batchNum){
-        return bizOutstockPackmaterialCancelRepository.queryNeedCancel(batchNum);
+    public List<BizOutstockPackmaterialCancelEntity> queryNeedCancel(Map<String, Object> map){
+        return bizOutstockPackmaterialCancelRepository.queryNeedCancel(map);
     }
     
     /**

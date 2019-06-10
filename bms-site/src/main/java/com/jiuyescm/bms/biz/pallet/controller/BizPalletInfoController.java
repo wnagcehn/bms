@@ -692,7 +692,7 @@ public class BizPalletInfoController {
 			return "没有数据重算";
 		}
 		
-		if(bizPalletInfoService.retryCalculate(list) <= 0){
+		if(bizPalletInfoService.retryCalculate(list) == 0){
 			return "重算异常";
 		}else {
 			List<BmsCalcuTaskVo> taskVos = bmsCalcuTaskService.queryPalletTask(param);
@@ -832,6 +832,7 @@ public class BizPalletInfoController {
 		taskEntity.setCreator(JAppContext.currentUserName());
 		taskEntity.setCreatorId(JAppContext.currentUserID());
 		taskEntity.setCreateTime(JAppContext.currentTimestamp());
+		taskEntity.setTemplateType(BmsEnums.templateType.system.getCode());
 		int saveNum = bmsFileAsynTaskService.save(taskEntity);
 		if (saveNum <= 0) {
 			setProgress(6);

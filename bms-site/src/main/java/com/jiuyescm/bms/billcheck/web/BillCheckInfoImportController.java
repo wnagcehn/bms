@@ -20,6 +20,7 @@ import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.uploader.UploadFile;
 import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupUserService;
 import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.bill.customer.service.IBillCustomerInfoService;
@@ -130,18 +131,13 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 			
 			//商家合同名称验证
 			if(StringUtils.isNotBlank(vo.getInvoiceName())){
-				if(customerInfoMap.containsKey(vo.getInvoiceName())){
-					/*
-					BillCustomerInfoVo vo2=(BillCustomerInfoVo) customerInfoMap.get(vo.getInvoiceName());
-					if(StringUtils.isBlank(vo2.getSysCustomerId())){
-						mes+="开票商家对应的系统商家没有维护;";
-						//infoList.add(new ErrorMessageVo(index,"开票商家对应的系统商家没有维护"));
-						//break;					
-						}*/
-				}else{
-					mes+="商家合同名称["+vo.getInvoiceName()+"]未在OMS商家中心维护;";
-					//infoList.add(new ErrorMessageVo(index,"商家合同名称没有在开票商家中维护"));
-					//break;
+			    Map<String,Object> map=new HashMap<>();
+			    map.put("mkInvoiceName", vo.getInvoiceName());
+			    
+			    PubCustomerBaseEntity mkInvoiceName=billCheckInfoService.queryMk(map);
+			    
+				if(mkInvoiceName==null){
+				    mes+="商家合同名称["+vo.getInvoiceName()+"]未在BMS商家中心维护;";
 				}
 				
 			}else{

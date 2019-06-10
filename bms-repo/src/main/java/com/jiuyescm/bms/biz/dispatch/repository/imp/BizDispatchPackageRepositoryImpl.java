@@ -126,4 +126,22 @@ public class BizDispatchPackageRepositoryImpl extends MyBatisDao implements IBiz
         return p;
     }
 
+    @Override
+    public BizDispatchPackageEntity queryOne(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return (BizDispatchPackageEntity) selectOne("com.jiuyescm.bms.biz.dispatch.BizDispatchPackageMapper.queryOne", condition);
+    }
+
+    @Override
+    public int cancalCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.dispatch.BizDispatchPackageMapper.cancalCustomerBiz",map);
+    }
+
+    @Override
+    public int restoreCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.dispatch.BizDispatchPackageMapper.restoreCustomerBiz",map);
+    }
+
 }

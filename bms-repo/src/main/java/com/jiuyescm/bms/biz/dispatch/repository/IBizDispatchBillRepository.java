@@ -143,5 +143,8 @@ public interface IBizDispatchBillRepository{
     List<BizDispatchBillEntity> queryAllWarehouseFromBizData(Map<String, Object> condition);
 
     List<BizDispatchBillEntity> queryBizByCusid(Map<String, Object> condition);
+    
+    int cancalCustomerBiz(Map<String,Object> map);
 
+    int restoreCustomerBiz(Map<String,Object> map);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
@@ -231,5 +232,7 @@ public interface IBillCheckInfoService {
 
 
     PageInfo<BillCheckInfoVo> querySimple(Map<String, Object> condition, int pageNo, int pageSize); 
+    
+    PubCustomerBaseEntity queryMk(Map<String, Object> condition);
 	
 	}

@@ -187,4 +187,7 @@ public interface IBizOutstockPackmaterialRepository {
      */
     int delFees(List<BizOutstockPackmaterialEntity> list);
 
+    int cancalCustomerBiz(Map<String,Object> map);
+
+    int restoreCustomerBiz(Map<String,Object> map);
 }
