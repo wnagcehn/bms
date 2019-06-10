@@ -64,12 +64,12 @@ public class ExceptionDetailVo implements IEntity{
     /**
      * 仓库名称
      */
-    @ExcelField(title = "仓库", num = 7)
+    @ExcelField(title = "仓库名称", num = 7)
     private String warehouseName;
     /**
      * 业务时间
      */
-    @ExcelField(title = "业务时间", num = 8)
+    @ExcelField(title = "业务日期", num = 8)
     private String createTime;
     /**
      * 出库单号
