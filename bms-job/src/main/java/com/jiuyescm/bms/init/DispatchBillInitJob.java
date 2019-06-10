@@ -108,14 +108,15 @@ public class DispatchBillInitJob extends IJobHandler {
 			if(CollectionUtils.isNotEmpty(bizList)){
                 List<String> feesNos=new ArrayList<>();
 			    for (BizDispatchBillEntity entity : bizList) {
+			        if(StringUtils.isNotBlank(entity.getFeesNo())){
+                        feesNos.add(entity.getFeesNo());
+                    }
 			        //如果是不计费的商家，则直接更新业务计算状态为4
 			        if(noCalculateList.size()>0 && noCalculateList.contains(entity.getCustomerid())){
 			            entity.setDelFlag("4");
 			            continue;
 			        }
-			        if(StringUtils.isNotBlank(entity.getFeesNo())){
-                        feesNos.add(entity.getFeesNo());
-                    }
+			
 					FeesReceiveDispatchEntity fee = initFees(entity);
 					feesList.add(fee);				
 					String customerId = entity.getCustomerid();

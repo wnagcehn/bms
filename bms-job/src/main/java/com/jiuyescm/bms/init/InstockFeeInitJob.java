@@ -112,14 +112,15 @@ public class InstockFeeInitJob extends IJobHandler {
 			initFees(bizList, feesList);
             List<String> feesNos=new ArrayList<>();
 			for (BmsBizInstockInfoEntity entity : bizList) {
+			    if(StringUtils.isNotBlank(entity.getFeesNo())){
+                    feesNos.add(entity.getFeesNo());
+                }
 			  //如果是不计费的商家，则直接更新业务计算状态为4
                 if(noCalculateList.size()>0 && noCalculateList.contains(entity.getCustomerId())){
                     entity.setDelFlag("4");
                     continue;
                 }
-			    if(StringUtils.isNotBlank(entity.getFeesNo())){
-                    feesNos.add(entity.getFeesNo());
-                }
+			 
 				//封装key
 				String customerId = entity.getCustomerId();
 				String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
