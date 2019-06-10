@@ -598,7 +598,7 @@
 		<if test="(customerId != null and customerId !='')" >
 			and a.customerid=#{customerId}
 		</if>
-		and CONCAT(IFNULL(b.consumer_material_code,''),IFNULL(d.pack_plan_no,'')) != ''
+		and CONCAT(IFNULL(b.consumer_material_code,''),IFNULL(d.waybill_no,'')) != ''
 	  	<if test="(customerIds != null and customerIds !='')" >
 	  		and a.customerid in
 		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
