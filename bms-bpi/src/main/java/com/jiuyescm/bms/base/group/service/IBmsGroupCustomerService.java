@@ -16,4 +16,11 @@ public interface IBmsGroupCustomerService {
 	List<String> checkCustomerCodeExist(int groupId, List<String> subjectCodeList);
 	int queryCustomerCountByGroupId(int id);
 	List<String> queryCustomerByGroupId(int groupId);
+	List<String> queryCustomerByGroupCode(String groupCode);
+	
+	//作废商家业务数据
+	int cancalCustomerBiz(List<BmsGroupCustomerVo> customerVoList);
+	//恢复商家业务数据
+	int restoreCustomerBiz(String customerId);
+	
 }

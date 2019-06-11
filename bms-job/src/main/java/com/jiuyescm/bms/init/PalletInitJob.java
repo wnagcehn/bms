@@ -61,6 +61,7 @@ public class PalletInitJob extends IJobHandler {
 
 	List<String> cusNames = null;
 	String[] subjects = null;
+    List<String> noCalculateList=null;
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -118,6 +119,12 @@ public class PalletInitJob extends IJobHandler {
 			        if(StringUtils.isNotBlank(entity.getFeesNo())){
                         feesNos.add(entity.getFeesNo());
                     }
+			        //如果是不计费的商家，则直接更新业务计算状态为4
+	                if(noCalculateList.size()>0 && noCalculateList.contains(entity.getCustomerId())){
+	                    entity.setDelFlag("4");
+	                    continue;
+	                }
+			        
 			        FeesReceiveStorageEntity fee = initFees(entity);
 					feesList.add(fee);
 					
@@ -172,6 +179,8 @@ public class PalletInitJob extends IJobHandler {
 				cusNames.add(vo.getCustomerid());
 			}
 		}
+		//不计费商家
+        noCalculateList=bmsGroupCustomerService.queryCustomerByGroupCode("no_calculate_customer");
 
 	}
 

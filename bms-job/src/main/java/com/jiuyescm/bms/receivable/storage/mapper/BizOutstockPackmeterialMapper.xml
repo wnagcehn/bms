@@ -145,6 +145,14 @@
                     </if>
                 </foreach>
             </trim>
+             <trim prefix="del_flag =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.delFlag != null" >
+                      when id=#{biz.id} then #{biz.delFlag}
+                      
+                    </if>
+                </foreach>
+            </trim>
     	</trim>
 	    where id in
         <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">

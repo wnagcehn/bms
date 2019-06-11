@@ -15,6 +15,7 @@ import org.springframework.util.StopWatch;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 import com.jiuyescm.bms.common.JobParameterHandler;
 import com.jiuyescm.bms.common.enumtype.TemplateTypeEnum;
@@ -37,14 +38,12 @@ import com.xxl.job.core.log.XxlJobLogger;
 @Service
 public class DispatchPackageInitJob extends IJobHandler{
 	
+    @Autowired private IBmsGroupCustomerService bmsGroupCustomerService;
 	@Autowired private IBizDispatchPackageService bizDispatchPackageService;;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
-	
-	protected void initConf(){
-
-	}
+	List<String> noCalculateList=null;
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -71,6 +70,9 @@ public class DispatchPackageInitJob extends IJobHandler{
 			//未配置最多执行多少运单
 			map.put("num", num);
 		}
+		
+		// 初始化配置
+        initConf();
 		
 		//查询所有状态为0的业务数据
 		map.put("isCalculated", "0");
@@ -99,6 +101,12 @@ public class DispatchPackageInitJob extends IJobHandler{
 			        if(StringUtils.isNotBlank(entity.getFeesNo())){
                         feesNos.add(entity.getFeesNo());
                     }
+			        //如果是不计费的商家，则直接更新业务计算状态为4
+                    if(noCalculateList.size()>0 && noCalculateList.contains(entity.getCustomerid())){
+                        entity.setDelFlag("4");
+                        continue;
+                    }
+			       
 			        FeesReceiveStorageEntity fee = initFees(entity);
 					feesList.add(fee);					
 					String customerId = entity.getCustomerid();
@@ -134,7 +142,9 @@ public class DispatchPackageInitJob extends IJobHandler{
 		
 	}
 	
-	
+    protected void initConf(){
+        noCalculateList=bmsGroupCustomerService.queryCustomerByGroupCode("no_calculate_customer");
+    }
 	private FeesReceiveStorageEntity initFees(BizDispatchPackageEntity entity) {
 		entity.setRemark("");
 		FeesReceiveStorageEntity storageFeeEntity = new FeesReceiveStorageEntity();	

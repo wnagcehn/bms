@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.github.pagehelper.PageInfo;
@@ -606,4 +608,80 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 		}
 		return voList;
 	}
+
+	/**
+	 * 重算商家在某个月份下所有科目的费用
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor={BizException.class})
+    @Override
+    public String reCalculate(Map<String, Object> cond) {
+        //耗材重算
+        if (bizOutstockPackmaterialRepository.reCalculate(cond) == 0) {
+            throw new BizException("托数重算异常!");
+        }
+        //出库重算
+        if (bizOutstockMasterRepository.reCalculate(cond) == 0) {
+            throw new BizException("出库单重算异常！");
+        }
+        //配送重算
+        if (bizDispatchBillRepository.reCalculate(cond) == 0) {
+            throw new BizException("配送费重算异常！");
+        }
+        //标准包装方案重算
+        if (bizDispatchPackageRepository.reCalculate(cond) == 0) {
+            throw new BizException("标准包装方案重算异常！");
+        }
+        //入库重算
+        if (bmsBizInstockInfoRepository.reCalculate(cond) == 0) {
+            throw new BizException("入库单重算异常！");
+        }
+        //商品按件重算
+        if (bizProductStorageRepository.reCalculateForAll(cond) == 0) {
+            throw new BizException("商品按件重算异常！");
+        }
+        //增值重算
+        if (bizAddFeeRepository.retryCalcu(cond) == 0) {
+            throw new BizException("增值费重算异常！");
+        }
+        //托数重算
+        if (bizPalletInfoRepository.reCalculate(cond) == 0) {
+            throw new BizException("托数重算异常！");
+        }
+        
+        return "ok";
+    }
+	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public List<BmsCalcuTaskVo> queryAllSubjectTask(Map<String, Object> param){
+	    List<BmsCalcuTaskVo> allTasks = new ArrayList<BmsCalcuTaskVo>();
+	    //查询耗材需要重算的任务
+	    List<BmsCalcuTaskVo> materialTasks = queryMaterialTask(param);
+	    //查询出库需要重算的任务
+	    List<BmsCalcuTaskVo> outstockTasks = queryOutstockTask(param);
+	    //查询配送需要重算的任务
+	    List<BmsCalcuTaskVo> dispatchTasks = queryDispatchTask(param);
+	    //查询包材需要重算的任务
+	    List<BmsCalcuTaskVo> packageTasks = queryPackageTask(param);
+	    //查询入库需要重算的任务
+	    List<BmsCalcuTaskVo> instockTasks = queryInsTask(param);
+	    //查询商品按件需要重算的任务
+	    List<BmsCalcuTaskVo> productTasks = queryProTask(param);
+	    //查询增值费需要重算的任务
+	    List<BmsCalcuTaskVo> addTasks = queryAddTask(param);
+	    //查询托数需要重算的任务
+	    List<BmsCalcuTaskVo> palletTasks = queryPalletTask(param);
+	    
+	    allTasks.addAll(materialTasks);
+	    allTasks.addAll(outstockTasks);
+	    allTasks.addAll(dispatchTasks);
+	    allTasks.addAll(packageTasks);
+	    allTasks.addAll(instockTasks);
+	    allTasks.addAll(productTasks);
+	    allTasks.addAll(addTasks);
+	    allTasks.addAll(palletTasks);
+	    
+	    return allTasks;
+	}
+	
 }

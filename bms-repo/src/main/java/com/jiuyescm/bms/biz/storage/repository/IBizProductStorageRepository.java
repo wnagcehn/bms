@@ -44,4 +44,21 @@ public interface IBizProductStorageRepository {
 	List<BizProductStorageEntity> queryList(Map<String, Object> condition);
 
 	List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition);
+	
+	/**
+	 * 为了重算所有商家的重算
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年5月29日 下午5:29:08
+	 *
+	 * @param param 
+	 * @return
+	 */
+    int reCalculateForAll(Map<String, Object> param);
+    
+    int cancalCustomerBiz(Map<String,Object> map);
+    
+    int restoreCustomerBiz(Map<String,Object> map);
+
 }

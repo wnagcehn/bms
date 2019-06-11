@@ -21,7 +21,7 @@ import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
  * 
  */
 @Repository("bizDispatchPackageService")
-public class BizDispatchPackageServiceImpl extends MyBatisDao<BizDispatchPackageEntity> implements IBizDispatchPackageService {
+public class BizDispatchPackageServiceImpl extends MyBatisDao implements IBizDispatchPackageService {
 
 	private static final Logger logger = Logger.getLogger(BizDispatchPackageServiceImpl.class.getName());
 
@@ -39,7 +39,9 @@ public class BizDispatchPackageServiceImpl extends MyBatisDao<BizDispatchPackage
 	@Override
 	public void updateBatch(List<BizDispatchPackageEntity> list) {
 		try{
-			this.updateBatch("com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper.updateBatch", list);
+		    Map<String,Object> map=new HashMap<String, Object>();
+		    map.put("list", list);
+			this.update("com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper.updateBatch",  map);
 		}catch(Exception ex){
 			logger.error("【标准耗材使用费任务】批量更新主表异常"+ex.getMessage());
 		}
@@ -61,6 +63,12 @@ public class BizDispatchPackageServiceImpl extends MyBatisDao<BizDispatchPackage
         Map<String, Object> cond = new HashMap<String, Object>();
         cond.put("list", list);
         return this.selectList("com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper.queryByWaybillNo", cond);
+    }
+
+    @Override
+    public BizDispatchPackageEntity queryOne(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return (BizDispatchPackageEntity) selectOne("com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper.queryOne", condition);
     }
 	
 }

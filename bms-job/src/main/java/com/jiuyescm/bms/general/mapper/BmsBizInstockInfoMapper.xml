@@ -299,7 +299,14 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
                       when id=#{biz.bId} then #{biz.bizCalculateTime}
                     </if>
                 </foreach>
-            </trim>         
+            </trim>  
+            <trim prefix="del_flag =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.delFlag != null" >
+                      when id=#{biz.bId} then #{biz.delFlag}
+                    </if>
+                </foreach>
+            </trim>          
     	</trim>
 	    where id in
         <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">

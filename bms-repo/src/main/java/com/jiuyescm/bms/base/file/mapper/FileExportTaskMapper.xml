@@ -199,4 +199,12 @@
     	where customerid=#{customerId} and start_time=#{startTime} and end_time=#{endTime}
     	and task_type=#{taskType}
     </select>
+    
+    <select id="getCount" parameterType="java.util.Map" resultType="int">
+        select COUNT(0) from file_export_task 
+		WHERE 1=1 and del_flag='0'
+		and create_time >= #{creTime}
+		and <![CDATA[create_time <=#{creEndTime}]]>
+		and task_type=#{taskType};
+    </select>
 </mapper>

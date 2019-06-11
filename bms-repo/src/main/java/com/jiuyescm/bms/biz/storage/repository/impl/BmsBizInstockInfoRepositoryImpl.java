@@ -127,9 +127,38 @@ public class BmsBizInstockInfoRepositoryImpl extends MyBatisDao implements IBmsB
 		}
 	}
 	
+    /**
+     * 重算
+     * @param param
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public int reCalculate(Map<String, Object> param) {
+        try{
+            update("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.reCalculate", param);
+            return 1;
+        }
+        catch(Exception ex){
+            return 0;
+        }
+    }
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<BmsAsynCalcuTaskEntity> queryTask(Map<String, Object> condition) {
 		return this.selectList("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.queryTask", condition);
 	}
+
+    @Override
+    public int cancalCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.cancalCustomerBiz",map);
+    }
+
+    @Override
+    public int restoreCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.BmsBizInstockInfoMapper.restoreCustomerBiz",map);
+    }
 }

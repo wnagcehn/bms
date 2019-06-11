@@ -383,4 +383,15 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
         return updateBatch("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.delFees", list);
     }
 
+    @Override
+    public int cancalCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.cancalCustomerBiz", map);
+    }
+
+    @Override
+    public int restoreCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.restoreCustomerBiz", map);
+    }
 }

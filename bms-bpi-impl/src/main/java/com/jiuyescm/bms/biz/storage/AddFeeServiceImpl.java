@@ -19,10 +19,10 @@ import org.springframework.util.CollectionUtils;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.biz.storage.service.IAddFeeService;
+import com.jiuyescm.bms.biz.storage.vo.BizAddFeeVo;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
-import com.jiuyescm.bms.biz.storage.vo.BizAddFeeVo;
 
 @Service("addFeeService")
 public class AddFeeServiceImpl implements IAddFeeService {
@@ -47,7 +47,9 @@ public class AddFeeServiceImpl implements IAddFeeService {
             try {
                 PropertyUtils.copyProperties(paramEntity, vo);
             } catch (Exception ex) {
-                logger.error("增值服务单，转换失败" + vo.toString());
+               
+                logger.error("转换失败", ex);
+
             }
             list.add(paramEntity);
         }

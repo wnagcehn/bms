@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.biz.dispatch.web;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -266,6 +267,13 @@ public class BizDispatchPackageController {
         String path = "";
         StopWatch sw = new StopWatch();
         sw.start();
+        
+        //如果存放上传文件的目录不存在就新建
+        SystemCodeEntity sc = getSystemCode("GLOABL_PARAM","EXPORT_PACKAGE_BIZ");
+        File storeFolder=new File(sc.getExtattr1());
+        if(!storeFolder.isDirectory()){
+            storeFolder.mkdirs();
+        }
 
         logger.info("====标准包装方案导出：写入Excel begin.");
         fileExportTaskService.updateExportTask(taskId, null, 30);

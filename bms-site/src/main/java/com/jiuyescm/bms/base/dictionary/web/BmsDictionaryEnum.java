@@ -72,6 +72,12 @@ public class BmsDictionaryEnum {
 		return CalculateState.getMap();
 	}
 	
+	@DataProvider  
+	public Map<String, String> getErrorCalculateStateEnum() {  
+	    //return CalculateState.
+	    return BmsEnums.errorCalcuStatus.getMap();
+	}
+	
 	@DataProvider
 	public Map<Integer, String> getBothTypeEnum() {  
 		//return CalculateState.

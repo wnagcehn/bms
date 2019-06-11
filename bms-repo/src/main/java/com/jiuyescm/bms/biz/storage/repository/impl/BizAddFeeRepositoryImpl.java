@@ -143,11 +143,12 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao implements IBizAddFeeRep
 	@Override
 	public int retryCalcu(Map<String, Object> condition) {
 		try {
-			return update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.retryCalcu",condition);
+			update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.retryCalcu",condition);
+			return 1;
 		} catch (Exception ex) {
 			logger.error("批量更新主表异常"+ex.getMessage());
+			return 0;
 		}	
-		return 0;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -174,5 +175,19 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao implements IBizAddFeeRep
     @Override
     public int feesave(List<FeesReceiveStorageEntity> feeList) {
         return insertBatch("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.feesave",feeList);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public int cancalCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.cancalCustomerBiz", map);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public int restoreCustomerBiz(Map<String, Object> map) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.restoreCustomerBiz", map);
     }
 }

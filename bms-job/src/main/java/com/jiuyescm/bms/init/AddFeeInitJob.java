@@ -15,6 +15,7 @@ import org.springframework.util.StopWatch;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.common.JobParameterHandler;
 import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
@@ -41,6 +42,10 @@ public class AddFeeInitJob extends IJobHandler{
 	@Autowired private ISnowflakeSequenceService snowflakeSequenceService;
 	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired private IFeesReceiveStorageService feesReceiveStorageService;
+    @Autowired
+    private IBmsGroupCustomerService bmsGroupCustomerService;
+
+    List<String> noCalculateList=null;
 
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
@@ -68,6 +73,8 @@ public class AddFeeInitJob extends IJobHandler{
 			map.put("num", num);
 		}
 		
+		initConf();
+		
 		//查询所有状态为0的业务数据
 		map.put("isCalculated", "0");	
 		Map<String, Object> taskVoMap = new HashMap<>();	
@@ -89,8 +96,15 @@ public class AddFeeInitJob extends IJobHandler{
 			    List<String> feesNos=new ArrayList<>();
 				for (BizAddFeeEntity entity : bizList) {
 				    if(StringUtils.isNotBlank(entity.getFeesNo())){
-				        feesNos.add(entity.getFeesNo());
-				    }
+                        feesNos.add(entity.getFeesNo());
+                    }
+				    //优先判断该商家是否是不计费商家，不计费商家状态直接置为4
+				    //如果是不计费的商家，则直接更新业务计算状态为4
+                    if(noCalculateList.size()>0 && noCalculateList.contains(entity.getCustomerid())){
+                        entity.setDelFlag("4");
+                        continue;
+                    }
+				   
 					FeesReceiveStorageEntity fee = initFees(entity);
 					feesList.add(fee);				
 					String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
@@ -197,4 +211,9 @@ public class AddFeeInitJob extends IJobHandler{
 			}
 		} 
 	}
+	
+    private void initConf() {
+        noCalculateList=bmsGroupCustomerService.queryCustomerByGroupCode("no_calculate_customer");
+    }
+
 }
