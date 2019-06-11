@@ -93,6 +93,8 @@ public class MaterialToDelJob extends IJobHandler {
             sw.start("结束1");
             return printLog("没有需要作废的运单", sw);
         }
+        
+        sw.start("组装需要作废和不需要作废的数据");
         List<BizOutstockPackmaterialCancelEntity> delList = new ArrayList<BizOutstockPackmaterialCancelEntity>(); 
         List<String> waybillNoList = new ArrayList<String>();
         //修改配置表（如：去掉一个耗材），通过配置表中作废的耗材变成未作废，触发重算
@@ -113,7 +115,6 @@ public class MaterialToDelJob extends IJobHandler {
             }    
         }
    
-        XxlJobLogger.log("统计不需要作废的，并将状态更新为'不作废'");
         if (CollectionUtils.isNotEmpty(updateNoDelList)) {
             bizOutstockPackmaterialCancelService.updateBatchStatus(updateNoDelList);
         }
@@ -125,7 +126,6 @@ public class MaterialToDelJob extends IJobHandler {
             return printLog("没有需要作废的运单", sw);
         }
         
-        //通过商家归属为'合同在线'的运单号，查出对应耗材
         sw.start("通过商家归属为'合同在线'的运单号，查出对应耗材");
         List<BizOutstockPackmaterialEntity> materialLists = bizOutstockPackmaterialRepository.queryByWaybillNo(waybillNoList);
         printTime(sw);
@@ -135,8 +135,7 @@ public class MaterialToDelJob extends IJobHandler {
         Map<String, Object> con = new HashMap<String, Object>();
         con.put("delFlag", "0");
         List<PubPackageDictEntity> packDickList = pubPackageDictService.query(con);
-        //key为mark，value为需要作废的耗材
-        Map<String, List<String>> dicMap = new HashMap<String, List<String>>();
+        Map<String, List<String>> dicMap = new HashMap<String, List<String>>();  //key为mark，value为需要作废的耗材
         for (PubPackageDictEntity dictEntity : packDickList) {
             if (dicMap.containsKey(dictEntity.getPackMark())) {
                 dicMap.get(dictEntity.getPackMark()).add(dictEntity.getMaterialType());
@@ -146,12 +145,13 @@ public class MaterialToDelJob extends IJobHandler {
                 dicMap.put(dictEntity.getPackMark(), materialList);
             }
         }
+        printTime(sw);
+        
         //配置表一定会配置数据，这一步可能多余
         if (CollectionUtils.isEmpty(packDickList)) {
             sw.start("结束3");
             return printLog("配置表无配置数据", sw);
-        }
-        printTime(sw);
+        }      
         
         sw.start("对运单进行匹配打分");
         //4.通过捞的运单号去标准包装方案表中查, 然后开始进行匹配打分
