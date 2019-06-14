@@ -93,18 +93,12 @@
     <update id="update" parameterType="com.jiuyescm.bms.bill.customer.BillPeriodInfoEntity">
         update bill_period_info
         <trim prefix="set" suffixOverrides=",">
-			<if test=" mkId != null and mkId !='' ">
-				mk_id = #{mkId,jdbcType=VARCHAR},
-			</if>
-			<if test=" invoiceName != null ">
-				invoice_name = #{invoiceName,jdbcType=VARCHAR},
-			</if>
+			mk_id = #{mkId,jdbcType=VARCHAR},
+			invoice_name = #{invoiceName,jdbcType=VARCHAR},
 			<if test=" basicCode != null and basicCode !='' ">
 				basic_code = #{basicCode,jdbcType=VARCHAR},
 			</if>
-			<if test=" addMonth != null and addMonth !='' ">
-				add_month = #{addMonth,jdbcType=INTEGER},
-			</if>
+			add_month = #{addMonth,jdbcType=INTEGER},
 			add_day = #{addDay,jdbcType=INTEGER},
 			<if test=" modPerson != null and modPerson !='' ">
 				mod_person = #{modPerson,jdbcType=VARCHAR},
