@@ -47,6 +47,7 @@ import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
 import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.crm.module.api.IModuleDataOpenService;
 import com.jiuyescm.crm.module.vo.FieldDataOpenVO;
 import com.jiuyescm.crm.module.vo.ModuleDataOpenVO;
@@ -162,13 +163,44 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
                     if (null == periodInfo) {
                         throw new BizException("请先去商家账期设置界面配置！");
                     }
+                    long time = 0l;
+                    Calendar c = Calendar.getInstance();
+                    SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
                     
                     if (BILL_DAY.equals(periodInfo.getBasicCode()) || BILL_DAY_NEXT_MONTH.equals(periodInfo.getBasicCode())) {
-                        
+                        //取业务月份最后一天，如：1901，取2019-01-31
+                        String creMonth = DateUtil.getLastDay("20" 
+                                + String.valueOf(entity.getCreateMonth()).substring(0, 2) + "-"
+                                        + String.valueOf(entity.getCreateMonth()).substring(2, 4) + "-01");
+                        if (BILL_DAY.equals(periodInfo.getBasicCode())) {
+                            //加一天                       
+                            c.setTime(sdf.parse(creMonth));  
+                            c.add(Calendar.DAY_OF_MONTH, 1);
+                            if (null != periodInfo.getAddMonth()) {
+                                c.add(Calendar.MONTH, periodInfo.getAddMonth());
+                            }
+                            if (null != periodInfo.getAddDay()) {
+                                c.add(Calendar.DAY_OF_MONTH, periodInfo.getAddDay());
+                            }
+                            
+                            int days = (int) ((time - current) / (1000 * 60 * 60 * 24));
+                            if (days >= 20) {
+                                entity.setOverStatus("正常"); 
+                            } else if (days > 0 && days < 20) {
+                                entity.setOverStatus("临期");
+                            } else if (days <= 0) {
+                                entity.setOverStatus("超期");
+                            }
+                        }
+                        if (BILL_DAY_NEXT_MONTH.equals(periodInfo.getBasicCode())) {
+                            //下个月第一天
+                            
+                            
+                        }
                     }else {
                         if ("1".equals(entity.getIsneedInvoice()) && entity.getInvoiceDate() != null) {
                             // 需要开票时用开票时间去判断
-                            long time = entity.getInvoiceDate().getTime();
+                            time = entity.getInvoiceDate().getTime();
 
                             int days = (int) ((current - time) / (1000 * 60 * 60 * 24));
                             if (days >= 0 && days < 30) {
@@ -180,7 +212,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
                             }
 
                         } else if ("0".equals(entity.getIsneedInvoice()) && entity.getConfirmDate() != null) {
-                            long time = entity.getConfirmDate().getTime();
+                            time = entity.getConfirmDate().getTime();
 
                             int days = (int) ((current - time) / (1000 * 60 * 60 * 24));
                             if (days >= 0 && days < 30) {

@@ -58,7 +58,7 @@ public class BillPeriodInfoController {
 	}
 
 	/**
-	 * 保存
+	 * 保存和修改
 	 * @param entity
 	 * @return
 	 */
@@ -71,7 +71,7 @@ public class BillPeriodInfoController {
             return result;
         } 
 	    if (null == entity.getAddMonth() && null == entity.getAddDay()) {
-	        result.put("fail", "加月数与加天数必填一个！");
+	        result.put("fail", "加月数与加天数必填一个，不可都为空！");
             return result;
         }
 	    if (null != entity.getAddDay() && entity.getAddDay() < 0) {
@@ -84,7 +84,10 @@ public class BillPeriodInfoController {
 	    }
 	    map.put("mkInvoiceName", entity.getInvoiceName());
         List<BillPeriodInfoEntity> list = billPeriodInfoService.queryByCustomer(map);
-        if (CollectionUtils.isNotEmpty(list)) {
+        if (StringUtils.isBlank(entity.getInvoiceName()) && CollectionUtils.isNotEmpty(list)) {
+            result.put("fail", "已存在商家名称为空的配置，不可重复！");
+            return result;
+        }else if (StringUtils.isNotBlank(entity.getInvoiceName()) && CollectionUtils.isNotEmpty(list)) {
             result.put("fail", "该商家已有账期设置！");
             return result;
         }
@@ -101,7 +104,7 @@ public class BillPeriodInfoController {
                 return result;
             }
 	        if (null == cusEntity) {
-	            result.put("fail", "查询商家不存在，请检查商家是否精确！");
+	            result.put("fail", "商家名称不存在于BMS商家信息“商家合同名称”中！");
 	            return result;
             }else {
                 entity.setMkId(cusEntity.getMkId());
