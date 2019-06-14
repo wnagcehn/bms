@@ -488,6 +488,7 @@ public class BillCheckInfoController{
 					//****** 修改模板 ******
 					temp.setLastModifier(userid);
 					temp.setLastModifyTime(nowdate);
+					temp.setMkId(mkInvoiceName.getMkId());
 					int result=billCheckInfoService.updateOne(temp);
 					if(result<=0){
 						return "修改失败";

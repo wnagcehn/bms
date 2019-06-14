@@ -39,4 +39,14 @@ mk_id, mk_invoice_name, creator, create_time, last_modifier, last_modify_time, d
 		and b.mk_invoice_name like '%${mkInvoiceName}%'
 		</if>
     </select>
+    
+    <select id="queryByMkInvoiceName" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity">
+		select distinct b.mk_invoice_name,a.mk_id from pub_customer a
+		inner join pub_customer_base b on a.mk_id = b.mk_id
+		where  a.del_flag = '0' and b.del_flag = '0'
+		<if test="(mkInvoiceName != null and mkInvoiceName !='')" >
+		and b.mk_invoice_name = #{mkInvoiceName}
+		</if>
+    </select>
 </mapper>
