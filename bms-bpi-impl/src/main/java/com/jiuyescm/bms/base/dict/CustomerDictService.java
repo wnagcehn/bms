@@ -22,6 +22,7 @@ import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.bms.base.dict.vo.PubCustomerBaseVo;
 import com.jiuyescm.bms.base.dict.vo.PubCustomerVo;
 import com.jiuyescm.constants.RedisCache;
+import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.redis.callback.GetDataCallBack;
 import com.jiuyescm.framework.redis.client.IRedisClient;
 import com.jiuyescm.mdm.customer.api.ICustomerService;
@@ -311,5 +312,20 @@ public class CustomerDictService implements ICustomerDictService {
 		}
 		return vo;
 	}
+	
+	@Override
+    public PubCustomerBaseEntity getMkIdByMkInvoiceNameNew(String mkInvoiceName) {
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("delFlag", "0");
+        condition.put("mkInvoiceName", mkInvoiceName);
+        List<PubCustomerBaseEntity> list = pubCustomerBaseRepository.queryByMkInvoiceName(condition);
+        if (list == null || list.size() == 0) {
+            return null;
+        } else if (list.size() > 1) {
+            throw new BizException("查询到多个商家，请确认合同商家名称是否精确");
+        } else {
+            return list.get(0);
+        }
+    }
 
 }

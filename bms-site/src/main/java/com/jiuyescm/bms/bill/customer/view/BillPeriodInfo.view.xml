@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtBillPeriodInfoEntity">
+      <Property name="creationType">com.jiuyescm.bms.bill.customer.BillPeriodInfoEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">自增主键</Property>
+      </PropertyDef>
+      <PropertyDef name="mkId">
+        <Property name="label">主商家id</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property name="label">合同商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="basicCode">
+        <Property name="label">应收款起算基准</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;BASE_CODE&quot;)}</Property>
+        </Property>
+        <Property name="required">false</Property>
+      </PropertyDef>
+      <PropertyDef name="addMonth">
+        <Property name="label">加月数</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;feesPayImportController#getAllMonth&quot;).getResult()}</Property>
+        </Property>
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="addDay">
+        <Property name="label">加天数</Property>
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="crePerson">
+        <Property name="label">创建人</Property>
+      </PropertyDef>
+      <PropertyDef name="crePersonId">
+        <Property name="label">创建人id</Property>
+      </PropertyDef>
+      <PropertyDef name="creTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="modPerson">
+        <Property name="label">修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="modPersonId">
+        <Property name="label">修改人id</Property>
+      </PropertyDef>
+      <PropertyDef name="modTime">
+        <Property name="label">修改时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标识</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtBillPeriodInfoEntityQuery">
+      <PropertyDef name="mkId">
+        <Property name="label">主商家id</Property>
+      </PropertyDef>
+      <PropertyDef name="invoiceName">
+        <Property name="label">合同商家名称</Property>
+      </PropertyDef>
+      <PropertyDef name="basicCode">
+        <Property name="label">应收款起算基准</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;systemCodeController#getEnumList3&quot;).getResult(&quot;BASE_CODE&quot;)}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="delFlag">
+        <Property name="label">作废标识</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsBillPeriodInfoEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton id="btnQuery">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBillPeriodInfoEntityQuery.data&quot;).current;
+				with (view.get(&quot;#dsBillPeriodInfoEntity&quot;)){
+					set(&quot;parameter&quot;, data);
+					flushAsync();
+				}</ClientEvent>
+        <Property name="caption">查询</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnAdd">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillPeriodInfoEntity.data&quot;);
+                datas.insert();
+                view.get(&quot;#dialogEdit&quot;).show();
+</ClientEvent>
+        <Property name="caption">新增</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnModify">
+        <ClientEvent name="onClick">var data=view.get(&quot;#dsBillPeriodInfoEntity.data&quot;);&#xD;
+                if(data.current){&#xD;
+                    view.get(&quot;#dialogEdit&quot;).show();&#xD;
+					&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnRemove">
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillPeriodInfoEntity.data&quot;);&#xD;
+                var currentData = datas.current;&#xD;
+                if(currentData){&#xD;
+                    dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+                        view.get(&quot;#deleteAction&quot;).execute({&#xD;
+                            callback:function(success){&#xD;
+                                //刷新&#xD;
+								var data = view.get(&quot;#dsBillPeriodInfoEntityQuery.data&quot;).current;&#xD;
+								with (view.get(&quot;#dsBillPeriodInfoEntity&quot;)){&#xD;
+									set(&quot;parameter&quot;, data);&#xD;
+									flushAsync();&#xD;
+								}&#xD;
+                            }&#xD;
+                        });&#xD;
+                    });&#xD;
+                }else{&#xD;
+                    dorado.MessageBox.alert(&quot;请首先选择要删除的记录!&quot;);&#xD;
+                }</ClientEvent>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataSet id="dsBillPeriodInfoEntity">
+      <Property name="dataType">[dtBillPeriodInfoEntity]</Property>
+      <Property name="dataProvider">billPeriodInfoController#query</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsBillPeriodInfoEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsBillPeriodInfoEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtBillPeriodInfoEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <AutoForm id="queryForm">
+      <Property name="createPrivateDataSet">true</Property>
+      <Property name="cols">*,*,*,*</Property>
+      <Property name="labelWidth">100</Property>
+      <Property name="dataSet">dsBillPeriodInfoEntityQuery</Property>
+      <AutoFormElement>
+        <Property name="name">invoiceName</Property>
+        <Property name="property">invoiceName</Property>
+        <Property name="trigger">triggerQueryInvoice</Property>
+        <Editor/>
+      </AutoFormElement>
+      <AutoFormElement>
+        <Property name="name">basicCode</Property>
+        <Property name="property">basicCode</Property>
+        <Editor/>
+      </AutoFormElement>
+    </AutoForm>
+    <DataGrid>
+      <Property name="dataSet">dsBillPeriodInfoEntity</Property>
+      <Property name="stretchColumnsMode">auto</Property>
+      <Property name="readOnly">true</Property>
+      <IndicatorColumn/>
+      <RowNumColumn/>
+      <DataColumn name="id">
+        <Property name="property">id</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="mkId">
+        <Property name="property">mkId</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn name="invoiceName">
+        <Property name="property">invoiceName</Property>
+        <Property name="width">180</Property>
+      </DataColumn>
+      <DataColumn name="basicCode">
+        <Property name="property">basicCode</Property>
+      </DataColumn>
+      <DataColumn name="addMonth">
+        <Property name="property">addMonth</Property>
+      </DataColumn>
+      <DataColumn name="addDay">
+        <Property name="property">addDay</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">crePerson</Property>
+        <Property name="name">crePerson</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">creTime</Property>
+        <Property name="name">creTime</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">modPerson</Property>
+        <Property name="name">modPerson</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">modTime</Property>
+        <Property name="name">modTime</Property>
+      </DataColumn>
+    </DataGrid>
+    <Dialog id="dialogEdit">
+      <ClientEvent name="onClose">view.id(&quot;dsBillPeriodInfoEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+var data = view.get(&quot;#dsBillPeriodInfoEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBillPeriodInfoEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}</ClientEvent>
+      <Property name="caption">商家账期新增</Property>
+      <Property name="center">true</Property>
+      <Property name="height">280</Property>
+      <Property name="width">370</Property>
+      <Buttons>
+        <Button id="btnSave">
+          <ClientEvent name="onClick">view.id(&quot;updateAction&quot;).execute(&#xD;
+	    function(result){&#xD;
+			if(result['fail'] != null &amp;&amp; result['fail'] != '' &amp;&amp; result['fail'] != undefined){&#xD;
+				dorado.MessageBox.alert(result['fail']);&#xD;
+				return;&#xD;
+			}else{&#xD;
+				view.id(&quot;dialogEdit&quot;).hide();&#xD;
+				//刷新&#xD;
+				var data = view.get(&quot;#dsBillPeriodInfoEntityQuery.data&quot;).current;&#xD;
+				with (view.get(&quot;#dsBillPeriodInfoEntity&quot;)){&#xD;
+					set(&quot;parameter&quot;, data);&#xD;
+					flushAsync();&#xD;
+				}&#xD;
+			}  &#xD;
+	    }&#xD;
+	);</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnCancel">
+          <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBillPeriodInfoEntity&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogEdit&quot;).hide();&#xD;
+							var data = view.get(&quot;#dsBillPeriodInfoEntityQuery.data&quot;).current;&#xD;
+							with (view.get(&quot;#dsBillPeriodInfoEntity&quot;)){&#xD;
+								set(&quot;parameter&quot;, data);&#xD;
+								flushAsync();&#xD;
+							}&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formEdit">
+          <Property name="cols">*</Property>
+          <Property name="dataSet">dsBillPeriodInfoEntity</Property>
+          <Property name="dataType">dtBillPeriodInfoEntity</Property>
+          <Property name="labelWidth">100</Property>
+          <AutoFormElement>
+            <Property name="name">id</Property>
+            <Property name="property">id</Property>
+            <Property name="hideMode">display</Property>
+            <Property name="visible">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">mkId</Property>
+            <Property name="property">mkId</Property>
+            <Property name="visible">false</Property>
+            <Property name="showHint">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">invoiceName</Property>
+            <Property name="property">invoiceName</Property>
+            <Property name="trigger">triggerInvoice</Property>
+            <Property name="editable">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">basicCode</Property>
+            <Property name="property">basicCode</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">addMonth</Property>
+            <Property name="property">addMonth</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">addDay</Property>
+            <Property name="property">addDay</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <Property name="modal">true</Property>
+      <Property name="dataResolver">billPeriodInfoController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillPeriodInfoEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="deleteAction">
+      <Property name="successMessage">数据删除成功！</Property>
+      <Property name="dataResolver">billPeriodInfoController#delete</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillPeriodInfoEntity</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Trigger id="triggerInvoice">
+      <ClientEvent name="onExecute">view.get(&quot;#panelInvoice&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelInvoice">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectInvoice.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsBillPeriodInfoEntity&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+        mkId: data.get(&quot;mkId&quot;),&#xD;
+		invoiceName:data.get(&quot;mkInvoiceName&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">合同商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">520</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectInvoice">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.InvoiceLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerQueryInvoice">
+      <ClientEvent name="onExecute">view.get(&quot;#panelQueryInvoice&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelQueryInvoice">
+      <ClientEvent name="onHide">var data = this.get(&quot;#queyViewSelectInvoice.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	var entity = this.get(&quot;#dsBillPeriodInfoEntityQuery&quot;).getData(&quot;#&quot;);&#xD;
+    entity.set({&#xD;
+		invoiceName:data.get(&quot;mkInvoiceName&quot;)&#xD;
+    });&#xD;
+}</ClientEvent>
+      <Property name="caption">合同商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">520</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="queyViewSelectInvoice">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.InvoiceLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+  </View>
+</ViewConfig>

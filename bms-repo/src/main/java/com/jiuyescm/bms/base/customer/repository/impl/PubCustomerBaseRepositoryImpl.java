@@ -49,4 +49,10 @@ public class PubCustomerBaseRepositoryImpl extends MyBatisDao<PubCustomerBaseEnt
     public List<PubCustomerBaseEntity> query(Map<String, Object> condition){
 		return selectList("com.jiuyescm.bms.base.customer.PubCustomerBaseMapper.query", condition);
 	}
+	
+	
+	@Override
+	public List<PubCustomerBaseEntity> queryByMkInvoiceName(Map<String, Object> condition){
+	    return selectList("com.jiuyescm.bms.base.customer.PubCustomerBaseMapper.queryByMkInvoiceName", condition);
+	}
 }

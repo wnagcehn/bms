@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.bill.customer.BillPeriodInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.bill.customer.BillPeriodInfoEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="mk_id" property="mkId" jdbcType="VARCHAR" />
+		   	<result column="invoice_name" property="invoiceName" jdbcType="VARCHAR" />
+		   	<result column="basic_code" property="basicCode" jdbcType="VARCHAR" />
+		   	<result column="add_month" property="addMonth" jdbcType="INTEGER" />
+		   	<result column="add_day" property="addDay" jdbcType="INTEGER" />
+		   	<result column="cre_person" property="crePerson" jdbcType="VARCHAR" />
+		   	<result column="cre_person_id" property="crePersonId" jdbcType="VARCHAR" />
+		   	<result column="cre_time" property="creTime" jdbcType="TIMESTAMP" />
+		   	<result column="mod_person" property="modPerson" jdbcType="VARCHAR" />
+		   	<result column="mod_person_id" property="modPersonId" jdbcType="VARCHAR" />
+		   	<result column="mod_time" property="modTime" jdbcType="TIMESTAMP" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, mk_id, invoice_name, basic_code, add_month, add_day, cre_person, cre_person_id, cre_time, mod_person, mod_person_id, mod_time, del_flag
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+		mk_id, invoice_name, basic_code, add_month, add_day, cre_person, cre_person_id, cre_time, mod_person, mod_person_id, mod_time, del_flag
+    </sql>
+
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.customer.BillPeriodInfoEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_period_info
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" mkId != null and mkId !='' ">
+				and mk_id = #{mkId}
+			</if>
+        	<if test=" invoiceName != null and invoiceName !='' ">
+				and invoice_name  like '%${invoiceName}%'
+			</if>
+        	<if test=" basicCode != null and basicCode !='' ">
+				and basic_code = #{basicCode}
+			</if>
+        	<if test=" delFlag != null and delFlag !='' ">
+				and del_flag = #{delFlag}
+			</if>
+		order by invoice_name,basic_code ASC
+    </select>
+    
+    <select id="queryByCustomer" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.customer.BillPeriodInfoEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_period_info
+        where 1 = 1 and del_flag='0'
+        	<if test=" id != null and id !='' ">
+				and id != #{id}
+			</if>
+			<if test=" mkInvoiceName == null or mkInvoiceName =='' ">
+				and invoice_name is null
+			</if>
+			<if test=" mkInvoiceName != null and mkInvoiceName !='' ">
+				and invoice_name = #{mkInvoiceName}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.bill.customer.BillPeriodInfoEntity">
+        insert into bill_period_info(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{mkId,jdbcType=VARCHAR}, 
+			#{invoiceName,jdbcType=VARCHAR}, 
+			#{basicCode,jdbcType=VARCHAR}, 
+			#{addMonth,jdbcType=INTEGER}, 
+			#{addDay,jdbcType=INTEGER}, 
+			#{crePerson,jdbcType=VARCHAR}, 
+			#{crePersonId,jdbcType=VARCHAR}, 
+			#{creTime,jdbcType=TIMESTAMP}, 
+			#{modPerson,jdbcType=VARCHAR}, 
+			#{modPersonId,jdbcType=VARCHAR}, 
+			#{modTime,jdbcType=TIMESTAMP}, 
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.bill.customer.BillPeriodInfoEntity">
+        update bill_period_info
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" mkId != null and mkId !='' ">
+				mk_id = #{mkId,jdbcType=VARCHAR},
+			</if>
+			<if test=" invoiceName != null ">
+				invoice_name = #{invoiceName,jdbcType=VARCHAR},
+			</if>
+			<if test=" basicCode != null and basicCode !='' ">
+				basic_code = #{basicCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" addMonth != null and addMonth !='' ">
+				add_month = #{addMonth,jdbcType=INTEGER},
+			</if>
+			add_day = #{addDay,jdbcType=INTEGER},
+			<if test=" modPerson != null and modPerson !='' ">
+				mod_person = #{modPerson,jdbcType=VARCHAR},
+			</if>
+			<if test=" modPersonId != null and modPersonId !='' ">
+				mod_person_id = #{modPersonId,jdbcType=VARCHAR},
+			</if>
+			<if test=" modTime != null and modTime !='' ">
+				mod_time = #{modTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=VARCHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+</mapper>
