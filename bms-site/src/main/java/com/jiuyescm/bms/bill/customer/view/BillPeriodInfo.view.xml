@@ -137,7 +137,7 @@
       <Property name="dataType">[dtBillPeriodInfoEntity]</Property>
       <Property name="dataProvider">billPeriodInfoController#query</Property>
       <Property name="readOnly">false</Property>
-      <Property name="loadMode">manual</Property>
+      <Property name="loadMode">lazy</Property>
       <Property name="pageSize">20</Property>
     </DataSet>
     <DataSet id="dsBillPeriodInfoEntityQuery">

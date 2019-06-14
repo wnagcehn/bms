@@ -67,7 +67,7 @@ public class BillPeriodInfoController {
 	    Map<String, String> result = Maps.newLinkedHashMap();
 	    Map<String, Object> map = Maps.newLinkedHashMap();
         if (StringUtils.isBlank(entity.getBasicCode())) {
-            result.put("fail", "应收款起算基准位必填项，不可为空！");
+            result.put("fail", "应收款起算基准为必填项，不可为空！");
             return result;
         } 
 	    if (null == entity.getAddMonth() && null == entity.getAddDay()) {
@@ -110,6 +110,9 @@ public class BillPeriodInfoController {
                 entity.setMkId(cusEntity.getMkId());
                 entity.setInvoiceName(cusEntity.getMkInvoiceName());
             }
+        }else {
+            entity.setMkId(null);
+            entity.setInvoiceName(null);
         }
 	    try {
 	        if (null == entity.getId()) {
