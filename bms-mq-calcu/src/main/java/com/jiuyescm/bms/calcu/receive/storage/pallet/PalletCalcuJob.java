@@ -18,7 +18,6 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
-import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.calcu.base.ICalcuService;
 import com.jiuyescm.bms.calcu.receive.BmsContractBase;
@@ -80,6 +79,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 	
 	List<String> cusList=null;
 	List<String> cusNames = null;
+	List<String> materialCusNames=null;
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
@@ -172,16 +172,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		cond.put("bizType", "group_customer");
 		BmsGroupVo bmsGroup=bmsGroupService.queryOne(cond);
 		if(bmsGroup!=null){
-			cusNames = new ArrayList<String>();
-			List<BmsGroupCustomerVo> cusList = null;
-			try {
-				cusList = bmsGroupCustomerService.queryAllByGroupId(bmsGroup.getId());
-			} catch (Exception e) {
-				logger.error("查询使用导入商品托数的商家异常:", e);
-			}
-			for(BmsGroupCustomerVo vo:cusList){
-				cusNames.add(vo.getCustomerid());
-			}
+			cusNames = bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
 		}
 		
 		//指定的商家
@@ -189,10 +180,18 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		map.put("groupCode", "customer_unit");
 		map.put("bizType", "group_customer");
 		BmsGroupVo bmsGroup1=bmsGroupService.queryOne(map);
-		if(bmsGroup!=null){
+		if(bmsGroup1!=null){
 			cusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup1.getId());
 		}
-			
+		
+		//《使用导入耗材托数的商家》
+		map= new HashMap<String, Object>();
+        map.put("groupCode", "Material_Pallet");
+        map.put("bizType", "group_customer");
+        BmsGroupVo bmsGroup2=bmsGroupService.queryOne(map);
+        if(bmsGroup2!=null){
+            materialCusNames=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup2.getId());
+        }
 	}
 
 	@Override
@@ -204,7 +203,9 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		double num = 0d;
 		if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())) {
 		    entity.setChargeSource("system");	
-		}else {
+		}if ("material".equals(entity.getBizType()) && !materialCusNames.contains(entity.getCustomerId())) {
+            entity.setChargeSource("system");   
+        }else {
 		    entity.setChargeSource("import");
 		}
 		//调整托数优先级最高
@@ -214,7 +215,9 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		if (DoubleUtil.isBlank(entity.getAdjustPalletNum())) {
 			if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())){
 				num = entity.getSysPalletNum();
-			}else {
+			}if ("material".equals(entity.getBizType()) && !materialCusNames.contains(entity.getCustomerId())){
+                num = entity.getSysPalletNum();
+            }else {
 			    num = entity.getPalletNum();
             }
 		}else {

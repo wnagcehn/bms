@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.discount.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,18 @@ public interface IBmsDiscountRepository {
 	 * @return
 	 */
 	public BmsDiscountAccountEntity queryStorageAccount(Map<String,Object> condition);
+	
+	/**
+	 * 物流产品统计
+	 * <功能描述>
+	 * 
+	 * @author zhaofeng
+	 * @date 2019年6月14日 下午4:01:28
+	 *
+	 * @param condition
+	 * @return
+	 */
+	public List<BmsDiscountAccountEntity> queryServiceAccount(Map<String,Object> condition);
 	
 	/**
 	 * 更新taskId到折扣费用表
