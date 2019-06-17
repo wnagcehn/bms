@@ -2,7 +2,10 @@ package com.jiuyescm.bms.bill.customer.controller;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -13,9 +16,23 @@ import org.springframework.stereotype.Controller;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.uploader.DownloadFile;
+import com.bstek.dorado.uploader.annotation.FileProvider;
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity;
 import com.jiuyescm.bms.bill.customer.service.IBillCustomerDetailService;
+import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
+import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
+import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
+import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
+import com.jiuyescm.bms.common.enumtype.CalculateState;
+import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
+import com.jiuyescm.bms.common.vo.ExportDataVoEntity;
+import com.jiuyescm.bms.common.web.HttpCommanExport;
+import com.jiuyescm.common.utils.upload.BillProcessReportType;
+import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -30,6 +47,10 @@ public class BillCustomerDetailController {
 
 	@Autowired
 	private IBillCustomerDetailService billCustomerDetailService;
+	@Autowired
+	private IBmsErrorLogInfoService bmsErrorLogInfoService;
+	@Autowired
+	private ISystemCodeService systemCodeService;
 
 	/**
 	 * 根据id查询
@@ -110,5 +131,69 @@ public class BillCustomerDetailController {
 	public void delete(BillCustomerDetailEntity entity) {
 		billCustomerDetailService.delete(entity.getId());
 	}
+	
+	/**
+	 * 导出
+	 */
+    @FileProvider
+    public DownloadFile downLoadData(Map<String,Object> parameter) throws Exception{
+        try{
+            String path=getPath();
+            HttpCommanExport commanExport=new HttpCommanExport(path);
+            ExportDataVoEntity voEntity=new ExportDataVoEntity();
+            voEntity.setTitleName("结算进度报表导出");
+            voEntity.setBaseType(new BillProcessReportType());
+            voEntity.setDataList(getDataList(parameter));
+            return commanExport.exportFile(voEntity);
+        }catch(Exception e){
+            //写入日志
+            bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
+            throw e;
+        }
+        
+    }
+    
+    private String getPath(){
+        SystemCodeEntity systemCodeEntity = systemCodeService.getSystemCode("GLOABL_PARAM", "EXPORT_BILL_PROCESS_REPORT ");
+        if(systemCodeEntity == null){
+            throw new BizException("请在系统参数中配置文件上传路径,参数GLOABL_PARAM,EXPORT_BILL_PROCESS_REPORT ");
+        }
+        return systemCodeEntity.getExtattr1();
+    }
+    
+    private List<Map<String,Object>> getDataList(Map<String,Object> parameter) throws Exception{
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        List<BillCustomerDetailEntity> list = billCustomerDetailService.query(parameter);
+        List<Map<String,Object>> mapList=new ArrayList<Map<String,Object>>();
+        Map<String,Object> map=null;
+        for (BillCustomerDetailEntity entity : list) {
+            map = new HashMap<>();
+            map.put("createMonth",entity.getCreateMonth());
+            map.put("mkInvoiceName", entity.getMkInvoiceName());
+            if ("0".equals(entity.getIsPrepare())) {
+                map.put("isPrepare", "否");
+            } else if ("1".equals(entity.getIsPrepare())) {
+                map.put("isPrepare", "是");
+            } else if ("2".equals(entity.getIsPrepare())) {
+                map.put("isPrepare", "部分生成");
+            }
+            map.put("prepareTime", sdf.format(entity.getPrepareTime()));
+            map.put("prepareAmount", entity.getPrepareAmount());
+            map.put("isImport", "0".equals(entity.getIsImport())?"否":"是");
+            map.put("billName", entity.getBillName());
+            map.put("billCheckStatus", BillCheckStateEnum.getDesc(entity.getBillCheckStatus()));
+            map.put("confirmDate", sdf.format(entity.getConfirmDate()));
+            map.put("invoiceStatus", BillCheckInvoiceStateEnum.getDesc(entity.getInvoiceStatus()));
+            map.put("invoiceDate", sdf.format(entity.getInvoiceDate()));
+            map.put("receiptStatus", BillCheckReceiptStateEnum.getDesc(entity.getReceiptStatus()));
+            map.put("receiptDate", sdf.format(entity.getReceiptDate()));
+            map.put("confirmAmount", entity.getConfirmAmount());
+            map.put("invoiceAmount", entity.getInvoiceAmount());
+            map.put("receiptAmount", entity.getReceiptAmount());
+            map.put("balanceName", entity.getBalanceName());
+            mapList.add(map);
+        }
+        return mapList;
+    }
 	
 }
