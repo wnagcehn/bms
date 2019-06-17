@@ -90,7 +90,7 @@ public class HttpCommanExport {
 		for(DataProperty dataProp:dataProps){
 			itemMap = new HashMap<String, Object>();	
 			itemMap.put("title", dataProp.getPropertyName());
-	        itemMap.put("columnWidth", 25);
+	        itemMap.put("columnWidth", 40);
 	        itemMap.put("dataKey", dataProp.getPropertyId());
 	        headInfoList.add(itemMap);
 		}

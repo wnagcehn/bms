@@ -369,7 +369,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
             if (StringUtils.isBlank(periodEntity.getInvoiceName())) {
                 periodNullEntity = periodEntity;
             }
-            if (entity.getMkInvoiceName().equals(periodEntity.getInvoiceName())) {
+            if (entity.getInvoiceName().equals(periodEntity.getInvoiceName())) {
                 periodInfoEntity = periodEntity;
                 exe = true;
                 break;

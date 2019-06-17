@@ -195,6 +195,24 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+var createMonth = &quot;&quot;;&#xD;
+if(month &lt; 10){&#xD;
+	createMonth = year.toString().substring(0,4) + &quot;0&quot; + month;&#xD;
+}else{&#xD;
+	createMonth = year.toString().substring(0,4) + month;&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;createMonth&quot;,createMonth);&#xD;
+view.get(&quot;#queryForm.entity&quot;).set(&quot;createEndMonth&quot;,createMonth);&#xD;
+&#xD;
+var data = view.get(&quot;#dsBillCustomerDetailEntityQuery.data&quot;).current;&#xD;
+with (view.get(&quot;#dsBillCustomerDetailEntity&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
     <ToolBar>
       <DataPilot>
         <Property name="dataSet">dsBillCustomerDetailEntity</Property>
@@ -246,6 +264,12 @@ with (view.get(&quot;#dsBillCustomerDetailEntity&quot;)){
 </ClientEvent>
         <Property name="caption">查询</Property>
         <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsBillCustomerDetailEntityQuery.data&quot;).current;&#xD;
+view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();</ClientEvent>
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
       </ToolBarButton>
     </ToolBar>
     <DataSet id="dsBillCustomerDetailEntity">
@@ -465,5 +489,10 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </FloatPanel>
+    <DownloadAction id="downloadAction">
+      <Property name="fileProvider">billCustomerDetailController#downLoadData</Property>
+      <Property name="caption">导出</Property>
+      <Property name="parameter"></Property>
+    </DownloadAction>
   </View>
 </ViewConfig>
