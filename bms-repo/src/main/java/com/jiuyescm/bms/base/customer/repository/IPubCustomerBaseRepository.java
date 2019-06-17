@@ -18,4 +18,6 @@ public interface IPubCustomerBaseRepository {
 		int pageNo, int pageSize);
 
 	List<PubCustomerBaseEntity> query(Map<String, Object> condition);
+
+    List<PubCustomerBaseEntity> queryByMkInvoiceName(Map<String, Object> condition);
 }
