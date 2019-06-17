@@ -155,7 +155,100 @@ public class BmsCalcuRepositoryImpl extends MyBatisDao<BmsFeesQtyEntity> impleme
         return entity;
     }
 
+    @Override
+    public BmsFeesQtyEntity queryTotalAmountForStoOutstock(String customerId, String subjectCode,
+            String startTime, String endTime) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("customerId", customerId);
+        map.put("subjectCode", subjectCode);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        List<BmsFeesQtyEntity> list = selectList("com.jiuyescm.bms.calculate.BmsCalcuMapper.queryTotalAmountForStoOutstock", map);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+    
+    @Override
+    public BmsFeesQtyEntity queryTotalAmountForStoInstock(String customerId, String subjectCode,
+            String startTime, String endTime) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("customerId", customerId);
+        map.put("subjectCode", subjectCode);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        List<BmsFeesQtyEntity> list = selectList("com.jiuyescm.bms.calculate.BmsCalcuMapper.queryTotalAmountForStoInstock", map);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+    
+    @Override
+    public BmsFeesQtyEntity queryTotalAmountForStoPallet(String customerId, String subjectCode,
+            String startTime, String endTime) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("customerId", customerId);
+        map.put("subjectCode", subjectCode);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        List<BmsFeesQtyEntity> list = selectList("com.jiuyescm.bms.calculate.BmsCalcuMapper.queryTotalAmountForStoPallet", map);
+        return list.size() > 0 ? list.get(0) : null;
+    }
 
-
+    @Override
+    public BmsFeesQtyEntity queryTotalAmountForStoProductItem(String customerId, String subjectCode,
+            String startTime, String endTime) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("customerId", customerId);
+        map.put("subjectCode", subjectCode);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        List<BmsFeesQtyEntity> list = selectList("com.jiuyescm.bms.calculate.BmsCalcuMapper.queryTotalAmountForStoProductItem", map);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+    
+    @Override
+    public BmsFeesQtyEntity queryTotalAmountForStoStandMaterial(String customerId, String subjectCode,
+            String startTime, String endTime) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("customerId", customerId);
+        map.put("subjectCode", subjectCode);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        List<BmsFeesQtyEntity> list = selectList("com.jiuyescm.bms.calculate.BmsCalcuMapper.queryTotalAmountForStoStandMaterial", map);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+    
+    @Override
+    public BmsFeesQtyEntity queryTotalAmountForStoAdd(String customerId, String subjectCode,
+            String startTime, String endTime) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("customerId", customerId);
+        map.put("subjectCode", subjectCode);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        List<BmsFeesQtyEntity> list = selectList("com.jiuyescm.bms.calculate.BmsCalcuMapper.queryTotalAmountForStoAdd", map);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+    
+    @Override
+    public BmsFeesQtyEntity queryTotalAmountForStoMaterial(String customerId, String subjectCode,
+            String startTime, String endTime) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("customerId", customerId);
+        map.put("subjectCode", subjectCode);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        List<BmsFeesQtyEntity> list = selectList("com.jiuyescm.bms.calculate.BmsCalcuMapper.queryTotalAmountForStoMaterial", map);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+    
+    @Override
+    public BmsFeesQtyEntity queryTotalAmountForStoDis(String customerId, String subjectCode,
+            String startTime, String endTime) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("customerId", customerId);
+        map.put("subjectCode", subjectCode);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        List<BmsFeesQtyEntity> list = selectList("com.jiuyescm.bms.calculate.BmsCalcuMapper.queryTotalAmountForStoDis", map);
+        return list.size() > 0 ? list.get(0) : null;
+    }
 
 }

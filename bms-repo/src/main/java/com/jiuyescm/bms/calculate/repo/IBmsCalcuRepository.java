@@ -111,5 +111,130 @@ public interface IBmsCalcuRepository {
      * @return
      */
     List<BmsFeesQtyEntity> queryFeesQtyForStoStandMaterial(String customerId,String subjectCode, String startTime,String endTime);
+
+    /**
+     * 出库总费用
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午2:47:23
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    BmsFeesQtyEntity queryTotalAmountForStoOutstock(String customerId, String subjectCode, String startTime,
+            String endTime);
+
+    /**
+     * 入库总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午2:48:27
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    BmsFeesQtyEntity queryTotalAmountForStoInstock(String customerId, String subjectCode, String startTime,
+            String endTime);
+
+    /**
+     * 托数总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午2:48:51
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    BmsFeesQtyEntity queryTotalAmountForStoPallet(String customerId, String subjectCode, String startTime,
+            String endTime);
+
+    /**
+     * 商品按件总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午2:49:17
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    BmsFeesQtyEntity queryTotalAmountForStoProductItem(String customerId, String subjectCode, String startTime,
+            String endTime);
+
+    /**
+     * 标准包装方案总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午2:49:44
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    BmsFeesQtyEntity queryTotalAmountForStoStandMaterial(String customerId, String subjectCode, String startTime,
+            String endTime);
+
+    /**
+     * 增值总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午2:50:45
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    BmsFeesQtyEntity queryTotalAmountForStoAdd(String customerId, String subjectCode, String startTime, String endTime);
+
+    /**
+     * 耗材总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午2:51:04
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    BmsFeesQtyEntity queryTotalAmountForStoMaterial(String customerId, String subjectCode, String startTime,
+            String endTime);
+
+    /**
+     * 配送总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午2:51:24
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    BmsFeesQtyEntity queryTotalAmountForStoDis(String customerId, String subjectCode, String startTime, String endTime);
 	
 }

@@ -40,5 +40,10 @@ public class ProductCalcuBase extends CalcuTaskListener<BmsBizInstockInfoEntity,
 		return feesQtyVo;
 	}
 
+    @Override
+    protected BmsFeesQtyVo totalAmountReport(BmsCalcuTaskVo taskVo) {
+        BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryTotalAmountForStoProductItem(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
+        return feesQtyVo;
+    }
 	
 }

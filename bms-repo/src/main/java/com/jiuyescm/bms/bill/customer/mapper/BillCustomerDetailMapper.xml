@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.bill.customer.BillCustomerDetailMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="create_month" property="createMonth" jdbcType="INTEGER" />
+		   	<result column="mk_id" property="mkId" jdbcType="VARCHAR" />
+		   	<result column="mk_invoice_name" property="mkInvoiceName" jdbcType="VARCHAR" />
+		   	<result column="check_id" property="checkId" jdbcType="INTEGER" />
+		   	<result column="is_prepare" property="isPrepare" jdbcType="VARCHAR" />
+		   	<result column="prepare_time" property="prepareTime" jdbcType="TIMESTAMP" />
+		   	<result column="prepare_amount" property="prepareAmount" jdbcType="DECIMAL" />
+		   	<result column="is_import" property="isImport" jdbcType="VARCHAR" />
+		   	<result column="cre_time" property="creTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, create_month, mk_id, mk_invoice_name, check_id, is_prepare, prepare_time, prepare_amount, is_import, cre_time
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+create_month, mk_id, mk_invoice_name, check_id, is_prepare, prepare_time, prepare_amount, is_import, cre_time
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from bill_customer_detail
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity">
+        select a.create_month,a.mk_invoice_name,a.is_prepare,a.prepare_time,a.prepare_amount,a.is_import,
+		b.bill_name as billName,b.bill_check_status as billCheckStatus,b.confirm_date as confirmDate,
+		b.invoice_status as invoiceStatus,b.invoice_date as invoiceDate,b.receipt_status as receiptStatus,
+		b.receipt_date as receiptDate,b.confirm_amount as confirmAmount,b.invoice_amount as invoiceAmount,
+		b.receipt_amount as receiptAmount,a.balance_name as balanceName
+		From bill_customer_detail a
+		LEFT JOIN bill_check_info b on a.check_id=b.id
+        where 1 = 1
+        	<if test=" createMonth != null and createMonth !='' ">
+				and a.create_month >= #{createMonth}
+			</if>
+        	<if test=" createEndMonth != null and createEndMonth !='' ">
+				and a.create_month <![CDATA[<= #{createEndMonth}]]>
+			</if>
+			<if test=" receiptDate != null and receiptDate !='' ">
+				and b.receipt_date >= #{receiptDate}
+			</if>
+        	<if test=" receiptEndDate != null and receiptEndDate !='' ">
+				and b.receipt_date <![CDATA[<= #{receiptEndDate}]]>
+			</if>
+			<if test=" invoiceDate != null and invoiceDate !='' ">
+				and b.invoice_date >= #{invoiceDate}
+			</if>
+        	<if test=" invoiceEndDate != null and invoiceEndDate !='' ">
+				and b.invoice_date <![CDATA[<= #{invoiceEndDate}]]>
+			</if>
+        	<if test=" mkInvoiceName != null and mkInvoiceName !='' ">
+				and a.mk_invoice_name like CONCAT('%',#{mkInvoiceName},'%')
+			</if>
+        	<if test=" billName != null and billName !='' ">
+				and b.bill_name like CONCAT('%',#{billName},'%')
+			</if>
+        	<if test=" isPrepare != null and isPrepare !='' ">
+				and a.is_prepare = #{isPrepare}
+			</if>
+			<if test=" isImport != null and isImport !='' ">
+				and a.is_import = #{isImport}
+			</if>
+        	<if test=" billCheckStatus != null and billCheckStatus !='' ">
+				and b.bill_check_status = #{billCheckStatus}
+			</if>
+        	<if test=" invoiceStatus != null and invoiceStatus !='' ">
+				and b.invoice_status = #{invoiceStatus}
+			</if>	
+        	<if test=" receiptStatus != null and receiptStatus !='' ">
+				and b.receipt_status = #{receiptStatus}
+			</if>	
+        	<if test=" balanceName != null and balanceName !='' ">
+				and a.balance_name like CONCAT('%',#{balanceName},'%')
+			</if>
+			order by a.create_month,a.mk_invoice_name,a.balance_name
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity">
+        insert into bill_customer_detail(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{createMonth,jdbcType=INTEGER}, 
+			#{mkId,jdbcType=VARCHAR}, 
+			#{mkInvoiceName,jdbcType=VARCHAR}, 
+			#{checkId,jdbcType=INTEGER}, 
+			#{isPrepare,jdbcType=VARCHAR}, 
+			#{prepareTime,jdbcType=TIMESTAMP}, 
+			#{prepareAmount,jdbcType=DECIMAL}, 
+			#{isImport,jdbcType=VARCHAR}, 
+			#{creTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity">
+        update bill_customer_detail
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" createMonth != null and createMonth !='' ">
+				create_month = #{createMonth,jdbcType=INTEGER},
+			</if>
+			<if test=" mkId != null and mkId !='' ">
+				mk_id = #{mkId,jdbcType=VARCHAR},
+			</if>
+			<if test=" mkInvoiceName != null and mkInvoiceName !='' ">
+				mk_invoice_name = #{mkInvoiceName,jdbcType=VARCHAR},
+			</if>
+			<if test=" checkId != null and checkId !='' ">
+				check_id = #{checkId,jdbcType=INTEGER},
+			</if>
+			<if test=" isPrepare != null and isPrepare !='' ">
+				is_prepare = #{isPrepare,jdbcType=VARCHAR},
+			</if>
+			<if test=" prepareTime != null and prepareTime !='' ">
+				prepare_time = #{prepareTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" prepareAmount != null and prepareAmount !='' ">
+				prepare_amount = #{prepareAmount,jdbcType=DECIMAL},
+			</if>
+			<if test=" isImport != null and isImport !='' ">
+				is_import = #{isImport,jdbcType=VARCHAR},
+			</if>
+			<if test=" creTime != null and creTime !='' ">
+				cre_time = #{creTime,jdbcType=TIMESTAMP},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bill_customer_detail 
+        where id = #{id}
+    </delete>
+</mapper>
