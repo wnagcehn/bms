@@ -241,7 +241,10 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 			BmsGroupUserVo vo=new BmsGroupUserVo();
 			if(groupUser!=null){
 				PropertyUtils.copyProperties(vo, groupUser);
-			}		
+			}
+			else{
+			    return null;
+			}
 			return vo;
 		}catch(Exception e){
 			logger.error(e);
