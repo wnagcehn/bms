@@ -80,7 +80,6 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 		super.process(taskVo, contractAttr);
 		getQuoTemplete();
 		serviceSubjectCode = subjectCode;
-		errorMap = new HashMap<String, Object>();
 		initConf();
 	}
 	
@@ -116,18 +115,19 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 		}
 		logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),bizList.size());
 		for (BizAddFeeEntity entity : bizList) {
+		    errorMap = new HashMap<String, Object>();
 			FeesReceiveStorageEntity fee = initFee(entity);
 			fees.add(fee);
 			try {
 				if(isNoExe(entity, fee)){
 					continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
-				}		
-				if("BMS".equals(contractAttr)){
-					calcuForBms(entity,fee);
 				}
-				else {
-					calcuForContract(entity,fee);
-				}
+				//优先合同在线计算
+                calcuForContract(entity,fee);
+                //如果返回的是合同缺失，则继续BMS计算
+                if("CONTRACT_LIST_NULL".equals(errorMap.get("code"))){
+                    calcuForBms(entity,fee);
+                }
 			} catch (Exception e) {
 				// TODO: handle exception
 				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
@@ -205,7 +205,8 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	
 	@Override
 	public void calcuForBms(BizAddFeeEntity entity,FeesReceiveStorageEntity fee){
-		//合同校验
+	    fee.setContractAttr("1");
+	    //合同校验
 		if(contractList.size()<=0){
 			fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			fee.setCalcuMsg("bms合同缺失");
@@ -285,7 +286,8 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	
 	@Override
 	public void calcuForContract(BizAddFeeEntity entity,FeesReceiveStorageEntity fee){
-		ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
+		fee.setContractAttr("2");
+	    ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
 		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){

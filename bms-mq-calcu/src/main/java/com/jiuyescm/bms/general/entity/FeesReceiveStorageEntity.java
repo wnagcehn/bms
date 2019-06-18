@@ -112,6 +112,8 @@ public class FeesReceiveStorageEntity implements IEntity {
 	private Double continueNum;
 	// 续价
 	private Double continuePrice;
+    // 合同归属 1-BMS 2-合同在线
+    private String contractAttr;
 
 	public String getBizId() {
 		return bizId;
@@ -789,6 +791,12 @@ public class FeesReceiveStorageEntity implements IEntity {
 		this.continuePrice = continuePrice;
 	}
 
+    public String getContractAttr() {
+        return contractAttr;
+    }
 
-    
+    public void setContractAttr(String contractAttr) {
+        this.contractAttr = contractAttr;
+    }
+ 
 }

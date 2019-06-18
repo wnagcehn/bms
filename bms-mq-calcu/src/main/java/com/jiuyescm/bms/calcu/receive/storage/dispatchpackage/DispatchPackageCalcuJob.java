@@ -51,7 +51,6 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
-		errorMap = new HashMap<String, Object>();
 		initConf();
 	}
 	
@@ -76,17 +75,18 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
 		}
 		logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),bizList.size());
 		for (BizDispatchPackageEntity entity : bizList) {
+		    errorMap = new HashMap<String, Object>();
 			FeesReceiveStorageEntity fee = initFee(entity);
 			try {
 				fees.add(fee);
 				if(isNoExe(entity, fee)){
 					continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
 				}
-				
-				if("BMS".equals(contractAttr)){
+				//优先合同在线计算
+                calcuForContract(entity,fee);
+                //如果返回的是合同缺失，则继续BMS计算
+                if("CONTRACT_LIST_NULL".equals(errorMap.get("code"))){
                     calcuForBms(entity,fee);
-                }else {
-                    calcuForContract(entity,fee);
                 }
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -150,7 +150,8 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
 
 	@Override
 	public void calcuForContract(BizDispatchPackageEntity entity,FeesReceiveStorageEntity fee){
-		ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
+        fee.setContractAttr("2");
+	    ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
 		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
@@ -202,6 +203,7 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
         // TODO Auto-generated method stub
         fee.setCalcuMsg("标准包装方案只支持合同在线计费");                    
         fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
+        fee.setContractAttr("1");
         return;
     }
 
