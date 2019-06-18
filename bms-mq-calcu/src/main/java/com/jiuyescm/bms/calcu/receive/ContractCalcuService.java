@@ -63,6 +63,7 @@ public class ContractCalcuService {
             errorMap.put("success", "fail");
             errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
             errorMap.put("msg", ex.getMessage());
+            errorMap.put("code", ex.getCode());         
             return;
         }
         if (cqVo == null) {
