@@ -69,18 +69,21 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                     flag=true;
                 }
             }
-              
-            //所有需要折扣的物流产品类型对应得总单量、总金额
-            map.put("startTime", task.getStartDate());
-            map.put("endTime", task.getEndDate());
-            map.put("customerId", task.getCustomerId());
-            map.put("carrierId", task.getCarrierId());
-            map.put("serviceList", serviceList);
-            List<BmsDiscountAccountEntity> accountList=bmsDiscountRepository.queryServiceAccount(map);
+            
             Map<String,BmsDiscountAccountEntity> accountMap=new HashMap<>();
-            for(BmsDiscountAccountEntity en:accountList){
-                accountMap.put(en.getServiceTypeCode(), en);
+            //所有需要折扣的物流产品类型对应得总单量、总金额
+            if(serviceList.size()>0){
+                map.put("startTime", task.getStartDate());
+                map.put("endTime", task.getEndDate());
+                map.put("customerId", task.getCustomerId());
+                map.put("carrierId", task.getCarrierId());
+                map.put("serviceList", serviceList);
+                List<BmsDiscountAccountEntity> accountList=bmsDiscountRepository.queryServiceAccount(map);
+                for(BmsDiscountAccountEntity en:accountList){
+                    accountMap.put(en.getServiceTypeCode(), en);
+                }
             }
+           
             
             //如果折扣报价中有物流产品类型为空时，需要统计除特殊物流物流产品类型以外的总单量、总金额
             if(flag){
@@ -168,16 +171,19 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
             }
                    
             //所有需要折扣的物流产品类型对应得总单量、总金额
-            map.put("startTime", task.getStartDate());
-            map.put("endTime", task.getEndDate());
-            map.put("customerId", task.getCustomerId());
-            map.put("carrierId", task.getCarrierId());
-            map.put("serviceList", serviceList);
-            List<BmsDiscountAccountEntity> accountList=bmsDiscountRepository.queryServiceAccount(map);
             Map<String,BmsDiscountAccountEntity> accountMap=new HashMap<>();
-            for(BmsDiscountAccountEntity en:accountList){
-                accountMap.put(en.getServiceTypeCode(), en);
+            if(serviceList.size()>0){
+                map.put("startTime", task.getStartDate());
+                map.put("endTime", task.getEndDate());
+                map.put("customerId", task.getCustomerId());
+                map.put("carrierId", task.getCarrierId());
+                map.put("serviceList", serviceList);
+                List<BmsDiscountAccountEntity> accountList=bmsDiscountRepository.queryServiceAccount(map);
+                for(BmsDiscountAccountEntity en:accountList){
+                    accountMap.put(en.getServiceTypeCode(), en);
+                }
             }
+
             
             //如果折扣报价中有物流产品类型为空时，需要统计除特殊物流物流产品类型以外的总单量、总金额
             if(flag){
@@ -204,13 +210,25 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                     if(count.compareTo(discount.getLowerLimit())>=0 && discount.getUpperLimit().compareTo(count)>0){                        
                         DiscountQuoteVo quotevo=new DiscountQuoteVo();
                         quotevo.setId(discount.getId());
-                        quotevo.setUnitPrice(discount.getTotalDiscountPrice().doubleValue());
-                        quotevo.setUnitRate(discount.getTotalDiscountRate().doubleValue());
-                        quotevo.setFirstPrice(discount.getFirstWeightDiscountPrice().doubleValue());
-                        quotevo.setFirstRate(discount.getFirstWeightDiscountRate().doubleValue());
-                        quotevo.setContinuePrice(discount.getContinueWeightDiscountPrice().doubleValue());
-                        quotevo.setContinueRate(discount.getContinueWeightDiscountRate().doubleValue());
-                                   
+                        if(discount.getTotalDiscountPrice()!=null){
+                            quotevo.setUnitPrice(discount.getTotalDiscountPrice().doubleValue());
+                        }
+                        if(discount.getTotalDiscountRate()!=null){
+                            quotevo.setUnitRate(discount.getTotalDiscountRate().doubleValue());
+                        }
+                        if(discount.getFirstWeightDiscountPrice()!=null){
+                            quotevo.setFirstPrice(discount.getFirstWeightDiscountPrice().doubleValue());
+                        }
+                        if(discount.getFirstWeightDiscountRate()!=null){
+                            quotevo.setFirstRate(discount.getFirstWeightDiscountRate().doubleValue());
+                        }
+                        if(discount.getContinueWeightDiscountPrice()!=null){
+                            quotevo.setContinuePrice(discount.getContinueWeightDiscountPrice().doubleValue());
+                        }                        
+                        if(discount.getContinueWeightDiscountRate()!=null){
+                            quotevo.setContinueRate(discount.getContinueWeightDiscountRate().doubleValue());
+                        }
+          
                         if(reportMap.containsKey(serviceTypeCode)){
                             DiscountDispatchReportVo vo=reportMap.get(serviceTypeCode);
                             if(vo.getQuotes()!=null){
