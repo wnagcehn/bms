@@ -305,9 +305,9 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 		String quoTempleteCode=contract.getModelNo();
 		
 		if("fail".equals(quoTempleteCode)){
-			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			fee.setCalcuMsg("未签约服务");
-			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "未签约服务", contract, cbiVo);
+			fee.setIsCalculated(CalculateState.No_Dinggou.getCode());
+			fee.setCalcuMsg("商家【"+fee.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!");
+			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "商家【"+fee.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!", contract, cbiVo);
 			return;
 		}
 		
@@ -322,7 +322,7 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 				//XxlJobLogger.log("-->"+entity.getId()+"报价未配置");
 				entity.setIsCalculated(CalculateState.Quote_Miss.getCode());
 				fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
-				fee.setCalcuMsg("报价未配置");
+				fee.setCalcuMsg("BMS报价未配置");
 				entity.setRemark(entity.getRemark()+"报价未配置;");
 				return;
 			}
@@ -409,21 +409,13 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 			fee.setUnitPrice(stepQuoEntity.getUnitPrice());
 			fee.setParam2(stepQuoEntity.getUnitPrice().toString()+"*"+fee.getQuantity().toString());
 			fee.setParam3(stepQuoEntity.getId()+"");
+            fee.setIsCalculated(CalculateState.Finish.getCode());
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
-				fee.setIsCalculated(CalculateState.Finish.getCode());
 				fee.setCalcuMsg(CalculateState.Finish.getDesc());
-				entity.setIsCalculated(CalculateState.Finish.getCode());
-				entity.setRemark(entity.getRemark()+CalculateState.Finish.getDesc()+";");
-				//XxlJobLogger.log("-->"+entity.getId()+"计算成功，费用【{0}】",fee.getCost());
+                logger.info("计算成功，费用【{}】",fee.getCost());
 			}else{
-			    if (fee.getQuantity() == 0 || fee.getUnitPrice() ==0) {
-			        fee.setIsCalculated(CalculateState.Finish.getCode());
-	                fee.setCalcuMsg("计算成功");
-                }else {
-                    fee.setIsCalculated(CalculateState.Sys_Error.getCode());
-                    fee.setCalcuMsg("未计算出金额");
-                }				
-				//XxlJobLogger.log("-->"+entity.getId()+"计算不成功，费用【0】");
+                fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
+                logger.info("计算不成功，费用【{}】",fee.getCost());
 			}
 		}catch(Exception ex){
 			fee.setIsCalculated(CalculateState.Sys_Error.getCode());
@@ -440,21 +432,14 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	    ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
 		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
-			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
-				fee.setIsCalculated(CalculateState.Finish.getCode());
+            fee.setIsCalculated(CalculateState.Finish.getCode());
+		    if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				fee.setCalcuMsg(CalculateState.Finish.getDesc());
 				logger.info("计算成功，费用【{}】",fee.getCost());
 			}
 			else{
-			    if (fee.getQuantity() == 0 || fee.getUnitPrice() == 0) {
-			        fee.setIsCalculated(CalculateState.Finish.getCode());
-	                logger.info("计算成功，费用【{}】",fee.getCost());
-	                fee.setCalcuMsg("计算成功");
-                }else {
-                    fee.setIsCalculated(CalculateState.Sys_Error.getCode());
-                    logger.info("计算不成功，费用【{}】",fee.getCost());
-                    fee.setCalcuMsg("未计算出金额");
-                }	
+                logger.info("计算不成功，费用【{}】",fee.getCost());
+                fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
 			}
 		}
 		else{

@@ -562,10 +562,11 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		//根据计费物流商 获取 物流商配送科目 SHUNFENG_DISPATCH    JIUYE_DISPATCH
 		String carrierSubjectCode = dispatchSubjectMap.get(fee.getCarrierid());
 		if(contractItemMap==null || !contractItemMap.containsKey(carrierSubjectCode)){
-			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			fee.setCalcuMsg("未签约服务");
+			fee.setIsCalculated(CalculateState.No_Dinggou.getCode());
+			fee.setCalcuMsg("商家【"+fee.getCustomerName()+"】物流商【"+fee.getCarrierName()+"】未订购科目【配送费】的服务项!");
 			return;
 		}
+		
 		
 		try{
 			BmsQuoteDispatchDetailVo price=new BmsQuoteDispatchDetailVo();
@@ -627,15 +628,14 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
 		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
+            fee.setIsCalculated(CalculateState.Finish.getCode());
 			if(fee.getAmount()>0){
-				fee.setIsCalculated(CalculateState.Finish.getCode());
 				fee.setCalcuMsg("计算成功");
 				logger.info("计算成功，费用【{}】",fee.getAmount());
 			}
 			else{
-				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 				logger.info("计算不成功，费用【{}】",fee.getAmount());
-				fee.setCalcuMsg("未计算出金额");
+				fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
 			}
 		}
 		else{
