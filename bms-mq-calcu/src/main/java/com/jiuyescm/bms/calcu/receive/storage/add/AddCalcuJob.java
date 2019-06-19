@@ -235,9 +235,9 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
         String quoTempleteCode=contract.getModelNo();
         
 		if("fail".equals(quoTempleteCode)){
-			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			fee.setCalcuMsg("未签约服务");
-			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "未签约服务", contract, cbiVo);
+			fee.setIsCalculated(CalculateState.No_Dinggou.getCode());
+			fee.setCalcuMsg("商家【"+fee.getCustomerName()+"】未订购任何增值服务!");
+			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "商家【"+fee.getCustomerName()+"】未订购任何增值服务!", contract, cbiVo);
 			return;
 		}
 		
@@ -290,15 +290,14 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	    ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
 		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
-			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
-				fee.setIsCalculated(CalculateState.Finish.getCode());
+            fee.setIsCalculated(CalculateState.Finish.getCode());
+		    if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				fee.setCalcuMsg("计算成功");
 				logger.info("计算成功，费用【{}】",fee.getCost());
 			}
 			else{
-				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 				logger.info("计算不成功，费用【{}】",fee.getCost());
-				fee.setCalcuMsg("未计算出金额");
+				fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
 			}
 		}
 		else{
