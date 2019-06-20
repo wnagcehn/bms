@@ -46,7 +46,6 @@ import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
 import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
-import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.crm.module.api.IModuleDataOpenService;
 import com.jiuyescm.crm.module.vo.FieldDataOpenVO;
@@ -85,7 +84,12 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
     public PageInfo<BillCheckInfoVo> query(Map<String, Object> condition, int pageNo, int pageSize) {
         try {
 
-            long current = JAppContext.currentTimestamp().getTime();
+            //获取当前日期的long值
+            Timestamp tt = new Timestamp(System.currentTimeMillis());
+            Date d = new Date();
+            d = tt;
+            String time = sdf.format(d) + " 00:00:00";
+            long current = sdf.parse(time).getTime();
 
             String overStatus = "";
             if (condition != null && condition.get("overStatus") != null) {

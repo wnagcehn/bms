@@ -273,6 +273,7 @@ public class NewBuinessDataExportController extends BaseController {
 							entity.setProgress(0d);
 							entity.setCreator(username);
 							entity.setCreateTime(JAppContext.currentTimestamp());
+							entity.setLastModifyTime(JAppContext.currentTimestamp());
 							entity.setDelFlag("0");
 							entity.setCustomerid(cu.get("customerId").toString());
 							entity.setMkId(mkId);
