@@ -52,6 +52,11 @@ public class BillCustomerDetailRepositoryImpl extends MyBatisDao<BillCustomerDet
 		return selectList("com.jiuyescm.bms.bill.customer.BillCustomerDetailMapper.query", condition);
 	}
 
+	@Override
+	public List<BillCustomerDetailEntity> queryGroupByMonth(Map<String, Object> condition){
+	    return selectList("com.jiuyescm.bms.bill.customer.BillCustomerDetailMapper.queryGroupByMonth", condition);
+	}
+
 	/**
 	 * 保存
 	 * @param entity
@@ -61,6 +66,11 @@ public class BillCustomerDetailRepositoryImpl extends MyBatisDao<BillCustomerDet
     public BillCustomerDetailEntity save(BillCustomerDetailEntity entity) {
         insert("com.jiuyescm.bms.bill.customer.BillCustomerDetailMapper.save", entity);
         return entity;
+    }
+    
+    @Override
+    public void saveBatch(List<BillCustomerDetailEntity> list) {
+        insertBatch("com.jiuyescm.bms.bill.customer.BillCustomerDetailMapper.save", list);
     }
 
 	/**
@@ -81,6 +91,11 @@ public class BillCustomerDetailRepositoryImpl extends MyBatisDao<BillCustomerDet
     @Override
     public void delete(Long id) {
         delete("com.jiuyescm.bms.bill.customer.BillCustomerDetailMapper.delete", id);
+    }
+    
+    @Override
+    public void deleteByMaster(Map<String, Object> param) {
+        delete("com.jiuyescm.bms.bill.customer.BillCustomerDetailMapper.deleteByMaster", param);
     }
 	
 }

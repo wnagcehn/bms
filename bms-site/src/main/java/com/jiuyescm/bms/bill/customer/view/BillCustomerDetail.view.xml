@@ -27,6 +27,7 @@
             <Entity>
               <Property name="0">否</Property>
               <Property name="1">是</Property>
+              <Property name="2">部分生成</Property>
             </Entity>
           </Property>
         </Property>
@@ -53,11 +54,11 @@
         <Property name="label">写入时间</Property>
       </PropertyDef>
       <PropertyDef name="billName">
-        <Property/>
+        <Property></Property>
         <Property name="label">账单名称</Property>
       </PropertyDef>
       <PropertyDef name="billCheckStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">对账状态</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckStateMap&quot;).getResult()}</Property>
@@ -68,7 +69,7 @@
         <Property name="label">账单确认日期</Property>
       </PropertyDef>
       <PropertyDef name="invoiceStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">开票状态</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckInvoiceStateMap&quot;).getResult()}</Property>
@@ -79,7 +80,7 @@
         <Property name="label">开票日期</Property>
       </PropertyDef>
       <PropertyDef name="receiptStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">收款状态</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckReceiptStateEnum&quot;).getResult()}</Property>
@@ -102,7 +103,7 @@
         <Property name="label">收款金额</Property>
       </PropertyDef>
       <PropertyDef name="balanceName">
-        <Property/>
+        <Property></Property>
         <Property name="label">结算员</Property>
       </PropertyDef>
     </DataType>
@@ -149,14 +150,14 @@
         <Property name="label">写入时间</Property>
       </PropertyDef>
       <PropertyDef name="billCheckStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">对账状态</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckStateMap&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="invoiceStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">开票状态</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckInvoiceStateMap&quot;).getResult()}</Property>
@@ -171,14 +172,14 @@
         <Property name="label">-</Property>
       </PropertyDef>
       <PropertyDef name="receiptStatus">
-        <Property/>
+        <Property></Property>
         <Property name="label">收款状态</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;bmsDictionaryEnum#getBillCheckReceiptStateEnum&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
       <PropertyDef name="balanceName">
-        <Property/>
+        <Property></Property>
         <Property name="label">结算员</Property>
       </PropertyDef>
       <PropertyDef name="isImport">
@@ -228,7 +229,7 @@ if (data.get(&quot;createEndMonth&quot;) != null &amp;&amp;
 	data.get(&quot;createMonth&quot;) != undefined &amp;&amp;
 	data.get(&quot;createMonth&quot;) != &quot;&quot;) {
 	if (data.get(&quot;createMonth&quot;) > data.get(&quot;createEndMonth&quot;)) {
-		dorado.MessageBox.alert(&quot;账单年月的结束时间不能大于起始时间&quot;);
+		dorado.MessageBox.alert(&quot;账单年月的起始时间不能大于结束时间&quot;);
 		return;
 	}
 }
@@ -240,7 +241,7 @@ if (data.get(&quot;receiptEndDate&quot;) != null &amp;&amp;
 	data.get(&quot;receiptDate&quot;) != undefined &amp;&amp;
 	data.get(&quot;receiptDate&quot;) != &quot;&quot;) {
 	if (data.get(&quot;receiptDate&quot;) > data.get(&quot;receiptEndDate&quot;)) {
-		dorado.MessageBox.alert(&quot;收款日期的结束时间不能大于起始时间&quot;);
+		dorado.MessageBox.alert(&quot;收款日期的起始时间不能大于结束时间&quot;);
 		return;
 	}
 }
@@ -252,7 +253,7 @@ if(data.get(&quot;invoiceEndDate&quot;) != null
 	&amp;&amp; data.get(&quot;invoiceDate&quot;) != undefined
 	&amp;&amp; data.get(&quot;invoiceDate&quot;) != &quot;&quot;){
 	if(data.get(&quot;invoiceDate&quot;) > data.get(&quot;invoiceEndDate&quot;)){
-		dorado.MessageBox.alert(&quot;开票日期的结束时间不能大于起始时间&quot;);
+		dorado.MessageBox.alert(&quot;开票日期的起始时间不能大于结束时间&quot;);
 	return;
 	}
 }
@@ -267,7 +268,13 @@ with (view.get(&quot;#dsBillCustomerDetailEntity&quot;)){
       </ToolBarButton>
       <ToolBarButton id="btnExport">
         <ClientEvent name="onClick">var data = view.get(&quot;#dsBillCustomerDetailEntityQuery.data&quot;).current;&#xD;
-view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();</ClientEvent>
+var dataEntity = view.get(&quot;#dsBillCustomerDetailEntity.data&quot;).current;&#xD;
+if(null == dataEntity){&#xD;
+	dorado.MessageBox.alert(&quot;无数据需要导出&quot;);&#xD;
+	return;&#xD;
+}else {&#xD;
+	view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();&#xD;
+}</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
       </ToolBarButton>
@@ -301,6 +308,8 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();
         <Property name="property">createEndMonth</Property>
         <Property name="editorWidth">110</Property>
         <Property name="labelWidth">10</Property>
+        <Property name="hintWidth">50</Property>
+        <Property name="hintSpacing">50</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -333,6 +342,8 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();
         <Property name="property">receiptEndDate</Property>
         <Property name="labelWidth">10</Property>
         <Property name="editorWidth">110</Property>
+        <Property name="hintWidth">50</Property>
+        <Property name="hintSpacing">50</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -361,6 +372,8 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();
         <Property name="property">invoiceEndDate</Property>
         <Property name="labelWidth">10</Property>
         <Property name="editorWidth">110</Property>
+        <Property name="hintWidth">50</Property>
+        <Property name="hintSpacing">50</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -378,6 +391,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();
       <Property name="dataSet">dsBillCustomerDetailEntity</Property>
       <Property name="stretchColumnsMode">auto</Property>
       <Property name="readOnly">true</Property>
+      <Property name="showFooter">true</Property>
       <IndicatorColumn/>
       <RowNumColumn/>
       <DataColumn name="id">
@@ -385,6 +399,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();
         <Property name="visible">false</Property>
       </DataColumn>
       <DataColumn name="createMonth">
+        <ClientEvent name="onRenderFooterCell">arg.dom.innerHTML=&quot;总计&quot;;</ClientEvent>
         <Property name="property">createMonth</Property>
         <Property name="width">80</Property>
       </DataColumn>
@@ -406,6 +421,7 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();
         <Property name="property">prepareAmount</Property>
         <Property name="width">100</Property>
         <Property name="align">right</Property>
+        <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn name="isImport">
         <Property name="property">isImport</Property>
@@ -447,16 +463,19 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();
         <Property name="property">confirmAmount</Property>
         <Property name="width">100</Property>
         <Property name="align">right</Property>
+        <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn name="invoiceAmount">
         <Property name="property">invoiceAmount</Property>
         <Property name="width">100</Property>
         <Property name="align">right</Property>
+        <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn name="receiptAmount">
         <Property name="property">receiptAmount</Property>
         <Property name="width">100</Property>
         <Property name="align">right</Property>
+        <Property name="summaryType">sum</Property>
       </DataColumn>
       <DataColumn name="balanceName">
         <Property name="property">balanceName</Property>
