@@ -3,8 +3,8 @@ package com.jiuyescm.bms.bill.customer.controller;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,16 +23,14 @@ import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity;
 import com.jiuyescm.bms.bill.customer.service.IBillCustomerDetailService;
-import com.jiuyescm.bms.biz.pallet.entity.BizPalletInfoEntity;
 import com.jiuyescm.bms.common.enumtype.BillCheckInvoiceStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckReceiptStateEnum;
 import com.jiuyescm.bms.common.enumtype.BillCheckStateEnum;
-import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.log.service.IBmsErrorLogInfoService;
+import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.common.vo.ExportDataVoEntity;
 import com.jiuyescm.bms.common.web.HttpCommanExport;
 import com.jiuyescm.common.utils.upload.BillProcessReportType;
-import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -51,6 +49,8 @@ public class BillCustomerDetailController {
 	private IBmsErrorLogInfoService bmsErrorLogInfoService;
 	@Autowired
 	private ISystemCodeService systemCodeService;
+	@Autowired
+	private SequenceService sequenceService;
 
 	/**
 	 * 根据id查询
@@ -141,7 +141,18 @@ public class BillCustomerDetailController {
             String path=getPath();
             HttpCommanExport commanExport=new HttpCommanExport(path);
             ExportDataVoEntity voEntity=new ExportDataVoEntity();
-            voEntity.setTitleName("结算进度报表导出");
+            SimpleDateFormat sd = new SimpleDateFormat("yyyyMMdd");
+            String today = sd.format(new Date());
+            String exportName = "";
+            List<BillCustomerDetailEntity> list = billCustomerDetailService.queryGroupByMonth(parameter);
+            String seq = sequenceService.getBillNoOne(today, "", "000");
+            for (BillCustomerDetailEntity billCustomerDetailEntity : list) {
+                exportName = exportName + String.valueOf(billCustomerDetailEntity.getCreateMonth()) + seq + "&";
+            }
+            if (exportName.endsWith("&")) {
+                exportName = exportName.substring(0, exportName.length()-1);
+            }
+            voEntity.setTitleName(exportName);
             voEntity.setBaseType(new BillProcessReportType());
             voEntity.setDataList(getDataList(parameter));
             return commanExport.exportFile(voEntity);

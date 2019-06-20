@@ -1697,11 +1697,15 @@ if(index==3){&#xD;
             <DataColumn name="overStatus">
               <ClientEvent name="onRenderCell">var overStatus=arg.data.get(&quot;overStatus&quot;);&#xD;
 if(!isNullOrEmpty(overStatus)){&#xD;
-	if(overStatus==&quot;临期&quot;){&#xD;
+	if (overStatus == &quot;临期&quot;) {&#xD;
 		arg.dom.style.color = &quot;blue&quot;;&#xD;
-	}else if(overStatus==&quot;超期&quot;){&#xD;
+	}&#xD;
+	else if (overStatus == &quot;超期&quot;) {&#xD;
 		arg.dom.style.color = &quot;red&quot;;&#xD;
-	}	&#xD;
+	}&#xD;
+	else{&#xD;
+		arg.dom.style.color = &quot;green&quot;;&#xD;
+	}&#xD;
 }&#xD;
 &#xD;
 arg.processDefault = true;</ClientEvent>

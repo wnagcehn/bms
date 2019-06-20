@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.general.mapper.BillCustomerMasterMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.general.entity.BillCustomerMasterEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="mk_id" property="mkId" jdbcType="VARCHAR" />
+		   	<result column="create_month" property="createMonth" jdbcType="INTEGER" />
+		   	<result column="is_calculated" property="isCalculated" jdbcType="VARCHAR" />
+		   	<result column="cre_time" property="creTime" jdbcType="TIMESTAMP" />
+		   	<result column="mod_time" property="modTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, mk_id, create_month, is_calculated, cre_time, mod_time
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+		mk_id, create_month, is_calculated, cre_time, mod_time
+    </sql>
+
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.general.entity.BillCustomerMasterEntity">
+        select
+		a.id, a.mk_id as mkId, b.mk_invoice_name as mkInvoiceName, a.create_month as createMonth, 
+		a.is_calculated as isCalculated, a.cre_time as creTime, a.mod_time as modTime
+		from bill_customer_master a
+		LEFT JOIN pub_customer_base b on a.mk_id=b.mk_id
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and a.id = #{id}
+			</if>
+        	<if test=" mkId != null and mkId !='' ">
+				and a.mk_id = #{mkId}
+			</if>
+        	<if test=" createMonth != null and createMonth !='' ">
+				and a.create_month = #{createMonth}
+			</if>
+        	<if test=" isCalculated != null and isCalculated !='' ">
+				and a.is_calculated = #{isCalculated}
+			</if>
+        	<if test=" creTime != null and creTime !='' ">
+				and a.cre_time = #{creTime}
+			</if>
+        	<if test=" modTime != null and modTime !='' ">
+				and a.mod_time = #{modTime}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.general.entity.BillCustomerMasterEntity">
+        insert into bill_customer_master(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{mkId,jdbcType=VARCHAR}, 
+			#{createMonth,jdbcType=INTEGER}, 
+			#{isCalculated,jdbcType=VARCHAR}, 
+			#{creTime,jdbcType=TIMESTAMP}, 
+			#{modTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.general.entity.BillCustomerMasterEntity">
+        update bill_customer_master
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" isCalculated != null and isCalculated !='' ">
+				is_calculated = #{isCalculated,jdbcType=VARCHAR},
+			</if>
+			<if test=" modTime != null and modTime !='' ">
+				mod_time = #{modTime,jdbcType=TIMESTAMP},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from bill_customer_master 
+        where id = #{id}
+    </delete>
+    
+    <select id="queryCalcuTaskLogAndCheckLog" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.BillCustomerMasterEntity">
+        SELECT t.mkId, t.createMonth from ( 
+	        select b.mk_id as mkId,a.cre_month as createMonth 
+	        from bms_asyn_calcu_task_log a 
+			left join pub_customer b on a.customer_id = b.customer_id and b.del_flag='0'
+			where a.cre_time>=#{startTime} 
+			and a.cre_time <![CDATA[<= #{endTime}]]>
+			and b.mk_id is not null group by b.mk_id
+			UNION
+			select b.mk_id as mkId,CONCAT(SUBSTRING(a.create_time,1,4),SUBSTRING(a.create_time,6,2)) as createMonth 
+	    	from bill_check_log a
+			left join bill_check_info b on a.bill_check_id = b.id
+			where b.mk_id is not null 
+			and b.del_flag='0'
+			and a.create_time>=#{startTime} 
+			and a.create_time <![CDATA[<= #{endTime}]]>
+			group by b.mk_id,CONCAT(SUBSTRING(a.create_time,1,4),SUBSTRING(a.create_time,6,2))
+		) t
+		limit #{num}
+    </select>
+    
+    <!-- 查询bms计算的数据 -->
+    <select id="queryBmsCalcuData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity">
+        select b.mk_id as mkId,c.mk_invoice_name as mkInvoiceName,
+        a.cre_month as createMonth, a.total_amount as prepareAmount 
+        from bms_asyn_calcu_task a
+		LEFT JOIN pub_customer b on a.customer_id = b.customer_id and b.del_flag='0'
+		LEFT JOIN pub_customer_base c on b.mk_id=c.mk_id and c.del_flag='0'
+		WHERE b.mk_id=#{mkId} and a.cre_month=#{creMonth}
+		GROUP BY b.mk_id,a.cre_month
+    </select>
+    
+    <!-- 查询预账单的数据 -->
+    <select id="queryPrepareData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity">
+    	select creator,create_time as createTime,isChildCustomer as isChildCustomer from bill_prepare_export_task
+		WHERE mk_id=#{mkId} 
+		and start_time >= #{startTime} 
+		and end_time <![CDATA[< #{endTime}]]>
+		and del_flag = '0'
+		order by create_time desc
+    </select>
+    
+    <!-- 查询账单导入的数据 -->
+    <select id="queryBillImportData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+    	select id, balance_name as balanceName from bill_check_info
+		WHERE del_flag='0'
+		and mk_id=#{mkId}
+		and create_month=#{createMonth}
+    </select>
+    
+    <!-- 查询预账单按子商家生成的数据 -->
+    <select id="queryPrepareIsChildData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.file.entity.BillPrepareExportTaskEntity">
+    	select creator,create_time as createTime,isChildCustomer as isChildCustomer from bill_prepare_export_task
+		WHERE mk_id=#{mkId} 
+		and start_time >= #{startTime} 
+		and end_time <![CDATA[< #{endTime}]]>
+		and del_flag = '0'
+		and isChildCustomer='0'
+		GROUP BY customerid
+    </select>
+    
+    <!-- 查询预账单总金额 -->
+    <select id="queryPrepareAmount" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity">
+    	select SUM(total_amount) as prepareAmount from bms_asyn_calcu_task a
+		LEFT JOIN pub_customer b on a.customer_id=b.customer_id and b.del_flag='0'
+		WHERE 1=1
+		and a.cre_month=#{creMonth}
+		and b.mk_id=#{mkId}
+    </select>
+    
+    <!-- 表里有就更新，没有就新增 -->
+    <insert id="saveOrUpdate" parameterType="java.util.List">
+    	insert into bill_customer_master(mk_id, create_month, is_calculated, cre_time)
+    	values 
+  		<foreach collection="list" item="item" index="index" separator=",">
+  		(
+		  #{item.mkId,jdbcType=VARCHAR},
+		  #{item.createMonth,jdbcType=INTEGER},
+		  #{item.isCalculated,jdbcType=VARCHAR},
+		  #{item.creTime,jdbcType=TIMESTAMP}
+		 )
+  		</foreach>
+  		ON DUPLICATE KEY UPDATE 
+  		mod_time = VALUES(mod_time),
+  		is_calculated = VALUES(is_calculated)
+  	</insert>
+    
+</mapper>

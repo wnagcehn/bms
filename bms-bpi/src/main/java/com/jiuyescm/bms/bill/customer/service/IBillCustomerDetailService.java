@@ -26,4 +26,16 @@ public interface IBillCustomerDetailService {
 
     void delete(Long id);
 
+    /**
+     * 对月份进行合并
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月17日 下午6:35:20
+     *
+     * @param condition
+     * @return
+     */
+    List<BillCustomerDetailEntity> queryGroupByMonth(Map<String, Object> condition);
+
 }

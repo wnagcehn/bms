@@ -54,6 +54,11 @@ public class BillCustomerDetailServiceImpl implements IBillCustomerDetailService
 		return billCustomerDetailRepository.query(condition);
 	}
 	
+	@Override
+	public List<BillCustomerDetailEntity> queryGroupByMonth(Map<String, Object> condition){
+	    return billCustomerDetailRepository.queryGroupByMonth(condition);
+	}
+	
 	/**
 	 * 保存
 	 * @param entity

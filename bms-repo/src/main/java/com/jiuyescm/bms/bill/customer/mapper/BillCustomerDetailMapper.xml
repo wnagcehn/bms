@@ -15,11 +15,11 @@
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, create_month, mk_id, mk_invoice_name, check_id, is_prepare, prepare_time, prepare_amount, is_import, cre_time
+        id, create_month, mk_id, mk_invoice_name, check_id, is_prepare, prepare_time, prepare_amount, is_import, cre_time, balance_name
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-create_month, mk_id, mk_invoice_name, check_id, is_prepare, prepare_time, prepare_amount, is_import, cre_time
+		create_month, mk_id, mk_invoice_name, check_id, is_prepare, prepare_time, prepare_amount, is_import, cre_time, balance_name
     </sql>
 
 	<!-- 根据id查询 -->
@@ -32,6 +32,62 @@ create_month, mk_id, mk_invoice_name, check_id, is_prepare, prepare_time, prepar
 	
 	<!-- 分页查询 -->
     <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity">
+        select a.create_month,c.mk_invoice_name,a.is_prepare,a.prepare_time,a.prepare_amount,a.is_import,
+		b.bill_name as billName,b.bill_check_status as billCheckStatus,b.confirm_date as confirmDate,
+		b.invoice_status as invoiceStatus,b.invoice_date as invoiceDate,b.receipt_status as receiptStatus,
+		b.receipt_date as receiptDate,b.confirm_amount as confirmAmount,b.invoice_amount as invoiceAmount,
+		b.receipt_amount as receiptAmount,a.balance_name as balanceName
+		From bill_customer_detail a
+		LEFT JOIN bill_check_info b on a.check_id=b.id
+		LEFT JOIN pub_customer_base c on a.mk_id=c.mk_id and c.del_flag='0'
+        where 1 = 1
+        	<if test=" createMonth != null and createMonth !='' ">
+				and a.create_month >= #{createMonth}
+			</if>
+        	<if test=" createEndMonth != null and createEndMonth !='' ">
+				and a.create_month <![CDATA[<= #{createEndMonth}]]>
+			</if>
+			<if test=" receiptDate != null and receiptDate !='' ">
+				and b.receipt_date >= #{receiptDate}
+			</if>
+        	<if test=" receiptEndDate != null and receiptEndDate !='' ">
+				and b.receipt_date <![CDATA[<= #{receiptEndDate}]]>
+			</if>
+			<if test=" invoiceDate != null and invoiceDate !='' ">
+				and b.invoice_date >= #{invoiceDate}
+			</if>
+        	<if test=" invoiceEndDate != null and invoiceEndDate !='' ">
+				and b.invoice_date <![CDATA[<= #{invoiceEndDate}]]>
+			</if>
+        	<if test=" mkInvoiceName != null and mkInvoiceName !='' ">
+				and a.mk_invoice_name like CONCAT('%',#{mkInvoiceName},'%')
+			</if>
+        	<if test=" billName != null and billName !='' ">
+				and b.bill_name like CONCAT('%',#{billName},'%')
+			</if>
+        	<if test=" isPrepare != null and isPrepare !='' ">
+				and a.is_prepare = #{isPrepare}
+			</if>
+			<if test=" isImport != null and isImport !='' ">
+				and a.is_import = #{isImport}
+			</if>
+        	<if test=" billCheckStatus != null and billCheckStatus !='' ">
+				and b.bill_check_status = #{billCheckStatus}
+			</if>
+        	<if test=" invoiceStatus != null and invoiceStatus !='' ">
+				and b.invoice_status = #{invoiceStatus}
+			</if>	
+        	<if test=" receiptStatus != null and receiptStatus !='' ">
+				and b.receipt_status = #{receiptStatus}
+			</if>	
+        	<if test=" balanceName != null and balanceName !='' ">
+				and a.balance_name like CONCAT('%',#{balanceName},'%')
+			</if>
+			order by a.create_month,a.mk_invoice_name,a.balance_name
+    </select>
+    
+    <select id="queryGroupByMonth" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity">
         select a.create_month,a.mk_invoice_name,a.is_prepare,a.prepare_time,a.prepare_amount,a.is_import,
 		b.bill_name as billName,b.bill_check_status as billCheckStatus,b.confirm_date as confirmDate,
@@ -83,7 +139,7 @@ create_month, mk_id, mk_invoice_name, check_id, is_prepare, prepare_time, prepar
         	<if test=" balanceName != null and balanceName !='' ">
 				and a.balance_name like CONCAT('%',#{balanceName},'%')
 			</if>
-			order by a.create_month,a.mk_invoice_name,a.balance_name
+			order by a.create_month
     </select>
 
 	<!-- 保存 -->
@@ -101,7 +157,8 @@ create_month, mk_id, mk_invoice_name, check_id, is_prepare, prepare_time, prepar
 			#{prepareTime,jdbcType=TIMESTAMP}, 
 			#{prepareAmount,jdbcType=DECIMAL}, 
 			#{isImport,jdbcType=VARCHAR}, 
-			#{creTime,jdbcType=TIMESTAMP}
+			#{creTime,jdbcType=TIMESTAMP},
+			#{balanceName,jdbcType=TIMESTAMP}
         )
     </insert>
 
@@ -144,5 +201,10 @@ create_month, mk_id, mk_invoice_name, check_id, is_prepare, prepare_time, prepar
     <delete id="delete" parameterType="java.lang.Long">
         delete from bill_customer_detail 
         where id = #{id}
+    </delete>
+    
+    <delete id="deleteByMaster" parameterType="java.util.Map">
+        delete from bill_customer_detail 
+        where mk_id = #{mkId} and create_month = #{createMonth}
     </delete>
 </mapper>
