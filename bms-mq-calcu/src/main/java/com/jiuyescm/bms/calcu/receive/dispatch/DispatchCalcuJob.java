@@ -456,6 +456,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
             fee.setTotalWeight(entity.getTotalWeight());//实际重量
             fee.setChargedWeight(entity.getWeight());   //从weight中取出计费重量
             fee.setCalculateTime(JAppContext.currentTimestamp());//计算时间
+            fee.setCreateTime(entity.getCreateTime());
 			return fee;
 		
 		} catch (Exception e) {

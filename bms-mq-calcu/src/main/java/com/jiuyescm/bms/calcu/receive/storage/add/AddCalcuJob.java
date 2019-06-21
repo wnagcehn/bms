@@ -188,6 +188,7 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 		}
         fee.setParam1(entity.getItem());
 		fee.setCostType("FEE_TYPE_GENEARL");
+		fee.setCreateTime(entity.getCreateTime());
 		return fee;
 	}
 	

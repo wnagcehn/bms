@@ -177,6 +177,7 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 		fee.setFeesNo(entity.getFeesNo());
 		fee.setSubjectCode(subjectCode);
 		fee.setCalculateTime(JAppContext.currentTimestamp());
+		fee.setCreateTime(entity.getCreateTime());
 		CalcuLog.printLog(CalcuNodeEnum.CHARGE.getCode().toString(), "", fee, cbiVo);
 		return fee;
 		

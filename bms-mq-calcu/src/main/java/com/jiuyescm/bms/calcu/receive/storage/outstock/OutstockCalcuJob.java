@@ -219,6 +219,7 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
         if(StringUtils.isEmpty(entity.getTemperatureTypeName())){
             entity.setTemperatureTypeName("冷冻");
         }
+        fee.setCreateTime(entity.getCreateTime());
 		return fee;	
 	}
 	

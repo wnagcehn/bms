@@ -212,6 +212,7 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 		/*if(StringUtils.isNotBlank(entity.getTemperature())){
 			entity.setTemperature(temMap.get(entity.getTemperature()));
 		}*/
+		fee.setCreateTime(entity.getCreateTime());
 		return fee;
 	}
 	

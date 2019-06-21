@@ -143,6 +143,7 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
 		fee.setCost(new BigDecimal(0));					//入仓金额
 		fee.setFeesNo(entity.getFeesNo());
 		fee.setParam1(TemplateTypeEnum.COMMON.getCode());
+		fee.setCreateTime(entity.getCreTime());
 		return fee;
 		
 	}
