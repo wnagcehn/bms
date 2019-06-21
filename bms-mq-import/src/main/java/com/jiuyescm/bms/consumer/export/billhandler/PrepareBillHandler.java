@@ -60,6 +60,8 @@ import com.jiuyescm.bms.biz.storage.service.IBmsBizInstockInfoService;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
+import com.jiuyescm.bms.feeclaim.service.IFeesClaimService;
+import com.jiuyescm.bms.feeclaim.vo.FeesClaimsVo;
 import com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity;
 import com.jiuyescm.bms.fees.abnormal.service.IFeesAbnormalService;
 import com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity;
@@ -114,7 +116,7 @@ public class PrepareBillHandler {
     @Autowired
     private IBmsGroupSubjectService bmsGroupSubjectService;
     @Autowired
-    private IFeesAbnormalService feesAbnormalService;
+    private IFeesClaimService feesClaimService;
     @Autowired
     private StorageClient storageClient;
     
@@ -1645,7 +1647,7 @@ public class PrepareBillHandler {
         totalReturnAmount.set(0d);
 
         while (doLoop) {
-            PageInfo<FeesAbnormalEntity> abnormalList = feesAbnormalService.queryPreBillAbnormal(condition, pageNo,
+            PageInfo<FeesClaimsVo> abnormalList = feesClaimService.queryPreBillClaim(condition, pageNo,
                     PAGESIZE);
             if (null != abnormalList && abnormalList.getList().size() > 0) {
                 if (abnormalList.getList().size() < PAGESIZE) {
@@ -1694,7 +1696,13 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "运单号");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "expressnum");
+        itemMap.put("dataKey", "waybillNo");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "工单号");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "workOrderNo");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
@@ -1718,7 +1726,7 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "赔付商品金额");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "productAmountJ2c");
+        itemMap.put("dataKey", "productAmount");
         headInfoList.add(itemMap);
 
 //      itemMap = new HashMap<String, Object>();
@@ -1730,13 +1738,13 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "是否免运费");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "isDeliveryFreeJ2c");
+        itemMap.put("dataKey", "isDeliveryFree");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "登记人");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "createPersonName");
+        itemMap.put("dataKey", "crePerson");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
@@ -1751,30 +1759,29 @@ public class PrepareBillHandler {
     /**
      * 理赔-content
      */
-    private List<Map<String, Object>> getAbnormalItem(List<FeesAbnormalEntity> list) {
+    private List<Map<String, Object>> getAbnormalItem(List<FeesClaimsVo> list) {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = null;
         double t_productAmount = 0d;
         double t_deliveryCost = 0d;
-        for (FeesAbnormalEntity entity : list) {
+        for (FeesClaimsVo entity : list) {
             dataItem = new HashMap<String, Object>();
             dataItem.put("warehouseName", entity.getWarehouseName());
             dataItem.put("createTime", sdf.format(entity.getCreateTime()));
-            dataItem.put("expressnum", entity.getExpressnum());
+            dataItem.put("waybillNo", entity.getWaybillNo());
+            dataItem.put("workOrderNo", entity.getWorkOrderNo());
             dataItem.put("customerName", entity.getCustomerName());
-            dataItem.put("dutyType", entity.getReason());
-            dataItem.put("payType", entity.getReasonDetail());
-            double productAmount=entity.getProductAmountJ2c()==null?0d:entity.getProductAmountJ2c();
+            dataItem.put("dutyType", entity.getDutyType());
+            dataItem.put("payType", entity.getPayType());
+            double productAmount=entity.getProductAmount()==null?0d:entity.getProductAmount().doubleValue();
             t_productAmount+=productAmount;
-            dataItem.put("productAmountJ2c", productAmount);
-            double deliveryCost=entity.getDeliveryCost()==null?0d:entity.getDeliveryCost();
-            t_deliveryCost+=deliveryCost;
-            if("0".equals(entity.getIsDeliveryFreeJ2c())){
-                dataItem.put("isDeliveryFreeJ2c", "否"); 
-            }else if("1".equals(entity.getIsDeliveryFreeJ2c())){
-                dataItem.put("isDeliveryFreeJ2c", "是");
+            dataItem.put("productAmount", productAmount);
+            if("0".equals(entity.getIsDeliveryFree())){
+                dataItem.put("isDeliveryFree", "否"); 
+            }else if("1".equals(entity.getIsDeliveryFree())){
+                dataItem.put("isDeliveryFree", "是");
             }
-            dataItem.put("createPersonName", entity.getCreatePersonName());
+            dataItem.put("crePerson", entity.getCrePerson());
             dataItem.put("remark", entity.getRemark());
             dataList.add(dataItem);
         }
@@ -1791,8 +1798,7 @@ public class PrepareBillHandler {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = new HashMap<String, Object>();
         dataItem.put("expressnum", "合计金额");
-        dataItem.put("productAmountJ2c", totalProductAmount.get());
-        dataItem.put("deliveryCost", totalDeliveryCost.get());
+        dataItem.put("productAmount", totalProductAmount.get());
         dataList.add(dataItem);
         return dataList;
     }
@@ -1815,7 +1821,7 @@ public class PrepareBillHandler {
         totalReturnAmount.set(0d);
         
         while (doLoop) {
-            PageInfo<FeesAbnormalEntity> abnormalList = feesAbnormalService.queryPreBillAbnormalChange(condition,
+            PageInfo<FeesClaimsVo> abnormalList = feesClaimService.queryPreBillClaimChange(condition,
                     pageNo, PAGESIZE);
             if (null != abnormalList && abnormalList.getList().size() > 0) {
                 if (abnormalList.getList().size() < PAGESIZE) {
@@ -1865,13 +1871,13 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "运单号");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "expressnum");
+        itemMap.put("dataKey", "waybillNo");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "退货单号");
+        itemMap.put("title", "工单号");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "returnOrderno");
+        itemMap.put("dataKey", "workOrderNo");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
@@ -1895,13 +1901,13 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "金额");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "returnedAmountC2j");
+        itemMap.put("dataKey", "returnedAmount");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "登记人");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "createPersonName");
+        itemMap.put("dataKey", "crePerson");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
@@ -1916,28 +1922,27 @@ public class PrepareBillHandler {
     /**
      * 改地址推荐费-content
      */
-    private List<Map<String, Object>> getAbnormalChangeItem(List<FeesAbnormalEntity> list) {
+    private List<Map<String, Object>> getAbnormalChangeItem(List<FeesClaimsVo> list) {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = null;
         double t_amount = 0d;
 
-        for (FeesAbnormalEntity entity : list) {
+        for (FeesClaimsVo entity : list) {
             dataItem = new HashMap<String, Object>();       
             dataItem.put("warehouseName", entity.getWarehouseName());
             dataItem.put("createTime", sdf.format(entity.getCreateTime()));
-            dataItem.put("expressnum", entity.getExpressnum());
-            dataItem.put("returnOrderno", entity.getReturnOrderno());
+            dataItem.put("waybillNo", entity.getWaybillNo());
+            dataItem.put("workOrderNo", entity.getWorkOrderNo());
             dataItem.put("customerName", entity.getCustomerName());
-            dataItem.put("dutyType", entity.getReason());
-            dataItem.put("payType", entity.getReasonDetail());
-            double amount = (entity.getReturnedAmountC2j() == null ? 0 : entity.getReturnedAmountC2j());
+            dataItem.put("dutyType", entity.getDutyType());
+            dataItem.put("payType", entity.getPayType());
+            double amount = (entity.getReturnedAmount() == null ? 0 : entity.getReturnedAmount().doubleValue());
             t_amount += amount;
-            dataItem.put("returnedAmountC2j", amount);
-            dataItem.put("createPersonName", entity.getCreatePersonName());
+            dataItem.put("returnedAmount", amount);
+            dataItem.put("crePerson", entity.getCrePerson());
             dataItem.put("remark", entity.getRemark());
             dataList.add(dataItem);
         }
-
         totalReturnAmount.set(totalReturnAmount.get() + t_amount);
         return dataList;
     }
@@ -1949,7 +1954,7 @@ public class PrepareBillHandler {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = new HashMap<String, Object>();
         dataItem.put("expressnum", "合计金额");
-        dataItem.put("returnedAmountC2j", totalReturnAmount.get());
+        dataItem.put("returnedAmount", totalReturnAmount.get());
         dataList.add(dataItem);
         return dataList;
     }

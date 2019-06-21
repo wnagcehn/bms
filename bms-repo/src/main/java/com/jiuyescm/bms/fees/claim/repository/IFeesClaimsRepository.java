@@ -14,4 +14,12 @@ public interface IFeesClaimsRepository {
 	
 	PageInfo<FeesClaimsEntity> query(Map<String, Object> condition, int pageNo, int pageSize);
 	int update(FeesClaimsEntity entity);
+	
+    //客诉理赔
+    PageInfo<FeesClaimsEntity> queryPreBillClaim(Map<String, Object> condition, int pageNo,
+            int pageSize);
+    
+    //改地址退件费
+    PageInfo<FeesClaimsEntity> queryPreBillClaimChange(Map<String, Object> condition, int pageNo,
+            int pageSize);
 }

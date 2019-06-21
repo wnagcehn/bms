@@ -16,7 +16,6 @@ import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 public class FeesClaimsRepositoryImpl extends MyBatisDao implements IFeesClaimsRepository {
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public PageInfo<FeesClaimsEntity> query(Map<String, Object> condition, int pageNo, int pageSize) {
 		List<FeesClaimsEntity> list = selectList(
 				"com.jiuyescm.bms.fees.claim.mapper.FeesClaimsMapper.query",
@@ -29,6 +28,28 @@ public class FeesClaimsRepositoryImpl extends MyBatisDao implements IFeesClaimsR
     public int update(FeesClaimsEntity entity) {
         // TODO Auto-generated method stub
         return update("com.jiuyescm.bms.fees.claim.mapper.FeesClaimsMapper.update", entity);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public PageInfo<FeesClaimsEntity> queryPreBillClaim(Map<String, Object> condition, int pageNo, int pageSize) {
+        // TODO Auto-generated method stub
+        List<FeesClaimsEntity> list = selectList(
+                "com.jiuyescm.bms.fees.claim.mapper.FeesClaimsMapper.queryPreBillClaim",
+                condition, new RowBounds(pageNo, pageSize));
+        
+        return new PageInfo<FeesClaimsEntity>(list);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public PageInfo<FeesClaimsEntity> queryPreBillClaimChange(Map<String, Object> condition, int pageNo, int pageSize) {
+        // TODO Auto-generated method stub
+        List<FeesClaimsEntity> list = selectList(
+                "com.jiuyescm.bms.fees.claim.mapper.FeesClaimsMapper.queryPreBillClaimChange",
+                condition, new RowBounds(pageNo, pageSize));
+        
+        return new PageInfo<FeesClaimsEntity>(list);
     }
 
 	

@@ -71,6 +71,54 @@ public class FeeClaimServiceImpl implements IFeesClaimService{
 
     }
 
+
+    @Override
+    public PageInfo<FeesClaimsVo> queryPreBillClaim(Map<String, Object> condition, int pageNo, int pageSize) {
+        // TODO Auto-generated method stub
+        PageInfo<FeesClaimsVo> result=new PageInfo<FeesClaimsVo>();
+
+        try {
+            PageInfo<FeesClaimsEntity> pageInfo=feesClaimsRepository.queryPreBillClaim(condition, pageNo, pageSize);           
+            List<FeesClaimsVo> voList = new ArrayList<FeesClaimsVo>();
+            for(FeesClaimsEntity entity : pageInfo.getList()) {
+                FeesClaimsVo vo = new FeesClaimsVo();         
+                PropertyUtils.copyProperties(vo, entity);          
+                voList.add(vo);
+            }
+            
+            PropertyUtils.copyProperties(result, pageInfo); 
+            result.setList(voList);
+            return result;
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+        
+        return result;
+    }
+
+
+    @Override
+    public PageInfo<FeesClaimsVo> queryPreBillClaimChange(Map<String, Object> condition, int pageNo, int pageSize) {
+        PageInfo<FeesClaimsVo> result=new PageInfo<FeesClaimsVo>();
+        try {
+            PageInfo<FeesClaimsEntity> pageInfo=feesClaimsRepository.queryPreBillClaimChange(condition, pageNo, pageSize);           
+            List<FeesClaimsVo> voList = new ArrayList<FeesClaimsVo>();
+            for(FeesClaimsEntity entity : pageInfo.getList()) {
+                FeesClaimsVo vo = new FeesClaimsVo();         
+                PropertyUtils.copyProperties(vo, entity);          
+                voList.add(vo);
+            }
+            
+            PropertyUtils.copyProperties(result, pageInfo); 
+            result.setList(voList);
+            return result;
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}",ex);
+        }
+        
+        return result;
+    }
+
 }
 
 

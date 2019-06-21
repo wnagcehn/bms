@@ -128,14 +128,6 @@
       <PropertyDef name="isDeliveryFree">
         <Property name="dataType">Long</Property>
         <Property name="label">是否免运费</Property>
-        <Property name="mapping">
-          <Property name="mapValues">
-            <Entity>
-              <Property name="0">否</Property>
-              <Property name="1">是</Property>
-            </Entity>
-          </Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="productAmount">
         <Property name="dataType">BigDecimal</Property>

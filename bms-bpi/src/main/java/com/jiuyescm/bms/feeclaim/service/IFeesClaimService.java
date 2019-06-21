@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.feeclaim.vo.FeesClaimsVo;
+import com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity;
 
 /**
  * <功能描述>
@@ -19,6 +20,14 @@ public interface IFeesClaimService {
             int pageSize);
     
     int update(FeesClaimsVo vo);
+    
+    //客诉理赔
+    PageInfo<FeesClaimsVo> queryPreBillClaim(Map<String, Object> condition, int pageNo,
+            int pageSize);
+    
+    //改地址退件费
+    PageInfo<FeesClaimsVo> queryPreBillClaimChange(Map<String, Object> condition, int pageNo,
+            int pageSize);
 }
 
 
