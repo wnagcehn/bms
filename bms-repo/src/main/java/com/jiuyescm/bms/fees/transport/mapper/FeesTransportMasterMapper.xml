@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.transport.FeesTransportMasterMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		   	<result column="transfer_no" property="transferNo" jdbcType="VARCHAR" />
+		   	<result column="temperature_control_no" property="temperatureControlNo" jdbcType="VARCHAR" />
+		   	<result column="partner_code" property="partnerCode" jdbcType="VARCHAR" />
+		   	<result column="partner_name" property="partnerName" jdbcType="VARCHAR" />
+		   	<result column="project_name" property="projectName" jdbcType="VARCHAR" />
+		   	<result column="origin_site_no" property="originSiteNo" jdbcType="VARCHAR" />
+		   	<result column="origin_province" property="originProvince" jdbcType="VARCHAR" />
+		   	<result column="origin" property="origin" jdbcType="VARCHAR" />
+		   	<result column="origin_district" property="originDistrict" jdbcType="VARCHAR" />
+		   	<result column="destination_site_no" property="destinationSiteNo" jdbcType="VARCHAR" />
+		   	<result column="destination_province" property="destinationProvince" jdbcType="VARCHAR" />
+		   	<result column="destination" property="destination" jdbcType="VARCHAR" />
+		   	<result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
+		   	<result column="receiver_address" property="receiverAddress" jdbcType="VARCHAR" />
+		   	<result column="created_dt" property="createdDt" jdbcType="TIMESTAMP" />
+		   	<result column="actual_volume" property="actualVolume" jdbcType="DECIMAL" />
+		   	<result column="actual_weight" property="actualWeight" jdbcType="DECIMAL" />
+		   	<result column="actual_packing_qty" property="actualPackingQty" jdbcType="DECIMAL" />
+		   	<result column="actual_goods_qty" property="actualGoodsQty" jdbcType="DECIMAL" />
+		   	<result column="receipt_packing_qty" property="receiptPackingQty" jdbcType="DECIMAL" />
+		   	<result column="receipt_goods_qty" property="receiptGoodsQty" jdbcType="DECIMAL" />
+		   	<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+		   	<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		   	<result column="payment_totle" property="paymentTotle" jdbcType="DECIMAL" />
+		   	<result column="need_insurance" property="needInsurance" jdbcType="VARCHAR" />
+		   	<result column="order_source_code" property="orderSourceCode" jdbcType="VARCHAR" />
+		   	<result column="light" property="light" jdbcType="INTEGER" />
+		   	<result column="has_backtrack" property="hasBacktrack" jdbcType="INTEGER" />
+		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+		   	<result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP" />
+		   	<result column="cre_time" property="creTime" jdbcType="TIMESTAMP" />
+		   	<result column="cre_person" property="crePerson" jdbcType="VARCHAR" />
+		   	<result column="sync_flag" property="syncFlag" jdbcType="CHAR" />
+		   	<result column="sync_time" property="syncTime" jdbcType="TIMESTAMP" />
+		   	<result column="sync_count" property="syncCount" jdbcType="INTEGER" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, order_no, transfer_no, temperature_control_no, partner_code, partner_name, project_name, origin_site_no, origin_province, origin, origin_district, destination_site_no, destination_province, destination, destination_district, receiver_address, created_dt, actual_volume, actual_weight, actual_packing_qty, actual_goods_qty, receipt_packing_qty, receipt_goods_qty, begin_time, end_time, payment_totle, need_insurance, order_source_code, light, has_backtrack, remark, upload_time, cre_time, cre_person, sync_flag, sync_time, sync_count
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+order_no, transfer_no, temperature_control_no, partner_code, partner_name, project_name, origin_site_no, origin_province, origin, origin_district, destination_site_no, destination_province, destination, destination_district, receiver_address, created_dt, actual_volume, actual_weight, actual_packing_qty, actual_goods_qty, receipt_packing_qty, receipt_goods_qty, begin_time, end_time, payment_totle, need_insurance, order_source_code, light, has_backtrack, remark, upload_time, cre_time, cre_person, sync_flag, sync_time, sync_count
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from fees_transport_master
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from fees_transport_master
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" orderNo != null and orderNo !='' ">
+				and order_no = #{orderNo}
+			</if>
+        	<if test=" transferNo != null and transferNo !='' ">
+				and transfer_no = #{transferNo}
+			</if>
+        	<if test=" temperatureControlNo != null and temperatureControlNo !='' ">
+				and temperature_control_no = #{temperatureControlNo}
+			</if>
+        	<if test=" partnerCode != null and partnerCode !='' ">
+				and partner_code = #{partnerCode}
+			</if>
+        	<if test=" partnerName != null and partnerName !='' ">
+				and partner_name = #{partnerName}
+			</if>
+        	<if test=" projectName != null and projectName !='' ">
+				and project_name = #{projectName}
+			</if>
+        	<if test=" originSiteNo != null and originSiteNo !='' ">
+				and origin_site_no = #{originSiteNo}
+			</if>
+        	<if test=" originProvince != null and originProvince !='' ">
+				and origin_province = #{originProvince}
+			</if>
+        	<if test=" origin != null and origin !='' ">
+				and origin = #{origin}
+			</if>
+        	<if test=" originDistrict != null and originDistrict !='' ">
+				and origin_district = #{originDistrict}
+			</if>
+        	<if test=" destinationSiteNo != null and destinationSiteNo !='' ">
+				and destination_site_no = #{destinationSiteNo}
+			</if>
+        	<if test=" destinationProvince != null and destinationProvince !='' ">
+				and destination_province = #{destinationProvince}
+			</if>
+        	<if test=" destination != null and destination !='' ">
+				and destination = #{destination}
+			</if>
+        	<if test=" destinationDistrict != null and destinationDistrict !='' ">
+				and destination_district = #{destinationDistrict}
+			</if>
+        	<if test=" receiverAddress != null and receiverAddress !='' ">
+				and receiver_address = #{receiverAddress}
+			</if>
+        	<if test=" createdDt != null and createdDt !='' ">
+				and created_dt = #{createdDt}
+			</if>
+        	<if test=" actualVolume != null and actualVolume !='' ">
+				and actual_volume = #{actualVolume}
+			</if>
+        	<if test=" actualWeight != null and actualWeight !='' ">
+				and actual_weight = #{actualWeight}
+			</if>
+        	<if test=" actualPackingQty != null and actualPackingQty !='' ">
+				and actual_packing_qty = #{actualPackingQty}
+			</if>
+        	<if test=" actualGoodsQty != null and actualGoodsQty !='' ">
+				and actual_goods_qty = #{actualGoodsQty}
+			</if>
+        	<if test=" receiptPackingQty != null and receiptPackingQty !='' ">
+				and receipt_packing_qty = #{receiptPackingQty}
+			</if>
+        	<if test=" receiptGoodsQty != null and receiptGoodsQty !='' ">
+				and receipt_goods_qty = #{receiptGoodsQty}
+			</if>
+        	<if test=" beginTime != null and beginTime !='' ">
+				and begin_time = #{beginTime}
+			</if>
+        	<if test=" endTime != null and endTime !='' ">
+				and end_time = #{endTime}
+			</if>
+        	<if test=" paymentTotle != null and paymentTotle !='' ">
+				and payment_totle = #{paymentTotle}
+			</if>
+        	<if test=" needInsurance != null and needInsurance !='' ">
+				and need_insurance = #{needInsurance}
+			</if>
+        	<if test=" orderSourceCode != null and orderSourceCode !='' ">
+				and order_source_code = #{orderSourceCode}
+			</if>
+        	<if test=" light != null and light !='' ">
+				and light = #{light}
+			</if>
+        	<if test=" hasBacktrack != null and hasBacktrack !='' ">
+				and has_backtrack = #{hasBacktrack}
+			</if>
+        	<if test=" remark != null and remark !='' ">
+				and remark = #{remark}
+			</if>
+        	<if test=" uploadTime != null and uploadTime !='' ">
+				and upload_time = #{uploadTime}
+			</if>
+        	<if test=" creTime != null and creTime !='' ">
+				and cre_time = #{creTime}
+			</if>
+        	<if test=" crePerson != null and crePerson !='' ">
+				and cre_person = #{crePerson}
+			</if>
+        	<if test=" syncFlag != null and syncFlag !='' ">
+				and sync_flag = #{syncFlag}
+			</if>
+        	<if test=" syncTime != null and syncTime !='' ">
+				and sync_time = #{syncTime}
+			</if>
+        	<if test=" syncCount != null and syncCount !='' ">
+				and sync_count = #{syncCount}
+			</if>
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity">
+        insert into fees_transport_master(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{orderNo,jdbcType=VARCHAR}, 
+			#{transferNo,jdbcType=VARCHAR}, 
+			#{temperatureControlNo,jdbcType=VARCHAR}, 
+			#{partnerCode,jdbcType=VARCHAR}, 
+			#{partnerName,jdbcType=VARCHAR}, 
+			#{projectName,jdbcType=VARCHAR}, 
+			#{originSiteNo,jdbcType=VARCHAR}, 
+			#{originProvince,jdbcType=VARCHAR}, 
+			#{origin,jdbcType=VARCHAR}, 
+			#{originDistrict,jdbcType=VARCHAR}, 
+			#{destinationSiteNo,jdbcType=VARCHAR}, 
+			#{destinationProvince,jdbcType=VARCHAR}, 
+			#{destination,jdbcType=VARCHAR}, 
+			#{destinationDistrict,jdbcType=VARCHAR}, 
+			#{receiverAddress,jdbcType=VARCHAR}, 
+			#{createdDt,jdbcType=TIMESTAMP}, 
+			#{actualVolume,jdbcType=DECIMAL}, 
+			#{actualWeight,jdbcType=DECIMAL}, 
+			#{actualPackingQty,jdbcType=DECIMAL}, 
+			#{actualGoodsQty,jdbcType=DECIMAL}, 
+			#{receiptPackingQty,jdbcType=DECIMAL}, 
+			#{receiptGoodsQty,jdbcType=DECIMAL}, 
+			#{beginTime,jdbcType=TIMESTAMP}, 
+			#{endTime,jdbcType=TIMESTAMP}, 
+			#{paymentTotle,jdbcType=DECIMAL}, 
+			#{needInsurance,jdbcType=VARCHAR}, 
+			#{orderSourceCode,jdbcType=VARCHAR}, 
+			#{light,jdbcType=INTEGER}, 
+			#{hasBacktrack,jdbcType=INTEGER}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{uploadTime,jdbcType=TIMESTAMP}, 
+			#{creTime,jdbcType=TIMESTAMP}, 
+			#{crePerson,jdbcType=VARCHAR}, 
+			#{syncFlag,jdbcType=CHAR}, 
+			#{syncTime,jdbcType=TIMESTAMP}, 
+			#{syncCount,jdbcType=INTEGER}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity">
+        update fees_transport_master
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" orderNo != null and orderNo !='' ">
+				order_no = #{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" transferNo != null and transferNo !='' ">
+				transfer_no = #{transferNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" temperatureControlNo != null and temperatureControlNo !='' ">
+				temperature_control_no = #{temperatureControlNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" partnerCode != null and partnerCode !='' ">
+				partner_code = #{partnerCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" partnerName != null and partnerName !='' ">
+				partner_name = #{partnerName,jdbcType=VARCHAR},
+			</if>
+			<if test=" projectName != null and projectName !='' ">
+				project_name = #{projectName,jdbcType=VARCHAR},
+			</if>
+			<if test=" originSiteNo != null and originSiteNo !='' ">
+				origin_site_no = #{originSiteNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" originProvince != null and originProvince !='' ">
+				origin_province = #{originProvince,jdbcType=VARCHAR},
+			</if>
+			<if test=" origin != null and origin !='' ">
+				origin = #{origin,jdbcType=VARCHAR},
+			</if>
+			<if test=" originDistrict != null and originDistrict !='' ">
+				origin_district = #{originDistrict,jdbcType=VARCHAR},
+			</if>
+			<if test=" destinationSiteNo != null and destinationSiteNo !='' ">
+				destination_site_no = #{destinationSiteNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" destinationProvince != null and destinationProvince !='' ">
+				destination_province = #{destinationProvince,jdbcType=VARCHAR},
+			</if>
+			<if test=" destination != null and destination !='' ">
+				destination = #{destination,jdbcType=VARCHAR},
+			</if>
+			<if test=" destinationDistrict != null and destinationDistrict !='' ">
+				destination_district = #{destinationDistrict,jdbcType=VARCHAR},
+			</if>
+			<if test=" receiverAddress != null and receiverAddress !='' ">
+				receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+			</if>
+			<if test=" createdDt != null and createdDt !='' ">
+				created_dt = #{createdDt,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" actualVolume != null and actualVolume !='' ">
+				actual_volume = #{actualVolume,jdbcType=DECIMAL},
+			</if>
+			<if test=" actualWeight != null and actualWeight !='' ">
+				actual_weight = #{actualWeight,jdbcType=DECIMAL},
+			</if>
+			<if test=" actualPackingQty != null and actualPackingQty !='' ">
+				actual_packing_qty = #{actualPackingQty,jdbcType=DECIMAL},
+			</if>
+			<if test=" actualGoodsQty != null and actualGoodsQty !='' ">
+				actual_goods_qty = #{actualGoodsQty,jdbcType=DECIMAL},
+			</if>
+			<if test=" receiptPackingQty != null and receiptPackingQty !='' ">
+				receipt_packing_qty = #{receiptPackingQty,jdbcType=DECIMAL},
+			</if>
+			<if test=" receiptGoodsQty != null and receiptGoodsQty !='' ">
+				receipt_goods_qty = #{receiptGoodsQty,jdbcType=DECIMAL},
+			</if>
+			<if test=" beginTime != null and beginTime !='' ">
+				begin_time = #{beginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" endTime != null and endTime !='' ">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" paymentTotle != null and paymentTotle !='' ">
+				payment_totle = #{paymentTotle,jdbcType=DECIMAL},
+			</if>
+			<if test=" needInsurance != null and needInsurance !='' ">
+				need_insurance = #{needInsurance,jdbcType=VARCHAR},
+			</if>
+			<if test=" orderSourceCode != null and orderSourceCode !='' ">
+				order_source_code = #{orderSourceCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" light != null and light !='' ">
+				light = #{light,jdbcType=INTEGER},
+			</if>
+			<if test=" hasBacktrack != null and hasBacktrack !='' ">
+				has_backtrack = #{hasBacktrack,jdbcType=INTEGER},
+			</if>
+			<if test=" remark != null and remark !='' ">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test=" uploadTime != null and uploadTime !='' ">
+				upload_time = #{uploadTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" creTime != null and creTime !='' ">
+				cre_time = #{creTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" crePerson != null and crePerson !='' ">
+				cre_person = #{crePerson,jdbcType=VARCHAR},
+			</if>
+			<if test=" syncFlag != null and syncFlag !='' ">
+				sync_flag = #{syncFlag,jdbcType=CHAR},
+			</if>
+			<if test=" syncTime != null and syncTime !='' ">
+				sync_time = #{syncTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" syncCount != null and syncCount !='' ">
+				sync_count = #{syncCount,jdbcType=INTEGER},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from fees_transport_master 
+        where id = #{id}
+    </delete>
+</mapper>
