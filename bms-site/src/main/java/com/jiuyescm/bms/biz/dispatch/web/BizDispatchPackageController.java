@@ -87,6 +87,7 @@ public class BizDispatchPackageController {
         if (param.get("creEndTime") == null) {
             throw new BizException("结束时间不能为空!");
         }
+        param.put("delFlag", "0");
 	    try {
 	        PageInfo<BizDispatchPackageVo> pageInfo = bizDispatchPackageService.query(param, page.getPageNo(), page.getPageSize());
 	        if (pageInfo != null) {
@@ -169,6 +170,7 @@ public class BizDispatchPackageController {
         if (null != param.get("customerid")) {
             customerid = param.get("customerid").toString();
         }
+        param.put("delFlag", "0");
         
         // 初始化商家
         Map<String, String> customerMap = getCustomer(); 
