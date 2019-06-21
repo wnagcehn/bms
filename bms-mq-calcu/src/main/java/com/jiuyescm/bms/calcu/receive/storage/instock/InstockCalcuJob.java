@@ -225,8 +225,8 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.No_Dinggou.getCode());
 			
-			fee.setCalcuMsg("商家【"+fee.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!");
-			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "商家【"+fee.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!", contract, cbiVo);
+			fee.setCalcuMsg("商家【"+taskVo.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!");
+			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "商家【"+taskVo.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!", contract, cbiVo);
 			return;
 		}
 		
@@ -345,11 +345,18 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 		}
 		fee.setCost(BigDecimal.valueOf(amount));
 		fee.setParam4(priceType);
-		entity.setRemark(entity.getRemark()+"计算成功;");
-		entity.setIsCalculated(CalculateState.Finish.getCode());
 		fee.setCalcuMsg("计算成功");
 		fee.setIsCalculated(CalculateState.Finish.getCode());
 		fee.setCalculateTime(JAppContext.currentTimestamp());
+		
+		if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
+            fee.setCalcuMsg("计算成功");
+            logger.info("计算成功，费用【{}】",fee.getCost());
+        }
+        else{
+            logger.info("计算不成功，费用【{}】",fee.getCost());
+            fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
+        }
 	}
 	
 	@Override

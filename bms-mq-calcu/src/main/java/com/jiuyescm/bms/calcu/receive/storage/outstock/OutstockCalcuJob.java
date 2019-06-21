@@ -259,7 +259,7 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
         
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.No_Dinggou.getCode());			
-			fee.setCalcuMsg("商家【"+fee.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!");
+			fee.setCalcuMsg("商家【"+taskVo.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!");
 			return;
 		}
 		
@@ -409,9 +409,16 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 		fee.setCost(BigDecimal.valueOf(amount));
 		fee.setParam4(priceType);
 		fee.setBizType(entity.getextattr1());//用于判断是否是遗漏数据
-		entity.setRemark(entity.getRemark()+"计算成功;");
 		fee.setCalcuMsg("计算成功");
 		fee.setIsCalculated(CalculateState.Finish.getCode());
+		 if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
+             logger.info("计算成功，费用【{}】",fee.getCost());
+             fee.setCalcuMsg("计算成功");
+         }
+         else{
+             logger.info("计算不成功，费用【{}】",fee.getCost());
+             fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
+         }
 	}
 	
 	@Override
