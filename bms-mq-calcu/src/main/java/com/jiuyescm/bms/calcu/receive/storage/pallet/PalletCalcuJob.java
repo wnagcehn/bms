@@ -236,6 +236,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		fee.setParam1(TemplateTypeEnum.COMMON.getCode());
 		fee.setCalcuMsg("");
 		fee.setCalculateTime(JAppContext.currentTimestamp());
+		fee.setCreateTime(entity.getCreateTime());
 		return fee;
 	}
 

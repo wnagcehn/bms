@@ -238,8 +238,10 @@ public class ContractCalcuService {
             }  
         }
 
-        newList = levelMap.get(levelMap.lastKey());
-        
+        if(levelMap.size()>0 && levelMap.get(levelMap.lastKey())!=null){
+            newList = levelMap.get(levelMap.lastKey());
+        }
+             
         return newList;
     }
 
