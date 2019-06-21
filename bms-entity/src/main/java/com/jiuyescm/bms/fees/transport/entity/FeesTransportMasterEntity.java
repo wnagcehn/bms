@@ -15,39 +15,41 @@ public class FeesTransportMasterEntity implements IEntity {
 	/**
      * 
      */
-    private static final long serialVersionUID = -631612165123969426L;
+    private static final long serialVersionUID = -991992554937349013L;
     // 编号
 	private Long id;
+	// omsid
+	private Long omsId;
 	// 运输订单号
 	private String orderNo;
 	// 外部订单号(来源：OMS，为出库单号)
-	private String transferNo;
+	private String outstockNo;
 	// 温控标准编号
-	private String temperatureControlNo;
+	private String temperatureTypeCode;
 	// 伙伴编码
-	private String partnerCode;
+	private String customerId;
 	// 伙伴名称
-	private String partnerName;
+	private String customerName;
 	// 承运产品
 	private String projectName;
 	// 始发站
-	private String originSiteNo;
+	private String sendSite;
 	// 始发省份
-	private String originProvince;
+	private String sendProvince;
 	// 始发城市
-	private String origin;
+	private String sendCity;
 	// 始发区
-	private String originDistrict;
+	private String sendDistrict;
 	// 目的站
-	private String destinationSiteNo;
+	private String receiveSite;
 	// 目的省份
-	private String destinationProvince;
+	private String receiveProvince;
 	// 目的城市
-	private String destination;
+	private String receiveCity;
 	// 目的区
-	private String destinationDistrict;
+	private String receiveDistrict;
 	// 目的地址
-	private String receiverAddress;
+	private String receiveAddress;
 	// 订单创建日期
 	private Timestamp createdDt;
 	// 体积
@@ -103,6 +105,14 @@ public class FeesTransportMasterEntity implements IEntity {
 		this.id = id;
 	}
 	
+	public Long getOmsId() {
+		return this.omsId;
+	}
+
+	public void setOmsId(Long omsId) {
+		this.omsId = omsId;
+	}
+	
 	public String getOrderNo() {
 		return this.orderNo;
 	}
@@ -111,36 +121,36 @@ public class FeesTransportMasterEntity implements IEntity {
 		this.orderNo = orderNo;
 	}
 	
-	public String getTransferNo() {
-		return this.transferNo;
+	public String getOutstockNo() {
+		return this.outstockNo;
 	}
 
-	public void setTransferNo(String transferNo) {
-		this.transferNo = transferNo;
+	public void setOutstockNo(String outstockNo) {
+		this.outstockNo = outstockNo;
 	}
 	
-	public String getTemperatureControlNo() {
-		return this.temperatureControlNo;
+	public String getTemperatureTypeCode() {
+		return this.temperatureTypeCode;
 	}
 
-	public void setTemperatureControlNo(String temperatureControlNo) {
-		this.temperatureControlNo = temperatureControlNo;
+	public void setTemperatureTypeCode(String temperatureTypeCode) {
+		this.temperatureTypeCode = temperatureTypeCode;
 	}
 	
-	public String getPartnerCode() {
-		return this.partnerCode;
+	public String getCustomerId() {
+		return this.customerId;
 	}
 
-	public void setPartnerCode(String partnerCode) {
-		this.partnerCode = partnerCode;
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
 	
-	public String getPartnerName() {
-		return this.partnerName;
+	public String getCustomerName() {
+		return this.customerName;
 	}
 
-	public void setPartnerName(String partnerName) {
-		this.partnerName = partnerName;
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 	
 	public String getProjectName() {
@@ -151,76 +161,76 @@ public class FeesTransportMasterEntity implements IEntity {
 		this.projectName = projectName;
 	}
 	
-	public String getOriginSiteNo() {
-		return this.originSiteNo;
+	public String getSendSite() {
+		return this.sendSite;
 	}
 
-	public void setOriginSiteNo(String originSiteNo) {
-		this.originSiteNo = originSiteNo;
+	public void setSendSite(String sendSite) {
+		this.sendSite = sendSite;
 	}
 	
-	public String getOriginProvince() {
-		return this.originProvince;
+	public String getSendProvince() {
+		return this.sendProvince;
 	}
 
-	public void setOriginProvince(String originProvince) {
-		this.originProvince = originProvince;
+	public void setSendProvince(String sendProvince) {
+		this.sendProvince = sendProvince;
 	}
 	
-	public String getOrigin() {
-		return this.origin;
+	public String getSendCity() {
+		return this.sendCity;
 	}
 
-	public void setOrigin(String origin) {
-		this.origin = origin;
+	public void setSendCity(String sendCity) {
+		this.sendCity = sendCity;
 	}
 	
-	public String getOriginDistrict() {
-		return this.originDistrict;
+	public String getSendDistrict() {
+		return this.sendDistrict;
 	}
 
-	public void setOriginDistrict(String originDistrict) {
-		this.originDistrict = originDistrict;
+	public void setSendDistrict(String sendDistrict) {
+		this.sendDistrict = sendDistrict;
 	}
 	
-	public String getDestinationSiteNo() {
-		return this.destinationSiteNo;
+	public String getReceiveSite() {
+		return this.receiveSite;
 	}
 
-	public void setDestinationSiteNo(String destinationSiteNo) {
-		this.destinationSiteNo = destinationSiteNo;
+	public void setReceiveSite(String receiveSite) {
+		this.receiveSite = receiveSite;
 	}
 	
-	public String getDestinationProvince() {
-		return this.destinationProvince;
+	public String getReceiveProvince() {
+		return this.receiveProvince;
 	}
 
-	public void setDestinationProvince(String destinationProvince) {
-		this.destinationProvince = destinationProvince;
+	public void setReceiveProvince(String receiveProvince) {
+		this.receiveProvince = receiveProvince;
 	}
 	
-	public String getDestination() {
-		return this.destination;
+	public String getReceiveCity() {
+		return this.receiveCity;
 	}
 
-	public void setDestination(String destination) {
-		this.destination = destination;
+	public void setReceiveCity(String receiveCity) {
+		this.receiveCity = receiveCity;
 	}
 	
-	public String getDestinationDistrict() {
-		return this.destinationDistrict;
+	public String getReceiveDistrict() {
+		return this.receiveDistrict;
 	}
 
-	public void setDestinationDistrict(String destinationDistrict) {
-		this.destinationDistrict = destinationDistrict;
+	public void setReceiveDistrict(String receiveDistrict) {
+		this.receiveDistrict = receiveDistrict;
 	}
 	
-	public String getReceiverAddress() {
-		return this.receiverAddress;
+	public String getReceiveAddress() {
+		return this.receiveAddress;
 	}
 
-	public void setReceiverAddress(String receiverAddress) {
-		this.receiverAddress = receiverAddress;
+	public void setReceiveAddress(String receiveAddress) {
+		this.receiveAddress = receiveAddress;
 	}
 	
 	public Timestamp getCreatedDt() {

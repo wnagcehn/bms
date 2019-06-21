@@ -3,21 +3,22 @@
 <mapper namespace="com.jiuyescm.bms.fees.transport.FeesTransportMasterMapper" >
     <resultMap id="BaseResultMap" type="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity" >
        		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="oms_id" property="omsId" jdbcType="BIGINT" />
 		   	<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
-		   	<result column="transfer_no" property="transferNo" jdbcType="VARCHAR" />
-		   	<result column="temperature_control_no" property="temperatureControlNo" jdbcType="VARCHAR" />
-		   	<result column="partner_code" property="partnerCode" jdbcType="VARCHAR" />
-		   	<result column="partner_name" property="partnerName" jdbcType="VARCHAR" />
+		   	<result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+		   	<result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+		   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
 		   	<result column="project_name" property="projectName" jdbcType="VARCHAR" />
-		   	<result column="origin_site_no" property="originSiteNo" jdbcType="VARCHAR" />
-		   	<result column="origin_province" property="originProvince" jdbcType="VARCHAR" />
-		   	<result column="origin" property="origin" jdbcType="VARCHAR" />
-		   	<result column="origin_district" property="originDistrict" jdbcType="VARCHAR" />
-		   	<result column="destination_site_no" property="destinationSiteNo" jdbcType="VARCHAR" />
-		   	<result column="destination_province" property="destinationProvince" jdbcType="VARCHAR" />
-		   	<result column="destination" property="destination" jdbcType="VARCHAR" />
-		   	<result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
-		   	<result column="receiver_address" property="receiverAddress" jdbcType="VARCHAR" />
+		   	<result column="send_site" property="sendSite" jdbcType="VARCHAR" />
+		   	<result column="send_province" property="sendProvince" jdbcType="VARCHAR" />
+		   	<result column="send_city" property="sendCity" jdbcType="VARCHAR" />
+		   	<result column="send_district" property="sendDistrict" jdbcType="VARCHAR" />
+		   	<result column="receive_site" property="receiveSite" jdbcType="VARCHAR" />
+		   	<result column="receive_province" property="receiveProvince" jdbcType="VARCHAR" />
+		   	<result column="receive_city" property="receiveCity" jdbcType="VARCHAR" />
+		   	<result column="receive_district" property="receiveDistrict" jdbcType="VARCHAR" />
+		   	<result column="receive_address" property="receiveAddress" jdbcType="VARCHAR" />
 		   	<result column="created_dt" property="createdDt" jdbcType="TIMESTAMP" />
 		   	<result column="actual_volume" property="actualVolume" jdbcType="DECIMAL" />
 		   	<result column="actual_weight" property="actualWeight" jdbcType="DECIMAL" />
@@ -39,14 +40,15 @@
 		   	<result column="sync_flag" property="syncFlag" jdbcType="CHAR" />
 		   	<result column="sync_time" property="syncTime" jdbcType="TIMESTAMP" />
 		   	<result column="sync_count" property="syncCount" jdbcType="INTEGER" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
     </resultMap>
   
     <sql id="BASE_COLUMNS_ALL">
-        id, order_no, transfer_no, temperature_control_no, partner_code, partner_name, project_name, origin_site_no, origin_province, origin, origin_district, destination_site_no, destination_province, destination, destination_district, receiver_address, created_dt, actual_volume, actual_weight, actual_packing_qty, actual_goods_qty, receipt_packing_qty, receipt_goods_qty, begin_time, end_time, payment_totle, need_insurance, order_source_code, light, has_backtrack, remark, upload_time, cre_time, cre_person, sync_flag, sync_time, sync_count
+        id, oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name, project_name, send_site, send_province, send_city, send_district, receive_site, receive_province, receive_city, receive_district, receive_address, created_dt, actual_volume, actual_weight, actual_packing_qty, actual_goods_qty, receipt_packing_qty, receipt_goods_qty, begin_time, end_time, payment_totle, need_insurance, order_source_code, light, has_backtrack, remark, upload_time, cre_time, cre_person, sync_flag, sync_time, sync_count, del_flag
     </sql>
     
     <sql id="BASE_COLUMNS_WITHOUT_ID">
-order_no, transfer_no, temperature_control_no, partner_code, partner_name, project_name, origin_site_no, origin_province, origin, origin_district, destination_site_no, destination_province, destination, destination_district, receiver_address, created_dt, actual_volume, actual_weight, actual_packing_qty, actual_goods_qty, receipt_packing_qty, receipt_goods_qty, begin_time, end_time, payment_totle, need_insurance, order_source_code, light, has_backtrack, remark, upload_time, cre_time, cre_person, sync_flag, sync_time, sync_count
+oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name, project_name, send_site, send_province, send_city, send_district, receive_site, receive_province, receive_city, receive_district, receive_address, created_dt, actual_volume, actual_weight, actual_packing_qty, actual_goods_qty, receipt_packing_qty, receipt_goods_qty, begin_time, end_time, payment_totle, need_insurance, order_source_code, light, has_backtrack, remark, upload_time, cre_time, cre_person, sync_flag, sync_time, sync_count, del_flag
     </sql>
 
 	<!-- 根据id查询 -->
@@ -67,50 +69,53 @@ order_no, transfer_no, temperature_control_no, partner_code, partner_name, proje
         	<if test=" id != null and id !='' ">
 				and id = #{id}
 			</if>
+        	<if test=" omsId != null and omsId !='' ">
+				and oms_id = #{omsId}
+			</if>
         	<if test=" orderNo != null and orderNo !='' ">
 				and order_no = #{orderNo}
 			</if>
-        	<if test=" transferNo != null and transferNo !='' ">
-				and transfer_no = #{transferNo}
+        	<if test=" outstockNo != null and outstockNo !='' ">
+				and outstock_no = #{outstockNo}
 			</if>
-        	<if test=" temperatureControlNo != null and temperatureControlNo !='' ">
-				and temperature_control_no = #{temperatureControlNo}
+        	<if test=" temperatureTypeCode != null and temperatureTypeCode !='' ">
+				and temperature_type_code = #{temperatureTypeCode}
 			</if>
-        	<if test=" partnerCode != null and partnerCode !='' ">
-				and partner_code = #{partnerCode}
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
 			</if>
-        	<if test=" partnerName != null and partnerName !='' ">
-				and partner_name = #{partnerName}
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
 			</if>
         	<if test=" projectName != null and projectName !='' ">
 				and project_name = #{projectName}
 			</if>
-        	<if test=" originSiteNo != null and originSiteNo !='' ">
-				and origin_site_no = #{originSiteNo}
+        	<if test=" sendSite != null and sendSite !='' ">
+				and send_site = #{sendSite}
 			</if>
-        	<if test=" originProvince != null and originProvince !='' ">
-				and origin_province = #{originProvince}
+        	<if test=" sendProvince != null and sendProvince !='' ">
+				and send_province = #{sendProvince}
 			</if>
-        	<if test=" origin != null and origin !='' ">
-				and origin = #{origin}
+        	<if test=" sendCity != null and sendCity !='' ">
+				and send_city = #{sendCity}
 			</if>
-        	<if test=" originDistrict != null and originDistrict !='' ">
-				and origin_district = #{originDistrict}
+        	<if test=" sendDistrict != null and sendDistrict !='' ">
+				and send_district = #{sendDistrict}
 			</if>
-        	<if test=" destinationSiteNo != null and destinationSiteNo !='' ">
-				and destination_site_no = #{destinationSiteNo}
+        	<if test=" receiveSite != null and receiveSite !='' ">
+				and receive_site = #{receiveSite}
 			</if>
-        	<if test=" destinationProvince != null and destinationProvince !='' ">
-				and destination_province = #{destinationProvince}
+        	<if test=" receiveProvince != null and receiveProvince !='' ">
+				and receive_province = #{receiveProvince}
 			</if>
-        	<if test=" destination != null and destination !='' ">
-				and destination = #{destination}
+        	<if test=" receiveCity != null and receiveCity !='' ">
+				and receive_city = #{receiveCity}
 			</if>
-        	<if test=" destinationDistrict != null and destinationDistrict !='' ">
-				and destination_district = #{destinationDistrict}
+        	<if test=" receiveDistrict != null and receiveDistrict !='' ">
+				and receive_district = #{receiveDistrict}
 			</if>
-        	<if test=" receiverAddress != null and receiverAddress !='' ">
-				and receiver_address = #{receiverAddress}
+        	<if test=" receiveAddress != null and receiveAddress !='' ">
+				and receive_address = #{receiveAddress}
 			</if>
         	<if test=" createdDt != null and createdDt !='' ">
 				and created_dt = #{createdDt}
@@ -175,6 +180,9 @@ order_no, transfer_no, temperature_control_no, partner_code, partner_name, proje
         	<if test=" syncCount != null and syncCount !='' ">
 				and sync_count = #{syncCount}
 			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				and del_flag = #{delFlag}
+			</if>
     </select>
 
 	<!-- 保存 -->
@@ -184,21 +192,22 @@ order_no, transfer_no, temperature_control_no, partner_code, partner_name, proje
     	)
         values (
 
+			#{omsId,jdbcType=BIGINT}, 
 			#{orderNo,jdbcType=VARCHAR}, 
-			#{transferNo,jdbcType=VARCHAR}, 
-			#{temperatureControlNo,jdbcType=VARCHAR}, 
-			#{partnerCode,jdbcType=VARCHAR}, 
-			#{partnerName,jdbcType=VARCHAR}, 
+			#{outstockNo,jdbcType=VARCHAR}, 
+			#{temperatureTypeCode,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
 			#{projectName,jdbcType=VARCHAR}, 
-			#{originSiteNo,jdbcType=VARCHAR}, 
-			#{originProvince,jdbcType=VARCHAR}, 
-			#{origin,jdbcType=VARCHAR}, 
-			#{originDistrict,jdbcType=VARCHAR}, 
-			#{destinationSiteNo,jdbcType=VARCHAR}, 
-			#{destinationProvince,jdbcType=VARCHAR}, 
-			#{destination,jdbcType=VARCHAR}, 
-			#{destinationDistrict,jdbcType=VARCHAR}, 
-			#{receiverAddress,jdbcType=VARCHAR}, 
+			#{sendSite,jdbcType=VARCHAR}, 
+			#{sendProvince,jdbcType=VARCHAR}, 
+			#{sendCity,jdbcType=VARCHAR}, 
+			#{sendDistrict,jdbcType=VARCHAR}, 
+			#{receiveSite,jdbcType=VARCHAR}, 
+			#{receiveProvince,jdbcType=VARCHAR}, 
+			#{receiveCity,jdbcType=VARCHAR}, 
+			#{receiveDistrict,jdbcType=VARCHAR}, 
+			#{receiveAddress,jdbcType=VARCHAR}, 
 			#{createdDt,jdbcType=TIMESTAMP}, 
 			#{actualVolume,jdbcType=DECIMAL}, 
 			#{actualWeight,jdbcType=DECIMAL}, 
@@ -219,7 +228,8 @@ order_no, transfer_no, temperature_control_no, partner_code, partner_name, proje
 			#{crePerson,jdbcType=VARCHAR}, 
 			#{syncFlag,jdbcType=CHAR}, 
 			#{syncTime,jdbcType=TIMESTAMP}, 
-			#{syncCount,jdbcType=INTEGER}
+			#{syncCount,jdbcType=INTEGER},
+			#{delFlag,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -227,50 +237,53 @@ order_no, transfer_no, temperature_control_no, partner_code, partner_name, proje
     <update id="update" parameterType="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity">
         update fees_transport_master
         <trim prefix="set" suffixOverrides=",">
+			<if test=" omsId != null and omsId !='' ">
+				oms_id = #{omsId,jdbcType=BIGINT},
+			</if>
 			<if test=" orderNo != null and orderNo !='' ">
 				order_no = #{orderNo,jdbcType=VARCHAR},
 			</if>
-			<if test=" transferNo != null and transferNo !='' ">
-				transfer_no = #{transferNo,jdbcType=VARCHAR},
+			<if test=" outstockNo != null and outstockNo !='' ">
+				outstock_no = #{outstockNo,jdbcType=VARCHAR},
 			</if>
-			<if test=" temperatureControlNo != null and temperatureControlNo !='' ">
-				temperature_control_no = #{temperatureControlNo,jdbcType=VARCHAR},
+			<if test=" temperatureTypeCode != null and temperatureTypeCode !='' ">
+				temperature_type_code = #{temperatureTypeCode,jdbcType=VARCHAR},
 			</if>
-			<if test=" partnerCode != null and partnerCode !='' ">
-				partner_code = #{partnerCode,jdbcType=VARCHAR},
+			<if test=" customerId != null and customerId !='' ">
+				customer_id = #{customerId,jdbcType=VARCHAR},
 			</if>
-			<if test=" partnerName != null and partnerName !='' ">
-				partner_name = #{partnerName,jdbcType=VARCHAR},
+			<if test=" customerName != null and customerName !='' ">
+				customer_name = #{customerName,jdbcType=VARCHAR},
 			</if>
 			<if test=" projectName != null and projectName !='' ">
 				project_name = #{projectName,jdbcType=VARCHAR},
 			</if>
-			<if test=" originSiteNo != null and originSiteNo !='' ">
-				origin_site_no = #{originSiteNo,jdbcType=VARCHAR},
+			<if test=" sendSite != null and sendSite !='' ">
+				send_site = #{sendSite,jdbcType=VARCHAR},
 			</if>
-			<if test=" originProvince != null and originProvince !='' ">
-				origin_province = #{originProvince,jdbcType=VARCHAR},
+			<if test=" sendProvince != null and sendProvince !='' ">
+				send_province = #{sendProvince,jdbcType=VARCHAR},
 			</if>
-			<if test=" origin != null and origin !='' ">
-				origin = #{origin,jdbcType=VARCHAR},
+			<if test=" sendCity != null and sendCity !='' ">
+				send_city = #{sendCity,jdbcType=VARCHAR},
 			</if>
-			<if test=" originDistrict != null and originDistrict !='' ">
-				origin_district = #{originDistrict,jdbcType=VARCHAR},
+			<if test=" sendDistrict != null and sendDistrict !='' ">
+				send_district = #{sendDistrict,jdbcType=VARCHAR},
 			</if>
-			<if test=" destinationSiteNo != null and destinationSiteNo !='' ">
-				destination_site_no = #{destinationSiteNo,jdbcType=VARCHAR},
+			<if test=" receiveSite != null and receiveSite !='' ">
+				receive_site = #{receiveSite,jdbcType=VARCHAR},
 			</if>
-			<if test=" destinationProvince != null and destinationProvince !='' ">
-				destination_province = #{destinationProvince,jdbcType=VARCHAR},
+			<if test=" receiveProvince != null and receiveProvince !='' ">
+				receive_province = #{receiveProvince,jdbcType=VARCHAR},
 			</if>
-			<if test=" destination != null and destination !='' ">
-				destination = #{destination,jdbcType=VARCHAR},
+			<if test=" receiveCity != null and receiveCity !='' ">
+				receive_city = #{receiveCity,jdbcType=VARCHAR},
 			</if>
-			<if test=" destinationDistrict != null and destinationDistrict !='' ">
-				destination_district = #{destinationDistrict,jdbcType=VARCHAR},
+			<if test=" receiveDistrict != null and receiveDistrict !='' ">
+				receive_district = #{receiveDistrict,jdbcType=VARCHAR},
 			</if>
-			<if test=" receiverAddress != null and receiverAddress !='' ">
-				receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+			<if test=" receiveAddress != null and receiveAddress !='' ">
+				receive_address = #{receiveAddress,jdbcType=VARCHAR},
 			</if>
 			<if test=" createdDt != null and createdDt !='' ">
 				created_dt = #{createdDt,jdbcType=TIMESTAMP},
@@ -334,6 +347,9 @@ order_no, transfer_no, temperature_control_no, partner_code, partner_name, proje
 			</if>
 			<if test=" syncCount != null and syncCount !='' ">
 				sync_count = #{syncCount,jdbcType=INTEGER},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=CHAR},
 			</if>
         </trim>
         where id = #{id}
