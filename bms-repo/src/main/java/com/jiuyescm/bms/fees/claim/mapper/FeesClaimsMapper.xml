@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.claim.mapper.FeesClaimsMapper" >
+  <resultMap id="BaseResultMap" type="com.jiuyescm.bms.fees.claim.FeesClaimsEntity" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+	   	<result column="master_id" property="masterId" jdbcType="BIGINT" />
+	   	<result column="waybill_no" property="waybillNo" jdbcType="VARCHAR" />
+	   	<result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+	   	<result column="external_no" property="externalNo" jdbcType="VARCHAR" />
+	   	<result column="work_order_no" property="workOrderNo" jdbcType="VARCHAR" />
+	   	<result column="pay_id" property="payId" jdbcType="VARCHAR" />
+	   	<result column="duty_type" property="dutyType" jdbcType="VARCHAR" />
+	   	<result column="pay_type" property="payType" jdbcType="VARCHAR" />
+	   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+	   	<result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+	   	<result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+	   	<result column="carrier_id" property="carrierId" jdbcType="VARCHAR" />
+	   	<result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+	   	<result column="deliver_id" property="deliverId" jdbcType="VARCHAR" />
+	   	<result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	   	<result column="pay_direction" property="payDirection" jdbcType="VARCHAR" />
+	   	<result column="is_delivery_free" property="isDeliveryFree" jdbcType="TINYINT" />
+	   	<result column="product_amount" property="productAmount" jdbcType="DECIMAL" />
+	   	<result column="returned_amount" property="returnedAmount" jdbcType="DECIMAL" />
+	   	<result column="amerce_amount" property="amerceAmount" jdbcType="DECIMAL" />
+	   	<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	   	<result column="cre_person_id" property="crePersonId" jdbcType="VARCHAR" />
+	   	<result column="cre_person" property="crePerson" jdbcType="VARCHAR" />
+	   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+	   	<result column="mod_person_id" property="modPersonId" jdbcType="VARCHAR" />
+	   	<result column="mod_person" property="modPerson" jdbcType="VARCHAR" />
+	   	<result column="mod_time" property="modTime" jdbcType="TIMESTAMP" />
+	   	<result column="write_time" property="writeTime" jdbcType="TIMESTAMP" />
+	   	<result column="sync_time" property="syncTime" jdbcType="TIMESTAMP" />
+	   	<result column="bill_year" property="billYear" jdbcType="VARCHAR" />
+	   	<result column="bill_month" property="billMonth" jdbcType="VARCHAR" />
+	   	<result column="waybill_time" property="waybillTime" jdbcType="TIMESTAMP" />
+	   	<result column="del_flag" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+  
+  <sql id="BASE_COLUMNS_ALL">
+        id, master_id, waybill_no, outstock_no, external_no, work_order_no, pay_id, duty_type, pay_type, customer_id, customer_name, warehouse_code, warehouse_name, carrier_id, carrier_name, deliver_id, deliver_name, pay_direction, is_delivery_free, product_amount, returned_amount, amerce_amount, create_time, cre_person_id, cre_person, remark, mod_person_id, mod_person, mod_time, write_time, sync_time, bill_year, bill_month, waybill_time, del_flag
+  </sql>
+    
+  <sql id="BASE_COLUMNS_WITHOUT_ID">
+		master_id, waybill_no, outstock_no, external_no, work_order_no, pay_id, duty_type, pay_type, customer_id, customer_name, warehouse_code, warehouse_name, carrier_id, carrier_name, deliver_id, deliver_name, pay_direction, is_delivery_free, product_amount, returned_amount, amerce_amount, create_time, cre_person_id, cre_person, remark, mod_person_id, mod_person, mod_time, write_time, sync_time, bill_year, bill_month, waybill_time, del_flag
+  </sql>
+    
+ <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.claim.FeesClaimsEntity">
+        select
+        id, waybill_no, outstock_no, external_no, work_order_no, pay_id, duty_type, pay_type, customer_id, customer_name, warehouse_code, warehouse_name, carrier_id, carrier_name, deliver_id, deliver_name, pay_direction, is_delivery_free, sum(product_amount) as product_amount, sum(returned_amount) as returned_amount, amerce_amount, create_time, cre_person_id, cre_person, remark, mod_person_id, mod_person, mod_time, write_time, sync_time, bill_year, bill_month, waybill_time, del_flag
+        from fees_claims
+        where 1 = 1 
+        	<if test=" waybillNo != null and waybillNo !='' ">
+				and waybill_no = #{waybillNo}
+			</if>
+        	<if test=" outstockNo != null and outstockNo !='' ">
+				and outstock_no = #{outstockNo}
+			</if>
+        	<if test=" externalNo != null and externalNo !='' ">
+				and external_no = #{externalNo}
+			</if>
+        	<if test=" workOrderNo != null and workOrderNo !='' ">
+				and work_order_no = #{workOrderNo}
+			</if>
+        	<if test=" customerId != null and customerId !='' ">
+				and customer_id = #{customerId}
+			</if>
+        	<if test=" customerName != null and customerName !='' ">
+				and customer_name = #{customerName}
+			</if>
+        	<if test=" warehouseCode != null and warehouseCode !='' ">
+				and warehouse_code = #{warehouseCode}
+			</if>
+        	<if test=" warehouseName != null and warehouseName !='' ">
+				and warehouse_name = #{warehouseName}
+			</if>
+        	<if test=" carrierId != null and carrierId !='' ">
+				and carrier_id = #{carrierId}
+			</if>
+        	<if test=" carrierName != null and carrierName !='' ">
+				and carrier_name = #{carrierName}
+			</if>
+			<if test=" billYear != null and billYear !='' ">
+				and bill_year = #{billYear}
+			</if>
+        	<if test=" billMonth != null and billMonth !='' ">
+				and bill_month = #{billMonth}
+			</if>
+			<if test="(kesuStartTime != null and kesuStartTime !='')" >
+				and create_time <![CDATA[>= ]]>#{kesuStartTime}
+			</if>
+			<if test="(kesuEndTime != null and kesuEndTime !='')" >
+				and <![CDATA[create_time <= #{kesuEndTime}]]>
+			</if>
+        	<if test="(waybillStartTime != null and waybillStartTime !='')" >
+				and waybill_time <![CDATA[>= ]]>#{waybillStartTime}
+			</if>
+			<if test="(waybillEndTime != null and waybillEndTime !='')" >
+				and <![CDATA[waybill_time <= #{waybillEndTime}]]>
+			</if>
+		 group by waybill_no,work_order_no
+    </select>
+
+  
+  <update id="update" parameterType="com.jiuyescm.bms.fees.claim.FeesClaimsEntity">
+        update fees_claims
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" masterId != null and masterId !='' ">
+				master_id = #{masterId,jdbcType=BIGINT},
+			</if>
+			<if test=" waybillNo != null and waybillNo !='' ">
+				waybill_no = #{waybillNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" outstockNo != null and outstockNo !='' ">
+				outstock_no = #{outstockNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" externalNo != null and externalNo !='' ">
+				external_no = #{externalNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" workOrderNo != null and workOrderNo !='' ">
+				work_order_no = #{workOrderNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" payId != null and payId !='' ">
+				pay_id = #{payId,jdbcType=VARCHAR},
+			</if>
+			<if test=" dutyType != null and dutyType !='' ">
+				duty_type = #{dutyType,jdbcType=VARCHAR},
+			</if>
+			<if test=" payType != null and payType !='' ">
+				pay_type = #{payType,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerId != null and customerId !='' ">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerName != null and customerName !='' ">
+				customer_name = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseCode != null and warehouseCode !='' ">
+				warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" warehouseName != null and warehouseName !='' ">
+				warehouse_name = #{warehouseName,jdbcType=VARCHAR},
+			</if>
+			<if test=" carrierId != null and carrierId !='' ">
+				carrier_id = #{carrierId,jdbcType=VARCHAR},
+			</if>
+			<if test=" carrierName != null and carrierName !='' ">
+				carrier_name = #{carrierName,jdbcType=VARCHAR},
+			</if>
+			<if test=" deliverId != null and deliverId !='' ">
+				deliver_id = #{deliverId,jdbcType=VARCHAR},
+			</if>
+			<if test=" deliverName != null and deliverName !='' ">
+				deliver_name = #{deliverName,jdbcType=VARCHAR},
+			</if>
+			<if test=" payDirection != null and payDirection !='' ">
+				pay_direction = #{payDirection,jdbcType=VARCHAR},
+			</if>
+			<if test=" isDeliveryFree != null and isDeliveryFree !='' ">
+				is_delivery_free = #{isDeliveryFree,jdbcType=TINYINT},
+			</if>
+			<if test=" productAmount != null and productAmount !='' ">
+				product_amount = #{productAmount,jdbcType=DECIMAL},
+			</if>
+			<if test=" returnedAmount != null and returnedAmount !='' ">
+				returned_amount = #{returnedAmount,jdbcType=DECIMAL},
+			</if>
+			<if test=" amerceAmount != null and amerceAmount !='' ">
+				amerce_amount = #{amerceAmount,jdbcType=DECIMAL},
+			</if>
+			<if test=" createTime != null and createTime !='' ">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" crePersonId != null and crePersonId !='' ">
+				cre_person_id = #{crePersonId,jdbcType=VARCHAR},
+			</if>
+			<if test=" crePerson != null and crePerson !='' ">
+				cre_person = #{crePerson,jdbcType=VARCHAR},
+			</if>
+			<if test=" remark != null and remark !='' ">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test=" modPersonId != null and modPersonId !='' ">
+				mod_person_id = #{modPersonId,jdbcType=VARCHAR},
+			</if>
+			<if test=" modPerson != null and modPerson !='' ">
+				mod_person = #{modPerson,jdbcType=VARCHAR},
+			</if>
+			<if test=" modTime != null and modTime !='' ">
+				mod_time = #{modTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" writeTime != null and writeTime !='' ">
+				write_time = #{writeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" syncTime != null and syncTime !='' ">
+				sync_time = #{syncTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" billYear != null and billYear !='' ">
+				bill_year = #{billYear,jdbcType=VARCHAR},
+			</if>
+			<if test=" billMonth != null and billMonth !='' ">
+				bill_month = #{billMonth,jdbcType=VARCHAR},
+			</if>
+			<if test=" waybillTime != null and waybillTime !='' ">
+				waybill_time = #{waybillTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=CHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>  
+</mapper>
