@@ -564,10 +564,9 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		String carrierSubjectCode = dispatchSubjectMap.get(fee.getCarrierid());
 		if(contractItemMap==null || !contractItemMap.containsKey(carrierSubjectCode)){
 			fee.setIsCalculated(CalculateState.No_Dinggou.getCode());
-			fee.setCalcuMsg("商家【"+fee.getCustomerName()+"】物流商【"+fee.getCarrierName()+"】未订购科目【配送费】的服务项!");
+			fee.setCalcuMsg("商家【"+taskVo.getCustomerName()+"】物流商【"+fee.getCarrierName()+"】未订购科目【配送费】的服务项!");
 			return;
 		}
-		
 		
 		try{
 			BmsQuoteDispatchDetailVo price=new BmsQuoteDispatchDetailVo();
@@ -617,7 +616,14 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			fee.setBizType(entity.getExtattr1());//判断是否是遗漏数据
 			fee.setServiceTypeCode(StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?entity.getServiceTypeCode():entity.getAdjustServiceTypeCode());
 			fee.setIsCalculated(CalculateState.Finish.getCode());
-			fee.setCalcuMsg("计算成功");
+			if(fee.getAmount()>0){
+                fee.setCalcuMsg("计算成功");
+                logger.info("计算成功，费用【{}】",fee.getAmount());
+            }
+            else{
+                logger.info("计算不成功，费用【{}】",fee.getAmount());
+                fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
+            }
 		}catch(Exception ex){
 			
 		}

@@ -306,8 +306,8 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 		
 		if("fail".equals(quoTempleteCode)){
 			fee.setIsCalculated(CalculateState.No_Dinggou.getCode());
-			fee.setCalcuMsg("商家【"+fee.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!");
-			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "商家【"+fee.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!", contract, cbiVo);
+			fee.setCalcuMsg("商家【"+taskVo.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!");
+			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "商家【"+taskVo.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!", contract, cbiVo);
 			return;
 		}
 		
