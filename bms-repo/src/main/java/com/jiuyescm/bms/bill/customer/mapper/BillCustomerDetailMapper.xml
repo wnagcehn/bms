@@ -139,6 +139,7 @@
         	<if test=" balanceName != null and balanceName !='' ">
 				and a.balance_name like CONCAT('%',#{balanceName},'%')
 			</if>
+			GROUP BY a.create_month
 			order by a.create_month
     </select>
 
