@@ -1,6 +1,5 @@
 package com.jiuyescm.bms.bill.customer;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 

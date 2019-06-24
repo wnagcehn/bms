@@ -190,9 +190,9 @@ public class JudgeProcessReportJob extends IJobHandler {
                 // 预账单总金额
                 BillCustomerDetailEntity prepareData = billCustomerMasterService.queryPrepareAmount(param);
                 if (null != prepareData) {
-                    detail.setPrepareAmount(prepareData.getPrepareAmount()==null?BigDecimal.ZERO:prepareData.getPrepareAmount());
+                    detail.setPrepareAmount(prepareData.getPrepareAmount()==null?0d:prepareData.getPrepareAmount());
                 }else {
-                    detail.setPrepareAmount(BigDecimal.ZERO);
+                    detail.setPrepareAmount(0d);
                 }
                 
                 // 3.组装账单跟踪的数据                 201905 -> 1905
@@ -206,7 +206,7 @@ public class JudgeProcessReportJob extends IJobHandler {
                         }
                     }
                     for (BillCheckInfoEntity billCheckInfoEntity : billCheckList) {
-                        detail.setPrepareAmount(billCheckInfoEntity.getAccountAmount()==null?BigDecimal.ZERO:billCheckInfoEntity.getAccountAmount());
+                        detail.setPrepareAmount(billCheckInfoEntity.getAccountAmount()==null?0d:billCheckInfoEntity.getAccountAmount().doubleValue());
                         detail.setBalanceName(billCheckInfoEntity.getBalanceName());
                         detail.setCheckId(billCheckInfoEntity.getId());
                         detailList.add(detail);
