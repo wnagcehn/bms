@@ -54,7 +54,7 @@
         <Property name="label">目的地址</Property>
       </PropertyDef>
       <PropertyDef name="createdDt">
-        <Property name="label">订单创建日</Property>
+        <Property name="label">订单创建日期</Property>
         <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="actualVolume">

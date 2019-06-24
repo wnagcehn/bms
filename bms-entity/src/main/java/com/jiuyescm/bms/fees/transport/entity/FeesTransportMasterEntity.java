@@ -68,7 +68,7 @@ public class FeesTransportMasterEntity implements IEntity {
 	private String receiveAddress;
 	// 订单创建日期
 	private Timestamp createdDt;
-	@ExcelField(title = "订单创建日", num = 1)
+	@ExcelField(title = "订单创建日期", num = 1)
 	private String creDate;
 	// 体积
 	@ExcelField(title = "体积", num = 19)
