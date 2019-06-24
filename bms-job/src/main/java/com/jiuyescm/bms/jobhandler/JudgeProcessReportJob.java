@@ -133,6 +133,7 @@ public class JudgeProcessReportJob extends IJobHandler {
             Map<String, Object> param = new LinkedHashMap<String, Object>();
             param.put("mkId", masterEntity.getMkId());
             param.put("createMonth", masterEntity.getCreateMonth()); 
+            param.put("creMonth", masterEntity.getCreateMonth()); 
             param.put("delFlag", "0");
             try {
                 //日期转换（预账单查询条件，原格式：201905）
@@ -155,7 +156,9 @@ public class JudgeProcessReportJob extends IJobHandler {
                 // 1.组装bms计算的数据
                 BillCustomerDetailEntity bmsCalcuData = billCustomerMasterService.queryBmsCalcuData(param);
                 if (null != bmsCalcuData) {
-                    detail.setPrepareAmount(bmsCalcuData.getPrepareAmount());
+                    detail.setPrepareAmount(bmsCalcuData.getPrepareAmount()==null?0d:bmsCalcuData.getPrepareAmount());
+                }else {
+                    detail.setPrepareAmount(0d);
                 }
                 // 2.组装生成预账单的数据
                 List<BillPrepareExportTaskEntity> prepareList = billCustomerMasterService.queryPrepareData(param);
@@ -187,13 +190,13 @@ public class JudgeProcessReportJob extends IJobHandler {
                     }
                                         
                 }
-                // 预账单总金额
-                BillCustomerDetailEntity prepareData = billCustomerMasterService.queryPrepareAmount(param);
-                if (null != prepareData) {
-                    detail.setPrepareAmount(prepareData.getPrepareAmount()==null?0d:prepareData.getPrepareAmount());
-                }else {
-                    detail.setPrepareAmount(0d);
-                }
+//                // 预账单总金额
+//                BillCustomerDetailEntity prepareData = billCustomerMasterService.queryPrepareAmount(param);
+//                if (null != prepareData) {
+//                    detail.setPrepareAmount(prepareData.getPrepareAmount()==null?0d:prepareData.getPrepareAmount());
+//                }else {
+//                    detail.setPrepareAmount(0d);
+//                }
                 
                 // 3.组装账单跟踪的数据                 201905 -> 1905
                 param.put("createMonth", String.valueOf(masterEntity.getCreateMonth()).substring(2, 6));
@@ -204,6 +207,8 @@ public class JudgeProcessReportJob extends IJobHandler {
                         for (int i = 1; i < billCheckList.size(); i++) {
                             billCheckList.get(i).setAccountAmount(BigDecimal.ZERO);
                         }
+                    }else {
+                        billCheckList.get(0).setAccountAmount(new BigDecimal(detail.getPrepareAmount()));
                     }
                     for (BillCheckInfoEntity billCheckInfoEntity : billCheckList) {
                         detail.setPrepareAmount(billCheckInfoEntity.getAccountAmount()==null?0d:billCheckInfoEntity.getAccountAmount().doubleValue());
