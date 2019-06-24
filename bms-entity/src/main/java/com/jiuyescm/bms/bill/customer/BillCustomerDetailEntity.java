@@ -45,7 +45,7 @@ public class BillCustomerDetailEntity implements IEntity {
 	
 	// 预账单金额
 	@ExcelField(title = "预账单金额", num = 5)
-	private BigDecimal prepareAmount;
+	private Double prepareAmount;
 	
 	// 是否导入账单
 	@ExcelField(title = "是否导入账单", num = 6)
@@ -69,11 +69,11 @@ public class BillCustomerDetailEntity implements IEntity {
 	@ExcelField(title = "收款日期", num = 13)
 	private Date receiptDate;
 	@ExcelField(title = "账单确认金额", num = 14)
-	private BigDecimal confirmAmount;
+	private Double confirmAmount;
 	@ExcelField(title = "发票金额", num = 15)
-	private BigDecimal invoiceAmount;
+	private Double invoiceAmount;
 	@ExcelField(title = "收款金额", num = 16)
-	private BigDecimal receiptAmount;
+	private Double receiptAmount;
 	@ExcelField(title = "结算员", num = 17)
 	private String balanceName;
 
@@ -137,13 +137,7 @@ public class BillCustomerDetailEntity implements IEntity {
 		this.prepareTime = prepareTime;
 	}
 	
-	public BigDecimal getPrepareAmount() {
-		return this.prepareAmount;
-	}
 
-	public void setPrepareAmount(BigDecimal prepareAmount) {
-		this.prepareAmount = prepareAmount;
-	}
 	
 	public String getIsImport() {
 		return this.isImport;
@@ -217,27 +211,36 @@ public class BillCustomerDetailEntity implements IEntity {
         this.receiptDate = receiptDate;
     }
 
-    public BigDecimal getConfirmAmount() {
+
+    public Double getPrepareAmount() {
+        return prepareAmount;
+    }
+
+    public void setPrepareAmount(Double prepareAmount) {
+        this.prepareAmount = prepareAmount;
+    }
+
+    public Double getConfirmAmount() {
         return confirmAmount;
     }
 
-    public void setConfirmAmount(BigDecimal confirmAmount) {
+    public void setConfirmAmount(Double confirmAmount) {
         this.confirmAmount = confirmAmount;
     }
 
-    public BigDecimal getInvoiceAmount() {
+    public Double getInvoiceAmount() {
         return invoiceAmount;
     }
 
-    public void setInvoiceAmount(BigDecimal invoiceAmount) {
+    public void setInvoiceAmount(Double invoiceAmount) {
         this.invoiceAmount = invoiceAmount;
     }
 
-    public BigDecimal getReceiptAmount() {
+    public Double getReceiptAmount() {
         return receiptAmount;
     }
 
-    public void setReceiptAmount(BigDecimal receiptAmount) {
+    public void setReceiptAmount(Double receiptAmount) {
         this.receiptAmount = receiptAmount;
     }
 

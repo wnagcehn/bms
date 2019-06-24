@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.bill.customer.controller;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -139,6 +140,11 @@ public class BillCustomerDetailController {
     public DownloadFile downLoadData(Map<String,Object> parameter) throws Exception{
         try{
             String path=getPath();
+            //如果存放上传文件的目录不存在就新建
+            File storeFolder=new File(path);
+            if(!storeFolder.exists()){
+                storeFolder.mkdirs();
+            }
             HttpCommanExport commanExport=new HttpCommanExport(path);
             ExportDataVoEntity voEntity=new ExportDataVoEntity();
             SimpleDateFormat sd = new SimpleDateFormat("yyyyMMdd");
@@ -188,16 +194,16 @@ public class BillCustomerDetailController {
             } else if ("2".equals(entity.getIsPrepare())) {
                 map.put("isPrepare", "部分生成");
             }
-            map.put("prepareTime", sdf.format(entity.getPrepareTime()));
+            map.put("prepareTime", entity.getPrepareTime()==null?"":sdf.format(entity.getPrepareTime()));
             map.put("prepareAmount", entity.getPrepareAmount());
             map.put("isImport", "0".equals(entity.getIsImport())?"否":"是");
             map.put("billName", entity.getBillName());
             map.put("billCheckStatus", BillCheckStateEnum.getDesc(entity.getBillCheckStatus()));
-            map.put("confirmDate", sdf.format(entity.getConfirmDate()));
+            map.put("confirmDate", entity.getConfirmDate()==null?"":sdf.format(entity.getConfirmDate()));
             map.put("invoiceStatus", BillCheckInvoiceStateEnum.getDesc(entity.getInvoiceStatus()));
-            map.put("invoiceDate", sdf.format(entity.getInvoiceDate()));
+            map.put("invoiceDate", entity.getInvoiceDate()==null?"":sdf.format(entity.getInvoiceDate()));
             map.put("receiptStatus", BillCheckReceiptStateEnum.getDesc(entity.getReceiptStatus()));
-            map.put("receiptDate", sdf.format(entity.getReceiptDate()));
+            map.put("receiptDate", entity.getReceiptDate()==null?"":sdf.format(entity.getReceiptDate()));
             map.put("confirmAmount", entity.getConfirmAmount());
             map.put("invoiceAmount", entity.getInvoiceAmount());
             map.put("receiptAmount", entity.getReceiptAmount());
