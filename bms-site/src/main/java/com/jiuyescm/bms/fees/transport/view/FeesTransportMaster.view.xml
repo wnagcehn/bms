@@ -9,7 +9,7 @@
         <Property name="label">编号</Property>
       </PropertyDef>
       <PropertyDef name="orderNo">
-        <Property name="label">运输订单号</Property>
+        <Property name="label">订单号</Property>
       </PropertyDef>
       <PropertyDef name="transferNo">
         <Property name="label">外部订单号(来源：OMS，为出库单号)</Property>
@@ -54,7 +54,8 @@
         <Property name="label">目的地址</Property>
       </PropertyDef>
       <PropertyDef name="createdDt">
-        <Property name="label">订单创建日期</Property>
+        <Property name="label">订单创建日</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="actualVolume">
         <Property name="label">体积</Property>
@@ -76,24 +77,50 @@
       </PropertyDef>
       <PropertyDef name="beginTime">
         <Property name="label">发货日期</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="endTime">
         <Property name="label">收货日期</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="paymentTotle">
         <Property name="label">应付总计</Property>
       </PropertyDef>
       <PropertyDef name="needInsurance">
         <Property name="label">客户是否需要保险</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="1">是</Property>
+              <Property name="0">否</Property>
+            </Entity>
+          </Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="orderSourceCode">
         <Property name="label">订单来源：OMS、TMS</Property>
       </PropertyDef>
       <PropertyDef name="light">
-        <Property name="label">是否泡货:是:1 ，否:0</Property>
+        <Property name="label">是否泡货</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="1">是</Property>
+              <Property name="0">否</Property>
+            </Entity>
+          </Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="hasBacktrack">
-        <Property name="label">是否退货:是:1 ，否:0</Property>
+        <Property name="label">是否退货</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="1">是</Property>
+              <Property name="0">否</Property>
+            </Entity>
+          </Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="remark">
         <Property name="label">备注</Property>
@@ -115,116 +142,310 @@
       </PropertyDef>
       <PropertyDef name="syncCount">
         <Property name="label">同步次数</Property>
+      </PropertyDef>
+      <PropertyDef name="omsId">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="outstockNo">
+        <Property/>
+        <Property name="label">外部订单号</Property>
+      </PropertyDef>
+      <PropertyDef name="temperatureTypeCode">
+        <Property/>
+        <Property name="label">温控</Property>
+      </PropertyDef>
+      <PropertyDef name="customerId">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property/>
+        <Property name="label">商家全称</Property>
+      </PropertyDef>
+      <PropertyDef name="sendSite">
+        <Property/>
+        <Property name="label">始发站</Property>
+      </PropertyDef>
+      <PropertyDef name="sendProvince">
+        <Property/>
+        <Property name="label">始发省份</Property>
+      </PropertyDef>
+      <PropertyDef name="sendCity">
+        <Property/>
+        <Property name="label">始发城市</Property>
+      </PropertyDef>
+      <PropertyDef name="sendDistrict">
+        <Property/>
+        <Property name="label">始发区</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveSite">
+        <Property/>
+        <Property name="label">目的站</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveProvince">
+        <Property/>
+        <Property name="label">目的省份</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveCity">
+        <Property/>
+        <Property name="label">目的城市</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveDistrict">
+        <Property/>
+        <Property name="label">目的区</Property>
+      </PropertyDef>
+      <PropertyDef name="receiveAddress">
+        <Property/>
+        <Property name="label">目的地址</Property>
+      </PropertyDef>
+      <PropertyDef name="routeNo">
+        <Property/>
+        <Property name="label">派车单号</Property>
+      </PropertyDef>
+      <PropertyDef name="dispatcherName">
+        <Property/>
+        <Property name="label">调度人</Property>
+      </PropertyDef>
+      <PropertyDef name="transportNo">
+        <Property/>
+        <Property name="label">运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="capacityTypeCode">
+        <Property/>
+        <Property name="label">车型</Property>
+      </PropertyDef>
+      <PropertyDef name="tsTakes">
+        <Property name="dataType">Double</Property>
+        <Property name="label">提货费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsTransAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">运费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsSend">
+        <Property name="dataType">Double</Property>
+        <Property name="label">送货费</Property>
+      </PropertyDef>
+      <PropertyDef name="ysZh">
+        <Property name="dataType">Double</Property>
+        <Property name="label">装货费</Property>
+      </PropertyDef>
+      <PropertyDef name="ysXh">
+        <Property name="dataType">Double</Property>
+        <Property name="label">卸货费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsReverseLogistic">
+        <Property name="dataType">Double</Property>
+        <Property name="label">逆向物流费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsDelayWaiting">
+        <Property name="dataType">Double</Property>
+        <Property name="label">延时等待费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsWrappingFilm">
+        <Property name="dataType">Double</Property>
+        <Property name="label">缠绕膜费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsEmptying">
+        <Property name="dataType">Double</Property>
+        <Property name="label">放空费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsClaim">
+        <Property name="dataType">Double</Property>
+        <Property name="label">赔付费</Property>
+      </PropertyDef>
+      <PropertyDef name="ysZmhd">
+        <Property name="dataType">Double</Property>
+        <Property name="label">纸面回单费</Property>
+      </PropertyDef>
+      <PropertyDef name="ysCx">
+        <Property name="dataType">Double</Property>
+        <Property name="label">拆箱费</Property>
+      </PropertyDef>
+      <PropertyDef name="ysTm">
+        <Property name="dataType">Double</Property>
+        <Property name="label">贴码费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsInsurance">
+        <Property name="dataType">Double</Property>
+        <Property name="label">保险费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsFl">
+        <Property name="dataType">Double</Property>
+        <Property name="label">分流费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsSlby">
+        <Property name="dataType">Double</Property>
+        <Property name="label">上楼搬运费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsGyzl">
+        <Property name="dataType">Double</Property>
+        <Property name="label">过夜制冷费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsDjdy">
+        <Property name="dataType">Double</Property>
+        <Property name="label">单据打印费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsAddSite">
+        <Property name="dataType">Double</Property>
+        <Property name="label">加点费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsZz">
+        <Property name="dataType">Double</Property>
+        <Property name="label">中转费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsDf">
+        <Property name="dataType">Double</Property>
+        <Property name="label">垫付费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsYc">
+        <Property name="dataType">Double</Property>
+        <Property name="label">押车费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsTallying">
+        <Property name="dataType">Double</Property>
+        <Property name="label">理货费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsJh">
+        <Property name="dataType">Double</Property>
+        <Property name="label">交货费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsGl">
+        <Property name="dataType">Double</Property>
+        <Property name="label">过路费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsMh">
+        <Property name="dataType">Double</Property>
+        <Property name="label">码货费</Property>
+      </PropertyDef>
+      <PropertyDef name="tsPallet">
+        <Property name="dataType">Double</Property>
+        <Property name="label">托盘费</Property>
+      </PropertyDef>
+      <PropertyDef name="payTotalAmount">
+        <Property name="dataType">Double</Property>
+        <Property name="label">应付总计</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtFeesTransportMasterEntityQuery">
       <PropertyDef name="orderNo">
-        <Property name="label">运输订单号</Property>
-      </PropertyDef>
-      <PropertyDef name="transferNo">
-        <Property name="label">外部订单号(来源：OMS，为出库单号)</Property>
-      </PropertyDef>
-      <PropertyDef name="temperatureControlNo">
-        <Property name="label">温控标准编号</Property>
-      </PropertyDef>
-      <PropertyDef name="partnerCode">
-        <Property name="label">伙伴编码</Property>
-      </PropertyDef>
-      <PropertyDef name="partnerName">
-        <Property name="label">伙伴名称</Property>
+        <Property name="label">订单号</Property>
       </PropertyDef>
       <PropertyDef name="projectName">
         <Property name="label">承运产品</Property>
-      </PropertyDef>
-      <PropertyDef name="originSiteNo">
-        <Property name="label">始发站</Property>
-      </PropertyDef>
-      <PropertyDef name="originProvince">
-        <Property name="label">始发省份</Property>
-      </PropertyDef>
-      <PropertyDef name="origin">
-        <Property name="label">始发城市</Property>
-      </PropertyDef>
-      <PropertyDef name="originDistrict">
-        <Property name="label">始发区</Property>
-      </PropertyDef>
-      <PropertyDef name="destinationSiteNo">
-        <Property name="label">目的站</Property>
-      </PropertyDef>
-      <PropertyDef name="destinationProvince">
-        <Property name="label">目的省份</Property>
-      </PropertyDef>
-      <PropertyDef name="destination">
-        <Property name="label">目的城市</Property>
-      </PropertyDef>
-      <PropertyDef name="destinationDistrict">
-        <Property name="label">目的区</Property>
-      </PropertyDef>
-      <PropertyDef name="receiverAddress">
-        <Property name="label">目的地址</Property>
-      </PropertyDef>
-      <PropertyDef name="createdDt">
-        <Property name="label">订单创建日期</Property>
-      </PropertyDef>
-      <PropertyDef name="actualVolume">
-        <Property name="label">体积</Property>
-      </PropertyDef>
-      <PropertyDef name="actualWeight">
-        <Property name="label">重量</Property>
-      </PropertyDef>
-      <PropertyDef name="actualPackingQty">
-        <Property name="label">实发箱数</Property>
-      </PropertyDef>
-      <PropertyDef name="actualGoodsQty">
-        <Property name="label">实发件数</Property>
-      </PropertyDef>
-      <PropertyDef name="receiptPackingQty">
-        <Property name="label">实收箱数</Property>
-      </PropertyDef>
-      <PropertyDef name="receiptGoodsQty">
-        <Property name="label">实收件数</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTransportTypeList&quot;).getResult()}</Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="beginTime">
-        <Property name="label">发货日期</Property>
+        <Property name="label">开始时间</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="endTime">
-        <Property name="label">收货日期</Property>
+        <Property name="label">结束时间</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
-      <PropertyDef name="paymentTotle">
-        <Property name="label">应付总计</Property>
+      <PropertyDef name="customerId">
+        <Property name="label">商家</Property>
       </PropertyDef>
-      <PropertyDef name="needInsurance">
-        <Property name="label">客户是否需要保险</Property>
+      <PropertyDef name="transportNo">
+        <Property name="label">运单号</Property>
       </PropertyDef>
-      <PropertyDef name="orderSourceCode">
-        <Property name="label">订单来源：OMS、TMS</Property>
+    </DataType>
+    <DataType name="dtFileExportTaskEntity">
+      <Property name="creationType">com.jiuyescm.bms.base.file.entity.FileExportTaskEntity</Property>
+      <PropertyDef name="taskId">
+        <Property></Property>
       </PropertyDef>
-      <PropertyDef name="light">
-        <Property name="label">是否泡货:是:1 ，否:0</Property>
+      <PropertyDef name="taskName">
+        <Property></Property>
+        <Property name="label">任务名称</Property>
       </PropertyDef>
-      <PropertyDef name="hasBacktrack">
-        <Property name="label">是否退货:是:1 ，否:0</Property>
+      <PropertyDef name="billNo">
+        <Property></Property>
+        <Property name="label">账单编号</Property>
       </PropertyDef>
-      <PropertyDef name="remark">
-        <Property name="label">备注</Property>
+      <PropertyDef name="customerid">
+        <Property></Property>
+        <Property name="label">商家ID</Property>
       </PropertyDef>
-      <PropertyDef name="uploadTime">
-        <Property name="label">TMS上传时间</Property>
+      <PropertyDef name="taskType">
+        <Property></Property>
       </PropertyDef>
-      <PropertyDef name="creTime">
-        <Property name="label">创建时间</Property>
+      <PropertyDef name="taskState">
+        <Property></Property>
+        <Property name="label">状态</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">已创建</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">处理中</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">成功</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">3</Property>
+                <Property name="value">失败</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
       </PropertyDef>
-      <PropertyDef name="crePerson">
+      <PropertyDef name="progress">
+        <Property name="dataType">Double</Property>
+        <Property name="label">进度</Property>
+      </PropertyDef>
+      <PropertyDef name="filePath">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param1">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param2">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param3">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param4">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="param5">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="creator">
+        <Property></Property>
         <Property name="label">创建人</Property>
       </PropertyDef>
-      <PropertyDef name="syncFlag">
-        <Property name="label">N=未同步；Y=已同步；F=同步失败</Property>
+      <PropertyDef name="delFlag">
+        <Property></Property>
       </PropertyDef>
-      <PropertyDef name="syncTime">
-        <Property name="label">BMS同步时间</Property>
+      <PropertyDef name="startTime">
+        <Property name="label">开始时间</Property>
+        <Property name="dataType">DateTime</Property>
       </PropertyDef>
-      <PropertyDef name="syncCount">
-        <Property name="label">同步次数</Property>
+      <PropertyDef name="endTime">
+        <Property name="label">结束时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+      <PropertyDef name="createTime">
+        <Property name="label">创建时间</Property>
+        <Property name="dataType">DateTime</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtFileExportTaskCondition">
+      <PropertyDef name="taskName">
+        <Property></Property>
+        <Property name="label">任务名称</Property>
+      </PropertyDef>
+      <PropertyDef name="taskType">
+        <Property></Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -236,13 +457,43 @@
       </DataPilot>
       <Separator/>
       <ToolBarButton id="btnQuery">
-        <ClientEvent name="onClick">var data = view.get(&quot;#dsFeesTransportMasterEntityQuery.data&quot;).current;
+        <ClientEvent name="onClick">var entity = view.id(&quot;queryForm&quot;).get(&quot;entity&quot;);
+if(entity.get(&quot;beginTime&quot;) > entity.get(&quot;endTime&quot;)){
+	dorado.MessageBox.alert(&quot;开始时间不能大于结束时间！&quot;);
+	return;
+} 
+var data = view.get(&quot;#dsFeesTransportMasterEntityQuery.data&quot;).current;
 				with (view.get(&quot;#dsFeesTransportMasterEntity&quot;)){
 					set(&quot;parameter&quot;, data);
 					flushAsync();
 				}</ClientEvent>
         <Property name="caption">查询</Property>
         <Property name="icon">url(>skin>common/icons.gif) -120px -120px</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton id="btnExport">
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsFeesTransportMasterEntityQuery.data&quot;).current;&#xD;
+view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,data).execute(&#xD;
+	function(result){&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+	}&#xD;
+);&#xD;
+</ClientEvent>
+        <Property name="caption">导出</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+      </ToolBarButton>
+      <ToolBarButton id="biz_download">
+        <ClientEvent name="onClick">with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		taskType:'transport'&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}&#xD;
+view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
+        <Property name="caption">数据下载</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
       </ToolBarButton>
     </ToolBar>
     <DataSet id="dsFeesTransportMasterEntity">
@@ -258,34 +509,44 @@
       <Property name="pageSize">20</Property>
       <Property name="readOnly">false</Property>
     </DataSet>
+    <DataSet id="dsFileExportTaskList">
+      <Property name="dataType">[dtFileExportTaskEntity]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="dataProvider">fileExportTaskController#query</Property>
+    </DataSet>
+    <DataSet id="dsFileExportTaskCondition">
+      <ClientEvent name="onCreate">view.get(&quot;#dsFileExportTaskCondition&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtFileExportTaskCondition]</Property>
+    </DataSet>
     <AutoForm id="queryForm">
+      <ClientEvent name="onReady">var nowdays = new Date();&#xD;
+var year = nowdays.getFullYear();&#xD;
+var month = nowdays.getMonth();&#xD;
+if(month==0)&#xD;
+{&#xD;
+    month=12;&#xD;
+    year=year-1;&#xD;
+}&#xD;
+if (month &lt; 10) {&#xD;
+    month = &quot;0&quot; + month;&#xD;
+}&#xD;
+var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+var myDate = new Date(year, month, 0);&#xD;
+var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
+view.get(&quot;#queryForm.entity&quot;).set({&#xD;
+	beginTime:firstDay,&#xD;
+	endTime:lastDay&#xD;
+});&#xD;
+</ClientEvent>
       <Property name="createPrivateDataSet">true</Property>
-      <Property name="cols">*,*,*,*,*</Property>
+      <Property name="cols">*,*,*,*</Property>
       <Property name="labelWidth">65</Property>
       <Property name="dataSet">dsFeesTransportMasterEntityQuery</Property>
       <AutoFormElement>
-        <Property name="name">orderNo</Property>
-        <Property name="property">orderNo</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">transferNo</Property>
-        <Property name="property">transferNo</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">temperatureControlNo</Property>
-        <Property name="property">temperatureControlNo</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">partnerCode</Property>
-        <Property name="property">partnerCode</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">partnerName</Property>
-        <Property name="property">partnerName</Property>
+        <Property name="name">customerId</Property>
+        <Property name="property">customerId</Property>
+        <Property name="trigger">triggerCus</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -294,83 +555,13 @@
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
-        <Property name="name">originSiteNo</Property>
-        <Property name="property">originSiteNo</Property>
+        <Property name="name">orderNo</Property>
+        <Property name="property">orderNo</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
-        <Property name="name">originProvince</Property>
-        <Property name="property">originProvince</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">origin</Property>
-        <Property name="property">origin</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">originDistrict</Property>
-        <Property name="property">originDistrict</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">destinationSiteNo</Property>
-        <Property name="property">destinationSiteNo</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">destinationProvince</Property>
-        <Property name="property">destinationProvince</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">destination</Property>
-        <Property name="property">destination</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">destinationDistrict</Property>
-        <Property name="property">destinationDistrict</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">receiverAddress</Property>
-        <Property name="property">receiverAddress</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">createdDt</Property>
-        <Property name="property">createdDt</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">actualVolume</Property>
-        <Property name="property">actualVolume</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">actualWeight</Property>
-        <Property name="property">actualWeight</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">actualPackingQty</Property>
-        <Property name="property">actualPackingQty</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">actualGoodsQty</Property>
-        <Property name="property">actualGoodsQty</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">receiptPackingQty</Property>
-        <Property name="property">receiptPackingQty</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">receiptGoodsQty</Property>
-        <Property name="property">receiptGoodsQty</Property>
+        <Property name="name">transportNo</Property>
+        <Property name="property">transportNo</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -381,66 +572,6 @@
       <AutoFormElement>
         <Property name="name">endTime</Property>
         <Property name="property">endTime</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">paymentTotle</Property>
-        <Property name="property">paymentTotle</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">needInsurance</Property>
-        <Property name="property">needInsurance</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">orderSourceCode</Property>
-        <Property name="property">orderSourceCode</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">light</Property>
-        <Property name="property">light</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">hasBacktrack</Property>
-        <Property name="property">hasBacktrack</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">remark</Property>
-        <Property name="property">remark</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">uploadTime</Property>
-        <Property name="property">uploadTime</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">creTime</Property>
-        <Property name="property">creTime</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">crePerson</Property>
-        <Property name="property">crePerson</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">syncFlag</Property>
-        <Property name="property">syncFlag</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">syncTime</Property>
-        <Property name="property">syncTime</Property>
-        <Editor/>
-      </AutoFormElement>
-      <AutoFormElement>
-        <Property name="name">syncCount</Property>
-        <Property name="property">syncCount</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>
@@ -454,114 +585,431 @@
         <Property name="property">id</Property>
         <Property name="visible">false</Property>
       </DataColumn>
+      <DataColumn name="createdDt">
+        <Property name="property">createdDt</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
       <DataColumn name="orderNo">
         <Property name="property">orderNo</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="transferNo">
-        <Property name="property">transferNo</Property>
+      <DataColumn name="outstockNo">
+        <Property name="property">outstockNo</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="temperatureControlNo">
-        <Property name="property">temperatureControlNo</Property>
+      <DataColumn name="temperatureTypeCode">
+        <Property name="property">temperatureTypeCode</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="partnerCode">
-        <Property name="property">partnerCode</Property>
+      <DataColumn name="routeNo">
+        <Property name="property">routeNo</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="partnerName">
-        <Property name="property">partnerName</Property>
+      <DataColumn name="dispatcherName">
+        <Property name="property">dispatcherName</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="transportNo">
+        <Property name="property">transportNo</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="customerName">
+        <Property name="property">customerName</Property>
+        <Property name="width">100</Property>
       </DataColumn>
       <DataColumn name="projectName">
         <Property name="property">projectName</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="originSiteNo">
-        <Property name="property">originSiteNo</Property>
+      <DataColumn name="sendSite">
+        <Property name="property">sendSite</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="originProvince">
-        <Property name="property">originProvince</Property>
+      <DataColumn name="sendProvince">
+        <Property name="property">sendProvince</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="origin">
-        <Property name="property">origin</Property>
+      <DataColumn name="sendCity">
+        <Property name="property">sendCity</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="originDistrict">
-        <Property name="property">originDistrict</Property>
+      <DataColumn name="sendDistrict">
+        <Property name="property">sendDistrict</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="destinationSiteNo">
-        <Property name="property">destinationSiteNo</Property>
+      <DataColumn name="receiveSite">
+        <Property name="property">receiveSite</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="destinationProvince">
-        <Property name="property">destinationProvince</Property>
+      <DataColumn name="receiveProvince">
+        <Property name="property">receiveProvince</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="destination">
-        <Property name="property">destination</Property>
+      <DataColumn name="receiveCity">
+        <Property name="property">receiveCity</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="destinationDistrict">
-        <Property name="property">destinationDistrict</Property>
+      <DataColumn name="receiveDistrict">
+        <Property name="property">receiveDistrict</Property>
+        <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="receiverAddress">
-        <Property name="property">receiverAddress</Property>
-      </DataColumn>
-      <DataColumn name="createdDt">
-        <Property name="property">createdDt</Property>
+      <DataColumn name="receiveAddress">
+        <Property name="property">receiveAddress</Property>
+        <Property name="width">100</Property>
       </DataColumn>
       <DataColumn name="actualVolume">
         <Property name="property">actualVolume</Property>
+        <Property name="width">100</Property>
       </DataColumn>
       <DataColumn name="actualWeight">
         <Property name="property">actualWeight</Property>
-      </DataColumn>
-      <DataColumn name="actualPackingQty">
-        <Property name="property">actualPackingQty</Property>
-      </DataColumn>
-      <DataColumn name="actualGoodsQty">
-        <Property name="property">actualGoodsQty</Property>
-      </DataColumn>
-      <DataColumn name="receiptPackingQty">
-        <Property name="property">receiptPackingQty</Property>
-      </DataColumn>
-      <DataColumn name="receiptGoodsQty">
-        <Property name="property">receiptGoodsQty</Property>
-      </DataColumn>
-      <DataColumn name="beginTime">
-        <Property name="property">beginTime</Property>
-      </DataColumn>
-      <DataColumn name="endTime">
-        <Property name="property">endTime</Property>
-      </DataColumn>
-      <DataColumn name="paymentTotle">
-        <Property name="property">paymentTotle</Property>
-      </DataColumn>
-      <DataColumn name="needInsurance">
-        <Property name="property">needInsurance</Property>
-      </DataColumn>
-      <DataColumn name="orderSourceCode">
-        <Property name="property">orderSourceCode</Property>
+        <Property name="width">100</Property>
       </DataColumn>
       <DataColumn name="light">
         <Property name="property">light</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="capacityTypeCode">
+        <Property name="property">capacityTypeCode</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="actualPackingQty">
+        <Property name="property">actualPackingQty</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="actualGoodsQty">
+        <Property name="property">actualGoodsQty</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="receiptPackingQty">
+        <Property name="property">receiptPackingQty</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="receiptGoodsQty">
+        <Property name="property">receiptGoodsQty</Property>
+        <Property name="width">100</Property>
       </DataColumn>
       <DataColumn name="hasBacktrack">
         <Property name="property">hasBacktrack</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="beginTime">
+        <Property name="property">beginTime</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="endTime">
+        <Property name="property">endTime</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsTakes">
+        <Property name="property">tsTakes</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsTransAmount">
+        <Property name="property">tsTransAmount</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsSend">
+        <Property name="property">tsSend</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="ysZh">
+        <Property name="property">ysZh</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="ysXh">
+        <Property name="property">ysXh</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsReverseLogistic">
+        <Property name="property">tsReverseLogistic</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsDelayWaiting">
+        <Property name="property">tsDelayWaiting</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsWrappingFilm">
+        <Property name="property">tsWrappingFilm</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsEmptying">
+        <Property name="property">tsEmptying</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsClaim">
+        <Property name="property">tsClaim</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="ysZmhd">
+        <Property name="property">ysZmhd</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="ysCx">
+        <Property name="property">ysCx</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="ysTm">
+        <Property name="property">ysTm</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsInsurance">
+        <Property name="property">tsInsurance</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsFl">
+        <Property name="property">tsFl</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsSlby">
+        <Property name="property">tsSlby</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsGyzl">
+        <Property name="property">tsGyzl</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsDjdy">
+        <Property name="property">tsDjdy</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsAddSite">
+        <Property name="property">tsAddSite</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsZz">
+        <Property name="property">tsZz</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsDf">
+        <Property name="property">tsDf</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsYc">
+        <Property name="property">tsYc</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsTallying">
+        <Property name="property">tsTallying</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsJh">
+        <Property name="property">tsJh</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsGl">
+        <Property name="property">tsGl</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsMh">
+        <Property name="property">tsMh</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="tsPallet">
+        <Property name="property">tsPallet</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn name="payTotalAmount">
+        <Property name="property">payTotalAmount</Property>
+        <Property name="width">100</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">needInsurance</Property>
+        <Property name="width">100</Property>
+        <Property name="name">needInsurance</Property>
       </DataColumn>
       <DataColumn name="remark">
         <Property name="property">remark</Property>
-      </DataColumn>
-      <DataColumn name="uploadTime">
-        <Property name="property">uploadTime</Property>
-      </DataColumn>
-      <DataColumn name="creTime">
-        <Property name="property">creTime</Property>
-      </DataColumn>
-      <DataColumn name="crePerson">
-        <Property name="property">crePerson</Property>
-      </DataColumn>
-      <DataColumn name="syncFlag">
-        <Property name="property">syncFlag</Property>
-      </DataColumn>
-      <DataColumn name="syncTime">
-        <Property name="property">syncTime</Property>
-      </DataColumn>
-      <DataColumn name="syncCount">
-        <Property name="property">syncCount</Property>
+        <Property name="width">100</Property>
       </DataColumn>
     </DataGrid>
+    <Trigger id="triggerCus">
+      <ClientEvent name="onExecute">view.get(&quot;#panelCustomer&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelCustomer">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#queryForm.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+}</ClientEvent>
+      <Property name="caption">商家选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectCustomer">
+          <Property name="subView">com.jiuyescm.bms.base.customer.view.CustomerLookup</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <UpdateAction id="bizDownAction">
+      <Property name="dataResolver">feesTransportMasterController#asynExport</Property>
+    </UpdateAction>
+    <Dialog id="fileExportTaskDialog">
+      <Property name="closeable">false</Property>
+      <Property name="caption">导出下载</Property>
+      <Property name="height">500</Property>
+      <Property name="width">900</Property>
+      <Buttons>
+        <Button id="btnFileExportTaskClose">
+          <ClientEvent name="onClick">var condition = view.get(&quot;#dsFileExportTaskCondition.data&quot;).current;&#xD;
+condition.set(&quot;taskName&quot;,null);&#xD;
+view.get(&quot;#fileExportTaskDialog&quot;).hide();</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <Container>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsFileExportTaskList</Property>
+              <Property name="itemCodes">pages,pageSize</Property>
+            </DataPilot>
+            <Separator/>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var condition=view.get(&quot;#dsFileExportTaskCondition.data&quot;).current;&#xD;
+var taskName = &quot;&quot;;&#xD;
+if(null != condition){&#xD;
+	taskName = condition.get(&quot;taskName&quot;);&#xD;
+}&#xD;
+with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		taskType:'transport',&#xD;
+		taskName:taskName&#xD;
+	}; &#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();&#xD;
+}</ClientEvent>
+              <Property name="caption">查询</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton>
+              <ClientEvent name="onClick">var data=view.get(&quot;#dsFileExportTaskList.data&quot;).current;&#xD;
+if(!data){&#xD;
+	dorado.MessageBox.alert(&quot;请选择要删除的记录!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var taskId = data.get(&quot;taskId&quot;);&#xD;
+if(isNullOrEmpty(taskId)){&#xD;
+	dorado.MessageBox.alert(&quot;请选择要删除的记录&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var action=view.get(&quot;#delExportTaskAction&quot;);&#xD;
+dorado.MessageBox.confirm(&quot;确定删除[&quot;+data.get(&quot;taskName&quot;)+&quot;]的记录?&quot;,function(){&#xD;
+	action.set(&quot;parameter&quot;,data).execute(function(){&#xD;
+		dorado.MessageBox.alert(&quot;删除成功!&quot;);&#xD;
+		with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				taskType:'transport'&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();&#xD;
+		}&#xD;
+	});&#xD;
+})</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <AutoForm id="exportTaskForm">
+            <Property name="cols">*,*,*</Property>
+            <Property name="dataSet">dsFileExportTaskCondition</Property>
+            <Property name="dataType">dtFileExportTaskCondition</Property>
+            <Property name="labelWidth">100</Property>
+            <AutoFormElement>
+              <Property name="name">taskName</Property>
+              <Property name="property">taskName</Property>
+              <Property name="editable">true</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <DataGrid id="fileExportTaskDetailGrid">
+            <Property name="dataSet">dsFileExportTaskList</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="selectionMode">singleRow</Property>
+            <RowNumColumn/>
+            <DataColumn>
+              <Property name="property">taskId</Property>
+              <Property name="width">150</Property>
+              <Property name="name">taskId</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">taskName</Property>
+              <Property name="width">150</Property>
+              <Property name="name">taskName</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">taskState</Property>
+              <Property name="width">80</Property>
+              <Property name="name">taskState</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">startTime</Property>
+              <Property name="name">startTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">endTime</Property>
+              <Property name="name">endTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">filePath</Property>
+              <Property name="name">filePath</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">progress</Property>
+              <Property name="name">progress</Property>
+              <Property name="displayFormat">##%</Property>
+            </DataColumn>
+            <DataColumn name="creator">
+              <Property name="property">creator</Property>
+            </DataColumn>
+            <DataColumn name="createTime">
+              <Property name="property">createTime</Property>
+              <Property name="width">120</Property>
+            </DataColumn>
+            <DataColumn>
+              <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+var taskState=arg.data.get(&quot;taskState&quot;);&#xD;
+if(taskState==2){&#xD;
+	jQuery(arg.dom).xCreate([&#xD;
+		{&#xD;
+		    tagName: &quot;A&quot;,&#xD;
+		    href: &quot;#&quot;,&#xD;
+		    content:&quot;下载&quot;,&#xD;
+			style:&quot;margin-left:10px;&quot;,&#xD;
+		    onclick: function() {&#xD;
+			  var action=view.get(&quot;#fileExportDownAction&quot;);&#xD;
+			  action.set(&quot;parameter&quot;,arg.data).execute();&#xD;
+	    	}&#xD;
+		}&#xD;
+	]);&#xD;
+}</ClientEvent>
+              <Property name="align">center</Property>
+              <Property name="caption">操作</Property>
+              <Property name="name">operator</Property>
+              <Editor/>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <DownloadAction id="fileExportDownAction">
+      <Property name="fileProvider">fileExportTaskController#exportDetail</Property>
+      <Property name="caption">导出</Property>
+    </DownloadAction>
   </View>
 </ViewConfig>

@@ -62,127 +62,68 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 	<!-- 分页查询 -->
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity">
-        select
-        <include refid="BASE_COLUMNS_ALL" />
-        from fees_transport_master
-        where 1 = 1
-        	<if test=" id != null and id !='' ">
-				and id = #{id}
-			</if>
-        	<if test=" omsId != null and omsId !='' ">
-				and oms_id = #{omsId}
-			</if>
-        	<if test=" orderNo != null and orderNo !='' ">
-				and order_no = #{orderNo}
-			</if>
-        	<if test=" outstockNo != null and outstockNo !='' ">
-				and outstock_no = #{outstockNo}
-			</if>
-        	<if test=" temperatureTypeCode != null and temperatureTypeCode !='' ">
-				and temperature_type_code = #{temperatureTypeCode}
-			</if>
-        	<if test=" customerId != null and customerId !='' ">
-				and customer_id = #{customerId}
-			</if>
-        	<if test=" customerName != null and customerName !='' ">
-				and customer_name = #{customerName}
-			</if>
-        	<if test=" projectName != null and projectName !='' ">
-				and project_name = #{projectName}
-			</if>
-        	<if test=" sendSite != null and sendSite !='' ">
-				and send_site = #{sendSite}
-			</if>
-        	<if test=" sendProvince != null and sendProvince !='' ">
-				and send_province = #{sendProvince}
-			</if>
-        	<if test=" sendCity != null and sendCity !='' ">
-				and send_city = #{sendCity}
-			</if>
-        	<if test=" sendDistrict != null and sendDistrict !='' ">
-				and send_district = #{sendDistrict}
-			</if>
-        	<if test=" receiveSite != null and receiveSite !='' ">
-				and receive_site = #{receiveSite}
-			</if>
-        	<if test=" receiveProvince != null and receiveProvince !='' ">
-				and receive_province = #{receiveProvince}
-			</if>
-        	<if test=" receiveCity != null and receiveCity !='' ">
-				and receive_city = #{receiveCity}
-			</if>
-        	<if test=" receiveDistrict != null and receiveDistrict !='' ">
-				and receive_district = #{receiveDistrict}
-			</if>
-        	<if test=" receiveAddress != null and receiveAddress !='' ">
-				and receive_address = #{receiveAddress}
-			</if>
-        	<if test=" createdDt != null and createdDt !='' ">
-				and created_dt = #{createdDt}
-			</if>
-        	<if test=" actualVolume != null and actualVolume !='' ">
-				and actual_volume = #{actualVolume}
-			</if>
-        	<if test=" actualWeight != null and actualWeight !='' ">
-				and actual_weight = #{actualWeight}
-			</if>
-        	<if test=" actualPackingQty != null and actualPackingQty !='' ">
-				and actual_packing_qty = #{actualPackingQty}
-			</if>
-        	<if test=" actualGoodsQty != null and actualGoodsQty !='' ">
-				and actual_goods_qty = #{actualGoodsQty}
-			</if>
-        	<if test=" receiptPackingQty != null and receiptPackingQty !='' ">
-				and receipt_packing_qty = #{receiptPackingQty}
-			</if>
-        	<if test=" receiptGoodsQty != null and receiptGoodsQty !='' ">
-				and receipt_goods_qty = #{receiptGoodsQty}
-			</if>
-        	<if test=" beginTime != null and beginTime !='' ">
-				and begin_time = #{beginTime}
-			</if>
-        	<if test=" endTime != null and endTime !='' ">
-				and end_time = #{endTime}
-			</if>
-        	<if test=" paymentTotle != null and paymentTotle !='' ">
-				and payment_totle = #{paymentTotle}
-			</if>
-        	<if test=" needInsurance != null and needInsurance !='' ">
-				and need_insurance = #{needInsurance}
-			</if>
-        	<if test=" orderSourceCode != null and orderSourceCode !='' ">
-				and order_source_code = #{orderSourceCode}
-			</if>
-        	<if test=" light != null and light !='' ">
-				and light = #{light}
-			</if>
-        	<if test=" hasBacktrack != null and hasBacktrack !='' ">
-				and has_backtrack = #{hasBacktrack}
-			</if>
-        	<if test=" remark != null and remark !='' ">
-				and remark = #{remark}
-			</if>
-        	<if test=" uploadTime != null and uploadTime !='' ">
-				and upload_time = #{uploadTime}
-			</if>
-        	<if test=" creTime != null and creTime !='' ">
-				and cre_time = #{creTime}
-			</if>
-        	<if test=" crePerson != null and crePerson !='' ">
-				and cre_person = #{crePerson}
-			</if>
-        	<if test=" syncFlag != null and syncFlag !='' ">
-				and sync_flag = #{syncFlag}
-			</if>
-        	<if test=" syncTime != null and syncTime !='' ">
-				and sync_time = #{syncTime}
-			</if>
-        	<if test=" syncCount != null and syncCount !='' ">
-				and sync_count = #{syncCount}
-			</if>
-			<if test=" delFlag != null and delFlag !='' ">
-				and del_flag = #{delFlag}
-			</if>
+        select a.created_dt,a.order_no,a.outstock_no,a.temperature_type_code,
+		GROUP_CONCAT(c.route_no) as routeNo,GROUP_CONCAT(c.dispatcher_name) as dispatcherName,
+		GROUP_CONCAT(c.transport_no) as transportNo,a.customer_name,a.customer_id,a.project_name,
+		a.send_site,a.send_province,a.send_city,a.send_district,
+		a.receive_site,a.receive_province,a.receive_city,a.receive_district,
+		a.receive_address,a.actual_volume,a.actual_weight,a.light,c.capacity_type_code,
+		a.actual_packing_qty,a.actual_goods_qty,a.receipt_packing_qty,a.receipt_goods_qty,
+		a.has_backtrack,a.begin_time,a.end_time,
+		(CASE b.subject_name WHEN '提货费' THEN b.amount ELSE 0 END) as 'tsTakes',
+		(CASE b.subject_name WHEN '运费' THEN b.amount ELSE 0 END) as 'tsTransAmount',
+		(CASE b.subject_name WHEN '送货费' THEN b.amount ELSE 0 END) as 'tsSend',
+		(CASE b.subject_name WHEN '装货费' THEN b.amount ELSE 0 END) as 'ysZh',
+		(CASE b.subject_name WHEN '卸货费' THEN b.amount ELSE 0 END) as 'ysXh',
+		(CASE b.subject_name WHEN '逆向物流费' THEN b.amount ELSE 0 END) as 'tsReverseLogistic',
+		(CASE b.subject_name WHEN '延时等待费' THEN b.amount ELSE 0 END) as 'tsDelayWaiting',
+		(CASE b.subject_name WHEN '缠绕膜费' THEN b.amount ELSE 0 END) as 'tsWrappingFilm',
+		(CASE b.subject_name WHEN '放空费' THEN b.amount ELSE 0 END) as 'tsEmptying',
+		(CASE b.subject_name WHEN '赔付费' THEN b.amount ELSE 0 END) as 'tsClaim',
+		(CASE b.subject_name WHEN '纸面回单费' THEN b.amount ELSE 0 END) as 'ysZmhd',
+		(CASE b.subject_name WHEN '拆箱费' THEN b.amount ELSE 0 END) as 'ysCx',
+		(CASE b.subject_name WHEN '贴码费' THEN b.amount ELSE 0 END) as 'ysTm',
+		(CASE b.subject_name WHEN '保险费' THEN b.amount ELSE 0 END) as 'tsInsurance',
+		(CASE b.subject_name WHEN '分流费' THEN b.amount ELSE 0 END) as 'tsFl',
+		(CASE b.subject_name WHEN '上楼搬运费' THEN b.amount ELSE 0 END) as 'tsSlby',
+		(CASE b.subject_name WHEN '过夜制冷费' THEN b.amount ELSE 0 END) as 'tsGyzl',
+		(CASE b.subject_name WHEN '单据打印费' THEN b.amount ELSE 0 END) as 'tsDjdy',
+		(CASE b.subject_name WHEN '加点费' THEN b.amount ELSE 0 END) as 'tsAddSite',
+		(CASE b.subject_name WHEN '中转费' THEN b.amount ELSE 0 END) as 'tsZz',
+		(CASE b.subject_name WHEN '垫付费' THEN b.amount ELSE 0 END) as 'tsDf',
+		(CASE b.subject_name WHEN '押车费' THEN b.amount ELSE 0 END) as 'tsYc',
+		(CASE b.subject_name WHEN '理货费' THEN b.amount ELSE 0 END) as 'tsTallying',
+		(CASE b.subject_name WHEN '交货费' THEN b.amount ELSE 0 END) as 'tsJh',
+		(CASE b.subject_name WHEN '过路费' THEN b.amount ELSE 0 END) as 'tsGl',
+		(CASE b.subject_name WHEN '码货费' THEN b.amount ELSE 0 END) as 'tsMh',
+		(CASE b.subject_name WHEN '托盘费' THEN b.amount ELSE 0 END) as 'tsPallet',
+		SUM(b.amount_totle) as 'payTotalAmount',a.need_insurance,a.remark
+		from fees_transport_master a
+		LEFT JOIN fees_transport_items b on a.oms_id=b.oms_id and b.del_flag='0'
+		LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
+		WHERE a.del_flag='0'
+		<if test=" customerId != null and customerId !='' ">
+			and a.customer_id=#{customerId}
+		</if>
+		<if test=" projectName != null and projectName !='' ">
+			and a.project_name like CONCAT('%',#{projectName},'%')
+		</if>
+		<if test=" orderNo != null and orderNo !='' ">
+			and a.order_no=#{orderNo}
+		</if>
+		<if test=" transportNo != null and transportNo !='' ">
+			and c.transport_no=#{transportNo}
+		</if>
+		<if test=" delFlag != null and delFlag !='' ">
+			and a.del_flag=#{delFlag}
+		</if>
+		<if test=" beginTime != null and beginTime !='' ">
+			and a.begin_time>=#{beginTime}
+		</if>
+		<if test=" endTime != null and endTime !='' ">
+			and a.end_time <![CDATA[ <= ]]> #{endTime}
+		</if>
+		GROUP BY a.order_no
     </select>
 
 	<!-- 保存 -->
