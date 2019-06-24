@@ -1,5 +1,7 @@
 package com.jiuyescm.bms.calculate;
 
+import java.math.BigDecimal;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
 /**
@@ -45,6 +47,8 @@ public class BmsFeesQtyEntity implements IEntity{
 	private Integer quoteMissCount;
 	// 未计算费用总数
 	private Integer noExeCount;	
+	
+	private BigDecimal totalAmount;
 	
 	// 计算状态
 	private String isCalculated;
@@ -281,5 +285,13 @@ public class BmsFeesQtyEntity implements IEntity{
 	public void setIsCalculated(String isCalculated) {
 		this.isCalculated = isCalculated;
 	}
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
 }
