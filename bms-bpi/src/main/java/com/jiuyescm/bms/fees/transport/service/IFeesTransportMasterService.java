@@ -25,4 +25,18 @@ public interface IFeesTransportMasterService {
 
     void delete(Long id);
 
+    /**
+     * 导出查询
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月24日 上午11:13:19
+     *
+     * @param condition
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    PageInfo<FeesTransportMasterEntity> queryToExport(Map<String, Object> condition, int pageNo, int pageSize);
+
 }

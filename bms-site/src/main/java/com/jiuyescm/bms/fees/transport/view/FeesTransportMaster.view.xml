@@ -147,70 +147,80 @@
         <Property name="dataType">Long</Property>
       </PropertyDef>
       <PropertyDef name="outstockNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">外部订单号</Property>
       </PropertyDef>
       <PropertyDef name="temperatureTypeCode">
-        <Property/>
+        <Property></Property>
         <Property name="label">温控</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Entity>
+              <Property name="LC">冷藏</Property>
+              <Property name="LD">冷冻</Property>
+              <Property name="CW">常温</Property>
+              <Property name="HW">恒温</Property>
+            </Entity>
+          </Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="customerId">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="customerName">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家全称</Property>
       </PropertyDef>
       <PropertyDef name="sendSite">
-        <Property/>
+        <Property></Property>
         <Property name="label">始发站</Property>
       </PropertyDef>
       <PropertyDef name="sendProvince">
-        <Property/>
+        <Property></Property>
         <Property name="label">始发省份</Property>
       </PropertyDef>
       <PropertyDef name="sendCity">
-        <Property/>
+        <Property></Property>
         <Property name="label">始发城市</Property>
       </PropertyDef>
       <PropertyDef name="sendDistrict">
-        <Property/>
+        <Property></Property>
         <Property name="label">始发区</Property>
       </PropertyDef>
       <PropertyDef name="receiveSite">
-        <Property/>
+        <Property></Property>
         <Property name="label">目的站</Property>
       </PropertyDef>
       <PropertyDef name="receiveProvince">
-        <Property/>
+        <Property></Property>
         <Property name="label">目的省份</Property>
       </PropertyDef>
       <PropertyDef name="receiveCity">
-        <Property/>
+        <Property></Property>
         <Property name="label">目的城市</Property>
       </PropertyDef>
       <PropertyDef name="receiveDistrict">
-        <Property/>
+        <Property></Property>
         <Property name="label">目的区</Property>
       </PropertyDef>
       <PropertyDef name="receiveAddress">
-        <Property/>
+        <Property></Property>
         <Property name="label">目的地址</Property>
       </PropertyDef>
       <PropertyDef name="routeNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">派车单号</Property>
       </PropertyDef>
       <PropertyDef name="dispatcherName">
-        <Property/>
+        <Property></Property>
         <Property name="label">调度人</Property>
       </PropertyDef>
       <PropertyDef name="transportNo">
-        <Property/>
+        <Property></Property>
         <Property name="label">运单号</Property>
       </PropertyDef>
       <PropertyDef name="capacityTypeCode">
-        <Property/>
+        <Property></Property>
         <Property name="label">车型</Property>
       </PropertyDef>
       <PropertyDef name="tsTakes">

@@ -437,5 +437,110 @@ public class BmsEnums {
             return null;
         }   
     }
+    
+    /**
+     * 是否泡货
+     */
+    public enum light{
+        light(1,"是"),unLight(0,"否");
+        private Integer code;
+        private String desc;
+        private light(Integer code, String desc){
+            this.code = code;
+            this.desc = desc;
+        }
+        
+        public Integer getCode(){
+            return code;
+        }
+        
+        public String getDesc(){
+            return desc;
+        }
+        
+        private static Map<Integer,String> mapKey =new LinkedHashMap<Integer,String>();
+        static{
+            mapKey.put(light.code, light.desc);
+            mapKey.put(unLight.code, unLight.desc);
+        } 
+        public static String getDesc(Integer code)
+        {
+            if (mapKey.containsKey(code))
+            {
+                return mapKey.get(code);
+            }
+            return null;
+        }  
+    }
+    
+    /**
+     * 是否退货
+     */
+    public enum hasBacktrack{
+        hasBacktrack(1,"是"),hasntBacktrack(0,"否");
+        private Integer code;
+        private String desc;
+        private hasBacktrack(Integer code, String desc){
+            this.code = code;
+            this.desc = desc;
+        }
+        
+        public Integer getCode(){
+            return code;
+        }
+        
+        public String getDesc(){
+            return desc;
+        }
+        
+        private static Map<Integer,String> mapKey =new LinkedHashMap<Integer,String>();
+        static{
+            mapKey.put(hasBacktrack.code, hasBacktrack.desc);
+            mapKey.put(hasntBacktrack.code, hasntBacktrack.desc);
+        } 
+        public static String getDesc(Integer code)
+        {
+            if (mapKey.containsKey(code))
+            {
+                return mapKey.get(code);
+            }
+            return null;
+        }  
+    }
+    
+    /**
+     * 是否需要保险
+     */
+    public enum needInsurance{
+        needInsurance("1","是"),needntInsurance("0","否");
+        private String code;
+        private String desc;
+        private needInsurance(String code, String desc){
+            this.code = code;
+            this.desc = desc;
+        }
+        
+        public String getCode(){
+            return code;
+        }
+        
+        public String getDesc(){
+            return desc;
+        }
+        
+        private static Map<String,String> mapKey =new LinkedHashMap<String,String>();
+        static{
+            mapKey.put(needInsurance.code, needInsurance.desc);
+            mapKey.put(needntInsurance.code, needntInsurance.desc);
+        } 
+        public static String getDesc(String code)
+        {
+            if (mapKey.containsKey(code))
+            {
+                return mapKey.get(code);
+            }
+            return null;
+        }  
+    }
 	
 }

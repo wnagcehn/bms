@@ -264,7 +264,7 @@ public class FeesTransportMasterController {
         int pageNo = 1;
         boolean doLoop = true;
         while (doLoop) {            
-            PageInfo<FeesTransportMasterEntity> pageInfo = feesTransportMasterService.query(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
+            PageInfo<FeesTransportMasterEntity> pageInfo = feesTransportMasterService.queryToExport(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
             if (null != pageInfo && pageInfo.getList().size() > 0) {
                 if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
                     doLoop = false;

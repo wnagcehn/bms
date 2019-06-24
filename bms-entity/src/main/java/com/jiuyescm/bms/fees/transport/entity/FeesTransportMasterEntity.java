@@ -67,8 +67,9 @@ public class FeesTransportMasterEntity implements IEntity {
 	@ExcelField(title = "目的地址", num = 18)
 	private String receiveAddress;
 	// 订单创建日期
-	@ExcelField(title = "订单创建日", num = 1)
 	private Timestamp createdDt;
+	@ExcelField(title = "订单创建日", num = 1)
+	private String creDate;
 	// 体积
 	@ExcelField(title = "体积", num = 19)
 	private BigDecimal actualVolume;
@@ -88,11 +89,13 @@ public class FeesTransportMasterEntity implements IEntity {
 	@ExcelField(title = "实收件数", num = 25)
 	private BigDecimal receiptGoodsQty;
 	// 发货日期
-	@ExcelField(title = "发货日期", num = 27)
 	private Timestamp beginTime;
+	@ExcelField(title = "发货日期", num = 27)
+	private String beginDate;
 	// 收货日期
-	@ExcelField(title = "收货日期", num = 28)
 	private Timestamp endTime;
+	@ExcelField(title = "收货日期", num = 28)
+	private String endDate;
 	// 应付总计
 	private BigDecimal paymentTotle;
 	// 客户是否需要保险
@@ -101,11 +104,13 @@ public class FeesTransportMasterEntity implements IEntity {
 	// 订单来源：OMS、TMS
 	private String orderSourceCode;
 	// 是否泡货:是:1 ，否:0
-	@ExcelField(title = "是否泡货", num = 21)
 	private Integer light;
-	// 是否退货:是:1 ，否:0
-	@ExcelField(title = "是否退货", num = 26)
+	@ExcelField(title = "是否泡货", num = 21)
+	private String isLight;
+	// 是否退货:是:1 ，否:0	
 	private Integer hasBacktrack;
+	@ExcelField(title = "是否退货", num = 26)
+	private String isBacktrack;
 	// 备注
 	@ExcelField(title = "备注", num = 58)
 	private String remark;
@@ -782,6 +787,46 @@ public class FeesTransportMasterEntity implements IEntity {
 
     public void setPayTotalAmount(Double payTotalAmount) {
         this.payTotalAmount = payTotalAmount;
+    }
+
+    public String getCreDate() {
+        return creDate;
+    }
+
+    public void setCreDate(String creDate) {
+        this.creDate = creDate;
+    }
+
+    public String getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(String beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getIsLight() {
+        return isLight;
+    }
+
+    public void setIsLight(String isLight) {
+        this.isLight = isLight;
+    }
+
+    public String getIsBacktrack() {
+        return isBacktrack;
+    }
+
+    public void setIsBacktrack(String isBacktrack) {
+        this.isBacktrack = isBacktrack;
     }
     
 	
