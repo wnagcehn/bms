@@ -113,7 +113,7 @@
     <!-- 查询bms计算的数据 -->
     <select id="queryBmsCalcuData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity">
         select b.mk_id as mkId,c.mk_invoice_name as mkInvoiceName,
-        a.cre_month as createMonth, a.total_amount as prepareAmount 
+        a.cre_month as createMonth, SUM(a.total_amount) as prepareAmount 
         from bms_asyn_calcu_task a
 		LEFT JOIN pub_customer b on a.customer_id = b.customer_id and b.del_flag='0'
 		LEFT JOIN pub_customer_base c on b.mk_id=c.mk_id and c.del_flag='0'
