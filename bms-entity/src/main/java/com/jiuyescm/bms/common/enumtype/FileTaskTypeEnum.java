@@ -43,6 +43,7 @@ public enum FileTaskTypeEnum {
 	BILL_RE_DOWN("bill_re_down","账单预下载"),
 	Calcu_Error("calcu_error", "计费异常数据下载"),
 	BIZ_BMS_OUTSTOCK("biz_bms_outstock","BMS原始出库数据"),
+	FEES_CLAIM("fees_claim","理赔费用"),
 	BIZ_WMS_OUTSTOCK("biz_wms_outstock","WMS原始结算数据");
 	private String code;
 	private String desc;

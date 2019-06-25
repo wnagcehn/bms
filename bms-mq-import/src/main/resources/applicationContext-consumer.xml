@@ -72,4 +72,6 @@
 		 <dubbo:reference id="bmsCalcuTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" version="1.0.0" registry="bms"/>
 		 
 		 <dubbo:reference id="bizOutstockPackmaterialCancelService" interface="com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialCancelService" version="1.0.0" registry="bms"/>
+		 <dubbo:reference id="feesClaimService" interface="com.jiuyescm.bms.feeclaim.service.IFeesClaimService" version="1.0.0" registry="bms"/>
+		 
 </beans> 
