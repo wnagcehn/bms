@@ -126,15 +126,14 @@
         <Property></Property>
       </PropertyDef>
       <PropertyDef name="isDeliveryFree">
-        <Property name="dataType">Long</Property>
         <Property name="label">是否免运费</Property>
       </PropertyDef>
       <PropertyDef name="productAmount">
-        <Property name="dataType">BigDecimal</Property>
+        <Property name="dataType">Double</Property>
         <Property name="label">理赔商品金额</Property>
       </PropertyDef>
       <PropertyDef name="returnedAmount">
-        <Property name="dataType">BigDecimal</Property>
+        <Property name="dataType">Double</Property>
         <Property name="label">改地址退件费</Property>
       </PropertyDef>
       <PropertyDef name="amerceAmount">
@@ -311,16 +310,144 @@
       <ToolBarButton id="query">
         <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
 &#xD;
+//账单年份&#xD;
+var billYear=data.get(&quot;billYear&quot;);&#xD;
+//账单月份&#xD;
+var billMonth=data.get(&quot;billMonth&quot;);&#xD;
+//客诉开始时间&#xD;
+var kesuStartTime=data.get(&quot;kesuStartTime&quot;);&#xD;
+//客诉结束时间&#xD;
+var kesuEndTime=data.get(&quot;kesuEndTime&quot;);&#xD;
+//运单开始时间&#xD;
+var waybillStartTime=data.get(&quot;waybillStartTime&quot;);&#xD;
+//运单结束时间&#xD;
+var waybillEndTime=data.get(&quot;waybillEndTime&quot;);&#xD;
+&#xD;
+//不能都为空&#xD;
+if(isNullOrEmpty(billYear) &amp;&amp; isNullOrEmpty(billMonth) &#xD;
+&amp;&amp; isNullOrEmpty(kesuStartTime) &amp;&amp; isNullOrEmpty(kesuEndTime) &#xD;
+&amp;&amp; isNullOrEmpty(waybillStartTime) &amp;&amp; isNullOrEmpty(waybillEndTime)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;账单月份、客诉时间、运单时间不能都为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+&#xD;
+//账单月份&#xD;
+if(!isNullOrEmpty(billYear) &amp;&amp; isNullOrEmpty(billMonth)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;账单月份不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+if(isNullOrEmpty(billYear) &amp;&amp; !isNullOrEmpty(billMonth)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;账单年份不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+&#xD;
+//客诉时间&#xD;
+if(!isNullOrEmpty(kesuStartTime) &amp;&amp; isNullOrEmpty(kesuEndTime)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;客诉结束时间不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+if(isNullOrEmpty(kesuStartTime) &amp;&amp; !isNullOrEmpty(kesuEndTime)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;客诉起始时间不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+if(!isNullOrEmpty(kesuStartTime) &amp;&amp; !isNullOrEmpty(kesuEndTime)){&#xD;
+ 	if(kesuStartTime.getTime()>kesuEndTime.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;客诉起始时间不能大于客诉结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+//运单时间&#xD;
+if(!isNullOrEmpty(waybillStartTime) &amp;&amp; isNullOrEmpty(waybillEndTime)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;运单结束时间不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+if(isNullOrEmpty(waybillStartTime) &amp;&amp; !isNullOrEmpty(waybillEndTime)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;运单起始时间不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+if(!isNullOrEmpty(waybillStartTime) &amp;&amp; !isNullOrEmpty(waybillEndTime)){&#xD;
+ 	if(waybillStartTime.getTime()>waybillEndTime.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;运单起始时间不能大于运单结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
 with (view.get(&quot;#dsFeesClaimEntity&quot;)){&#xD;
-					set(&quot;parameter&quot;, data);&#xD;
-					flushAsync();&#xD;
-				}			</ClientEvent>
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}			</ClientEvent>
         <Property name="caption">查询</Property>
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
       </ToolBarButton>
       <Separator/>
       <ToolBarButton>
         <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+&#xD;
+//账单年份&#xD;
+var billYear=data.get(&quot;billYear&quot;);&#xD;
+//账单月份&#xD;
+var billMonth=data.get(&quot;billMonth&quot;);&#xD;
+//客诉开始时间&#xD;
+var kesuStartTime=data.get(&quot;kesuStartTime&quot;);&#xD;
+//客诉结束时间&#xD;
+var kesuEndTime=data.get(&quot;kesuEndTime&quot;);&#xD;
+//运单开始时间&#xD;
+var waybillStartTime=data.get(&quot;waybillStartTime&quot;);&#xD;
+//运单结束时间&#xD;
+var waybillEndTime=data.get(&quot;waybillEndTime&quot;);&#xD;
+&#xD;
+//不能都为空&#xD;
+if(isNullOrEmpty(billYear) &amp;&amp; isNullOrEmpty(billMonth) &#xD;
+&amp;&amp; isNullOrEmpty(kesuStartTime) &amp;&amp; isNullOrEmpty(kesuEndTime) &#xD;
+&amp;&amp; isNullOrEmpty(waybillStartTime) &amp;&amp; isNullOrEmpty(waybillEndTime)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;账单月份、客诉时间、运单时间不能都为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+&#xD;
+//账单月份&#xD;
+if(!isNullOrEmpty(billYear) &amp;&amp; isNullOrEmpty(billMonth)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;账单月份不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+if(isNullOrEmpty(billYear) &amp;&amp; !isNullOrEmpty(billMonth)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;账单年份不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+&#xD;
+//客诉时间&#xD;
+if(!isNullOrEmpty(kesuStartTime) &amp;&amp; isNullOrEmpty(kesuEndTime)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;客诉结束时间不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+if(isNullOrEmpty(kesuStartTime) &amp;&amp; !isNullOrEmpty(kesuEndTime)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;客诉起始时间不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+if(!isNullOrEmpty(kesuStartTime) &amp;&amp; !isNullOrEmpty(kesuEndTime)){&#xD;
+ 	if(kesuStartTime.getTime()>kesuEndTime.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;客诉起始时间不能大于客诉结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+//运单时间&#xD;
+if(!isNullOrEmpty(waybillStartTime) &amp;&amp; isNullOrEmpty(waybillEndTime)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;运单结束时间不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+if(isNullOrEmpty(waybillStartTime) &amp;&amp; !isNullOrEmpty(waybillEndTime)){&#xD;
+ 	 dorado.MessageBox.alert(&quot;运单起始时间不能为空&quot;);&#xD;
+     return;&#xD;
+}&#xD;
+if(!isNullOrEmpty(waybillStartTime) &amp;&amp; !isNullOrEmpty(waybillEndTime)){&#xD;
+ 	if(waybillStartTime.getTime()>waybillEndTime.getTime()){&#xD;
+		dorado.MessageBox.alert(&quot;运单起始时间不能大于运单结束时间！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+&#xD;
 view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,data).execute(&#xD;
 	function(result){&#xD;
 		dorado.MessageBox.alert(result);&#xD;
@@ -357,9 +484,27 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
       </ToolBarButton>
     </ToolBar>
     <AutoForm id="formCondition">
+      <ClientEvent name="onReady">var nowdays = new Date();&#xD;
+    var year = nowdays.getFullYear();&#xD;
+    var month = nowdays.getMonth();&#xD;
+    if(month==0)&#xD;
+    {&#xD;
+        month=12;&#xD;
+        year=year-1;&#xD;
+    }&#xD;
+    if (month &lt; 10) {&#xD;
+        month = &quot;0&quot; + month;&#xD;
+    }&#xD;
+    var firstDay = year + &quot;-&quot; + month + &quot;-&quot; + &quot;01 00:00:00&quot;;//上个月的第一天&#xD;
+    var myDate = new Date(year, month, 0);&#xD;
+    var lastDay = year + &quot;-&quot; + month + &quot;-&quot; + myDate.getDate()+&quot; 23:59:59&quot;;//上个月的最后一天&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set({&#xD;
+		kesuStartTime:firstDay,&#xD;
+		kesuEndTime:lastDay,&#xD;
+	});</ClientEvent>
       <Property name="dataSet">dsCondition</Property>
       <Property name="dataType">dtCondition</Property>
-      <Property name="cols">210,*,*,200,170,200</Property>
+      <Property name="cols">210,*,*,200,200,220</Property>
       <Property name="labelWidth">60</Property>
       <Property name="showHint">false</Property>
       <AutoFormElement>
@@ -372,15 +517,15 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
       <AutoFormElement>
         <Property name="name">billYear</Property>
         <Property name="property">billYear</Property>
-        <Property name="width">140</Property>
+        <Property name="width">150</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
         <Property name="name">billMonth</Property>
         <Property name="property">billMonth</Property>
-        <Property name="labelWidth">1</Property>
-        <Property name="width">60</Property>
-        <Property name="labelSpacing">1</Property>
+        <Property name="labelWidth">10</Property>
+        <Property name="width">85</Property>
+        <Property name="labelSpacing">10</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -392,14 +537,14 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
       <AutoFormElement>
         <Property name="name">kesuStartTime</Property>
         <Property name="property">kesuStartTime</Property>
-        <Property name="editorWidth">140</Property>
+        <Property name="editorWidth">160</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
         <Property name="name">kesuEndTime</Property>
         <Property name="property">kesuEndTime</Property>
         <Property name="labelWidth">10</Property>
-        <Property name="editorWidth">120</Property>
+        <Property name="editorWidth">140</Property>
         <Editor/>
       </AutoFormElement>
       <AutoFormElement>
@@ -438,7 +583,7 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
         <Property name="name">waybillEndTime</Property>
         <Property name="property">waybillEndTime</Property>
         <Property name="labelWidth">10</Property>
-        <Property name="editorWidth">120</Property>
+        <Property name="editorWidth">140</Property>
         <Editor/>
       </AutoFormElement>
     </AutoForm>

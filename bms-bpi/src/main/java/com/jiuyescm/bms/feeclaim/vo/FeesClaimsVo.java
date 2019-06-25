@@ -73,7 +73,7 @@ public class FeesClaimsVo implements IEntity {
 	private String payDirection;
 	// 是否免运费 0-不免运费 1-免运费
     @ExcelField(title = "是否免运费", num = 15)
-	private Long isDeliveryFree;
+	private String isDeliveryFree;
 	// 理赔商品金额
     @ExcelField(title = "理赔商品金额", num = 14)
 	private BigDecimal productAmount;
@@ -256,16 +256,16 @@ public class FeesClaimsVo implements IEntity {
 	public void setPayDirection(String payDirection) {
 		this.payDirection = payDirection;
 	}
-	
-	public Long getIsDeliveryFree() {
-		return this.isDeliveryFree;
-	}
+		
+	public String getIsDeliveryFree() {
+        return isDeliveryFree;
+    }
 
-	public void setIsDeliveryFree(Long isDeliveryFree) {
-		this.isDeliveryFree = isDeliveryFree;
-	}
-	
-	public BigDecimal getProductAmount() {
+    public void setIsDeliveryFree(String isDeliveryFree) {
+        this.isDeliveryFree = isDeliveryFree;
+    }
+
+    public BigDecimal getProductAmount() {
 		return this.productAmount;
 	}
 

@@ -62,8 +62,6 @@ import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.feeclaim.service.IFeesClaimService;
 import com.jiuyescm.bms.feeclaim.vo.FeesClaimsVo;
-import com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity;
-import com.jiuyescm.bms.fees.abnormal.service.IFeesAbnormalService;
 import com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity;
 import com.jiuyescm.bms.fees.dispatch.service.IFeesReceiveDispatchService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
@@ -1643,7 +1641,6 @@ public class PrepareBillHandler {
         int abnormalLineNo = 1;
         boolean doLoop = true;
         totalProductAmount.set(0d);// 置零
-        totalDeliveryCost.set(0d);
         totalReturnAmount.set(0d);
 
         while (doLoop) {
@@ -1690,7 +1687,7 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "运单日期");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "createTime");
+        itemMap.put("dataKey", "waybillTime");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
@@ -1767,7 +1764,9 @@ public class PrepareBillHandler {
         for (FeesClaimsVo entity : list) {
             dataItem = new HashMap<String, Object>();
             dataItem.put("warehouseName", entity.getWarehouseName());
-            dataItem.put("createTime", sdf.format(entity.getCreateTime()));
+            if(entity.getWaybillTime()!=null){
+                dataItem.put("waybillTime", sdf.format(entity.getWaybillTime()));
+            }
             dataItem.put("waybillNo", entity.getWaybillNo());
             dataItem.put("workOrderNo", entity.getWorkOrderNo());
             dataItem.put("customerName", entity.getCustomerName());
@@ -1787,7 +1786,6 @@ public class PrepareBillHandler {
         }
 
         totalProductAmount.set(totalProductAmount.get() + t_productAmount);
-        totalDeliveryCost.set(totalDeliveryCost.get() + t_deliveryCost);
         return dataList;
     }
 
@@ -1797,7 +1795,7 @@ public class PrepareBillHandler {
     private List<Map<String, Object>> getAbnormalSumItem() {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = new HashMap<String, Object>();
-        dataItem.put("expressnum", "合计金额");
+        dataItem.put("waybillNo", "合计金额");
         dataItem.put("productAmount", totalProductAmount.get());
         dataList.add(dataItem);
         return dataList;
@@ -1817,7 +1815,6 @@ public class PrepareBillHandler {
         int abnormalLineNo = 1;
         boolean doLoop = true;
         totalProductAmount.set(0d);// 置零
-        totalDeliveryCost.set(0d);
         totalReturnAmount.set(0d);
         
         while (doLoop) {
@@ -1865,7 +1862,7 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "运单日期");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "createTime");
+        itemMap.put("dataKey", "waybillTime");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
@@ -1930,7 +1927,9 @@ public class PrepareBillHandler {
         for (FeesClaimsVo entity : list) {
             dataItem = new HashMap<String, Object>();       
             dataItem.put("warehouseName", entity.getWarehouseName());
-            dataItem.put("createTime", sdf.format(entity.getCreateTime()));
+            if(entity.getWaybillTime()!=null){
+                dataItem.put("waybillTime", sdf.format(entity.getWaybillTime()));
+            }
             dataItem.put("waybillNo", entity.getWaybillNo());
             dataItem.put("workOrderNo", entity.getWorkOrderNo());
             dataItem.put("customerName", entity.getCustomerName());
@@ -1953,7 +1952,7 @@ public class PrepareBillHandler {
     private List<Map<String, Object>> getAbnormalChangeSumItem() {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = new HashMap<String, Object>();
-        dataItem.put("expressnum", "合计金额");
+        dataItem.put("waybillNo", "合计金额");
         dataItem.put("returnedAmount", totalReturnAmount.get());
         dataList.add(dataItem);
         return dataList;

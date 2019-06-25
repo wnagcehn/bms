@@ -52,7 +52,7 @@ public class FeesClaimsEntity implements IEntity {
 	// 赔付方向 J2C-九曳赔偿商家 C2J-商家赔偿九曳 J2D-九曳赔承运商 D2J-承运商赔九曳
 	private String payDirection;
 	// 是否免运费 0-不免运费 1-免运费
-	private Long isDeliveryFree;
+	private String isDeliveryFree;
 	// 理赔商品金额
 	private BigDecimal productAmount;
 	// 改地址退件费
@@ -232,17 +232,17 @@ public class FeesClaimsEntity implements IEntity {
 
 	public void setPayDirection(String payDirection) {
 		this.payDirection = payDirection;
-	}
+	}	
 	
-	public Long getIsDeliveryFree() {
-		return this.isDeliveryFree;
-	}
+	public String getIsDeliveryFree() {
+        return isDeliveryFree;
+    }
 
-	public void setIsDeliveryFree(Long isDeliveryFree) {
-		this.isDeliveryFree = isDeliveryFree;
-	}
-	
-	public BigDecimal getProductAmount() {
+    public void setIsDeliveryFree(String isDeliveryFree) {
+        this.isDeliveryFree = isDeliveryFree;
+    }
+
+    public BigDecimal getProductAmount() {
 		return this.productAmount;
 	}
 

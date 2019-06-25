@@ -50,10 +50,14 @@
  <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.fees.claim.FeesClaimsEntity">
         select
-        id, waybill_no, outstock_no, external_no, work_order_no, pay_id, duty_type, pay_type, customer_id, customer_name, warehouse_code, warehouse_name, carrier_id, carrier_name, deliver_id, deliver_name, pay_direction, is_delivery_free, amerce_amount, create_time, cre_person_id, cre_person, remark, mod_person_id, mod_person, mod_time, write_time, sync_time, bill_year, bill_month, waybill_time, del_flag,IF(is_delivery_free='0','否','是')
-        , sum(product_amount) as product_amount, sum(returned_amount) as returned_amount        
+        id, waybill_no, outstock_no, external_no, work_order_no, pay_id, duty_type, pay_type, customer_id, customer_name, warehouse_code, warehouse_name, carrier_id, carrier_name, deliver_id, deliver_name, pay_direction, amerce_amount, create_time, cre_person_id, cre_person, remark, mod_person_id, mod_person, mod_time, write_time, sync_time, bill_year, bill_month, waybill_time, del_flag
+        ,CASE is_delivery_free
+		WHEN 0 THEN '否'
+		WHEN 1 THEN '是' 
+		END as is_delivery_free
+        ,sum(product_amount) as product_amount, sum(returned_amount) as returned_amount        
         from fees_claims
-        where 1 = 1 
+        where 1 = 1 and  del_flag='0'
         	<if test=" waybillNo != null and waybillNo !='' ">
 				and waybill_no = #{waybillNo}
 			</if>
@@ -102,7 +106,7 @@
 			<if test="(waybillEndTime != null and waybillEndTime !='')" >
 				and <![CDATA[waybill_time <= #{waybillEndTime}]]>
 			</if>
-		 group by waybill_no,work_order_no
+		 group by waybill_no,work_order_no		 
     </select>
 
   
@@ -208,17 +212,19 @@
 			<if test=" waybillTime != null and waybillTime !='' ">
 				waybill_time = #{waybillTime,jdbcType=TIMESTAMP},
 			</if>
-			<if test=" delFlag != null and delFlag !='' ">
-				del_flag = #{delFlag,jdbcType=CHAR},
-			</if>
         </trim>
-        where id = #{id}
+        where id = #{id} and del_flag='0'
     </update>  
    
 	 <!-- 预账单理赔 -->
 	<select id="queryPreBillClaim" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" resultType="com.jiuyescm.bms.fees.claim.FeesClaimsEntity">		
-		select warehouse_name,waybill_time,waybill_no,work_order_no,customer_name,duty_type,pay_type,product_amount,is_delivery_free,cre_person,remark from fees_claims
-		where 1=1 and product_amount>0 
+		select warehouse_name,waybill_time,waybill_no,work_order_no,customer_id,customer_name,duty_type,pay_type,sum(product_amount) as product_amount,cre_person,remark,
+		CASE is_delivery_free
+		WHEN 0 THEN '否'
+		WHEN 1 THEN '是' 
+		END as is_delivery_free
+		from fees_claims
+		where 1=1 and product_amount>0 and del_flag='0'
 		<if test="(year != null and year !='')">
 		   and bill_year=#{year}
 		</if>
@@ -234,14 +240,14 @@
 		 		#{item}
 		 	</foreach>
 	  	</if>
-	  	group by waybill_no,work_order_no
+	  	group by customer_id,waybill_no,work_order_no
 	  	
 	</select>
 	
 	<!-- 预账单改地址 -->
 	<select id="queryPreBillClaimChange" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" resultType="com.jiuyescm.bms.fees.claim.FeesClaimsEntity">
-	   select warehouse_name,waybill_time,waybill_no,work_order_no,customer_name,duty_type,pay_type,returned_amount,cre_person,remark from fees_claims
-		where 1=1 and returned_amount>0
+	   select warehouse_name,waybill_time,waybill_no,work_order_no,customer_id,customer_name,duty_type,pay_type,sum(returned_amount) as returned_amount,cre_person,remark from fees_claims
+		where 1=1 and returned_amount>0 and del_flag='0'
 		<if test="(year != null and year !='')">
 		   and bill_year=#{year}
 		</if>
@@ -249,7 +255,7 @@
 		   and bill_month=#{month}
 		</if>
 		<if test="(customerId != null and customerId !='')" >
-			AND customer_id = #{customerId}
+		   AND customer_id = #{customerId}
 		</if>
 	  	<if test="(customerIds != null and customerIds !='')" >
 	  		AND customer_id in
@@ -257,7 +263,7 @@
 		 		#{item}
 		 	</foreach>
 	  	</if>
-		group by waybill_no,work_order_no
+		group by customer_id,waybill_no,work_order_no
 		
 	</select>
 </mapper>
