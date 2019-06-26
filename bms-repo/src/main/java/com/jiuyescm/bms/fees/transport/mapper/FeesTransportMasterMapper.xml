@@ -70,7 +70,7 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 			t.receive_address,t.actual_volume,t.actual_weight,t.light,
 			t.actual_packing_qty,t.actual_goods_qty,t.receipt_packing_qty,t.receipt_goods_qty,
 			t.has_backtrack,t.begin_time,t.end_time,t.del_flag,
-			t.need_insurance,t.remark, 
+			t.need_insurance,t.remark,t.car_model,
 			sum(CASE b.subject_name WHEN '提货费' THEN b.amount ELSE 0 END) as tsTakes,
 			sum(CASE b.subject_name WHEN '运费' THEN b.amount ELSE 0 END) as tsTransAmount,
 			sum(CASE b.subject_name WHEN '送货费' THEN b.amount ELSE 0 END) as tsSend,
@@ -108,7 +108,7 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 			a.receive_address,a.actual_volume,a.actual_weight,a.light,
 			a.actual_packing_qty,a.actual_goods_qty,a.receipt_packing_qty,a.receipt_goods_qty,
 			a.has_backtrack,a.begin_time,a.end_time,a.del_flag,
-			a.need_insurance,a.remark
+			a.need_insurance,a.remark,c.car_model
 			from fees_transport_master a
 			LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
 			GROUP BY a.order_no
@@ -319,7 +319,7 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 			t.receive_address,t.actual_volume,t.actual_weight,t.light,
 			t.actual_packing_qty,t.actual_goods_qty,t.receipt_packing_qty,t.receipt_goods_qty,
 			t.has_backtrack,t.begin_time,t.end_time,t.del_flag,
-			t.need_insurance,t.remark, 
+			t.need_insurance,t.remark,t.car_model,
 			sum(CASE b.subject_name WHEN '提货费' THEN b.amount ELSE 0 END) as tsTakes,
 			sum(CASE b.subject_name WHEN '运费' THEN b.amount ELSE 0 END) as tsTransAmount,
 			sum(CASE b.subject_name WHEN '送货费' THEN b.amount ELSE 0 END) as tsSend,
@@ -357,7 +357,7 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 			a.receive_address,a.actual_volume,a.actual_weight,a.light,
 			a.actual_packing_qty,a.actual_goods_qty,a.receipt_packing_qty,a.receipt_goods_qty,
 			a.has_backtrack,a.begin_time,a.end_time,a.del_flag,
-			a.need_insurance,a.remark
+			a.need_insurance,a.remark,c.car_model
 			from fees_transport_master a
 			LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
 			GROUP BY a.order_no
@@ -386,7 +386,7 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 			and t.begin_time <![CDATA[ < ]]> #{endTime}
 		</if>
 		GROUP BY t.order_no
-		ORDER BY a.begin_time,a.created_dt,a.outstock_no ASC
+		ORDER BY t.begin_time,t.created_dt,t.outstock_no ASC
     </select>
 
 	<!-- 删除 -->

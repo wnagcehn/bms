@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity;
+import com.jiuyescm.bms.fees.transport.vo.FeesTransportVo;
 
 /**
  * ..Service
@@ -14,7 +15,7 @@ public interface IFeesTransportMasterService {
 
     FeesTransportMasterEntity findById(Long id);
 	
-    PageInfo<FeesTransportMasterEntity> query(Map<String, Object> condition, int pageNo,
+    PageInfo<FeesTransportVo> query(Map<String, Object> condition, int pageNo,
             int pageSize);
 
 	List<FeesTransportMasterEntity> query(Map<String, Object> condition);
@@ -37,7 +38,7 @@ public interface IFeesTransportMasterService {
      * @param pageSize
      * @return
      */
-    PageInfo<FeesTransportMasterEntity> queryToExport(Map<String, Object> condition, int pageNo, int pageSize);
+    PageInfo<FeesTransportVo> queryToExport(Map<String, Object> condition, int pageNo, int pageSize);
 
     /**
      * 预账单干线导出
@@ -49,6 +50,6 @@ public interface IFeesTransportMasterService {
      * @param condition
      * @return
      */
-    List<FeesTransportMasterEntity> queryForPrepareBill(Map<String, Object> condition);
+    List<FeesTransportVo> queryForPrepareBill(Map<String, Object> condition);
 
 }

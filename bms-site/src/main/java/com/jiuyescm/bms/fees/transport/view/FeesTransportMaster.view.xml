@@ -4,7 +4,7 @@
   <Context/>
   <Model>
     <DataType name="dtFeesTransportMasterEntity">
-      <Property name="creationType">com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity</Property>
+      <Property name="creationType">com.jiuyescm.bms.fees.transport.vo.FeesTransportVo</Property>
       <PropertyDef name="id">
         <Property name="label">编号</Property>
       </PropertyDef>
@@ -334,6 +334,9 @@
       <PropertyDef name="payTotalAmount">
         <Property name="dataType">Double</Property>
         <Property name="label">应付总计</Property>
+      </PropertyDef>
+      <PropertyDef name="carModel">
+        <Property name="label">车型</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtFeesTransportMasterEntityQuery">
@@ -679,9 +682,10 @@ view.get(&quot;#queryForm.entity&quot;).set({&#xD;
         <Property name="property">light</Property>
         <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="capacityTypeCode">
-        <Property name="property">capacityTypeCode</Property>
+      <DataColumn>
+        <Property name="property">carModel</Property>
         <Property name="width">100</Property>
+        <Property name="name">carModel</Property>
       </DataColumn>
       <DataColumn name="actualPackingQty">
         <Property name="property">actualPackingQty</Property>
@@ -1021,5 +1025,12 @@ if(taskState==2){&#xD;
       <Property name="fileProvider">fileExportTaskController#exportDetail</Property>
       <Property name="caption">导出</Property>
     </DownloadAction>
+    <UpdateAction id="delExportTaskAction">
+      <Property name="dataResolver">fileExportTaskController#delExportTask</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsFileExportTaskList</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
   </View>
 </ViewConfig>

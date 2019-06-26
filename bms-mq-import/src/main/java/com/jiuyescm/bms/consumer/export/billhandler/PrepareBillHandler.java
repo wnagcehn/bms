@@ -69,6 +69,7 @@ import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial;
 import com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity;
 import com.jiuyescm.bms.fees.transport.service.IFeesTransportMasterService;
+import com.jiuyescm.bms.fees.transport.vo.FeesTransportVo;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
@@ -2339,17 +2340,8 @@ public class PrepareBillHandler {
         Map<String, Object> cond = new HashMap<String, Object>();
         Map<String, String> cuMap = new HashMap<String, String>();
         List<Map<String, String>> cuList = new ArrayList<Map<String, String>>();
-        List<FeesTransportMasterEntity> transportList = new ArrayList<FeesTransportMasterEntity>();
+        List<FeesTransportVo> transportList = new ArrayList<FeesTransportVo>();
 
-        // 拼接年月
-//        String year = "";
-//        String month = "";
-//        String creMonth = "";
-//        String startTime = "";
-//        String endTime = "";
-//        creMonth = exchangeDate(condition, year, month);
-//        startTime = creMonth + "-01 00:00:00";
-//        endTime = DateUtil.getLastDay(creMonth+"-01") + " 23:59:59";
         cond.put("beginTime", condition.get("startTime"));
         cond.put("endTime", condition.get("endTime"));
         cond.put("delFlag", "0");
@@ -2554,7 +2546,7 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "车型");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "capacityTypeCode");
+        itemMap.put("dataKey", "carModel");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
@@ -2785,13 +2777,13 @@ public class PrepareBillHandler {
     /**
      * 干线费-content
      */
-    private List<Map<String, Object>> getTransportItem(List<FeesTransportMasterEntity> list) {
+    private List<Map<String, Object>> getTransportItem(List<FeesTransportVo> list) {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         double t_payTotalAmount = 0d;
         Map<String, Object> dataItem = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        for (FeesTransportMasterEntity entity : list) {
+        for (FeesTransportVo entity : list) {
             dataItem = new HashMap<String, Object>();       
             dataItem.put("creDate", entity.getCreatedDt()==null?"":sdf.format(entity.getCreatedDt()));
             dataItem.put("orderNo", entity.getOrderNo());
@@ -2815,7 +2807,7 @@ public class PrepareBillHandler {
             dataItem.put("actualWeight", entity.getActualWeight()==null?"":entity.getActualWeight().doubleValue());
             dataItem.put("isLight", entity.getLight()==null?"":BmsEnums.light.getDesc(entity.getLight()));
             //车型
-            dataItem.put("capacityTypeCode", entity.getCapacityTypeCode());
+            dataItem.put("carModel", entity.getCarModel());
             dataItem.put("actualPackingQty", entity.getActualPackingQty()==null?"":entity.getActualPackingQty().doubleValue());
             dataItem.put("actualGoodsQty", entity.getActualGoodsQty()==null?"":entity.getActualGoodsQty().doubleValue());
             dataItem.put("receiptPackingQty", entity.getReceiptPackingQty()==null?"":entity.getReceiptPackingQty().doubleValue());

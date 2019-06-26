@@ -1,8 +1,6 @@
 package com.jiuyescm.bms.fees.transport.controller;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,7 +21,6 @@ import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
-import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 import com.jiuyescm.bms.common.constants.ExceptionConstant;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.constants.MessageConstant;
@@ -36,6 +33,7 @@ import com.jiuyescm.bms.excel.write.ExcelExporterFactory;
 import com.jiuyescm.bms.excel.write.IExcelExporter;
 import com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity;
 import com.jiuyescm.bms.fees.transport.service.IFeesTransportMasterService;
+import com.jiuyescm.bms.fees.transport.vo.FeesTransportVo;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
@@ -81,7 +79,7 @@ public class FeesTransportMasterController {
 	 * @param param
 	 */
 	@DataProvider
-	public void query(Page<FeesTransportMasterEntity> page, Map<String, Object> param) {
+	public void query(Page<FeesTransportVo> page, Map<String, Object> param) {
 	    if (null == param) {
             param = new HashMap<String, Object>();
         }
@@ -93,7 +91,7 @@ public class FeesTransportMasterController {
         }
         param.put("delFlag", "0");
         try {
-    		PageInfo<FeesTransportMasterEntity> pageInfo = feesTransportMasterService.query(param, page.getPageNo(), page.getPageSize());
+    		PageInfo<FeesTransportVo> pageInfo = feesTransportMasterService.query(param, page.getPageNo(), page.getPageSize());
     		if (pageInfo != null) {
     			page.setEntities(pageInfo.getList());
     			page.setEntityCount((int) pageInfo.getTotal());
@@ -260,12 +258,12 @@ public class FeesTransportMasterController {
      */
     private String handBiz(Map<String, Object> myparam)throws Exception{
         IExcelExporter exporter = ExcelExporterFactory.createExporter(ExportConstants.SXSSF);
-        Sheet sheet =exporter.createSheetByAnno("干线运单",1,FeesTransportMasterEntity.class);
+        Sheet sheet =exporter.createSheetByAnno("干线运单",1,FeesTransportVo.class);
 
         int pageNo = 1;
         boolean doLoop = true;
         while (doLoop) {            
-            PageInfo<FeesTransportMasterEntity> pageInfo = feesTransportMasterService.queryToExport(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
+            PageInfo<FeesTransportVo> pageInfo = feesTransportMasterService.queryToExport(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
             if (null != pageInfo && pageInfo.getList().size() > 0) {
                 if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
                     doLoop = false;

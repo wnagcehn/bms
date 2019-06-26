@@ -138,6 +138,8 @@ public class FeesTransportMasterEntity implements IEntity {
 	private String transportNo;
 	//车型
 	@ExcelField(title = "车型", num = 22)
+	private String carModel;
+	
 	private String capacityTypeCode;
 	
 	//提货费
@@ -827,6 +829,14 @@ public class FeesTransportMasterEntity implements IEntity {
 
     public void setIsBacktrack(String isBacktrack) {
         this.isBacktrack = isBacktrack;
+    }
+
+    public String getCarModel() {
+        return carModel;
+    }
+
+    public void setCarModel(String carModel) {
+        this.carModel = carModel;
     }
     
 	
