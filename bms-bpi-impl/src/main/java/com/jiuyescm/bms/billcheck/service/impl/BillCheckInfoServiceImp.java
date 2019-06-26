@@ -222,7 +222,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
      */
     private String isOverdue(long current, BillCheckInfoVo entity) {
         BillPeriodInfoEntity periodInfo = getForPeriodInfo(entity);
-        if (null == periodInfo) {
+        if (null == periodInfo || null == periodInfo.getBasicCode()) {
             throw new BizException("请先去商家账期设置界面配置！");
         }
         //超期时间
