@@ -25,4 +25,16 @@ public interface IFeesTransportMasterRepository {
 
     void delete(Long id);
 
+    /**
+     * 预账单干线导出查询
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月25日 下午2:12:56
+     *
+     * @param condition
+     * @return
+     */
+    List<FeesTransportMasterEntity> queryForPrepareBill(Map<String, Object> condition);
+
 }

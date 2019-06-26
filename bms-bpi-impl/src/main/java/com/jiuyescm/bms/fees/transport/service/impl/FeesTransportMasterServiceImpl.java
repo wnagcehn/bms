@@ -73,6 +73,11 @@ public class FeesTransportMasterServiceImpl implements IFeesTransportMasterServi
 		return feesTransportMasterRepository.query(condition);
 	}
 	
+	@Override
+	public List<FeesTransportMasterEntity> queryForPrepareBill(Map<String, Object> condition){
+	    return feesTransportMasterRepository.queryForPrepareBill(condition);
+	}
+	
 	/**
 	 * 保存
 	 * @param entity

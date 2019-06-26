@@ -62,68 +62,81 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 	<!-- 分页查询 -->
     <select id="query" parameterType="java.util.Map"
         resultType="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity">
-        select a.created_dt,a.order_no,a.outstock_no,a.temperature_type_code,
-		GROUP_CONCAT(c.route_no) as routeNo,GROUP_CONCAT(c.dispatcher_name) as dispatcherName,
-		GROUP_CONCAT(c.transport_no) as transportNo,a.customer_name,a.customer_id,a.project_name,
-		a.send_site,a.send_province,a.send_city,a.send_district,
-		a.receive_site,a.receive_province,a.receive_city,a.receive_district,
-		a.receive_address,a.actual_volume,a.actual_weight,a.light,c.capacity_type_code,
-		a.actual_packing_qty,a.actual_goods_qty,a.receipt_packing_qty,a.receipt_goods_qty,
-		a.has_backtrack,a.begin_time,a.end_time,
-		(CASE b.subject_name WHEN '提货费' THEN b.amount ELSE 0 END) as 'tsTakes',
-		(CASE b.subject_name WHEN '运费' THEN b.amount ELSE 0 END) as 'tsTransAmount',
-		(CASE b.subject_name WHEN '送货费' THEN b.amount ELSE 0 END) as 'tsSend',
-		(CASE b.subject_name WHEN '装货费' THEN b.amount ELSE 0 END) as 'ysZh',
-		(CASE b.subject_name WHEN '卸货费' THEN b.amount ELSE 0 END) as 'ysXh',
-		(CASE b.subject_name WHEN '逆向物流费' THEN b.amount ELSE 0 END) as 'tsReverseLogistic',
-		(CASE b.subject_name WHEN '延时等待费' THEN b.amount ELSE 0 END) as 'tsDelayWaiting',
-		(CASE b.subject_name WHEN '缠绕膜费' THEN b.amount ELSE 0 END) as 'tsWrappingFilm',
-		(CASE b.subject_name WHEN '放空费' THEN b.amount ELSE 0 END) as 'tsEmptying',
-		(CASE b.subject_name WHEN '赔付费' THEN b.amount ELSE 0 END) as 'tsClaim',
-		(CASE b.subject_name WHEN '纸面回单费' THEN b.amount ELSE 0 END) as 'ysZmhd',
-		(CASE b.subject_name WHEN '拆箱费' THEN b.amount ELSE 0 END) as 'ysCx',
-		(CASE b.subject_name WHEN '贴码费' THEN b.amount ELSE 0 END) as 'ysTm',
-		(CASE b.subject_name WHEN '保险费' THEN b.amount ELSE 0 END) as 'tsInsurance',
-		(CASE b.subject_name WHEN '分流费' THEN b.amount ELSE 0 END) as 'tsFl',
-		(CASE b.subject_name WHEN '上楼搬运费' THEN b.amount ELSE 0 END) as 'tsSlby',
-		(CASE b.subject_name WHEN '过夜制冷费' THEN b.amount ELSE 0 END) as 'tsGyzl',
-		(CASE b.subject_name WHEN '单据打印费' THEN b.amount ELSE 0 END) as 'tsDjdy',
-		(CASE b.subject_name WHEN '加点费' THEN b.amount ELSE 0 END) as 'tsAddSite',
-		(CASE b.subject_name WHEN '中转费' THEN b.amount ELSE 0 END) as 'tsZz',
-		(CASE b.subject_name WHEN '垫付费' THEN b.amount ELSE 0 END) as 'tsDf',
-		(CASE b.subject_name WHEN '押车费' THEN b.amount ELSE 0 END) as 'tsYc',
-		(CASE b.subject_name WHEN '理货费' THEN b.amount ELSE 0 END) as 'tsTallying',
-		(CASE b.subject_name WHEN '交货费' THEN b.amount ELSE 0 END) as 'tsJh',
-		(CASE b.subject_name WHEN '过路费' THEN b.amount ELSE 0 END) as 'tsGl',
-		(CASE b.subject_name WHEN '码货费' THEN b.amount ELSE 0 END) as 'tsMh',
-		(CASE b.subject_name WHEN '托盘费' THEN b.amount ELSE 0 END) as 'tsPallet',
-		SUM(b.amount_totle) as 'payTotalAmount',a.need_insurance,a.remark
-		from fees_transport_master a
-		LEFT JOIN fees_transport_items b on a.oms_id=b.oms_id and b.del_flag='0'
-		LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
-		WHERE a.del_flag='0'
+        select t.oms_id,t.created_dt,t.order_no,t.outstock_no,t.temperature_type_code,
+			t.routeNo,t.dispatcherName,
+			t.transportNo,t.customer_name,t.customer_id,t.project_name,
+			t.send_site,t.send_province,t.send_city,t.send_district,
+			t.receive_site,t.receive_province,t.receive_city,t.receive_district,
+			t.receive_address,t.actual_volume,t.actual_weight,t.light,
+			t.actual_packing_qty,t.actual_goods_qty,t.receipt_packing_qty,t.receipt_goods_qty,
+			t.has_backtrack,t.begin_time,t.end_time,t.del_flag,
+			t.need_insurance,t.remark, 
+			sum(CASE b.subject_name WHEN '提货费' THEN b.amount ELSE 0 END) as tsTakes,
+			sum(CASE b.subject_name WHEN '运费' THEN b.amount ELSE 0 END) as tsTransAmount,
+			sum(CASE b.subject_name WHEN '送货费' THEN b.amount ELSE 0 END) as tsSend,
+			sum(CASE b.subject_name WHEN '装货费' THEN b.amount ELSE 0 END) as ysZh,
+			sum(CASE b.subject_name WHEN '卸货费' THEN b.amount ELSE 0 END) as ysXh,
+			sum(CASE b.subject_name WHEN '逆向物流费' THEN b.amount ELSE 0 END) as tsReverseLogistic,
+			sum(CASE b.subject_name WHEN '延时等待费' THEN b.amount ELSE 0 END) as tsDelayWaiting,
+			sum(CASE b.subject_name WHEN '缠绕膜费' THEN b.amount ELSE 0 END) as tsWrappingFilm,
+			sum(CASE b.subject_name WHEN '放空费' THEN b.amount ELSE 0 END) as tsEmptying,
+			sum(CASE b.subject_name WHEN '赔付费' THEN b.amount ELSE 0 END) as tsClaim,
+			sum(CASE b.subject_name WHEN '纸面回单费' THEN b.amount ELSE 0 END) as ysZmhd,
+			sum(CASE b.subject_name WHEN '拆箱费' THEN b.amount ELSE 0 END) as ysCx,
+			sum(CASE b.subject_name WHEN '贴码费' THEN b.amount ELSE 0 END) as ysTm,
+			sum(CASE b.subject_name WHEN '保险费' THEN b.amount ELSE 0 END) as tsInsurance,
+			sum(CASE b.subject_name WHEN '分流费' THEN b.amount ELSE 0 END) as tsFl,
+			sum(CASE b.subject_name WHEN '上楼搬运费' THEN b.amount ELSE 0 END) as tsSlby,
+			sum(CASE b.subject_name WHEN '过夜制冷费' THEN b.amount ELSE 0 END) as tsGyzl,
+			sum(CASE b.subject_name WHEN '单据打印费' THEN b.amount ELSE 0 END) as tsDjdy,
+			sum(CASE b.subject_name WHEN '加点费' THEN b.amount ELSE 0 END) as tsAddSite,
+			sum(CASE b.subject_name WHEN '中转费' THEN b.amount ELSE 0 END) as tsZz,
+			sum(CASE b.subject_name WHEN '垫付费' THEN b.amount ELSE 0 END) as tsDf,
+			sum(CASE b.subject_name WHEN '押车费' THEN b.amount ELSE 0 END) as tsYc,
+			sum(CASE b.subject_name WHEN '理货费' THEN b.amount ELSE 0 END) as tsTallying,
+			sum(CASE b.subject_name WHEN '交货费' THEN b.amount ELSE 0 END) as tsJh,
+			sum(CASE b.subject_name WHEN '过路费' THEN b.amount ELSE 0 END) as tsGl,
+			sum(CASE b.subject_name WHEN '码货费' THEN b.amount ELSE 0 END) as tsMh,
+			sum(CASE b.subject_name WHEN '托盘费' THEN b.amount ELSE 0 END) as tsPallet,
+			SUM(b.amount_totle) as payTotalAmount
+		from(
+			select a.oms_id,a.created_dt,a.order_no,a.outstock_no,a.temperature_type_code,
+			GROUP_CONCAT(c.route_no) as routeNo,GROUP_CONCAT(c.dispatcher_name) as dispatcherName,
+			GROUP_CONCAT(c.transport_no) as transportNo,a.customer_name,a.customer_id,a.project_name,
+			a.send_site,a.send_province,a.send_city,a.send_district,
+			a.receive_site,a.receive_province,a.receive_city,a.receive_district,
+			a.receive_address,a.actual_volume,a.actual_weight,a.light,
+			a.actual_packing_qty,a.actual_goods_qty,a.receipt_packing_qty,a.receipt_goods_qty,
+			a.has_backtrack,a.begin_time,a.end_time,a.del_flag,
+			a.need_insurance,a.remark
+			from fees_transport_master a
+			LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
+			GROUP BY a.order_no
+		) t
+		LEFT JOIN fees_transport_items b on t.oms_id=b.oms_id and b.del_flag='0'
+		where 1 = 1
 		<if test=" customerId != null and customerId !='' ">
-			and a.customer_id=#{customerId}
+			and t.customer_id=#{customerId}
 		</if>
 		<if test=" projectName != null and projectName !='' ">
-			and a.project_name like CONCAT('%',#{projectName},'%')
+			and t.project_name like CONCAT('%',#{projectName},'%')
 		</if>
 		<if test=" orderNo != null and orderNo !='' ">
-			and a.order_no=#{orderNo}
+			and t.order_no=#{orderNo}
 		</if>
 		<if test=" transportNo != null and transportNo !='' ">
-			and c.transport_no=#{transportNo}
+			and t.transport_no=#{transportNo}
 		</if>
 		<if test=" delFlag != null and delFlag !='' ">
-			and a.del_flag=#{delFlag}
+			and t.del_flag=#{delFlag}
 		</if>
 		<if test=" beginTime != null and beginTime !='' ">
-			and a.begin_time>=#{beginTime}
+			and t.begin_time>=#{beginTime}
 		</if>
 		<if test=" endTime != null and endTime !='' ">
-			and a.end_time <![CDATA[ <= ]]> #{endTime}
+			and t.begin_time <![CDATA[ <= ]]> #{endTime}
 		</if>
-		GROUP BY a.order_no
+		GROUP BY t.order_no
     </select>
 
 	<!-- 保存 -->
@@ -295,6 +308,86 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
         </trim>
         where id = #{id}
     </update>
+    
+    <select id="queryForPrepareBill" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity">
+        select t.oms_id,t.created_dt,t.order_no,t.outstock_no,t.temperature_type_code,
+			t.routeNo,t.dispatcherName,
+			t.transportNo,t.customer_name,t.customer_id,t.project_name,
+			t.send_site,t.send_province,t.send_city,t.send_district,
+			t.receive_site,t.receive_province,t.receive_city,t.receive_district,
+			t.receive_address,t.actual_volume,t.actual_weight,t.light,
+			t.actual_packing_qty,t.actual_goods_qty,t.receipt_packing_qty,t.receipt_goods_qty,
+			t.has_backtrack,t.begin_time,t.end_time,t.del_flag,
+			t.need_insurance,t.remark, 
+			sum(CASE b.subject_name WHEN '提货费' THEN b.amount ELSE 0 END) as tsTakes,
+			sum(CASE b.subject_name WHEN '运费' THEN b.amount ELSE 0 END) as tsTransAmount,
+			sum(CASE b.subject_name WHEN '送货费' THEN b.amount ELSE 0 END) as tsSend,
+			sum(CASE b.subject_name WHEN '装货费' THEN b.amount ELSE 0 END) as ysZh,
+			sum(CASE b.subject_name WHEN '卸货费' THEN b.amount ELSE 0 END) as ysXh,
+			sum(CASE b.subject_name WHEN '逆向物流费' THEN b.amount ELSE 0 END) as tsReverseLogistic,
+			sum(CASE b.subject_name WHEN '延时等待费' THEN b.amount ELSE 0 END) as tsDelayWaiting,
+			sum(CASE b.subject_name WHEN '缠绕膜费' THEN b.amount ELSE 0 END) as tsWrappingFilm,
+			sum(CASE b.subject_name WHEN '放空费' THEN b.amount ELSE 0 END) as tsEmptying,
+			sum(CASE b.subject_name WHEN '赔付费' THEN b.amount ELSE 0 END) as tsClaim,
+			sum(CASE b.subject_name WHEN '纸面回单费' THEN b.amount ELSE 0 END) as ysZmhd,
+			sum(CASE b.subject_name WHEN '拆箱费' THEN b.amount ELSE 0 END) as ysCx,
+			sum(CASE b.subject_name WHEN '贴码费' THEN b.amount ELSE 0 END) as ysTm,
+			sum(CASE b.subject_name WHEN '保险费' THEN b.amount ELSE 0 END) as tsInsurance,
+			sum(CASE b.subject_name WHEN '分流费' THEN b.amount ELSE 0 END) as tsFl,
+			sum(CASE b.subject_name WHEN '上楼搬运费' THEN b.amount ELSE 0 END) as tsSlby,
+			sum(CASE b.subject_name WHEN '过夜制冷费' THEN b.amount ELSE 0 END) as tsGyzl,
+			sum(CASE b.subject_name WHEN '单据打印费' THEN b.amount ELSE 0 END) as tsDjdy,
+			sum(CASE b.subject_name WHEN '加点费' THEN b.amount ELSE 0 END) as tsAddSite,
+			sum(CASE b.subject_name WHEN '中转费' THEN b.amount ELSE 0 END) as tsZz,
+			sum(CASE b.subject_name WHEN '垫付费' THEN b.amount ELSE 0 END) as tsDf,
+			sum(CASE b.subject_name WHEN '押车费' THEN b.amount ELSE 0 END) as tsYc,
+			sum(CASE b.subject_name WHEN '理货费' THEN b.amount ELSE 0 END) as tsTallying,
+			sum(CASE b.subject_name WHEN '交货费' THEN b.amount ELSE 0 END) as tsJh,
+			sum(CASE b.subject_name WHEN '过路费' THEN b.amount ELSE 0 END) as tsGl,
+			sum(CASE b.subject_name WHEN '码货费' THEN b.amount ELSE 0 END) as tsMh,
+			sum(CASE b.subject_name WHEN '托盘费' THEN b.amount ELSE 0 END) as tsPallet,
+			SUM(b.amount_totle) as payTotalAmount
+		from(
+			select a.oms_id,a.created_dt,a.order_no,a.outstock_no,a.temperature_type_code,
+			GROUP_CONCAT(c.route_no) as routeNo,GROUP_CONCAT(c.dispatcher_name) as dispatcherName,
+			GROUP_CONCAT(c.transport_no) as transportNo,a.customer_name,a.customer_id,a.project_name,
+			a.send_site,a.send_province,a.send_city,a.send_district,
+			a.receive_site,a.receive_province,a.receive_city,a.receive_district,
+			a.receive_address,a.actual_volume,a.actual_weight,a.light,
+			a.actual_packing_qty,a.actual_goods_qty,a.receipt_packing_qty,a.receipt_goods_qty,
+			a.has_backtrack,a.begin_time,a.end_time,a.del_flag,
+			a.need_insurance,a.remark
+			from fees_transport_master a
+			LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
+			GROUP BY a.order_no
+		) t
+		LEFT JOIN fees_transport_items b on t.oms_id=b.oms_id and b.del_flag='0'
+		where 1 = 1
+		<if test=" customerId != null and customerId !='' ">
+			and t.customer_id=#{customerId}
+		</if>
+		<if test=" projectName != null and projectName !='' ">
+			and t.project_name like CONCAT('%',#{projectName},'%')
+		</if>
+		<if test=" orderNo != null and orderNo !='' ">
+			and t.order_no=#{orderNo}
+		</if>
+		<if test=" transportNo != null and transportNo !='' ">
+			and t.transport_no=#{transportNo}
+		</if>
+		<if test=" delFlag != null and delFlag !='' ">
+			and t.del_flag=#{delFlag}
+		</if>
+		<if test=" beginTime != null and beginTime !='' ">
+			and t.begin_time>=#{beginTime}
+		</if>
+		<if test=" endTime != null and endTime !='' ">
+			and t.begin_time <![CDATA[ < ]]> #{endTime}
+		</if>
+		GROUP BY t.order_no
+		ORDER BY a.begin_time,a.created_dt,a.outstock_no ASC
+    </select>
 
 	<!-- 删除 -->
     <delete id="delete" parameterType="java.lang.Long">

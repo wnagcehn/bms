@@ -39,4 +39,16 @@ public interface IFeesTransportMasterService {
      */
     PageInfo<FeesTransportMasterEntity> queryToExport(Map<String, Object> condition, int pageNo, int pageSize);
 
+    /**
+     * 预账单干线导出
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月25日 下午2:13:30
+     *
+     * @param condition
+     * @return
+     */
+    List<FeesTransportMasterEntity> queryForPrepareBill(Map<String, Object> condition);
+
 }

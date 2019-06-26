@@ -82,7 +82,6 @@ public class FeesTransportMasterController {
 	 */
 	@DataProvider
 	public void query(Page<FeesTransportMasterEntity> page, Map<String, Object> param) {
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    if (null == param) {
             param = new HashMap<String, Object>();
         }
@@ -91,13 +90,6 @@ public class FeesTransportMasterController {
         }
         if (param.get("endTime") == null) {
             throw new BizException("结束时间不能为空!");
-        }
-        try {
-            if (sdf.parse(param.get("endTime").toString()).before(sdf.parse(param.get("beginTime").toString()))) {
-                throw new BizException("开始时间不能大于结束时间!");
-            }
-        } catch (ParseException e1) {
-            logger.error("日期转换异常：", e1);
         }
         param.put("delFlag", "0");
         try {

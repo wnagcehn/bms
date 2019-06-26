@@ -49,6 +49,11 @@ public class FeesTransportMasterRepositoryImpl extends MyBatisDao<FeesTransportM
     public List<FeesTransportMasterEntity> query(Map<String, Object> condition){
 		return selectList("com.jiuyescm.bms.fees.transport.FeesTransportMasterMapper.query", condition);
 	}
+	
+	@Override
+	public List<FeesTransportMasterEntity> queryForPrepareBill(Map<String, Object> condition){
+	    return selectList("com.jiuyescm.bms.fees.transport.FeesTransportMasterMapper.queryForPrepareBill", condition);
+	}
 
 	/**
 	 * 保存

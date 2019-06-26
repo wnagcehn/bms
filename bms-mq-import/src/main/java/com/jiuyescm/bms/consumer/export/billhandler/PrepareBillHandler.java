@@ -137,6 +137,8 @@ public class PrepareBillHandler {
     private static ThreadLocal<Double> totalProductAmount = new ThreadLocal<Double>();
     //改地址退件费
     private static ThreadLocal<Double> totalReturnAmount = new ThreadLocal<Double>();
+    //干线应付总费用
+    private static ThreadLocal<Double> paytotalAmount = new ThreadLocal<Double>();
     
     private Double process = 0d;
     private Map<String, String> mapWarehouse;
@@ -2312,29 +2314,43 @@ public class PrepareBillHandler {
         }
     }
     
+    /**
+     * 干线费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月25日 上午10:12:20
+     *
+     * @param taskId
+     * @param workbook
+     * @param poiUtil
+     * @param condition
+     * @param entity
+     * @throws Exception
+     */
     private void handTransport(String taskId, SXSSFWorkbook workbook, POISXSSUtil poiUtil,
             Map<String, Object> condition, BillPrepareExportTaskEntity entity) throws Exception {
-        int addLineNo = 1;
         int result = 0;
-        Map<String, String> cuMap = new HashMap<>();
+        paytotalAmount.set(0d);
+        Map<String, Object> cond = new HashMap<String, Object>();
+        Map<String, String> cuMap = new HashMap<String, String>();
         List<Map<String, String>> cuList = new ArrayList<Map<String, String>>();
         List<FeesTransportMasterEntity> transportList = new ArrayList<FeesTransportMasterEntity>();
 
         // 拼接年月
-        String year = "";
-        String month = "";
-        String creMonth = "";
-        if (condition.containsKey("year") && condition.containsKey("month")) {
-            year = condition.get("year").toString();
-            month = condition.get("month").toString();
-        }
-        if (Integer.parseInt(month) < 10) {
-            creMonth = year + "-0" + month;
-        } else {
-            creMonth = year + "-" + month;
-        }
+//        String year = "";
+//        String month = "";
+//        String creMonth = "";
+//        String startTime = "";
+//        String endTime = "";
+//        creMonth = exchangeDate(condition, year, month);
+//        startTime = creMonth + "-01 00:00:00";
+//        endTime = DateUtil.getLastDay(creMonth+"-01") + " 23:59:59";
+        cond.put("beginTime", condition.get("startTime"));
+        cond.put("endTime", condition.get("endTime"));
+        cond.put("delFlag", "0");
 
-        String customerId = condition.get("customerId").toString();
+        String customerId = condition.get("customerid").toString();
         // 区分是否按照子商家生成
         if (!(Boolean) condition.get("isChildCustomer")) {
             cuList = billPrepareExportTaskService.getChildCustomer(customerId);
@@ -2345,37 +2361,56 @@ public class PrepareBillHandler {
 
         for (Map<String, String> map : cuList) {
             try {
-                result = tmsForOmsService.getAccountBillOrderCount(map.get("customerId"), creMonth);
+                result = tmsForOmsService.getAccountBillOrderCount(map.get("customerId"), condition.get("createMonth").toString());
             } catch (Exception e) {
                 logger.error("调用TMS接口异常：", e);
                 throw new BizException("调用TMS接口异常:", e);
             }
             
+            // TMS无计算费用
             if (result == 0) {
-                continue; // TMS无计算费用
+                continue; 
             }
             
-            transportList = feesTransportMasterService.query(condition);
+            cond.put("customerId", map.get("customerId"));
+            transportList = feesTransportMasterService.queryForPrepareBill(cond);
             if (result != transportList.size()) {
                 //TMS条数和BMS干线条数不等
                 updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 0,StringUtils.isBlank(entity.getRemark())?"该商家" + condition.get("month").toString() + "月有干线计费未提交至BMS，请联系干线运营人员及时提交结算数据，提交后重新生成预账单，谢谢！": 
                             entity.getRemark()+";该商家" + condition.get("month").toString()+"月有干线计费未提交至BMS，请联系干线运营人员及时提交结算数据，提交后重新生成预账单，谢谢！", null);
+                continue;
             }
             
             
+        }
+        
+        if (CollectionUtils.isEmpty(transportList)) {
+            return;
         }
         
         List<Map<String, Object>> headTransportList = getTransportHead();
         List<Map<String, Object>> dataTransportList = getTransportItem(transportList);
+        dataTransportList.addAll(getTransportSumItem());
         
-        if (CollectionUtils.isNotEmpty(transportList)) {
-            poiUtil.exportExcel2FilePath(poiUtil, workbook, "干线", addLineNo, headTransportList, dataTransportList);
-            if (null != transportList && transportList.size() > 0) {
-                addLineNo += transportList.size();
-            }
-        }
+        poiUtil.exportExcel2FilePath(poiUtil, workbook, "干线", 1, headTransportList, dataTransportList);
 
-        
+    }
+
+    /*
+     * 日期转换
+     */
+    private String exchangeDate(Map<String, Object> condition, String year, String month) {
+        String creMonth;
+        if (condition.containsKey("year") && condition.containsKey("month")) {
+            year = condition.get("year").toString();
+            month = condition.get("month").toString();
+        }
+        if (Integer.parseInt(month) < 10) {
+            creMonth = year + "-0" + month;
+        } else {
+            creMonth = year + "-" + month;
+        }
+        return creMonth;
     }
 
     
@@ -2388,19 +2423,19 @@ public class PrepareBillHandler {
 
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "订单创建日期");
-        itemMap.put("columnWidth", 25);
+        itemMap.put("columnWidth", 30);
         itemMap.put("dataKey", "creDate");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "运输订单号");
-        itemMap.put("columnWidth", 25);
+        itemMap.put("columnWidth", 30);
         itemMap.put("dataKey", "orderNo");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "外部订单号");
-        itemMap.put("columnWidth", 25);
+        itemMap.put("columnWidth", 30);
         itemMap.put("dataKey", "outstockNo");
         headInfoList.add(itemMap);
         
@@ -2412,7 +2447,7 @@ public class PrepareBillHandler {
 
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "派车单号");
-        itemMap.put("columnWidth", 50);
+        itemMap.put("columnWidth", 30);
         itemMap.put("dataKey", "routeNo");
         headInfoList.add(itemMap);
 
@@ -2424,13 +2459,13 @@ public class PrepareBillHandler {
 
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "交接单号");
-        itemMap.put("columnWidth", 25);
+        itemMap.put("columnWidth", 30);
         itemMap.put("dataKey", "transportNo");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "商家全称");
-        itemMap.put("columnWidth", 25);
+        itemMap.put("columnWidth", 40);
         itemMap.put("dataKey", "customerName");
         headInfoList.add(itemMap);
         
@@ -2736,7 +2771,7 @@ public class PrepareBillHandler {
         
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "备注");
-        itemMap.put("columnWidth", 25);
+        itemMap.put("columnWidth", 50);
         itemMap.put("dataKey", "remark");
         headInfoList.add(itemMap);
 
@@ -2748,6 +2783,7 @@ public class PrepareBillHandler {
      */
     private List<Map<String, Object>> getTransportItem(List<FeesTransportMasterEntity> list) {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+        double t_payTotalAmount = 0d;
         Map<String, Object> dataItem = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -2756,7 +2792,7 @@ public class PrepareBillHandler {
             dataItem.put("creDate", entity.getCreatedDt()==null?"":sdf.format(entity.getCreatedDt()));
             dataItem.put("orderNo", entity.getOrderNo());
             dataItem.put("outstockNo", entity.getOutstockNo());
-            dataItem.put("temperatureTypeCode", BmsEnums.tempretureType.getDesc(entity.getTemperatureTypeCode()));
+            dataItem.put("temperatureTypeCode", entity.getTemperatureTypeCode()==null?"":BmsEnums.tempretureType.getDesc(entity.getTemperatureTypeCode()));
             dataItem.put("routeNo", entity.getRouteNo());
             dataItem.put("dispatcherName", entity.getDispatcherName());
             dataItem.put("transportNo", entity.getTransportNo());
@@ -2774,6 +2810,7 @@ public class PrepareBillHandler {
             dataItem.put("actualVolume", entity.getActualVolume()==null?"":entity.getActualVolume().doubleValue());
             dataItem.put("actualWeight", entity.getActualWeight()==null?"":entity.getActualWeight().doubleValue());
             dataItem.put("isLight", entity.getLight()==null?"":BmsEnums.light.getDesc(entity.getLight()));
+            //车型
             dataItem.put("capacityTypeCode", entity.getCapacityTypeCode());
             dataItem.put("actualPackingQty", entity.getActualPackingQty()==null?"":entity.getActualPackingQty().doubleValue());
             dataItem.put("actualGoodsQty", entity.getActualGoodsQty()==null?"":entity.getActualGoodsQty().doubleValue());
@@ -2809,12 +2846,26 @@ public class PrepareBillHandler {
             dataItem.put("tsGl", entity.getTsGl());
             dataItem.put("tsMh", entity.getTsMh());
             dataItem.put("tsPallet", entity.getTsPallet());
-            dataItem.put("payTotalAmount", entity.getPayTotalAmount()==null?"":entity.getPayTotalAmount().doubleValue());
+            dataItem.put("payTotalAmount", entity.getPayTotalAmount());
+            t_payTotalAmount += entity.getPayTotalAmount()==null?0d:entity.getPayTotalAmount();
             dataItem.put("needInsurance", entity.getNeedInsurance()==null?"":BmsEnums.needInsurance.getDesc(entity.getNeedInsurance()));
             dataItem.put("remark", entity.getRemark());            
             dataList.add(dataItem);
         }
-
+        
+        paytotalAmount.set(t_payTotalAmount);
+        return dataList;
+    }
+    
+    /**
+     * 干线-合计
+     */
+    private List<Map<String, Object>> getTransportSumItem() {
+        List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> dataItem = new HashMap<String, Object>();
+        dataItem.put("tsPallet", "合计金额");
+        dataItem.put("payTotalAmount", paytotalAmount.get());
+        dataList.add(dataItem);
         return dataList;
     }
     

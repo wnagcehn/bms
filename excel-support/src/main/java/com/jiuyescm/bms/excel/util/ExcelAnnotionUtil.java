@@ -54,7 +54,8 @@ public class ExcelAnnotionUtil {
                 Map<String, Object> itemMap = new HashMap<String, Object>();
                 itemMap.put("title", excelField.title());
                 itemMap.put("columnWidth", 50);
-                itemMap.put("dataKey",excelField.num());
+                itemMap.put("dataKey","XH"+excelField.num());
+                itemMap.put("num", excelField.num());
                 headInfoList.add(itemMap);
         	}
 		}
@@ -66,10 +67,10 @@ public class ExcelAnnotionUtil {
                  * 返回正数表示：m1大于m2
                  */
                 public int compare(Map<String, Object> m1, Map<String, Object> m2) {
-                    if((Integer)m1.get("dataKey") > (Integer)m2.get("dataKey")){
+                    if(((Integer) m1.get("num")) > ((Integer)m2.get("num"))){
                         return 1;
                     }
-                    if((Integer)m1.get("dataKey") == (Integer)m2.get("dataKey")){
+                    if(((Integer) m1.get("num")) == ((Integer)m2.get("num"))){
                         return 0;
                     }
                     return -1;
