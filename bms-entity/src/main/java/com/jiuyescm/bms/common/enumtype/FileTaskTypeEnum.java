@@ -25,6 +25,7 @@ public enum FileTaskTypeEnum {
 	BIZ_PRO_OUTSTOCK("pro_outstock", "商品出库单"),
 	BIZ_PACK_OUTSTOCK("pack_outstock", "耗材出库明细"),
 	BIZ_PACKAGE_OUTSTOCK("package_outstock", "标准包装方案"),
+	BIZ_TRANSPORT("transport", "干线"),
 	BIZ_INSTOCK("instock", "入库单"),
 	BIZ_INSTOCK_HANDWORK("instockhandwork", "入库卸货单"),
 	BIZ_OUTSTOCK("outstock","出库数据"),

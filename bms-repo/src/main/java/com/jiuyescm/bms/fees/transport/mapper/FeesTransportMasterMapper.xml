@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.fees.transport.FeesTransportMasterMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="oms_id" property="omsId" jdbcType="BIGINT" />
+		   	<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		   	<result column="outstock_no" property="outstockNo" jdbcType="VARCHAR" />
+		   	<result column="temperature_type_code" property="temperatureTypeCode" jdbcType="VARCHAR" />
+		   	<result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+		   	<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		   	<result column="project_name" property="projectName" jdbcType="VARCHAR" />
+		   	<result column="send_site" property="sendSite" jdbcType="VARCHAR" />
+		   	<result column="send_province" property="sendProvince" jdbcType="VARCHAR" />
+		   	<result column="send_city" property="sendCity" jdbcType="VARCHAR" />
+		   	<result column="send_district" property="sendDistrict" jdbcType="VARCHAR" />
+		   	<result column="receive_site" property="receiveSite" jdbcType="VARCHAR" />
+		   	<result column="receive_province" property="receiveProvince" jdbcType="VARCHAR" />
+		   	<result column="receive_city" property="receiveCity" jdbcType="VARCHAR" />
+		   	<result column="receive_district" property="receiveDistrict" jdbcType="VARCHAR" />
+		   	<result column="receive_address" property="receiveAddress" jdbcType="VARCHAR" />
+		   	<result column="created_dt" property="createdDt" jdbcType="TIMESTAMP" />
+		   	<result column="actual_volume" property="actualVolume" jdbcType="DECIMAL" />
+		   	<result column="actual_weight" property="actualWeight" jdbcType="DECIMAL" />
+		   	<result column="actual_packing_qty" property="actualPackingQty" jdbcType="DECIMAL" />
+		   	<result column="actual_goods_qty" property="actualGoodsQty" jdbcType="DECIMAL" />
+		   	<result column="receipt_packing_qty" property="receiptPackingQty" jdbcType="DECIMAL" />
+		   	<result column="receipt_goods_qty" property="receiptGoodsQty" jdbcType="DECIMAL" />
+		   	<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+		   	<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		   	<result column="payment_totle" property="paymentTotle" jdbcType="DECIMAL" />
+		   	<result column="need_insurance" property="needInsurance" jdbcType="VARCHAR" />
+		   	<result column="order_source_code" property="orderSourceCode" jdbcType="VARCHAR" />
+		   	<result column="light" property="light" jdbcType="INTEGER" />
+		   	<result column="has_backtrack" property="hasBacktrack" jdbcType="INTEGER" />
+		   	<result column="remark" property="remark" jdbcType="VARCHAR" />
+		   	<result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP" />
+		   	<result column="cre_time" property="creTime" jdbcType="TIMESTAMP" />
+		   	<result column="cre_person" property="crePerson" jdbcType="VARCHAR" />
+		   	<result column="sync_flag" property="syncFlag" jdbcType="CHAR" />
+		   	<result column="sync_time" property="syncTime" jdbcType="TIMESTAMP" />
+		   	<result column="sync_count" property="syncCount" jdbcType="INTEGER" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name, project_name, send_site, send_province, send_city, send_district, receive_site, receive_province, receive_city, receive_district, receive_address, created_dt, actual_volume, actual_weight, actual_packing_qty, actual_goods_qty, receipt_packing_qty, receipt_goods_qty, begin_time, end_time, payment_totle, need_insurance, order_source_code, light, has_backtrack, remark, upload_time, cre_time, cre_person, sync_flag, sync_time, sync_count, del_flag
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name, project_name, send_site, send_province, send_city, send_district, receive_site, receive_province, receive_city, receive_district, receive_address, created_dt, actual_volume, actual_weight, actual_packing_qty, actual_goods_qty, receipt_packing_qty, receipt_goods_qty, begin_time, end_time, payment_totle, need_insurance, order_source_code, light, has_backtrack, remark, upload_time, cre_time, cre_person, sync_flag, sync_time, sync_count, del_flag
+    </sql>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultType="java.lang.Long">
+        select
+        <include refid="BASE_COLUMNS_ALL" />
+        from fees_transport_master
+        where id = #{id}
+    </select>
+	
+	<!-- 分页查询 -->
+    <select id="query" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity">
+        select t.oms_id,t.created_dt,t.order_no,t.outstock_no,t.temperature_type_code,
+			t.routeNo,t.dispatcherName,
+			t.transportNo,t.customer_name,t.customer_id,t.project_name,
+			t.send_site,t.send_province,t.send_city,t.send_district,
+			t.receive_site,t.receive_province,t.receive_city,t.receive_district,
+			t.receive_address,t.actual_volume,t.actual_weight,t.light,
+			t.actual_packing_qty,t.actual_goods_qty,t.receipt_packing_qty,t.receipt_goods_qty,
+			t.has_backtrack,t.begin_time,t.end_time,t.del_flag,
+			t.need_insurance,t.remark,t.car_model,
+			sum(CASE b.subject_name WHEN '提货费' THEN b.amount ELSE 0 END) as tsTakes,
+			sum(CASE b.subject_name WHEN '运费' THEN b.amount ELSE 0 END) as tsTransAmount,
+			sum(CASE b.subject_name WHEN '送货费' THEN b.amount ELSE 0 END) as tsSend,
+			sum(CASE b.subject_name WHEN '装货费' THEN b.amount ELSE 0 END) as ysZh,
+			sum(CASE b.subject_name WHEN '卸货费' THEN b.amount ELSE 0 END) as ysXh,
+			sum(CASE b.subject_name WHEN '逆向物流费' THEN b.amount ELSE 0 END) as tsReverseLogistic,
+			sum(CASE b.subject_name WHEN '延时等待费' THEN b.amount ELSE 0 END) as tsDelayWaiting,
+			sum(CASE b.subject_name WHEN '缠绕膜费' THEN b.amount ELSE 0 END) as tsWrappingFilm,
+			sum(CASE b.subject_name WHEN '放空费' THEN b.amount ELSE 0 END) as tsEmptying,
+			sum(CASE b.subject_name WHEN '赔付费' THEN b.amount ELSE 0 END) as tsClaim,
+			sum(CASE b.subject_name WHEN '纸面回单费' THEN b.amount ELSE 0 END) as ysZmhd,
+			sum(CASE b.subject_name WHEN '拆箱费' THEN b.amount ELSE 0 END) as ysCx,
+			sum(CASE b.subject_name WHEN '贴码费' THEN b.amount ELSE 0 END) as ysTm,
+			sum(CASE b.subject_name WHEN '保险费' THEN b.amount ELSE 0 END) as tsInsurance,
+			sum(CASE b.subject_name WHEN '分流费' THEN b.amount ELSE 0 END) as tsFl,
+			sum(CASE b.subject_name WHEN '上楼搬运费' THEN b.amount ELSE 0 END) as tsSlby,
+			sum(CASE b.subject_name WHEN '过夜制冷费' THEN b.amount ELSE 0 END) as tsGyzl,
+			sum(CASE b.subject_name WHEN '单据打印费' THEN b.amount ELSE 0 END) as tsDjdy,
+			sum(CASE b.subject_name WHEN '加点费' THEN b.amount ELSE 0 END) as tsAddSite,
+			sum(CASE b.subject_name WHEN '中转费' THEN b.amount ELSE 0 END) as tsZz,
+			sum(CASE b.subject_name WHEN '垫付费' THEN b.amount ELSE 0 END) as tsDf,
+			sum(CASE b.subject_name WHEN '押车费' THEN b.amount ELSE 0 END) as tsYc,
+			sum(CASE b.subject_name WHEN '理货费' THEN b.amount ELSE 0 END) as tsTallying,
+			sum(CASE b.subject_name WHEN '交货费' THEN b.amount ELSE 0 END) as tsJh,
+			sum(CASE b.subject_name WHEN '过路费' THEN b.amount ELSE 0 END) as tsGl,
+			sum(CASE b.subject_name WHEN '码货费' THEN b.amount ELSE 0 END) as tsMh,
+			sum(CASE b.subject_name WHEN '托盘费' THEN b.amount ELSE 0 END) as tsPallet,
+			SUM(b.amount_totle) as payTotalAmount
+		from(
+			select a.oms_id,a.created_dt,a.order_no,a.outstock_no,a.temperature_type_code,
+			GROUP_CONCAT(c.route_no) as routeNo,GROUP_CONCAT(c.dispatcher_name) as dispatcherName,
+			GROUP_CONCAT(c.transport_no) as transportNo,a.customer_name,a.customer_id,a.project_name,
+			a.send_site,a.send_province,a.send_city,a.send_district,
+			a.receive_site,a.receive_province,a.receive_city,a.receive_district,
+			a.receive_address,a.actual_volume,a.actual_weight,a.light,
+			a.actual_packing_qty,a.actual_goods_qty,a.receipt_packing_qty,a.receipt_goods_qty,
+			a.has_backtrack,a.begin_time,a.end_time,a.del_flag,
+			a.need_insurance,a.remark,c.car_model
+			from fees_transport_master a
+			LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
+			GROUP BY a.order_no
+		) t
+		LEFT JOIN fees_transport_items b on t.oms_id=b.oms_id and b.del_flag='0'
+		where 1 = 1
+		<if test=" customerId != null and customerId !='' ">
+			and t.customer_id=#{customerId}
+		</if>
+		<if test=" projectName != null and projectName !='' ">
+			and t.project_name like CONCAT('%',#{projectName},'%')
+		</if>
+		<if test=" orderNo != null and orderNo !='' ">
+			and t.order_no=#{orderNo}
+		</if>
+		<if test=" transportNo != null and transportNo !='' ">
+			and t.transport_no=#{transportNo}
+		</if>
+		<if test=" delFlag != null and delFlag !='' ">
+			and t.del_flag=#{delFlag}
+		</if>
+		<if test=" beginTime != null and beginTime !='' ">
+			and t.begin_time>=#{beginTime}
+		</if>
+		<if test=" endTime != null and endTime !='' ">
+			and t.begin_time <![CDATA[ <= ]]> #{endTime}
+		</if>
+		GROUP BY t.order_no
+    </select>
+
+	<!-- 保存 -->
+    <insert id="save" parameterType="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity">
+        insert into fees_transport_master(
+        	<include refid="BASE_COLUMNS_WITHOUT_ID" />
+    	)
+        values (
+
+			#{omsId,jdbcType=BIGINT}, 
+			#{orderNo,jdbcType=VARCHAR}, 
+			#{outstockNo,jdbcType=VARCHAR}, 
+			#{temperatureTypeCode,jdbcType=VARCHAR}, 
+			#{customerId,jdbcType=VARCHAR}, 
+			#{customerName,jdbcType=VARCHAR}, 
+			#{projectName,jdbcType=VARCHAR}, 
+			#{sendSite,jdbcType=VARCHAR}, 
+			#{sendProvince,jdbcType=VARCHAR}, 
+			#{sendCity,jdbcType=VARCHAR}, 
+			#{sendDistrict,jdbcType=VARCHAR}, 
+			#{receiveSite,jdbcType=VARCHAR}, 
+			#{receiveProvince,jdbcType=VARCHAR}, 
+			#{receiveCity,jdbcType=VARCHAR}, 
+			#{receiveDistrict,jdbcType=VARCHAR}, 
+			#{receiveAddress,jdbcType=VARCHAR}, 
+			#{createdDt,jdbcType=TIMESTAMP}, 
+			#{actualVolume,jdbcType=DECIMAL}, 
+			#{actualWeight,jdbcType=DECIMAL}, 
+			#{actualPackingQty,jdbcType=DECIMAL}, 
+			#{actualGoodsQty,jdbcType=DECIMAL}, 
+			#{receiptPackingQty,jdbcType=DECIMAL}, 
+			#{receiptGoodsQty,jdbcType=DECIMAL}, 
+			#{beginTime,jdbcType=TIMESTAMP}, 
+			#{endTime,jdbcType=TIMESTAMP}, 
+			#{paymentTotle,jdbcType=DECIMAL}, 
+			#{needInsurance,jdbcType=VARCHAR}, 
+			#{orderSourceCode,jdbcType=VARCHAR}, 
+			#{light,jdbcType=INTEGER}, 
+			#{hasBacktrack,jdbcType=INTEGER}, 
+			#{remark,jdbcType=VARCHAR}, 
+			#{uploadTime,jdbcType=TIMESTAMP}, 
+			#{creTime,jdbcType=TIMESTAMP}, 
+			#{crePerson,jdbcType=VARCHAR}, 
+			#{syncFlag,jdbcType=CHAR}, 
+			#{syncTime,jdbcType=TIMESTAMP}, 
+			#{syncCount,jdbcType=INTEGER},
+			#{delFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+
+	<!-- 更新 -->
+    <update id="update" parameterType="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity">
+        update fees_transport_master
+        <trim prefix="set" suffixOverrides=",">
+			<if test=" omsId != null and omsId !='' ">
+				oms_id = #{omsId,jdbcType=BIGINT},
+			</if>
+			<if test=" orderNo != null and orderNo !='' ">
+				order_no = #{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" outstockNo != null and outstockNo !='' ">
+				outstock_no = #{outstockNo,jdbcType=VARCHAR},
+			</if>
+			<if test=" temperatureTypeCode != null and temperatureTypeCode !='' ">
+				temperature_type_code = #{temperatureTypeCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerId != null and customerId !='' ">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test=" customerName != null and customerName !='' ">
+				customer_name = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test=" projectName != null and projectName !='' ">
+				project_name = #{projectName,jdbcType=VARCHAR},
+			</if>
+			<if test=" sendSite != null and sendSite !='' ">
+				send_site = #{sendSite,jdbcType=VARCHAR},
+			</if>
+			<if test=" sendProvince != null and sendProvince !='' ">
+				send_province = #{sendProvince,jdbcType=VARCHAR},
+			</if>
+			<if test=" sendCity != null and sendCity !='' ">
+				send_city = #{sendCity,jdbcType=VARCHAR},
+			</if>
+			<if test=" sendDistrict != null and sendDistrict !='' ">
+				send_district = #{sendDistrict,jdbcType=VARCHAR},
+			</if>
+			<if test=" receiveSite != null and receiveSite !='' ">
+				receive_site = #{receiveSite,jdbcType=VARCHAR},
+			</if>
+			<if test=" receiveProvince != null and receiveProvince !='' ">
+				receive_province = #{receiveProvince,jdbcType=VARCHAR},
+			</if>
+			<if test=" receiveCity != null and receiveCity !='' ">
+				receive_city = #{receiveCity,jdbcType=VARCHAR},
+			</if>
+			<if test=" receiveDistrict != null and receiveDistrict !='' ">
+				receive_district = #{receiveDistrict,jdbcType=VARCHAR},
+			</if>
+			<if test=" receiveAddress != null and receiveAddress !='' ">
+				receive_address = #{receiveAddress,jdbcType=VARCHAR},
+			</if>
+			<if test=" createdDt != null and createdDt !='' ">
+				created_dt = #{createdDt,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" actualVolume != null and actualVolume !='' ">
+				actual_volume = #{actualVolume,jdbcType=DECIMAL},
+			</if>
+			<if test=" actualWeight != null and actualWeight !='' ">
+				actual_weight = #{actualWeight,jdbcType=DECIMAL},
+			</if>
+			<if test=" actualPackingQty != null and actualPackingQty !='' ">
+				actual_packing_qty = #{actualPackingQty,jdbcType=DECIMAL},
+			</if>
+			<if test=" actualGoodsQty != null and actualGoodsQty !='' ">
+				actual_goods_qty = #{actualGoodsQty,jdbcType=DECIMAL},
+			</if>
+			<if test=" receiptPackingQty != null and receiptPackingQty !='' ">
+				receipt_packing_qty = #{receiptPackingQty,jdbcType=DECIMAL},
+			</if>
+			<if test=" receiptGoodsQty != null and receiptGoodsQty !='' ">
+				receipt_goods_qty = #{receiptGoodsQty,jdbcType=DECIMAL},
+			</if>
+			<if test=" beginTime != null and beginTime !='' ">
+				begin_time = #{beginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" endTime != null and endTime !='' ">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" paymentTotle != null and paymentTotle !='' ">
+				payment_totle = #{paymentTotle,jdbcType=DECIMAL},
+			</if>
+			<if test=" needInsurance != null and needInsurance !='' ">
+				need_insurance = #{needInsurance,jdbcType=VARCHAR},
+			</if>
+			<if test=" orderSourceCode != null and orderSourceCode !='' ">
+				order_source_code = #{orderSourceCode,jdbcType=VARCHAR},
+			</if>
+			<if test=" light != null and light !='' ">
+				light = #{light,jdbcType=INTEGER},
+			</if>
+			<if test=" hasBacktrack != null and hasBacktrack !='' ">
+				has_backtrack = #{hasBacktrack,jdbcType=INTEGER},
+			</if>
+			<if test=" remark != null and remark !='' ">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test=" uploadTime != null and uploadTime !='' ">
+				upload_time = #{uploadTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" creTime != null and creTime !='' ">
+				cre_time = #{creTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" crePerson != null and crePerson !='' ">
+				cre_person = #{crePerson,jdbcType=VARCHAR},
+			</if>
+			<if test=" syncFlag != null and syncFlag !='' ">
+				sync_flag = #{syncFlag,jdbcType=CHAR},
+			</if>
+			<if test=" syncTime != null and syncTime !='' ">
+				sync_time = #{syncTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test=" syncCount != null and syncCount !='' ">
+				sync_count = #{syncCount,jdbcType=INTEGER},
+			</if>
+			<if test=" delFlag != null and delFlag !='' ">
+				del_flag = #{delFlag,jdbcType=CHAR},
+			</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <select id="queryForPrepareBill" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity">
+        select t.oms_id,t.created_dt,t.order_no,t.outstock_no,t.temperature_type_code,
+			t.routeNo,t.dispatcherName,
+			t.transportNo,t.customer_name,t.customer_id,t.project_name,
+			t.send_site,t.send_province,t.send_city,t.send_district,
+			t.receive_site,t.receive_province,t.receive_city,t.receive_district,
+			t.receive_address,t.actual_volume,t.actual_weight,t.light,
+			t.actual_packing_qty,t.actual_goods_qty,t.receipt_packing_qty,t.receipt_goods_qty,
+			t.has_backtrack,t.begin_time,t.end_time,t.del_flag,
+			t.need_insurance,t.remark,t.car_model,
+			sum(CASE b.subject_name WHEN '提货费' THEN b.amount ELSE 0 END) as tsTakes,
+			sum(CASE b.subject_name WHEN '运费' THEN b.amount ELSE 0 END) as tsTransAmount,
+			sum(CASE b.subject_name WHEN '送货费' THEN b.amount ELSE 0 END) as tsSend,
+			sum(CASE b.subject_name WHEN '装货费' THEN b.amount ELSE 0 END) as ysZh,
+			sum(CASE b.subject_name WHEN '卸货费' THEN b.amount ELSE 0 END) as ysXh,
+			sum(CASE b.subject_name WHEN '逆向物流费' THEN b.amount ELSE 0 END) as tsReverseLogistic,
+			sum(CASE b.subject_name WHEN '延时等待费' THEN b.amount ELSE 0 END) as tsDelayWaiting,
+			sum(CASE b.subject_name WHEN '缠绕膜费' THEN b.amount ELSE 0 END) as tsWrappingFilm,
+			sum(CASE b.subject_name WHEN '放空费' THEN b.amount ELSE 0 END) as tsEmptying,
+			sum(CASE b.subject_name WHEN '赔付费' THEN b.amount ELSE 0 END) as tsClaim,
+			sum(CASE b.subject_name WHEN '纸面回单费' THEN b.amount ELSE 0 END) as ysZmhd,
+			sum(CASE b.subject_name WHEN '拆箱费' THEN b.amount ELSE 0 END) as ysCx,
+			sum(CASE b.subject_name WHEN '贴码费' THEN b.amount ELSE 0 END) as ysTm,
+			sum(CASE b.subject_name WHEN '保险费' THEN b.amount ELSE 0 END) as tsInsurance,
+			sum(CASE b.subject_name WHEN '分流费' THEN b.amount ELSE 0 END) as tsFl,
+			sum(CASE b.subject_name WHEN '上楼搬运费' THEN b.amount ELSE 0 END) as tsSlby,
+			sum(CASE b.subject_name WHEN '过夜制冷费' THEN b.amount ELSE 0 END) as tsGyzl,
+			sum(CASE b.subject_name WHEN '单据打印费' THEN b.amount ELSE 0 END) as tsDjdy,
+			sum(CASE b.subject_name WHEN '加点费' THEN b.amount ELSE 0 END) as tsAddSite,
+			sum(CASE b.subject_name WHEN '中转费' THEN b.amount ELSE 0 END) as tsZz,
+			sum(CASE b.subject_name WHEN '垫付费' THEN b.amount ELSE 0 END) as tsDf,
+			sum(CASE b.subject_name WHEN '押车费' THEN b.amount ELSE 0 END) as tsYc,
+			sum(CASE b.subject_name WHEN '理货费' THEN b.amount ELSE 0 END) as tsTallying,
+			sum(CASE b.subject_name WHEN '交货费' THEN b.amount ELSE 0 END) as tsJh,
+			sum(CASE b.subject_name WHEN '过路费' THEN b.amount ELSE 0 END) as tsGl,
+			sum(CASE b.subject_name WHEN '码货费' THEN b.amount ELSE 0 END) as tsMh,
+			sum(CASE b.subject_name WHEN '托盘费' THEN b.amount ELSE 0 END) as tsPallet,
+			SUM(b.amount_totle) as payTotalAmount
+		from(
+			select a.oms_id,a.created_dt,a.order_no,a.outstock_no,a.temperature_type_code,
+			GROUP_CONCAT(c.route_no) as routeNo,GROUP_CONCAT(c.dispatcher_name) as dispatcherName,
+			GROUP_CONCAT(c.transport_no) as transportNo,a.customer_name,a.customer_id,a.project_name,
+			a.send_site,a.send_province,a.send_city,a.send_district,
+			a.receive_site,a.receive_province,a.receive_city,a.receive_district,
+			a.receive_address,a.actual_volume,a.actual_weight,a.light,
+			a.actual_packing_qty,a.actual_goods_qty,a.receipt_packing_qty,a.receipt_goods_qty,
+			a.has_backtrack,a.begin_time,a.end_time,a.del_flag,
+			a.need_insurance,a.remark,c.car_model
+			from fees_transport_master a
+			LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
+			GROUP BY a.order_no
+		) t
+		LEFT JOIN fees_transport_items b on t.oms_id=b.oms_id and b.del_flag='0'
+		where 1 = 1
+		<if test=" customerId != null and customerId !='' ">
+			and t.customer_id=#{customerId}
+		</if>
+		<if test=" projectName != null and projectName !='' ">
+			and t.project_name like CONCAT('%',#{projectName},'%')
+		</if>
+		<if test=" orderNo != null and orderNo !='' ">
+			and t.order_no=#{orderNo}
+		</if>
+		<if test=" transportNo != null and transportNo !='' ">
+			and t.transport_no=#{transportNo}
+		</if>
+		<if test=" delFlag != null and delFlag !='' ">
+			and t.del_flag=#{delFlag}
+		</if>
+		<if test=" beginTime != null and beginTime !='' ">
+			and t.begin_time>=#{beginTime}
+		</if>
+		<if test=" endTime != null and endTime !='' ">
+			and t.begin_time <![CDATA[ < ]]> #{endTime}
+		</if>
+		GROUP BY t.order_no
+		ORDER BY t.begin_time,t.created_dt,t.outstock_no ASC
+    </select>
+
+	<!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from fees_transport_master 
+        where id = #{id}
+    </delete>
+</mapper>

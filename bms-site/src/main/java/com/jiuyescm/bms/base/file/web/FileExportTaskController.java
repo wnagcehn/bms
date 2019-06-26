@@ -138,10 +138,12 @@ public class FileExportTaskController {
 			return MessageConstant.DELETE_INFO_NULL_MSG;
 		}
 		try {
-			File file = new File(entity.getFilePath());
-			if (file.exists()) {
-				file.delete();
-			}
+		    if (StringUtils.isNotBlank(entity.getFilePath())) {
+		        File file = new File(entity.getFilePath());
+	            if (file.exists()) {
+	                file.delete();
+	            }
+            }
 			FileExportTaskEntity delEntity = new FileExportTaskEntity();
 			delEntity.setTaskId(entity.getTaskId());
 			delEntity.setDelFlag("1");

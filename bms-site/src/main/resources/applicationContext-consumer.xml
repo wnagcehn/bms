@@ -121,6 +121,9 @@
 		<dubbo:reference id="bizDispatchPackageService" interface="com.jiuyescm.bms.biz.diapatch.service.IBizDispatchPackageService" version="1.0.0" registry="bms"/>
 		<dubbo:reference id="addFeeService" interface="com.jiuyescm.bms.biz.storage.service.IAddFeeService" version="1.0.0" registry="bms"/>
 		
+		<!-- 干线 -->
+		<dubbo:reference id="feesTransportMasterService" interface="com.jiuyescm.bms.fees.transport.service.IFeesTransportMasterService" version="1.0.0" registry="bms"/>
+		
 		<dubbo:reference id="bmsCalcuExceptionService" interface="com.jiuyescm.bms.calculate.api.IBmsCalcuExceptionService" version="1.0.0" registry="bms"/>		
 		<dubbo:reference id="feesClaimService" interface="com.jiuyescm.bms.feeclaim.service.IFeesClaimService" version="1.0.0" registry="bms"/>
 </beans> 
