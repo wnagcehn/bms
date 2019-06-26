@@ -77,4 +77,7 @@
 		 <!-- 干线 -->
 		 <dubbo:reference id="feesTransportMasterService" interface="com.jiuyescm.bms.fees.transport.service.IFeesTransportMasterService" version="1.0.0" registry="bms"/>	 
 		 <dubbo:reference id="tmsForOmsService" interface="com.jiuyescm.tms.open.api.ITmsForOmsService" version="1.0.0" />
+
+		 <dubbo:reference id="feesClaimService" interface="com.jiuyescm.bms.feeclaim.service.IFeesClaimService" version="1.0.0" registry="bms"/>
+		 
 </beans> 

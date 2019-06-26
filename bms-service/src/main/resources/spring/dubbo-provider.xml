@@ -83,6 +83,10 @@
 	
 	<dubbo:service interface="com.jiuyescm.bms.biz.storage.service.IAddFeeService" ref="addFeeService" />
 	<dubbo:service interface="com.jiuyescm.bms.calculate.api.IBmsCalcuExceptionService" ref="bmsCalcuExceptionService" />
+
 	<!-- 干线 -->
 	<dubbo:service interface="com.jiuyescm.bms.fees.transport.service.IFeesTransportMasterService" ref="feesTransportMasterService" />
+
+	<dubbo:service interface="com.jiuyescm.bms.feeclaim.service.IFeesClaimService" ref="feesClaimService" />
+
 </beans>
