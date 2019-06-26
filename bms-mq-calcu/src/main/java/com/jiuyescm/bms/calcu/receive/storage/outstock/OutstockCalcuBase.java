@@ -43,4 +43,10 @@ public class OutstockCalcuBase extends CalcuTaskListener<BizOutstockMasterEntity
 		return feesQtyVo;
 	}
 
+    @Override
+    protected BmsFeesQtyVo totalAmountReport(BmsCalcuTaskVo taskVo) {
+        BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryTotalAmountForStoOutstock(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
+        return feesQtyVo;
+    }
+	
 }

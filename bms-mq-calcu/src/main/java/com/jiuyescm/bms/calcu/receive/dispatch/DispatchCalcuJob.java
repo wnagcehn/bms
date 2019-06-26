@@ -97,7 +97,6 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
 		serviceSubjectCode = subjectCode;//配送签约服务初始化
-		errorMap = new HashMap<String, Object>();
 		initConf();
 	}
 	
@@ -117,19 +116,19 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		}
 		logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),bizList.size());
 		for (BizDispatchBillEntity entity : bizList) {
-			FeesReceiveDispatchEntity fee = initFee(entity);
-				
+		    errorMap = new HashMap<String, Object>();
+			FeesReceiveDispatchEntity fee = initFee(entity);			
 			try {
 				fees.add(fee);
 				if(isNoExe(entity, fee)){
 					continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
 				}
-				
-				if("BMS".equals(contractAttr)){
-					calcuForBms(entity,fee);
-				}else {
-					calcuForContract(entity,fee);
-				}
+				//优先合同在线计算
+                calcuForContract(entity,fee);
+                //如果返回的是合同缺失，则继续BMS计算
+                if("CONTRACT_LIST_NULL".equals(errorMap.get("code"))){
+                    calcuForBms(entity,fee);
+                }
 			} catch (Exception e) {
 				// TODO: handle exception
 				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
@@ -457,6 +456,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
             fee.setTotalWeight(entity.getTotalWeight());//实际重量
             fee.setChargedWeight(entity.getWeight());   //从weight中取出计费重量
             fee.setCalculateTime(JAppContext.currentTimestamp());//计算时间
+            fee.setCreateTime(entity.getCreateTime());
 			return fee;
 		
 		} catch (Exception e) {
@@ -532,6 +532,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 
 	@Override
 	public void calcuForBms(BizDispatchBillEntity entity,FeesReceiveDispatchEntity fee) {
+	    fee.setContractAttr("1");
 		//初始化合同
 	    contract=null;
 	    //合同校验
@@ -562,8 +563,8 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 		//根据计费物流商 获取 物流商配送科目 SHUNFENG_DISPATCH    JIUYE_DISPATCH
 		String carrierSubjectCode = dispatchSubjectMap.get(fee.getCarrierid());
 		if(contractItemMap==null || !contractItemMap.containsKey(carrierSubjectCode)){
-			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			fee.setCalcuMsg("未签约服务");
+			fee.setIsCalculated(CalculateState.No_Dinggou.getCode());
+			fee.setCalcuMsg("商家【"+taskVo.getCustomerName()+"】物流商【"+fee.getCarrierName()+"】未订购科目【配送费】的服务项!");
 			return;
 		}
 		
@@ -615,7 +616,14 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			fee.setBizType(entity.getExtattr1());//判断是否是遗漏数据
 			fee.setServiceTypeCode(StringUtils.isEmpty(entity.getAdjustServiceTypeCode())?entity.getServiceTypeCode():entity.getAdjustServiceTypeCode());
 			fee.setIsCalculated(CalculateState.Finish.getCode());
-			fee.setCalcuMsg("计算成功");
+			if(fee.getAmount()>0){
+                fee.setCalcuMsg("计算成功");
+                logger.info("计算成功，费用【{}】",fee.getAmount());
+            }
+            else{
+                logger.info("计算不成功，费用【{}】",fee.getAmount());
+                fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
+            }
 		}catch(Exception ex){
 			
 		}
@@ -623,18 +631,18 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 
 	@Override
 	public void calcuForContract(BizDispatchBillEntity entity,FeesReceiveDispatchEntity fee) {
+	    fee.setContractAttr("2");
 		ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
 		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
+            fee.setIsCalculated(CalculateState.Finish.getCode());
 			if(fee.getAmount()>0){
-				fee.setIsCalculated(CalculateState.Finish.getCode());
 				fee.setCalcuMsg("计算成功");
 				logger.info("计算成功，费用【{}】",fee.getAmount());
 			}
 			else{
-				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 				logger.info("计算不成功，费用【{}】",fee.getAmount());
-				fee.setCalcuMsg("未计算出金额");
+				fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
 			}
 		}
 		else{

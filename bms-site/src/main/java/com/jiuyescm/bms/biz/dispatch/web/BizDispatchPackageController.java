@@ -87,6 +87,7 @@ public class BizDispatchPackageController {
         if (param.get("creEndTime") == null) {
             throw new BizException("结束时间不能为空!");
         }
+        param.put("delFlag", "0");
 	    try {
 	        PageInfo<BizDispatchPackageVo> pageInfo = bizDispatchPackageService.query(param, page.getPageNo(), page.getPageSize());
 	        if (pageInfo != null) {
@@ -169,6 +170,7 @@ public class BizDispatchPackageController {
         if (null != param.get("customerid")) {
             customerid = param.get("customerid").toString();
         }
+        param.put("delFlag", "0");
         
         // 初始化商家
         Map<String, String> customerMap = getCustomer(); 
@@ -199,7 +201,7 @@ public class BizDispatchPackageController {
                         export(condition, taskId);
                     } catch (Exception e) {
                         fileExportTaskService.updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0);
-                        logger.error(ExceptionConstant.ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG, e);
+                        logger.error(ExceptionConstant.ASYN_REC_PACKAGE_FEE_EXCEL_EX_MSG, e);
                         
                         //写入日志
                         BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
@@ -271,13 +273,13 @@ public class BizDispatchPackageController {
         //如果存放上传文件的目录不存在就新建
         SystemCodeEntity sc = getSystemCode("GLOABL_PARAM","EXPORT_PACKAGE_BIZ");
         File storeFolder=new File(sc.getExtattr1());
-        if(!storeFolder.isDirectory()){
+        if(!storeFolder.exists()){
             storeFolder.mkdirs();
         }
 
         logger.info("====标准包装方案导出：写入Excel begin.");
         fileExportTaskService.updateExportTask(taskId, null, 30);
-       
+        
         fileExportTaskService.updateExportTask(taskId, null, 70);
         // 标准包装方案
         try {
@@ -309,6 +311,11 @@ public class BizDispatchPackageController {
      */
     private String handBiz(Map<String, Object> myparam)throws Exception{
     
+        Map<String, String> transportMap = getSystemCode("TRANSPORT_TYPE");
+        Map<String, String> boxMap = getSystemCode("PLATIC_BOX_TYPE");
+        Map<String, String> timeMap = getSystemCode("HOLDING_TIME");
+        Map<String, String> operateTypeMap = getSystemCode("PACK_OPERATE_TYPE");
+        
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String startTime =formatter.format(myparam.get("creTime")) ;
         String endTime = formatter.format( myparam.get("creEndTime"));
@@ -323,7 +330,8 @@ public class BizDispatchPackageController {
             int pageNo = 1;
             boolean doLoop = true;
             while (doLoop) {            
-                PageInfo<BizDispatchPackageEntity> pageInfo = bizDispatchPackageService.queryToExport(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
+                PageInfo<BizDispatchPackageEntity> pageInfo = 
+                        bizDispatchPackageService.queryToExport(myparam, pageNo, FileConstant.EXPORTPAGESIZE, transportMap, boxMap, timeMap, operateTypeMap);
                 if (null != pageInfo && pageInfo.getList().size() > 0) {
                     if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
                         doLoop = false;
@@ -367,6 +375,15 @@ public class BizDispatchPackageController {
             return systemCodeEntity;
         }
         return null;
+    }
+    
+    public Map<String, String> getSystemCode(String typeCode){
+        Map<String, String> map = new HashMap<>();
+        List<SystemCodeEntity> list = systemCodeService.findEnumList(typeCode);
+        for (SystemCodeEntity entity : list) {
+            map.put(entity.getCode(), entity.getCodeName());
+        }
+        return map;
     }
 	
 }

@@ -913,7 +913,7 @@ var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
 var entity=tmpFormCondition.get(&quot;entity&quot;);&#xD;
 &#xD;
 if(entity.get(&quot;createMonthStart&quot;)>entity.get(&quot;createMonthEnd&quot;)){&#xD;
-	dorado.MessageBox.alert(&quot;业务月份的结束时间不能大于起始时间&quot;);&#xD;
+	dorado.MessageBox.alert(&quot;业务月份的起始时间不能大于结束时间&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 &#xD;
@@ -1697,11 +1697,15 @@ if(index==3){&#xD;
             <DataColumn name="overStatus">
               <ClientEvent name="onRenderCell">var overStatus=arg.data.get(&quot;overStatus&quot;);&#xD;
 if(!isNullOrEmpty(overStatus)){&#xD;
-	if(overStatus==&quot;临期&quot;){&#xD;
+	if (overStatus == &quot;临期&quot;) {&#xD;
 		arg.dom.style.color = &quot;blue&quot;;&#xD;
-	}else if(overStatus==&quot;超期&quot;){&#xD;
+	}&#xD;
+	else if (overStatus == &quot;超期&quot;) {&#xD;
 		arg.dom.style.color = &quot;red&quot;;&#xD;
-	}	&#xD;
+	}&#xD;
+	else{&#xD;
+		arg.dom.style.color = &quot;green&quot;;&#xD;
+	}&#xD;
 }&#xD;
 &#xD;
 arg.processDefault = true;</ClientEvent>

@@ -15,6 +15,7 @@ import org.springframework.util.StopWatch;
 
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.calcu.CalcuLog;
 import com.jiuyescm.bms.calcu.base.ICalcuService;
@@ -31,6 +32,7 @@ import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.general.service.IBizAddFeeService;
 import com.jiuyescm.bms.general.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.general.service.IPriceContractInfoService;
+import com.jiuyescm.bms.general.service.ISystemCodeService;
 import com.jiuyescm.bms.general.service.SequenceService;
 import com.jiuyescm.bms.quotation.contract.repository.imp.IPriceContractItemRepository;
 import com.jiuyescm.bms.quotation.storage.entity.PriceExtraQuotationEntity;
@@ -66,17 +68,18 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	@Autowired private CommonService commonService;
 	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired IBmsCalcuService bmsCalcuService;
+	@Autowired private ISystemCodeService systemCodeService;
 
 
 	//private String quoTempleteCode = null;
 	private Map<String, Object> errorMap = null;
 	private GenericTemplateEntity addQuoTemplete;
+	private List<String> noCalList=null;
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
 		getQuoTemplete();
 		serviceSubjectCode = subjectCode;
-		errorMap = new HashMap<String, Object>();
 		initConf();
 	}
 	
@@ -91,7 +94,14 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	
 	@Override
 	public void initConf(){
-		
+	    noCalList = new ArrayList<>();
+	    Map<String, Object> map = new HashMap<String, Object>();	        
+        //获取物流商id与配送科目的映射关系  <物流商ID,费用科目>
+        map.put("typeCode", "NO_CALCULATE_STORAGE_ADD");
+        List<SystemCodeEntity> scList = systemCodeService.querySysCodes(map);
+        for (SystemCodeEntity systemCodeEntity : scList) {
+            noCalList.add(systemCodeEntity.getCode());
+        }
 	}
 	
 	@Override
@@ -105,18 +115,19 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 		}
 		logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),bizList.size());
 		for (BizAddFeeEntity entity : bizList) {
+		    errorMap = new HashMap<String, Object>();
 			FeesReceiveStorageEntity fee = initFee(entity);
 			fees.add(fee);
 			try {
 				if(isNoExe(entity, fee)){
 					continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
-				}		
-				if("BMS".equals(contractAttr)){
-					calcuForBms(entity,fee);
 				}
-				else {
-					calcuForContract(entity,fee);
-				}
+				//优先合同在线计算
+                calcuForContract(entity,fee);
+                //如果返回的是合同缺失，则继续BMS计算
+                if("CONTRACT_LIST_NULL".equals(errorMap.get("code"))){
+                    calcuForBms(entity,fee);
+                }
 			} catch (Exception e) {
 				// TODO: handle exception
 				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
@@ -165,11 +176,7 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 		CalcuLog.printLog(CalcuNodeEnum.BIZ.getCode().toString(), "", entity, cbiVo);
 		FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
     	fee.setFeesNo(entity.getFeesNo());
-    	if(entity.getPrice()!=null){
-    		fee.setCost(new BigDecimal(entity.getPrice()));
-    	}else{
-    		fee.setCost(new BigDecimal(0));
-    	}
+    	fee.setCost(new BigDecimal(0));
     	fee.setCalculateTime(JAppContext.currentTimestamp());
 		fee.setUnitPrice(entity.getUnitPrice());
 		fee.setSubjectCode("wh_value_add_subject");
@@ -181,17 +188,26 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 		}
         fee.setParam1(entity.getItem());
 		fee.setCostType("FEE_TYPE_GENEARL");
+		fee.setCreateTime(entity.getCreateTime());
 		return fee;
 	}
 	
 	@Override
 	public boolean isNoExe(BizAddFeeEntity entity,FeesReceiveStorageEntity fee){
+	    
+	    //不计算的费用类型
+	    if(noCalList.contains(entity.getFeesType())){
+            fee.setIsCalculated(CalculateState.No_Exe.getCode());           
+            fee.setCalcuMsg("此费用类型是【"+entity.getFeesTypeName()+"】不计费,金额置0");
+            return true;
+	    }    
 		return false;
 	}
 	
 	@Override
 	public void calcuForBms(BizAddFeeEntity entity,FeesReceiveStorageEntity fee){
-		//合同校验
+	    fee.setContractAttr("1");
+	    //合同校验
 		if(contractList.size()<=0){
 			fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			fee.setCalcuMsg("bms合同缺失");
@@ -220,9 +236,9 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
         String quoTempleteCode=contract.getModelNo();
         
 		if("fail".equals(quoTempleteCode)){
-			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			fee.setCalcuMsg("未签约服务");
-			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "未签约服务", contract, cbiVo);
+			fee.setIsCalculated(CalculateState.No_Dinggou.getCode());
+			fee.setCalcuMsg("商家【"+taskVo.getCustomerName()+"】未订购任何增值服务!");
+			CalcuLog.printLog(CalcuNodeEnum.CONTRACT.getCode().toString(), "商家【"+taskVo.getCustomerName()+"】未订购任何增值服务!", contract, cbiVo);
 			return;
 		}
 		
@@ -261,7 +277,17 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 				fee.setCost(BigDecimal.valueOf(amount));
 				//fee.setParam4(priceType);
 				fee.setCalcuMsg(entity.getRemark()+"计算成功;");
-				fee.setIsCalculated(CalculateState.Finish.getCode());	
+				fee.setIsCalculated(CalculateState.Finish.getCode());
+				
+				if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
+	                fee.setCalcuMsg("计算成功");
+	                logger.info("计算成功，费用【{}】",fee.getCost());
+	            }
+	            else{
+	                logger.info("计算不成功，费用【{}】",fee.getCost());
+	                fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
+	            }
+				
 			}				
 		}catch(Exception ex){
 			fee.setIsCalculated(CalculateState.Sys_Error.getCode());
@@ -271,18 +297,18 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	
 	@Override
 	public void calcuForContract(BizAddFeeEntity entity,FeesReceiveStorageEntity fee){
-		ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
+		fee.setContractAttr("2");
+	    ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
 		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
-			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
-				fee.setIsCalculated(CalculateState.Finish.getCode());
+            fee.setIsCalculated(CalculateState.Finish.getCode());
+		    if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				fee.setCalcuMsg("计算成功");
 				logger.info("计算成功，费用【{}】",fee.getCost());
 			}
 			else{
-				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 				logger.info("计算不成功，费用【{}】",fee.getCost());
-				fee.setCalcuMsg("未计算出金额");
+				fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
 			}
 		}
 		else{

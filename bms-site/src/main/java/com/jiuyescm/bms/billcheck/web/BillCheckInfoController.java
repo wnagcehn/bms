@@ -375,13 +375,15 @@ public class BillCheckInfoController{
 	 */
 	@DataResolver
 	public String saveAll(Collection<BillCheckInfoVo> datas){
-		
 		try {
 			Timestamp nowdate = JAppContext.currentTimestamp();
 			String userid=JAppContext.currentUserID();
 			String groupName=bmsGroupUserService.checkExistGroupName(JAppContext.currentUserID());
 			for(BillCheckInfoVo temp:datas){
-				if(EntityState.MODIFIED.equals(EntityUtils.getState(temp))){				
+			    if (StringUtils.isBlank(temp.getInvoiceName())) {
+			        return "商家合同名称不能为空!";
+                }
+				if(EntityState.MODIFIED.equals(EntityUtils.getState(temp))){
 					//验证商家合同名称是否存在
 					//获取所有商家
 					/*Map<String, Object> customerInfoMap=getCusMap();*/
@@ -488,6 +490,7 @@ public class BillCheckInfoController{
 					//****** 修改模板 ******
 					temp.setLastModifier(userid);
 					temp.setLastModifyTime(nowdate);
+					temp.setMkId(mkInvoiceName.getMkId());
 					int result=billCheckInfoService.updateOne(temp);
 					if(result<=0){
 						return "修改失败";

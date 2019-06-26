@@ -122,4 +122,9 @@
 		<dubbo:reference id="addFeeService" interface="com.jiuyescm.bms.biz.storage.service.IAddFeeService" version="1.0.0" registry="bms"/>
 		
 		<dubbo:reference id="bmsCalcuExceptionService" interface="com.jiuyescm.bms.calculate.api.IBmsCalcuExceptionService" version="1.0.0" registry="bms"/>
+		
+		<!-- 商家账期 -->
+		<dubbo:reference id="billPeriodInfoService" interface="com.jiuyescm.bms.bill.customer.service.IBillPeriodInfoService" version="1.0.0" registry="bms"/>
+		<!-- 结算进度 -->
+		<dubbo:reference id="billCustomerDetailService" interface="com.jiuyescm.bms.bill.customer.service.IBillCustomerDetailService" version="1.0.0" registry="bms"/>
 </beans> 

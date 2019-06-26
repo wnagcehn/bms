@@ -79,7 +79,6 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 		super.process(taskVo, contractAttr);
 		serviceSubjectCode = subjectCode;
 		getQuoTemplete();
-		errorMap = new HashMap<String, Object>();
 		initConf();
 	}
 	
@@ -118,6 +117,7 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 		}
 		logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),bizList.size());
 		for (BizOutstockMasterEntity entity : bizList) {
+		    errorMap = new HashMap<String, Object>();
 			FeesReceiveStorageEntity fee = initFee(entity);
 			fees.add(fee);
 			try {
@@ -125,12 +125,12 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 					continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
 				}
 		
-				if("BMS".equals(contractAttr)){
-					calcuForBms(entity,fee);
-				}
-				else {
-					calcuForContract(entity,fee);
-				}
+				//优先合同在线计算
+                calcuForContract(entity,fee);
+                //如果返回的是合同缺失，则继续BMS计算
+                if("CONTRACT_LIST_NULL".equals(errorMap.get("code"))){
+                    calcuForBms(entity,fee);
+                }
 			} catch (Exception e) {
 				// TODO: handle exception
 				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
@@ -219,6 +219,7 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
         if(StringUtils.isEmpty(entity.getTemperatureTypeName())){
             entity.setTemperatureTypeName("冷冻");
         }
+        fee.setCreateTime(entity.getCreateTime());
 		return fee;	
 	}
 	
@@ -229,7 +230,8 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 	
 	@Override
 	public void calcuForBms(BizOutstockMasterEntity entity,FeesReceiveStorageEntity fee){
-		//合同校验
+	    fee.setContractAttr("1");
+	    //合同校验
 		if(contractList.size()<=0){
 			fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
 			fee.setCalcuMsg("bms合同缺失");
@@ -256,8 +258,8 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
         String quoTempleteCode=contract.getModelNo();
         
 		if("fail".equals(quoTempleteCode)){
-			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			fee.setCalcuMsg("未签约服务");
+			fee.setIsCalculated(CalculateState.No_Dinggou.getCode());			
+			fee.setCalcuMsg("商家【"+taskVo.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!");
 			return;
 		}
 		
@@ -407,25 +409,32 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 		fee.setCost(BigDecimal.valueOf(amount));
 		fee.setParam4(priceType);
 		fee.setBizType(entity.getextattr1());//用于判断是否是遗漏数据
-		entity.setRemark(entity.getRemark()+"计算成功;");
 		fee.setCalcuMsg("计算成功");
 		fee.setIsCalculated(CalculateState.Finish.getCode());
+		 if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
+             logger.info("计算成功，费用【{}】",fee.getCost());
+             fee.setCalcuMsg("计算成功");
+         }
+         else{
+             logger.info("计算不成功，费用【{}】",fee.getCost());
+             fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
+         }
 	}
 	
 	@Override
 	public void calcuForContract(BizOutstockMasterEntity entity,FeesReceiveStorageEntity fee){
-		ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
+		fee.setContractAttr("2");
+	    ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
 		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
-			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
-				fee.setIsCalculated(CalculateState.Finish.getCode());
+            fee.setIsCalculated(CalculateState.Finish.getCode());
+		    if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				logger.info("计算成功，费用【{}】",fee.getCost());
 				fee.setCalcuMsg("计算成功");
 			}
 			else{
-				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 				logger.info("计算不成功，费用【{}】",fee.getCost());
-				fee.setCalcuMsg("未计算出金额");
+				fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
 			}
 		}
 		else{

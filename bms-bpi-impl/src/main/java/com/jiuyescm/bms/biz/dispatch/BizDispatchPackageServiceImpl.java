@@ -8,14 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.biz.diapatch.service.IBizDispatchPackageService;
 import com.jiuyescm.bms.biz.diapatch.vo.BizDispatchPackageVo;
@@ -23,7 +21,6 @@ import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 import com.jiuyescm.bms.biz.dispatch.repository.IBizDispatchPackageRepository;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.constants.BmsEnums;
-import com.jiuyescm.exception.BizException;
 
 /**
  * ..ServiceImpl
@@ -134,14 +131,14 @@ public class BizDispatchPackageServiceImpl implements IBizDispatchPackageService
      * @return
      */
     @Override
-    public PageInfo<BizDispatchPackageEntity> queryToExport(Map<String, Object> condition, int pageNo, int pageSize) {
+    public PageInfo<BizDispatchPackageEntity> queryToExport(Map<String, Object> condition, int pageNo, int pageSize, Map<String, String> transportMap, Map<String, String> boxMap, Map<String, String> timeMap, Map<String, String> operateTypeMap) {
         PageInfo<BizDispatchPackageEntity> pageList = bizDispatchPackageRepository.queryToExport(condition, pageNo, pageSize);
         if (null != pageList && pageList.getList().size() > 0) {
             for (BizDispatchPackageEntity entity : pageList.getList()) {
-                entity.setTransportType(getSystemCode("TRANSPORT_TYPE",entity.getTransportType()).getCodeName());
-                entity.setPackBoxType(getSystemCode("PLATIC_BOX_TYPE",entity.getPackBoxType()).getCodeName());
-                entity.setHoldingTime(getSystemCode("HOLDING_TIME", entity.getHoldingTime()).getCodeName());
-                entity.setPackOperateType(getSystemCode("PACK_OPERATE_TYPE", entity.getPackOperateType()).getCodeName());
+                entity.setTransportType(transportMap.containsKey(entity.getTransportType())?transportMap.get(entity.getTransportType()):"");
+                entity.setPackBoxType(boxMap.containsKey(entity.getPackBoxType())?boxMap.get(entity.getPackBoxType()):"");
+                entity.setHoldingTime(timeMap.containsKey(entity.getHoldingTime())?timeMap.get(entity.getHoldingTime()):"");
+                entity.setPackOperateType(operateTypeMap.containsKey(entity.getPackOperateType())?operateTypeMap.get(entity.getPackOperateType()):"");
                 entity.setTransportTemperatureType(BmsEnums.tempretureType.getDesc(entity.getTransportTemperatureType()));
                 entity.setCreTimeExport(entity.getCreTime() == null?"":new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(entity.getCreTime()));
                 entity.setIsCalculated(CalculateState.getDesc(entity.getIsCalculated()));
@@ -149,28 +146,5 @@ public class BizDispatchPackageServiceImpl implements IBizDispatchPackageService
         }
         return pageList;
     }
-    
-    /**
-     * 获取系统参数对象
-     * <功能描述>
-     * 
-     * @author wangchen870
-     * @date 2019年4月16日 下午12:02:12
-     *
-     * @param typeCode
-     * @param code
-     * @return
-     */
-    public SystemCodeEntity getSystemCode(String typeCode, String code){
-        if (StringUtils.isNotEmpty(typeCode) && StringUtils.isNotEmpty(code)) {
-            SystemCodeEntity systemCodeEntity = systemCodeRepository.getSystemCode(typeCode, code);
-            if(systemCodeEntity == null){
-                throw new BizException("请在系统参数中配置文件上传路径,参数" + typeCode + "," + code);
-            }
-            return systemCodeEntity;
-        }
-        return null;
-    }
-    
     
 }

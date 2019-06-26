@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerEntity;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerLookupEntity;
 import com.jiuyescm.bms.base.dict.vo.PubCustomerBaseVo;
@@ -91,4 +92,16 @@ public interface ICustomerDictService {
 	 * @return
 	 */
 	PubCustomerVo queryById(String customerId);
+
+	/**
+	 * 通过主商家名称获取ID
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年6月13日 下午2:36:43
+	 *
+	 * @param mkInvoiceName
+	 * @return
+	 */
+    PubCustomerBaseEntity getMkIdByMkInvoiceNameNew(String mkInvoiceName);
 }

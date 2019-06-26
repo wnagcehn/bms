@@ -38,5 +38,11 @@ public class DispatchPackageCalcuBase extends CalcuTaskListener<BizDispatchPacka
 		BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForStoStandMaterial(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
 		return feesQtyVo;
 	}
+	
+    @Override
+    protected BmsFeesQtyVo totalAmountReport(BmsCalcuTaskVo taskVo) {
+        BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryTotalAmountForStoStandMaterial(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
+        return feesQtyVo;
+    }
 
 }
