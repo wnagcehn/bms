@@ -89,6 +89,7 @@ public class JudgeProcessReportJob extends IJobHandler {
         printTime(sw);
         
         // 从etl_condition表获取时间
+        sw.start("从etl_condition表获取时间");
         Map<String, Object> elCondition = Maps.newLinkedHashMap();
         elCondition.put("pullType", "bill_customer_master");
         List<ElConditionEntity> elList =  elConditionRepository.query(elCondition);
@@ -121,6 +122,7 @@ public class JudgeProcessReportJob extends IJobHandler {
         printTime(sw);
         
         // 查询主表，组装子表数据
+        sw.start("查询主表，组装子表数据");
         map.put("isCalculated", "0");
         List<BillCustomerMasterEntity> masterList = billCustomerMasterService.query(map);
         if (CollectionUtils.isEmpty(masterList)) printLog("没有数据需要汇总", sw, SUCCESS);
