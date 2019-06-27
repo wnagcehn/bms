@@ -99,6 +99,7 @@ public class JudgeProcessReportJob extends IJobHandler {
         if(null == startTime) printLog("etl_condition表未配置时间，请去配置", sw, FAIL);
         String startT = sdf.format(startTime);
         elCondition.put("lastTime", new Timestamp(System.currentTimeMillis()));
+        printTime(sw);
         
         // 汇总主表数据（BMS计算的和账单导入的）
         sw.start("汇总主表数据");
@@ -126,6 +127,7 @@ public class JudgeProcessReportJob extends IJobHandler {
         map.put("isCalculated", "0");
         List<BillCustomerMasterEntity> masterList = billCustomerMasterService.query(map);
         if (CollectionUtils.isEmpty(masterList)) printLog("没有数据需要汇总", sw, SUCCESS);
+        printTime(sw);
         List<BillCustomerDetailEntity> detailList = new ArrayList<BillCustomerDetailEntity>();
         for (BillCustomerMasterEntity masterEntity : masterList) {
             sw.start("统计商家:" + masterEntity.getMkId() + ",月份:" + masterEntity.getCreateMonth() + "数据");
