@@ -700,10 +700,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
 			FeesReceiveDispatchEntity fee=feesReceiveDispatchService.queryOne(condition);
 			//初始化折扣费用
 			setValue(discountVo,amount);
-			if(fee!=null && "1".equals(fee.getIsCalculated()) && StringUtils.isNotBlank(fee.getPriceId())){
-				//查询明细报价
-				condition=new HashMap<String,Object>();
-				logger.info(taskId+"原始报价id为"+fee.getPriceId());
+			if(fee!=null && "1".equals(fee.getIsCalculated())){
 				//物流产品类型
 				String serviceTypeCode=StringUtils.isNotBlank(discountVo.getAdjustServiceTypeCode())?
 				        discountVo.getAdjustServiceTypeCode():discountVo.getServiceTypeCode();				
@@ -727,11 +724,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
                 }
 
                 if(discountDispatchReportVo==null || discountDispatchReportVo.getQuotes().size()<=0){
-                    if("contract".equals(task.getCustomerType())){
-                        discountVo.setRemark("合同在线没有查询到折扣报价");
-                    }else if("bms".equals(task.getCustomerType())){
-                        discountVo.setRemark("bms没有查询到折扣报价");
-                    }
+                    discountVo.setRemark("bms没有查询到折扣报价");
                     fee.setDerateAmount(0d);
                     feeList.add(fee);
                     continue;
@@ -763,30 +756,19 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
 					discountVo.setUnitRate(BigDecimal.valueOf(discountPrice.getUnitRate()/100));
 				}else{
 					//其余的（包含首重续重折扣）
-					//查询原始报价
-					logger.info(waybillNo+"进入首重续重折扣计算");
-					condition=new HashMap<String,Object>();
-					condition.put("id", fee.getPriceId());
-					BmsQuoteDispatchDetailVo oldPrice=priceDspatchService.queryOne(condition);
-					if(oldPrice==null){
-						setValue(discountVo,amount);
-						discountVo.setIsCalculated("2");
-						discountVo.setRemark("未查询到原始报价");
-						fee.setDerateAmount(0d);
-						feeList.add(fee);
-						continue;
-					}
-					
-					//===========================通过原始报价和折扣报价，得到最后计算的首重续重===============================
-					BmsQuoteDispatchDetailVo newprice=getNewPrice(oldPrice,discountPrice,discountVo);	
-					
-					//开始进行计算
-					if(!DoubleUtil.isBlank(newprice.getUnitPrice())){
-						amount=BigDecimal.valueOf(newprice.getUnitPrice());
-						discountVo.setUnitPrice(amount);
-					}else{
-						amount=BigDecimal.valueOf(newprice.getFirstWeight()<fee.getChargedWeight()?newprice.getFirstWeightPrice()+newprice.getContinuedPrice()*((fee.getChargedWeight()-newprice.getFirstWeight())/newprice.getContinuedWeight()):newprice.getFirstWeightPrice());	        		
-					}
+				    amount=getDispatchAmount(fee,discountPrice);
+                    if(discountPrice.getFirstPrice()!=null){
+                        discountVo.setFirstPrice(BigDecimal.valueOf(discountPrice.getFirstPrice()));
+                    }
+                    if(discountPrice.getFirstRate()!=null){
+                        discountVo.setFirstRate(BigDecimal.valueOf(discountPrice.getFirstRate()));
+                    }
+                    if(discountPrice.getContinuePrice()!=null){
+                        discountVo.setContinuePrice(BigDecimal.valueOf(discountPrice.getContinuePrice()));
+                    }
+                    if(discountPrice.getContinueRate()!=null){
+                        discountVo.setContinueRate(BigDecimal.valueOf(discountPrice.getContinueRate()));
+                    }
 				}	
 				handAmount(discountVo,fee,amount);
 				discountVo.setQuoteId(discountPrice.getId().longValue());
