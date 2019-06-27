@@ -285,6 +285,11 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 					entityTotal += entity.getFeesCount();
 					biaoshi=2;
 					break;
+                case "7"://未订购
+                    vo.setNoDinggouCount(entity.getFeesCount());
+                    entityTotal += entity.getFeesCount();
+                    biaoshi=2;
+                    break;
 				case "4"://报价缺失
 					vo.setQuoteMissCount(entity.getFeesCount());
 					entityTotal += entity.getFeesCount();
