@@ -49,6 +49,8 @@ public class BmsFeesQtyVo implements IEntity{
 	//计算状态
 	private Integer calcuStatus;
 	
+	private Integer noDinggouCount;
+	
 	private BigDecimal totalAmount;
 	
 	/**
@@ -289,6 +291,14 @@ public class BmsFeesQtyVo implements IEntity{
 
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public Integer getNoDinggouCount() {
+        return noDinggouCount;
+    }
+
+    public void setNoDinggouCount(Integer noDinggouCount) {
+        this.noDinggouCount = noDinggouCount;
     }
 	
 
