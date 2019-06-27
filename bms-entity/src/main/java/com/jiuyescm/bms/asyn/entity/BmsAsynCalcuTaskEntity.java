@@ -68,6 +68,8 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 	
 	private BigDecimal totalAmount;
 	
+	private Integer noDinggouCount;
+	
 	public String getNewid() {
 		return newid;
 	}
@@ -493,6 +495,14 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public Integer getNoDinggouCount() {
+        return noDinggouCount;
+    }
+
+    public void setNoDinggouCount(Integer noDinggouCount) {
+        this.noDinggouCount = noDinggouCount;
     }
 
 }

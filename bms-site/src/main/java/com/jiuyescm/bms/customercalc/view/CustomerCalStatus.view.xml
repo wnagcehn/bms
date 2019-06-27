@@ -168,6 +168,10 @@
           </Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="noDinggouCount">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">未订购服务</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondLookupCustomer">
       <PropertyDef name="shortname">
@@ -709,6 +713,61 @@ jQuery(arg.dom).xCreate({&#xD;
 </ClientEvent>
               <Property name="property">contractMissCount</Property>
               <Property name="align">center</Property>
+            </DataColumn>
+            <DataColumn>
+              <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate({&#xD;
+	tagName: &quot;A&quot;,&#xD;
+	href: &quot;#&quot;,&#xD;
+	content:arg.data.get(&quot;noDinggouCount&quot;)+&quot;&quot;,&#xD;
+	onclick:function(){&#xD;
+		//数据字典查询科目对应界面的URL&#xD;
+		var subjectUrlAction = view.get(&quot;#subjectUrlAction&quot;);&#xD;
+		//主的与明细的当前行&#xD;
+		var dataMain = view.get(&quot;#dsCustomerCalStatus.data&quot;).current;&#xD;
+		var dataDetail = view.get(&quot;#dsCustomerSubjectStatus.data&quot;).current;&#xD;
+		&#xD;
+		//时间转换,获取指定月份最后一天&#xD;
+		var creMonth = dataMain.get(&quot;creMonth&quot;);&#xD;
+		var year = creMonth.toString().substring(0,4);&#xD;
+		var month = creMonth.toString().substring(4,6);&#xD;
+		var createTime = year+&quot;-&quot;+month+&quot;-&quot;+&quot;01 00:00:00&quot;;&#xD;
+		var dateYar = getCurrentMonthLast(year+&quot;-&quot;+month);&#xD;
+		var createEndTime=dateYar.replace(new RegExp('/','g'),&quot;-&quot;) + &quot; 23:59:59&quot;;&#xD;
+		&#xD;
+		//参数拼接(未订购服务，计算状态：7)&#xD;
+		var param=&quot;?customerId=&quot;+dataMain.get(&quot;customerId&quot;)+&quot;&amp;createTime=&quot;+createTime+&quot;&amp;createEndTime=&quot;+createEndTime+&quot;&amp;subjectCode=&quot;+dataDetail.get(&quot;subjectCode&quot;)+&quot;&amp;isCalculated=7&quot;;&#xD;
+		var data = {&#xD;
+			code:dataDetail.get(&quot;subjectCode&quot;)&#xD;
+		};&#xD;
+		//商品存储费单独判断，其余的费用科目走数据字典配置&#xD;
+		if(&quot;wh_product_storage&quot; == dataDetail.get(&quot;subjectCode&quot;) &amp;&amp; &quot;item&quot; == dataDetail.get(&quot;feesType&quot;)){&#xD;
+			window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.biz.storage.view.productsRepertory.d&quot;+param, &quot;商品库存_件&quot;, &quot;url(>skin>common/icons.gif) -280px -20px&quot;, true);&#xD;
+		}else if(&quot;wh_product_storage&quot; == dataDetail.get(&quot;subjectCode&quot;) &amp;&amp; &quot;pallet&quot; == dataDetail.get(&quot;feesType&quot;)){&#xD;
+			window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.biz.pallet.view.BizPalletInfo.d&quot;+param, &quot;托数管理&quot;, &quot;url(>skin>common/icons.gif) -20px -100px&quot;, true);&#xD;
+		}else{&#xD;
+			subjectUrlAction.set(&quot;parameter&quot;,data).execute(function(result){&#xD;
+				window.top.openUrlInFrameTab(result['url']+param, result['name'], result['icon'], true);&#xD;
+			});&#xD;
+		}&#xD;
+		&#xD;
+		//日期转换&#xD;
+		function getCurrentMonthLast(date){&#xD;
+			var endDate = new Date(date); //date 是需要传递的时间如：2018-08&#xD;
+			var month=endDate.getMonth();&#xD;
+			var nextMonth=++month;&#xD;
+			var nextMonthFirstDay=new Date(endDate.getFullYear(),nextMonth,1);&#xD;
+			var oneDay=1000*60*60*24;&#xD;
+			var dateString=new Date(nextMonthFirstDay-oneDay);&#xD;
+			return dateString.toLocaleDateString(); //返回 2018/8/31&#xD;
+		}&#xD;
+		var end=dateYar.replace(new RegExp('/','g'),&quot;-&quot;); //把2018/8/31 替换成2018-8-31&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
+              <Property name="property">noDinggouCount</Property>
+              <Property name="align">center</Property>
+              <Property name="name">noDinggouCount</Property>
             </DataColumn>
             <DataColumn name="quoteMissCount">
               <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;

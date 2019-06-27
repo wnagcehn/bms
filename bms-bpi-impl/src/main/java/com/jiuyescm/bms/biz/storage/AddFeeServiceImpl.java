@@ -62,7 +62,7 @@ public class AddFeeServiceImpl implements IAddFeeService {
         
         //从配置中获取不需要计费的费用科目
         List<String> codeList = getNoExeSubject();
-        logger.info("不计费的科目有：{0}", JsonUtils.toJson(codeList));
+        logger.info("不计费的科目有：" + JsonUtils.toJson(codeList));
 
         // 保存list
         List<BizAddFeeEntity> addlist = new ArrayList<>();
@@ -155,7 +155,7 @@ public class AddFeeServiceImpl implements IAddFeeService {
                 BizAddFeeEntity checkEntity = bizAddFeeRepository.queryPayNo(param);
                 if (null == checkEntity) {
                     // 如果费用科目不需要计费
-                    logger.info("OMS增值费编号入参：{0}, 费用类型入参：{1}", payNo, bizAddFeeEntity.getFeesType());
+                    logger.info("OMS增值费编号："+ payNo + ", 费用类型：" + bizAddFeeEntity.getFeesType());
                     if (codeList.contains(bizAddFeeEntity.getFeesType())) {
                         FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
                         String feesNo = "STO" + snowflakeSequenceService.nextStringId();
