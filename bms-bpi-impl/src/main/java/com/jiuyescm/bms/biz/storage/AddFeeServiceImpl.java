@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.biz.storage.service.IAddFeeService;
@@ -23,6 +26,7 @@ import com.jiuyescm.bms.biz.storage.vo.BizAddFeeVo;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
+import com.jiuyescm.utils.JsonUtils;
 
 @Service("addFeeService")
 public class AddFeeServiceImpl implements IAddFeeService {
@@ -33,7 +37,9 @@ public class AddFeeServiceImpl implements IAddFeeService {
     private IBizAddFeeRepository bizAddFeeRepository;
     @Autowired
     private ISnowflakeSequenceService snowflakeSequenceService;
-
+    @Autowired
+    private ISystemCodeRepository systemCodeRepository;  
+        
     @Override
     public Map<String, String> save(List<BizAddFeeVo> listVo) {
         if (CollectionUtils.isEmpty(listVo)) {
@@ -53,6 +59,10 @@ public class AddFeeServiceImpl implements IAddFeeService {
             }
             list.add(paramEntity);
         }
+        
+        //从配置中获取不需要计费的费用科目
+        List<String> codeList = getNoExeSubject();
+        logger.info("不计费的科目有：{0}", JsonUtils.toJson(codeList));
 
         // 保存list
         List<BizAddFeeEntity> addlist = new ArrayList<>();
@@ -144,8 +154,9 @@ public class AddFeeServiceImpl implements IAddFeeService {
                 // 校验payNo是否存在
                 BizAddFeeEntity checkEntity = bizAddFeeRepository.queryPayNo(param);
                 if (null == checkEntity) {
-                    // 如果一口价大于0，生成费用
-                    if (fixedAmount > 0) {
+                    // 如果费用科目不需要计费
+                    logger.info("OMS增值费编号入参：{0}, 费用类型入参：{1}", payNo, bizAddFeeEntity.getFeesType());
+                    if (codeList.contains(bizAddFeeEntity.getFeesType())) {
                         FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
                         String feesNo = "STO" + snowflakeSequenceService.nextStringId();
                         bizAddFeeEntity.setFeesNo(feesNo);
@@ -173,7 +184,7 @@ public class AddFeeServiceImpl implements IAddFeeService {
                         fee.setExternalProductNo(bizAddFeeEntity.getExternalNo());
                         // 计算成功
                         fee.setIsCalculated("1");
-                        fee.setParam2(new SimpleDateFormat("yyyyMM").format(bizAddFeeEntity.getCreateTime()));
+                        fee.setParam2(bizAddFeeEntity.getCreateTime()==null?"":new SimpleDateFormat("yyyyMM").format(bizAddFeeEntity.getCreateTime()));
                         feelist.add(fee);
                     } else {
                         // 不生成费用，业务数据计算状态为0
@@ -206,5 +217,20 @@ public class AddFeeServiceImpl implements IAddFeeService {
             logger.error("增值服务单,保存失败：", e);
         }
         return resultMap;
+    }
+
+    /*
+     * 获取不需要计费的费用科目
+     */
+    private List<String> getNoExeSubject() {
+        List<String> codeList = new ArrayList<String>();
+        List<SystemCodeEntity> systemCodeList = systemCodeRepository.findEnumList("NO_CALCULATE_STORAGE_ADD");    
+        for (SystemCodeEntity systemCodeEntity : systemCodeList) {
+            if (null == systemCodeEntity.getCode()) {
+                continue;
+            }
+            codeList.add(systemCodeEntity.getCode());
+        }
+        return codeList;
     }
 }

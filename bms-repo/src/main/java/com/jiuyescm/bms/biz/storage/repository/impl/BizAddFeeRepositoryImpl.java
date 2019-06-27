@@ -4,16 +4,20 @@
  */
 package com.jiuyescm.bms.biz.storage.repository.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.cfm.persistence.mybatis.MyBatisDao;
 import com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity;
+import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
+import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
@@ -25,6 +29,9 @@ import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
  */
 @Repository("bizAddFeeRepository")
 public class BizAddFeeRepositoryImpl extends MyBatisDao implements IBizAddFeeRepository {
+    
+    @Autowired
+    private ISystemCodeRepository systemCodeRepository;  
 
 	private static final Logger logger = Logger.getLogger(BizAddFeeRepositoryImpl.class.getName());
 
@@ -143,6 +150,15 @@ public class BizAddFeeRepositoryImpl extends MyBatisDao implements IBizAddFeeRep
 	@Override
 	public int retryCalcu(Map<String, Object> condition) {
 		try {
+		    List<String> codeList = new ArrayList<String>();;
+	        List<SystemCodeEntity> systemCodeList = systemCodeRepository.findEnumList("NO_CALCULATE_STORAGE_ADD");    
+	        for (SystemCodeEntity systemCodeEntity : systemCodeList) {
+	            if (null == systemCodeEntity.getCode()) {
+	                continue;
+	            }            
+	            codeList.add(systemCodeEntity.getCode());
+	        }
+	        condition.put("subjectList", codeList);
 			update("com.jiuyescm.bms.biz.storage.BizAddFeeEntityMapper.retryCalcu",condition);
 			return 1;
 		} catch (Exception ex) {
