@@ -48,6 +48,8 @@ public class BmsFeesQtyEntity implements IEntity{
 	// 未计算费用总数
 	private Integer noExeCount;	
 	
+	private Integer noDinggouCount;
+	
 	private BigDecimal totalAmount;
 	
 	// 计算状态
@@ -292,6 +294,14 @@ public class BmsFeesQtyEntity implements IEntity{
 
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public Integer getNoDinggouCount() {
+        return noDinggouCount;
+    }
+
+    public void setNoDinggouCount(Integer noDinggouCount) {
+        this.noDinggouCount = noDinggouCount;
     }
 
 }
