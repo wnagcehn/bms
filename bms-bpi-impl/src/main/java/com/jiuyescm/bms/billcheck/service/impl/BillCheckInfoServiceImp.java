@@ -177,7 +177,6 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
                         res = isOverdue(current, entity);
                     } catch (Exception e) {
                         logger.error("判断是否超期异常", e);
-                        throw new BizException(e.getMessage());
                     }
                     entity.setOverStatus(res);
                 }
@@ -205,7 +204,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
             result.setList(voList);
             return result;
         } catch (Exception ex) {
-            logger.error("转换失败:{0}", ex);
+            logger.error("转换失败:{0}", ex);         
         }
         return null;
     }

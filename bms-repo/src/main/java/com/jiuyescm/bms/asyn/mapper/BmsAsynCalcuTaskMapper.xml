@@ -21,6 +21,7 @@
 	    <result column="contract_miss_count" property="contractMissCount" jdbcType="INTEGER" />
 	    <result column="quote_miss_count" property="quoteMissCount" jdbcType="INTEGER" />
 	    <result column="no_exe_count" property="noExeCount" jdbcType="INTEGER" />
+	    <result column="no_dinggou_count" property="noDinggouCount" jdbcType="INTEGER" />
 	    <result column="task_rate" property="taskRate" jdbcType="INTEGER" />
 	    <result column="cre_person" property="crePerson" jdbcType="VARCHAR" />
 	    <result column="cre_person_id" property="crePersonId" jdbcType="VARCHAR" />
@@ -31,7 +32,7 @@
     </resultMap>
   
     <sql id="baseColumns">
-        id, task_id, customer_id,customer_name, subject_code,subject_name,fees_type, cre_month, task_status, fees_count, uncalcu_count, calcu_count, begin_count, finish_count, sys_error_count, contract_miss_count, quote_miss_count, no_exe_count, task_rate, cre_person, cre_person_id, cre_time, process_time, finish_time, remark
+        id, task_id, customer_id,customer_name, subject_code,subject_name,fees_type, cre_month, task_status, fees_count, uncalcu_count, calcu_count, begin_count, finish_count, sys_error_count, contract_miss_count,no_dinggou_count, quote_miss_count, no_exe_count, task_rate, cre_person, cre_person_id, cre_time, process_time, finish_time, remark
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -117,6 +118,7 @@
 			<if test="finishCount != null" >finish_count=#{finishCount,jdbcType=INTEGER},</if>
 			<if test="sysErrorCount != null" >sys_error_count=#{sysErrorCount,jdbcType=INTEGER},</if>
 			<if test="contractMissCount != null" >contract_miss_count=#{contractMissCount,jdbcType=INTEGER},</if>
+			<if test="noDinggouCount != null" >no_dinggou_count=#{noDinggouCount,jdbcType=INTEGER},</if>
 			<if test="quoteMissCount != null" >quote_miss_count=#{quoteMissCount,jdbcType=INTEGER},</if>
 			<if test="noExeCount != null" >no_exe_count=#{noExeCount,jdbcType=INTEGER},</if>
 			<if test="taskRate != null" >task_rate=#{taskRate,jdbcType=INTEGER},</if>

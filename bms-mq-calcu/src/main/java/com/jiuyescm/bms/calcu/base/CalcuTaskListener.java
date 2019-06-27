@@ -183,6 +183,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			taskVo.setFinishCount(feesQtyVoFinish.getFinishCount()==null?0:feesQtyVoFinish.getFinishCount());//计算成功总数
 			taskVo.setSysErrorCount(feesQtyVoFinish.getSysErrorCount()==null?0:feesQtyVoFinish.getSysErrorCount());//系统错误用总数
 			taskVo.setContractMissCount(feesQtyVoFinish.getContractMissCount()==null?0:feesQtyVoFinish.getContractMissCount());//合同缺失总数
+	        taskVo.setNoDinggouCount(feesQtyVoFinish.getNoDinggouCount()==null?0:feesQtyVoFinish.getNoDinggouCount());//未订购服务总数
 			taskVo.setQuoteMissCount(feesQtyVoFinish.getQuoteMissCount()==null?0:feesQtyVoFinish.getQuoteMissCount());//报价缺失总数
 			taskVo.setNoExeCount(feesQtyVoFinish.getNoExeCount()==null?0:feesQtyVoFinish.getNoExeCount());//不计算费用总数
 			taskVo.setCalcuStatus(feesQtyVoFinish.getCalcuStatus());
@@ -195,7 +196,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			logger.error("taskId={} 计算任务执行异常",taskVo.getTaskId(),e1);
 			taskVo.setTaskStatus(30);
 			taskVo.setTaskRate(99);
-			taskVo.setRemark("系统错误");
+			taskVo.setRemark("系统错误"); 
 			return;
 		}
 	}
