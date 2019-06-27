@@ -397,7 +397,13 @@
     	UPDATE fees_receive_storage s
 		LEFT JOIN biz_add_fee a on s.fees_no=a.fees_no and a.del_flag='0'
 		SET s.is_calculated='99', s.calcu_msg=''
-		WHERE 1=1 and s.del_flag='0' and <![CDATA[a.fixed_amount<=0]]>
+		WHERE 1=1 and s.del_flag='0' 
+		<if test=" subjectList != null and subjectList.size() > 0 " >
+			and s.other_subject_code not in 
+			<foreach collection="subjectList" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
 		<if test="(customerid != null and customerid !='')" >
 			and a.customerid = #{customerid}
 		</if>
@@ -517,7 +523,9 @@
     </insert>
     
     <select id="queryPayNo" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity">
-    	select pay_no payNo from biz_add_fee where pay_no=#{payNo,jdbcType=VARCHAR}
+    	select pay_no payNo
+    	from biz_add_fee 
+    	where pay_no=#{payNo,jdbcType=VARCHAR}
     </select>
     
     
