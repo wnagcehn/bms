@@ -3,7 +3,14 @@
  */
 package com.jiuyescm.bms.calculate.api;
 
-import com.jiuyescm.bms.calculate.vo.DiscountCustomerQuoteVo;
+import java.util.List;
+import java.util.Map;
+
+import com.jiuyescm.bms.biz.discount.entity.BmsDiscountAsynTaskEntity;
+import com.jiuyescm.bms.calculate.vo.DiscountDispatchReportVo;
+import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
+import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity;
+import com.jiuyescm.contract.base.vo.ContractDiscountConfigVo;
 import com.jiuyescm.exception.BizException;
 
 /**
@@ -13,33 +20,35 @@ import com.jiuyescm.exception.BizException;
  * @date 2019年4月18日 上午11:16:51
  */
 public interface IBmsDiscountCalcuService {
-
+ 
     /**
+     * BMS折扣
+     * <功能描述>
      * 
-     * <功能描述>
-     * bms所有折扣统计
-     * @author caojianwei
-     * @date 2019年4月18日 上午11:18:53
-     * @param customerId 商家ID
-     * @param createMonth 折扣年月 格式 '2019-01'
+     * @author zhaofeng
+     * @date 2019年6月15日 下午12:15:48
+     *
+     * @param task
+     * @param template
      * @return
      * @throws BizException
      */
-    DiscountCustomerQuoteVo discountReport(String customerId,String createMonth) throws BizException;
+    Map<String,DiscountDispatchReportVo> discountDispatchBms(BmsDiscountAsynTaskEntity task,List<BmsQuoteDiscountDetailEntity> priceList,BmsQuoteDiscountTemplateEntity template);
     
     /**
+     * 合同在线折扣
      * <功能描述>
-     * bms配送指定物流商折扣统计
-     * @author caojianwei
-     * @date 2019年4月18日 下午1:10:31
-     * @param customerId 商家ID
-     * @param createMonth 折扣年月 格式 '2019-01'
-     * @param carrierId 物流商ID
+     * 
+     * @author zhaofeng
+     * @date 2019年6月15日 下午12:15:48
+     *
+     * @param task
+     * @param template
      * @return
      * @throws BizException
      */
-    DiscountCustomerQuoteVo discountReportForCarrier(String customerId,String createMonth,String carrierId) throws BizException;
-    
+    Map<String,DiscountDispatchReportVo> discountDispatchContract(BmsDiscountAsynTaskEntity task,List<ContractDiscountConfigVo> priceList);
+   
 }
 
 

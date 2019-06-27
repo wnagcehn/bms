@@ -496,7 +496,7 @@ public class PalletHandler {
                     //1000条写入一次
                     if (dataList.size() >= 1000) {
                         try {
-                            poiUtil.exportExcel2FilePath(poiUtil, workbook, "耗材出库结果文件",roNo, headDetailMapList, dataList);
+                            poiUtil.exportExcel2FilePath(poiUtil, workbook, "托数结果文件",roNo, headDetailMapList, dataList);
                             roNo = roNo + dataList.size();
                         } catch (IOException e) {
                             logger.error("写入结果文件失败！", e);
@@ -508,7 +508,7 @@ public class PalletHandler {
                 @Override
                 public void finish() {
                     try {
-                        poiUtil.exportExcel2FilePath(poiUtil, workbook, "耗材出库结果文件",roNo, headDetailMapList, dataList);
+                        poiUtil.exportExcel2FilePath(poiUtil, workbook, "托数结果文件",roNo, headDetailMapList, dataList);
                         roNo = 1;
                     } catch (IOException e) {
                         logger.error("写入结果文件失败！", e);

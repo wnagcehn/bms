@@ -3,8 +3,9 @@
  */
 package com.jiuyescm.bms.calculate.vo;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
+
+import com.jiuyescm.cfm.domain.IEntity;
 
 /**
  * <功能描述>
@@ -12,109 +13,84 @@ import java.sql.Timestamp;
  * @author caojianwei
  * @date 2019年4月18日 下午12:41:45
  */
-public class DiscountQuoteVo {
-
+public class DiscountQuoteVo implements IEntity{
+    private static final long serialVersionUID = -1L;
+    private Integer id;
     // 整单折扣率
-    private BigDecimal unitRate;
+    private Double unitRate;
     // 整单折扣价
-    private BigDecimal unitPrice;
+    private Double unitPrice;
     // 首量折扣率
-    private BigDecimal firstRate;
+    private Double firstRate;
     // 首量折扣价
-    private BigDecimal firstPrice;
+    private Double firstPrice;
     // 续量折扣率
-    private BigDecimal continueRate;
+    private Double continueRate;
     // 续量折扣价
-    private BigDecimal continuePrice;
+    private Double continuePrice;
     //报价生效时间
     private Timestamp startTime;
     //报价失效时间
     private Timestamp endTime;
     
-    /**
-     *整单折扣率
-     */
-    public BigDecimal getUnitRate() {
+  
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Double getUnitRate() {
         return unitRate;
     }
-    
-    /**
-     *整单折扣率
-     */
-    public void setUnitRate(BigDecimal unitRate) {
+
+    public void setUnitRate(Double unitRate) {
         this.unitRate = unitRate;
     }
-    
-    /**
-     *整单折扣价
-     */
-    public BigDecimal getUnitPrice() {
+
+    public Double getUnitPrice() {
         return unitPrice;
     }
-    
-    /**
-     *首量折扣价
-     */
-    public void setUnitPrice(BigDecimal unitPrice) {
+
+    public void setUnitPrice(Double unitPrice) {
         this.unitPrice = unitPrice;
     }
-    
-    /**
-     *首量折扣价
-     */
-    public BigDecimal getFirstRate() {
+
+    public Double getFirstRate() {
         return firstRate;
     }
-    
-    /**
-     *首量折扣率
-     */
-    public void setFirstRate(BigDecimal firstRate) {
+
+    public void setFirstRate(Double firstRate) {
         this.firstRate = firstRate;
     }
-    
-    /**
-     *首量折扣价
-     */
-    public BigDecimal getFirstPrice() {
+
+    public Double getFirstPrice() {
         return firstPrice;
     }
-    
-    /**
-     *首量折扣价
-     */
-    public void setFirstPrice(BigDecimal firstPrice) {
+
+    public void setFirstPrice(Double firstPrice) {
         this.firstPrice = firstPrice;
     }
-    
-    /**
-     *续量折扣率
-     */
-    public BigDecimal getContinueRate() {
+
+    public Double getContinueRate() {
         return continueRate;
     }
-    
-    /**
-     *续量折扣率
-     */
-    public void setContinueRate(BigDecimal continueRate) {
+
+    public void setContinueRate(Double continueRate) {
         this.continueRate = continueRate;
     }
-    
-    /**
-     *续量折扣价
-     */
-    public BigDecimal getContinuePrice() {
+
+    public Double getContinuePrice() {
         return continuePrice;
     }
-    
-    /**
-     *续量折扣价
-     */
-    public void setContinuePrice(BigDecimal continuePrice) {
+
+    public void setContinuePrice(Double continuePrice) {
         this.continuePrice = continuePrice;
     }
-    
+
     /**
      *折扣启用时间
      */

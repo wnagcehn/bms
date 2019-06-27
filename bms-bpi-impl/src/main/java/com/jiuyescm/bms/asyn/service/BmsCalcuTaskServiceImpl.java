@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.asyn.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -242,6 +243,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 					entity.setBeginCount(0);
 					entity.setTaskId(calEntity.getTaskId());
 					entity.setNewid(vo.getTaskId());
+					entity.setTotalAmount(BigDecimal.ZERO);
 					bmsAsynCalcuTaskRepositoryimpl.updateByTaskId(entity);
 					// 写入日志表
 					saveTaskLog(vo);

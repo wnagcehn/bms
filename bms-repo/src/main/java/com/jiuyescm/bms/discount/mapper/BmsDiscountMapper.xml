@@ -255,4 +255,20 @@
 		</if>
     </insert>
     
+    <select id="queryServiceAccount" parameterType="java.util.Map" resultType="com.jiuyescm.bms.discount.BmsDiscountAccountEntity">
+    	 select COUNT(0) as orderCount,sum(amount) as amount,service_type_code as serviceTypeCode
+		from fees_receive_dispatch 
+		where customerid=#{customerId}
+			and carrierid=#{carrierId}  
+			and create_time>=#{startTime} and create_time<![CDATA[<#{endTime}]]>
+			and del_flag='0' 
+			and is_calculated in ('1','5')
+    		and IFNULL(service_type_code,'') in
+    		<foreach collection="serviceList" index="index" item="item" open="(" separator="," close=")">
+    			#{item}
+    		</foreach>
+		    GROUP BY service_type_code
+    </select>
+    
+    
 </mapper> 

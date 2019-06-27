@@ -53,7 +53,7 @@
     <!-- 配送费用： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
     <select id="queryStatusFeesQtyForDis" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
        select b.customerid,b.subject_code,b.is_calculated,count(*) as fees_count  from biz_dispatch_bill a
-		inner join fees_receive_dispatch b on a.fees_no = b.fees_no
+		inner join fees_receive_dispatch b on a.fees_no = b.fees_no and b.del_flag='0'
 		where a.customerid = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
 		and a.del_flag = '0' and b.subject_code = #{subjectCode}
@@ -63,7 +63,7 @@
      <!-- 入库费用： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
     <select id="queryFeesQtyForStoInstock" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
    		select b.customer_id,b.subject_code,b.is_calculated,count(*) as fees_count  from biz_instock_info a
-		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
 		where a.customer_id = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
 		and a.del_flag = '0' and b.subject_code = #{subjectCode}
@@ -73,7 +73,7 @@
      <!-- 出库费用： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
     <select id="queryFeesQtyForStoOutstock" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
    		select b.customer_id,b.subject_code,b.is_calculated,count(*) as fees_count  from biz_outstock_master a
-		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
 		where a.customerid = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
 		and a.del_flag = '0' and b.subject_code = #{subjectCode}
@@ -83,7 +83,7 @@
      <!-- 耗材费用： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
     <select id="queryFeesQtyForStoMaterial" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
    		select b.customer_id,b.subject_code,b.is_calculated,count(*) as fees_count  from biz_outstock_packmaterial a
-		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
 		where a.customer_id = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
 		and a.del_flag = '0' and b.subject_code = #{subjectCode}
@@ -93,7 +93,7 @@
      <!-- 商品按件： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
     <select id="queryFeesQtyForStoProductItem" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
    		select b.customer_id,b.subject_code,b.is_calculated,count(*) as fees_count  from biz_product_storage a
-		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
 		where a.customerid = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
 		and a.del_flag = '0' and b.subject_code = #{subjectCode}
@@ -103,7 +103,7 @@
         <!-- 增值： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
     <select id="queryFeesQtyForStoAdd" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
    		select b.customer_id,b.subject_code,b.is_calculated,count(*) as fees_count  from biz_add_fee a
-		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
 		where a.customerid = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
 		and a.del_flag = '0' and b.subject_code = #{subjectCode}
@@ -113,7 +113,7 @@
        <!-- 按托： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
     <select id="queryFeesQtyForStoPallet" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
    		select b.customer_id,b.subject_code,b.is_calculated,count(*) as fees_count  from biz_pallet_info a
-		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
 		where a.customer_id = #{customerId}
 		and a.create_time >=#{startTime} and <![CDATA[a.create_time < #{endTime}]]>
 		and a.del_flag = '0' and b.subject_code = #{subjectCode}
@@ -123,11 +123,83 @@
      <!-- 标准耗材： 查询指定商家，指定时间范围，指定科目 的 各计算状态费用数 返回多条 -->
     <select id="queryFeesQtyForStoStandMaterial" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
     	select b.customer_id,b.subject_code,b.is_calculated,count(*) as fees_count  from biz_dispatch_package a
-		inner join fees_receive_storage b on a.fees_no = b.fees_no
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
 		where a.customerid = #{customerId}
 		and a.cre_time >= #{startTime} and <![CDATA[a.cre_time < #{endTime}]]>
 		and a.del_flag = '0' and b.subject_code =#{subjectCode}
 		group by b.customer_id,b.subject_code,b.is_calculated
+    </select>
+    
+    <!-- 出库： 查询指定商家，指定时间范围，指定科目 的 总费用-->
+    <select id="queryTotalAmountForStoOutstock" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+   		select b.create_time,b.customer_id,b.subject_code,SUM(b.cost) as totalAmount  from biz_outstock_master a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
+		where a.customerid = #{customerId}
+		and a.create_time >= #{startTime} and <![CDATA[a.create_time < #{endTime}]]>
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
+    </select>
+    
+    <!-- 入库： 查询指定商家，指定时间范围，指定科目 的 总费用-->
+    <select id="queryTotalAmountForStoInstock" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+   		select b.create_time,b.customer_id,b.subject_code,SUM(b.cost) as totalAmount  from biz_instock_info a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
+		where a.customer_id = #{customerId}
+		and a.create_time >= #{startTime} and <![CDATA[a.create_time < #{endTime}]]>
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
+    </select>
+    
+    <!-- 托数： 查询指定商家，指定时间范围，指定科目 的 总费用-->
+    <select id="queryTotalAmountForStoPallet" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+   		select b.create_time,b.customer_id,b.subject_code,SUM(b.cost) as totalAmount  from biz_pallet_info a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
+		where a.customer_id = #{customerId}
+		and a.create_time >= #{startTime} and <![CDATA[a.create_time < #{endTime}]]>
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
+    </select>
+    
+	<!-- 商品按件： 查询指定商家，指定时间范围，指定科目 的 总费用-->
+    <select id="queryTotalAmountForStoProductItem" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+   		select b.create_time,b.customer_id,b.subject_code,SUM(b.cost) as totalAmount  from biz_product_storage a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
+		where a.customerid = #{customerId}
+		and a.create_time >= #{startTime} and <![CDATA[a.create_time < #{endTime}]]>
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
+    </select>
+    
+	<!-- 标准包装方案： 查询指定商家，指定时间范围，指定科目 的 总费用-->
+    <select id="queryTotalAmountForStoStandMaterial" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+   		select b.create_time,b.customer_id,b.subject_code,SUM(b.cost) as totalAmount  from biz_dispatch_package a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
+		where a.customerid = #{customerId}
+		and a.cre_time >= #{startTime} and <![CDATA[a.cre_time < #{endTime}]]>
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
+    </select>
+    
+	<!-- 增值： 查询指定商家，指定时间范围，指定科目 的 总费用-->
+    <select id="queryTotalAmountForStoAdd" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+   		select b.create_time,b.customer_id,b.subject_code,SUM(b.cost) as totalAmount  from biz_add_fee a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
+		where a.customerid = #{customerId}
+		and a.create_time >= #{startTime} and <![CDATA[a.create_time < #{endTime}]]>
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
+    </select>
+    
+	<!-- 耗材： 查询指定商家，指定时间范围，指定科目 的 总费用-->
+    <select id="queryTotalAmountForStoMaterial" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity">
+   		select b.create_time,b.customer_id,b.subject_code,SUM(b.cost) as totalAmount  from biz_outstock_packmaterial a
+		inner join fees_receive_storage b on a.fees_no = b.fees_no and b.del_flag='0'
+		where a.customer_id = #{customerId}
+		and a.create_time >= #{startTime} and <![CDATA[a.create_time < #{endTime}]]>
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
+    </select>
+    
+	<!-- 配送： 查询指定商家，指定时间范围，指定科目 的 总费用-->
+    <select id="queryTotalAmountForStoDis" parameterType="java.util.Map" resultType="com.jiuyescm.bms.calculate.BmsFeesQtyEntity"> 		
+		select b.create_time,b.customerid,b.subject_code,SUM(b.amount) as totalAmount  from biz_dispatch_bill a
+		inner join fees_receive_dispatch b on a.fees_no = b.fees_no and b.del_flag='0'
+		where a.customerid = #{customerId}
+		and a.create_time >= #{startTime} and <![CDATA[a.create_time < #{endTime}]]>
+		and a.del_flag = '0' and b.subject_code = #{subjectCode}
     </select>
     
 </mapper>

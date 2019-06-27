@@ -6,18 +6,22 @@ package com.jiuyescm.bms.calculate.vo;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.jiuyescm.cfm.domain.IEntity;
+
 /**
  * <功能描述>
  * 
  * @author caojianwei
  * @date 2019年4月18日 下午12:48:12
  */
-public class DiscountDispatchReportVo {
+public class DiscountDispatchReportVo implements IEntity{
+    private static final long serialVersionUID = -1L;
 
     private String serviceTypeCode;
     private Integer sumNum;
     private BigDecimal sumAmount;
     List<DiscountQuoteVo> quotes;
+    private String discountType;
     private boolean isDiscount;
     private boolean isRemove;
     
@@ -104,6 +108,17 @@ public class DiscountDispatchReportVo {
     public void setRemove(boolean isRemove) {
         this.isRemove = isRemove;
     }
+
+    public String getDiscountType() {
+        return discountType;
+    }
+
+    public void setDiscountType(String discountType) {
+        this.discountType = discountType;
+    }
+    
+    
+    
 }
 
 

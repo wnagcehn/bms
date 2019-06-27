@@ -18,7 +18,6 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupService;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
-import com.jiuyescm.bms.base.group.vo.BmsGroupCustomerVo;
 import com.jiuyescm.bms.base.group.vo.BmsGroupVo;
 import com.jiuyescm.bms.calcu.base.ICalcuService;
 import com.jiuyescm.bms.calcu.receive.BmsContractBase;
@@ -80,12 +79,12 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 	
 	List<String> cusList=null;
 	List<String> cusNames = null;
+	List<String> materialCusNames=null;
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
 		serviceSubjectCode = subjectCode;
 		getQuoTemplete();
-		errorMap = new HashMap<String, Object>();
 		initConf();
 	}
 	
@@ -110,6 +109,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		}
 		logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),bizList.size());
 		for (BizPalletInfoEntity entity : bizList) {
+		    errorMap = new HashMap<String, Object>();
 			FeesReceiveStorageEntity fee = initFee(entity);
 			fees.add(fee);
 			try {
@@ -117,12 +117,12 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 					continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
 				}
 		
-				if("BMS".equals(contractAttr)){
-					calcuForBms(entity,fee);
-				}
-				else {
-					calcuForContract(entity,fee);
-				}
+				//优先合同在线计算
+                calcuForContract(entity,fee);
+                //如果返回的是合同缺失，则继续BMS计算
+                if("CONTRACT_LIST_NULL".equals(errorMap.get("code"))){
+                    calcuForBms(entity,fee);
+                }
 			} catch (Exception e) {
 				// TODO: handle exception
 				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
@@ -172,16 +172,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		cond.put("bizType", "group_customer");
 		BmsGroupVo bmsGroup=bmsGroupService.queryOne(cond);
 		if(bmsGroup!=null){
-			cusNames = new ArrayList<String>();
-			List<BmsGroupCustomerVo> cusList = null;
-			try {
-				cusList = bmsGroupCustomerService.queryAllByGroupId(bmsGroup.getId());
-			} catch (Exception e) {
-				logger.error("查询使用导入商品托数的商家异常:", e);
-			}
-			for(BmsGroupCustomerVo vo:cusList){
-				cusNames.add(vo.getCustomerid());
-			}
+			cusNames = bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
 		}
 		
 		//指定的商家
@@ -189,10 +180,18 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		map.put("groupCode", "customer_unit");
 		map.put("bizType", "group_customer");
 		BmsGroupVo bmsGroup1=bmsGroupService.queryOne(map);
-		if(bmsGroup!=null){
+		if(bmsGroup1!=null){
 			cusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup1.getId());
 		}
-			
+		
+		//《使用导入耗材托数的商家》
+		map= new HashMap<String, Object>();
+        map.put("groupCode", "Material_Pallet");
+        map.put("bizType", "group_customer");
+        BmsGroupVo bmsGroup2=bmsGroupService.queryOne(map);
+        if(bmsGroup2!=null){
+            materialCusNames=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup2.getId());
+        }
 	}
 
 	@Override
@@ -204,7 +203,9 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		double num = 0d;
 		if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())) {
 		    entity.setChargeSource("system");	
-		}else {
+		}if ("material".equals(entity.getBizType()) && !materialCusNames.contains(entity.getCustomerId())) {
+            entity.setChargeSource("system");   
+        }else {
 		    entity.setChargeSource("import");
 		}
 		//调整托数优先级最高
@@ -214,7 +215,9 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		if (DoubleUtil.isBlank(entity.getAdjustPalletNum())) {
 			if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())){
 				num = entity.getSysPalletNum();
-			}else {
+			}if ("material".equals(entity.getBizType()) && !materialCusNames.contains(entity.getCustomerId())){
+                num = entity.getSysPalletNum();
+            }else {
 			    num = entity.getPalletNum();
             }
 		}else {
@@ -233,6 +236,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		fee.setParam1(TemplateTypeEnum.COMMON.getCode());
 		fee.setCalcuMsg("");
 		fee.setCalculateTime(JAppContext.currentTimestamp());
+		fee.setCreateTime(entity.getCreateTime());
 		return fee;
 	}
 
@@ -258,7 +262,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 
 	@Override
 	public void calcuForBms(BizPalletInfoEntity entity,FeesReceiveStorageEntity fee) {
-		
+	    fee.setContractAttr("1");
 		//合同校验
 		if(contractList.size()<=0){
 			fee.setIsCalculated(CalculateState.Contract_Miss.getCode());
@@ -288,8 +292,8 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
         String quoTempleteCode=contract.getModelNo();
 		
 		if("fail".equals(quoTempleteCode)){
-			fee.setIsCalculated(CalculateState.Quote_Miss.getCode());
-			fee.setCalcuMsg("未签约服务");
+			fee.setIsCalculated(CalculateState.No_Dinggou.getCode());
+			fee.setCalcuMsg("商家【"+taskVo.getCustomerName()+"】未订购科目【"+taskVo.getSubjectName()+"】的服务项!");
 			return;
 		}
 		
@@ -355,7 +359,14 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 			fee.setCost(BigDecimal.valueOf(amount));
 			fee.setParam4(priceType);
 			fee.setIsCalculated(CalculateState.Finish.getCode());
-			fee.setCalcuMsg("计算成功");
+			
+			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
+                fee.setCalcuMsg("计算成功");
+                logger.info("计算成功，费用【{}】",fee.getCost());
+            }else{
+                logger.info("计算不成功，费用【{}】",fee.getCost());
+                fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
+            }
 		}catch(Exception ex){
 			fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 			fee.setCalcuMsg("系统异常");
@@ -365,24 +376,17 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 
 	@Override
 	public void calcuForContract(BizPalletInfoEntity entity,FeesReceiveStorageEntity fee) {
-		ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
+		fee.setContractAttr("2");
+	    ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
 		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
+            fee.setIsCalculated(CalculateState.Finish.getCode());
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
-				fee.setIsCalculated(CalculateState.Finish.getCode());
 				fee.setCalcuMsg("计算成功");
 				logger.info("计算成功，费用【{}】",fee.getCost());
-			}
-			else{
-			    if (fee.getQuantity() == 0 || fee.getUnitPrice() == 0) {
-			        fee.setIsCalculated(CalculateState.Finish.getCode());
-	                logger.info("计算成功，费用【{}】",fee.getCost());
-	                fee.setCalcuMsg("计算成功");
-                }else {
-                    fee.setIsCalculated(CalculateState.Sys_Error.getCode());
-                    logger.info("计算不成功，费用【{}】",fee.getCost());
-                    fee.setCalcuMsg("未计算出金额");
-                }
+			}else{
+			    logger.info("计算不成功，费用【{}】",fee.getCost());
+                fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
 			}
 		}
 		else{

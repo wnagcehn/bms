@@ -1,5 +1,7 @@
 package com.jiuyescm.bms.calculate.vo;
 
+import java.math.BigDecimal;
+
 import com.jiuyescm.cfm.domain.IEntity;
 
 /**
@@ -46,6 +48,10 @@ public class BmsFeesQtyVo implements IEntity{
 	private Integer noExeCount;	
 	//计算状态
 	private Integer calcuStatus;
+	
+	private Integer noDinggouCount;
+	
+	private BigDecimal totalAmount;
 	
 	/**
      * 商家id
@@ -279,6 +285,22 @@ public class BmsFeesQtyVo implements IEntity{
 		this.calcuStatus = calcuStatus;
 	}
 
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Integer getNoDinggouCount() {
+        return noDinggouCount;
+    }
+
+    public void setNoDinggouCount(Integer noDinggouCount) {
+        this.noDinggouCount = noDinggouCount;
+    }
+	
 
 	
 }

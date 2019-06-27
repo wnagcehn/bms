@@ -247,6 +247,13 @@
                     </if>
                 </foreach>
             </trim>
+            <trim prefix="contract_attr =case" suffix="end,">
+                <foreach collection="list" item="biz" index="index">
+                    <if test="biz.contractAttr!= null" >
+                      when fees_no=#{biz.feesNo} and subject_code=#{biz.subjectCode}  then #{biz.contractAttr}
+                    </if>
+                </foreach>
+            </trim>
         </trim>
 	    where fees_no in
         <foreach collection="list" index="index" item="biz" separator="," open="(" close=")">
@@ -277,6 +284,7 @@
 			<if test="param4 != null" >param4=#{param4,jdbcType=VARCHAR},</if>
 			<if test="param6 != null" >param6=#{param6,jdbcType=VARCHAR},</if>
 			<if test="ruleNo != null" >rule_no=#{ruleNo,jdbcType=VARCHAR},</if>
+			<if test="contractAttr != null" >contract_attr = #{contractAttr,jdbcType=VARCHAR},</if>
 			<if test="calcuMsg != null" >calcu_msg=#{calcuMsg,jdbcType=VARCHAR},</if>
 		</set>
         where fees_no=#{feesNo} and subject_code = #{subjectCode} and del_flag='0'

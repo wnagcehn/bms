@@ -19,6 +19,7 @@ public enum CalculateState {
 	No_Exe("5","不计算"),
 	Other("10", "其他"),
 	Quote_More("6", "多个报价"),
+	No_Dinggou("7", "未订购服务"),
 	Retry("99","待重算");
 	
 	private String code;
@@ -56,6 +57,7 @@ public enum CalculateState {
 		maps.put(No_Exe.getCode(),No_Exe.getDesc());
 		maps.put(Other.getCode(), Other.getDesc());
 		maps.put(Retry.getCode(), Retry.getDesc());
+	    maps.put(No_Dinggou.getCode(), No_Dinggou.getDesc());	
 	}
 	
 	public static Map<String,String> getMap(){

@@ -136,6 +136,8 @@ public class FeesReceiveDispatchEntity implements IEntity {
 	private Double derateAmount;
 	
 	private String calcuMsg;
+    // 合同归属 1-BMS 2-合同在线
+    private String contractAttr;
 	
 	public FeesReceiveDispatchEntity() {
 
@@ -1036,6 +1038,14 @@ public class FeesReceiveDispatchEntity implements IEntity {
 	public void setCalcuMsg(String calcuMsg) {
 		this.calcuMsg = calcuMsg;
 	}
+
+    public String getContractAttr() {
+        return contractAttr;
+    }
+
+    public void setContractAttr(String contractAttr) {
+        this.contractAttr = contractAttr;
+    }
 
 	
 	

@@ -153,7 +153,7 @@
 				and extattr1 = #{extattr1}
 		</if>
     </sql>
-    
+
     <sql id="baseSelectColumnsJoin">
     		<if test="(id != null and id !='')" >
 				and a.id = #{id}
@@ -432,16 +432,7 @@ a.extattr2, a.extattr3, a.extattr4, a.extattr5, b.is_calculated
  		LEFT JOIN biz_product_storage a on a.fees_no=b.fees_no and a.del_flag='0' 
  		set b.is_calculated = '99', b.calcu_msg=''
  		where 1=1 and b.del_flag='0'
- 		<if test="(customerid != null and customerid !='')" >
-			and a.customerid = #{customerid}
-		</if>
-		<if test="(startTime != null and startTime !='') " >
-			and <![CDATA[a.create_time >= #{startTime}]]> 
-		</if>
-		
-		<if test="(endTime != null and endTime !='')" >
-			and <![CDATA[a.create_time <= #{endTime}]]>
-		</if>
+ 	    <include refid="baseSelectColumnsJoin" />
     </update>
     
         <select id="queryList" parameterType="java.util.Map"
@@ -459,9 +450,9 @@ a.extattr2, a.extattr3, a.extattr4, a.extattr5, b.is_calculated
     
         <select id="queryTask" parameterType="java.util.Map" resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
     	select 
-		a.customerid,b.subject_code as subjectCode, DATE_FORMAT(a.create_time,'%Y%m') as creMonth  from biz_product_storage a
+		a.customerid as customerId,b.subject_code as subjectCode, DATE_FORMAT(a.create_time,'%Y%m') as creMonth  from biz_product_storage a
 		LEFT JOIN fees_receive_storage b on a.fees_no=b.fees_no
-		WHERE b.del_flag='0' and a.del_flag='0' and a.is_calculated != 0 and b.is_calculated = '99'
+		WHERE b.del_flag='0' and a.del_flag='0' and b.is_calculated = '99'
     		<if test="(id != null and id !='')" >
 				and a.id = #{id}
 		</if>
@@ -550,11 +541,11 @@ a.extattr2, a.extattr3, a.extattr4, a.extattr5, b.is_calculated
 			    and a.last_modify_time >= #{lastModifyTime} add <![CDATA[a.last_modify_time <= #{lastModifyTime}]]>
 		</if>
 		<if test="(startTime != null and startTime !='') " >
-			    and <![CDATA[a.cur_time >= #{startTime}]]> 
+			    and <![CDATA[a.create_time >= #{startTime}]]> 
 		</if>
 		
 		<if test="(endTime != null and endTime !='')" >
-			    and <![CDATA[a.cur_time <= #{endTime}]]>
+			    and <![CDATA[a.create_time <= #{endTime}]]>
 		</if>
 		<if test="(extattr1 != null and extattr1 !='')" >
 				and a.extattr1 = #{extattr1}
