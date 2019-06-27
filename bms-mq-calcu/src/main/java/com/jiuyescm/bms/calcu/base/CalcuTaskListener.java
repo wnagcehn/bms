@@ -149,7 +149,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			bmsCalcuTaskService.update(taskVo);
 			
 			//查询合同归属
-			String contractAttr = bmsCalcuService.queryContractAttr(taskVo.getCustomerId());
+			/*String contractAttr = bmsCalcuService.queryContractAttr(taskVo.getCustomerId());
 			logger.info("taskId={} contractAttr={}",taskVo.getTaskId(),contractAttr);
 			if(StringUtil.isEmpty(contractAttr)){
 				taskVo.setTaskStatus(30);//合同归属不存在，计算异常
@@ -158,12 +158,12 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 				bmsCalcuTaskService.update(taskVo);
 				logger.info("taskId={} 合同归属不存在，任务丢弃",taskVo.getTaskId());
 				return;
-			}
+			}*/
 			//费用计算
 			Map<String, Object> cond = getQueryMap(taskVo);
 			logger.info("taskId={} 数据查询条件{}",taskVo.getTaskId(),cond);
 			
-			generalCalcu(taskVo, contractAttr,cond);	
+			generalCalcu(taskVo, "",cond);	
 			
 			//总单量统计，计算单量统计
 			BmsFeesQtyVo feesQtyVoFinish = feesCountReport(taskVo);
