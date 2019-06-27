@@ -196,7 +196,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			logger.error("taskId={} 计算任务执行异常",taskVo.getTaskId(),e1);
 			taskVo.setTaskStatus(30);
 			taskVo.setTaskRate(99);
-			taskVo.setRemark("系统错误");
+			taskVo.setRemark("系统错误"); 
 			return;
 		}
 	}
