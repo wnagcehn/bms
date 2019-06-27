@@ -364,7 +364,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
      */
     private BillPeriodInfoEntity getForPeriodInfo(BillCheckInfoVo entity) {
         BillPeriodInfoEntity periodInfoEntity = new BillPeriodInfoEntity();
-        BillPeriodInfoEntity periodNullEntity = new BillPeriodInfoEntity();
+        BillPeriodInfoEntity periodNullEntity = null;
         Map<String, Object> map = Maps.newLinkedHashMap();
         map.put("delFlag", "0");
         List<BillPeriodInfoEntity> periodList = billPeriodInfoRepository.query(map); 
