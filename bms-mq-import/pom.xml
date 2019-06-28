@@ -364,7 +364,6 @@
 				<exclusion>
 			    	<groupId>com.jiuyescm.scm</groupId>
 					<artifactId>scm-beans</artifactId>
-					<version>1.0.1-SNAPSHOT</version>
 			    </exclusion>
 		    </exclusions>
 		</dependency>
