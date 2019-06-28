@@ -57,7 +57,6 @@ public class JudgeProcessReportJob extends IJobHandler {
     private static final Integer batchNum = 2000;
     private static final String SUCCESS = "SUCCESS";
     private static final String FAIL = "FAIL";
-    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private static SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
@@ -93,17 +92,17 @@ public class JudgeProcessReportJob extends IJobHandler {
         Map<String, Object> elCondition = Maps.newLinkedHashMap();
         elCondition.put("pullType", "bill_customer_master");
         List<ElConditionEntity> elList =  elConditionRepository.query(elCondition);
-        if(CollectionUtils.isEmpty(elList)) printLog("etl_condition表未配置，请去配置", sw, FAIL);
+        if(CollectionUtils.isEmpty(elList)) return printLog("etl_condition表未配置，请去配置", sw, FAIL);
         ElConditionEntity elEntity = elList.get(0);
         Timestamp startTime = elEntity.getLastTime();
-        if(null == startTime) printLog("etl_condition表未配置时间，请去配置", sw, FAIL);
-        String startT = sdf.format(startTime);
+        if(null == startTime) return printLog("etl_condition表未配置时间，请去配置", sw, FAIL);
         elCondition.put("lastTime", new Timestamp(System.currentTimeMillis()));
         printTime(sw);
+        XxlJobLogger.log("etl表获取的时间为：" + startTime);
         
         // 汇总主表数据（BMS计算的和账单导入的）
         sw.start("汇总主表数据");
-        map.put("startTime", startT);
+        map.put("startTime", startTime);
         map.put("endTime", new Timestamp(System.currentTimeMillis()));
         List<BillCustomerMasterEntity> taskAndCheckLogs = billCustomerMasterService.queryCalcuTaskLogAndCheckLog(map);
         for (BillCustomerMasterEntity masterEntity : taskAndCheckLogs) {
@@ -112,12 +111,13 @@ public class JudgeProcessReportJob extends IJobHandler {
             masterEntity.setModTime(new Timestamp(System.currentTimeMillis()));
         }
         if (CollectionUtils.isNotEmpty(taskAndCheckLogs)) {
+            XxlJobLogger.log("汇总计算表、预账单、账单日志表，共：" + taskAndCheckLogs.size() + " 条");
             try {
                 billCustomerMasterService.saveOrUpdate(taskAndCheckLogs);
             } catch (Exception e) {
                 XxlJobLogger.log("主表操作异常：", e);
                 elConditionRepository.updateByPullType(elCondition);
-                printLog("主表操作", sw, FAIL);
+                return printLog("主表操作", sw, FAIL);
             }
         }
         printTime(sw);
@@ -126,7 +126,8 @@ public class JudgeProcessReportJob extends IJobHandler {
         sw.start("查询主表，组装子表数据");
         map.put("isCalculated", "0");
         List<BillCustomerMasterEntity> masterList = billCustomerMasterService.query(map);
-        if (CollectionUtils.isEmpty(masterList)) printLog("没有数据需要汇总", sw, SUCCESS);
+        if (CollectionUtils.isEmpty(masterList)) return printLog("没有数据需要汇总", sw, SUCCESS);
+        XxlJobLogger.log("主表需要处理的数据存在：" + masterList.size() + " 条");
         printTime(sw);
         List<BillCustomerDetailEntity> detailList = new ArrayList<BillCustomerDetailEntity>();
         for (BillCustomerMasterEntity masterEntity : masterList) {
@@ -227,6 +228,7 @@ public class JudgeProcessReportJob extends IJobHandler {
             } catch (Exception e) {
                 XxlJobLogger.log("商家:" + masterEntity.getMkId() + ",月份:" + masterEntity.getCreateMonth()+ "处理异常：{0}", e);
                 masterEntity.setIsCalculated("2");
+                printTime(sw);
                 continue;
             }
             printTime(sw);
@@ -237,7 +239,7 @@ public class JudgeProcessReportJob extends IJobHandler {
             billCustomerDetailRepository.saveBatch(detailList);  
         } catch (Exception e) {
             XxlJobLogger.log("保存detail表异常：", e); 
-            printLog("保存Detail表异常", sw, FAIL);
+            return printLog("保存Detail表异常", sw, FAIL);
         }
         printTime(sw);
         
@@ -246,7 +248,7 @@ public class JudgeProcessReportJob extends IJobHandler {
             billCustomerMasterService.updateBatch(masterList);
         } catch (Exception e) {
             XxlJobLogger.log("更新master表异常：", e); 
-            printLog("更新master表异常", sw, FAIL);
+            return printLog("更新master表异常", sw, FAIL);
         }
         printTime(sw);
         

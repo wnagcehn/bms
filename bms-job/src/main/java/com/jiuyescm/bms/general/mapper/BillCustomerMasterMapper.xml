@@ -85,10 +85,12 @@
     <select id="queryCalcuTaskLogAndCheckLog" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.BillCustomerMasterEntity">
         SELECT t.mkId, t.createMonth from ( 
 	        select b.mk_id as mkId,a.cre_month as createMonth 
-	        from bms_asyn_calcu_task_log a 
+	        from bms_asyn_calcu_task a 
 			left join pub_customer b on a.customer_id = b.customer_id and b.del_flag='0'
 			where a.cre_time>=#{startTime} 
 			and a.cre_time <![CDATA[<= #{endTime}]]>
+			and a.task_status=20
+			and a.task_rate=100
 			and b.mk_id is not null group by b.mk_id
 			UNION
 			select b.mk_id as mkId,CONCAT(SUBSTRING(a.create_time,1,4),SUBSTRING(a.create_time,6,2)) as createMonth 
