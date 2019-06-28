@@ -1786,7 +1786,7 @@ public class PrepareBillHandler {
             dataItem.put("customerName", entity.getCustomerName());
             dataItem.put("dutyType", entity.getDutyType());
             dataItem.put("payType", entity.getPayType());
-            double productAmount=entity.getProductAmount()==null?0d:entity.getProductAmount().doubleValue();
+            double productAmount=entity.getProductAmount();
             t_productAmount+=productAmount;
             dataItem.put("productAmount", productAmount);
             if("0".equals(entity.getIsDeliveryFree())){
@@ -1949,7 +1949,7 @@ public class PrepareBillHandler {
             dataItem.put("customerName", entity.getCustomerName());
             dataItem.put("dutyType", entity.getDutyType());
             dataItem.put("payType", entity.getPayType());
-            double amount = (entity.getReturnedAmount() == null ? 0 : entity.getReturnedAmount().doubleValue());
+            double amount = entity.getReturnedAmount();
             t_amount += amount;
             dataItem.put("returnedAmount", amount);
             dataItem.put("crePerson", entity.getCrePerson());
