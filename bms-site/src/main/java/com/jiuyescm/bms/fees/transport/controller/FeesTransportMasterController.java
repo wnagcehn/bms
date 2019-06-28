@@ -1,6 +1,9 @@
 package com.jiuyescm.bms.fees.transport.controller;
 
 import java.io.File;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -80,6 +83,7 @@ public class FeesTransportMasterController {
 	 */
 	@DataProvider
 	public void query(Page<FeesTransportVo> page, Map<String, Object> param) {
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	    if (null == param) {
             param = new HashMap<String, Object>();
         }
@@ -90,6 +94,14 @@ public class FeesTransportMasterController {
             throw new BizException("结束时间不能为空!");
         }
         param.put("delFlag", "0");
+        try {
+            String dateString=formatter.format(param.get("endTime"));
+            dateString=dateString+" 23:59:59";
+            param.put("endTime", Timestamp.valueOf(dateString));
+        } catch (Exception e) {
+           logger.error("日期转换异常！", e);
+           throw new BizException("日期转换异常!");
+        }
         try {
     		PageInfo<FeesTransportVo> pageInfo = feesTransportMasterService.query(param, page.getPageNo(), page.getPageSize());
     		if (pageInfo != null) {

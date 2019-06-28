@@ -111,6 +111,7 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 			a.need_insurance,a.remark,c.car_model
 			from fees_transport_master a
 			LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
+			WHERE a.del_flag='0'
 			GROUP BY a.order_no
 		) t
 		LEFT JOIN fees_transport_items b on t.oms_id=b.oms_id and b.del_flag='0'

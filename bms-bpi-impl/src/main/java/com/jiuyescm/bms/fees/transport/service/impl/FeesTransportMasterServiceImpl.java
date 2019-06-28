@@ -59,6 +59,7 @@ public class FeesTransportMasterServiceImpl implements IFeesTransportMasterServi
             PageInfo<FeesTransportMasterEntity> pageInfo=feesTransportMasterRepository.query(condition, pageNo, pageSize);           
             List<FeesTransportVo> voList = new ArrayList<FeesTransportVo>();
             for(FeesTransportMasterEntity entity : pageInfo.getList()) {
+//                entity.setActualPackingQty(entity.getActualPackingQty()==null?0d:entity.getActualPackingQty().doubleValue());
                 FeesTransportVo vo = new FeesTransportVo();         
                 PropertyUtils.copyProperties(vo, entity);          
                 voList.add(vo);
