@@ -84,6 +84,9 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 			map.put("num", num);
 		}
 		
+	      //初始化配置
+        initConf();
+		
 		//查询所有状态为0的业务数据
 		map.put("isCalculated", "0");
 		Map<String, Object> taskVoMap = new HashMap<>();
