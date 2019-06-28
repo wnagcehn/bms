@@ -345,9 +345,6 @@
       </PropertyDef>
       <PropertyDef name="projectName">
         <Property name="label">承运产品</Property>
-        <Property name="mapping">
-          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTransportTypeList&quot;).getResult()}</Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="beginTime">
         <Property name="label">开始时间</Property>
