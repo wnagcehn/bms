@@ -164,9 +164,6 @@
 			<if test=" payDirection != null and payDirection !='' ">
 				pay_direction = #{payDirection,jdbcType=VARCHAR},
 			</if>
-			<if test=" isDeliveryFree != null and isDeliveryFree !='' ">
-				is_delivery_free = #{isDeliveryFree,jdbcType=TINYINT},
-			</if>
 			<if test=" productAmount != null and productAmount !='' ">
 				product_amount = #{productAmount,jdbcType=DECIMAL},
 			</if>
@@ -213,7 +210,7 @@
 				waybill_time = #{waybillTime,jdbcType=TIMESTAMP},
 			</if>
         </trim>
-        where id = #{id} and del_flag='0'
+        where waybill_no = #{waybillNo} and work_order_no = #{workOrderNo} and del_flag='0'
     </update>  
    
 	 <!-- 预账单理赔 -->
