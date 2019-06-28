@@ -76,10 +76,10 @@ public class FeesClaimsVo implements IEntity {
 	private String isDeliveryFree;
 	// 理赔商品金额
     @ExcelField(title = "理赔商品金额", num = 14)
-	private BigDecimal productAmount;
+	private Double productAmount;
 	// 改地址退件费
     @ExcelField(title = "改地址退件费", num = 16)
-	private BigDecimal returnedAmount;
+	private Double returnedAmount;
     // 创建人
     @ExcelField(title = "创建人", num = 17)
     private String crePerson;
@@ -265,23 +265,24 @@ public class FeesClaimsVo implements IEntity {
         this.isDeliveryFree = isDeliveryFree;
     }
 
-    public BigDecimal getProductAmount() {
-		return this.productAmount;
-	}
-
-	public void setProductAmount(BigDecimal productAmount) {
-		this.productAmount = productAmount;
-	}
 	
-	public BigDecimal getReturnedAmount() {
-		return this.returnedAmount;
-	}
+	public Double getProductAmount() {
+        return productAmount;
+    }
 
-	public void setReturnedAmount(BigDecimal returnedAmount) {
-		this.returnedAmount = returnedAmount;
-	}
-	
-	public BigDecimal getAmerceAmount() {
+    public void setProductAmount(Double productAmount) {
+        this.productAmount = productAmount;
+    }
+
+    public Double getReturnedAmount() {
+        return returnedAmount;
+    }
+
+    public void setReturnedAmount(Double returnedAmount) {
+        this.returnedAmount = returnedAmount;
+    }
+
+    public BigDecimal getAmerceAmount() {
 		return this.amerceAmount;
 	}
 
