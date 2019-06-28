@@ -72,22 +72,22 @@ public class FeesTransportMasterEntity implements IEntity {
 	private String creDate;
 	// 体积
 	@ExcelField(title = "体积", num = 19)
-	private BigDecimal actualVolume;
+	private Double actualVolume;
 	// 重量
 	@ExcelField(title = "重量", num = 20)
-	private BigDecimal actualWeight;
+	private Double actualWeight;
 	// 实发箱数
 	@ExcelField(title = "实发箱数", num = 23)
-	private BigDecimal actualPackingQty;
+	private Double actualPackingQty;
 	// 实发件数
 	@ExcelField(title = "实发件数", num = 24)
-	private BigDecimal actualGoodsQty;
+	private Double actualGoodsQty;
 	// 实收箱数
 	@ExcelField(title = "实收箱数", num = 25)
-	private BigDecimal receiptPackingQty;
+	private Double receiptPackingQty;
 	// 实收件数
 	@ExcelField(title = "实收件数", num = 25)
-	private BigDecimal receiptGoodsQty;
+	private Double receiptGoodsQty;
 	// 发货日期
 	private Timestamp beginTime;
 	@ExcelField(title = "发货日期", num = 27)
@@ -97,7 +97,7 @@ public class FeesTransportMasterEntity implements IEntity {
 	@ExcelField(title = "收货日期", num = 28)
 	private String endDate;
 	// 应付总计
-	private BigDecimal paymentTotle;
+	private Double paymentTotle;
 	// 客户是否需要保险
 	@ExcelField(title = "客户是否需要保险", num = 57)
 	private String needInsurance;
@@ -375,53 +375,6 @@ public class FeesTransportMasterEntity implements IEntity {
 		this.createdDt = createdDt;
 	}
 	
-	public BigDecimal getActualVolume() {
-		return this.actualVolume;
-	}
-
-	public void setActualVolume(BigDecimal actualVolume) {
-		this.actualVolume = actualVolume;
-	}
-	
-	public BigDecimal getActualWeight() {
-		return this.actualWeight;
-	}
-
-	public void setActualWeight(BigDecimal actualWeight) {
-		this.actualWeight = actualWeight;
-	}
-	
-	public BigDecimal getActualPackingQty() {
-		return this.actualPackingQty;
-	}
-
-	public void setActualPackingQty(BigDecimal actualPackingQty) {
-		this.actualPackingQty = actualPackingQty;
-	}
-	
-	public BigDecimal getActualGoodsQty() {
-		return this.actualGoodsQty;
-	}
-
-	public void setActualGoodsQty(BigDecimal actualGoodsQty) {
-		this.actualGoodsQty = actualGoodsQty;
-	}
-	
-	public BigDecimal getReceiptPackingQty() {
-		return this.receiptPackingQty;
-	}
-
-	public void setReceiptPackingQty(BigDecimal receiptPackingQty) {
-		this.receiptPackingQty = receiptPackingQty;
-	}
-	
-	public BigDecimal getReceiptGoodsQty() {
-		return this.receiptGoodsQty;
-	}
-
-	public void setReceiptGoodsQty(BigDecimal receiptGoodsQty) {
-		this.receiptGoodsQty = receiptGoodsQty;
-	}
 	
 	public Timestamp getBeginTime() {
 		return this.beginTime;
@@ -439,15 +392,64 @@ public class FeesTransportMasterEntity implements IEntity {
 		this.endTime = endTime;
 	}
 	
-	public BigDecimal getPaymentTotle() {
-		return this.paymentTotle;
-	}
-
-	public void setPaymentTotle(BigDecimal paymentTotle) {
-		this.paymentTotle = paymentTotle;
-	}
 	
-	public String getNeedInsurance() {
+	public Double getActualVolume() {
+        return actualVolume;
+    }
+
+    public void setActualVolume(Double actualVolume) {
+        this.actualVolume = actualVolume;
+    }
+
+    public Double getActualWeight() {
+        return actualWeight;
+    }
+
+    public void setActualWeight(Double actualWeight) {
+        this.actualWeight = actualWeight;
+    }
+
+    public Double getActualPackingQty() {
+        return actualPackingQty;
+    }
+
+    public void setActualPackingQty(Double actualPackingQty) {
+        this.actualPackingQty = actualPackingQty;
+    }
+
+    public Double getActualGoodsQty() {
+        return actualGoodsQty;
+    }
+
+    public void setActualGoodsQty(Double actualGoodsQty) {
+        this.actualGoodsQty = actualGoodsQty;
+    }
+
+    public Double getReceiptPackingQty() {
+        return receiptPackingQty;
+    }
+
+    public void setReceiptPackingQty(Double receiptPackingQty) {
+        this.receiptPackingQty = receiptPackingQty;
+    }
+
+    public Double getReceiptGoodsQty() {
+        return receiptGoodsQty;
+    }
+
+    public void setReceiptGoodsQty(Double receiptGoodsQty) {
+        this.receiptGoodsQty = receiptGoodsQty;
+    }
+
+    public Double getPaymentTotle() {
+        return paymentTotle;
+    }
+
+    public void setPaymentTotle(Double paymentTotle) {
+        this.paymentTotle = paymentTotle;
+    }
+
+    public String getNeedInsurance() {
 		return this.needInsurance;
 	}
 

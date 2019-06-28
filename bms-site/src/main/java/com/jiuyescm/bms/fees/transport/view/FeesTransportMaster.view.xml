@@ -59,21 +59,27 @@
       </PropertyDef>
       <PropertyDef name="actualVolume">
         <Property name="label">体积</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="actualWeight">
         <Property name="label">重量</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="actualPackingQty">
         <Property name="label">实发箱数</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="actualGoodsQty">
         <Property name="label">实发件数</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="receiptPackingQty">
         <Property name="label">实收箱数</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="receiptGoodsQty">
         <Property name="label">实收件数</Property>
+        <Property name="dataType">Double</Property>
       </PropertyDef>
       <PropertyDef name="beginTime">
         <Property name="label">发货日期</Property>
