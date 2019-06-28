@@ -112,6 +112,9 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 			from fees_transport_master a
 			LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
 			WHERE a.del_flag='0'
+			<if test=" transportNo != null and transportNo !='' ">
+				and c.transport_no=#{transportNo}
+			</if>
 			GROUP BY a.order_no
 		) t
 		LEFT JOIN fees_transport_items b on t.oms_id=b.oms_id and b.del_flag='0'
@@ -124,9 +127,6 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 		</if>
 		<if test=" orderNo != null and orderNo !='' ">
 			and t.order_no=#{orderNo}
-		</if>
-		<if test=" transportNo != null and transportNo !='' ">
-			and t.transport_no=#{transportNo}
 		</if>
 		<if test=" delFlag != null and delFlag !='' ">
 			and t.del_flag=#{delFlag}
