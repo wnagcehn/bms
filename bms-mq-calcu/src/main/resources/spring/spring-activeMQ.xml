@@ -96,11 +96,11 @@
 	    <jms:listener destination="BMS.QUEUE.CALCU.PALLET.DISPOSAL" ref="palletDisposalCalcuListener"/>
      </jms:listener-container>
      
-     <jms:listener-container task-executor="dispatchExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-10">
+     <jms:listener-container task-executor="dispatchExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-6">
 	    <jms:listener destination="BMS.QUEUE.CALCU.WAYBILL.DISPATCH" ref="dispatchCalcuListener"/>
 	 </jms:listener-container>
     
-     <jms:listener-container task-executor="materialuseExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-10">
+     <jms:listener-container task-executor="materialuseExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-6">
 	    <jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.MATERIALUSE" ref="materialUseCalcuListener"/>
      </jms:listener-container>
     
