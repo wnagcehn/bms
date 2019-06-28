@@ -54,9 +54,9 @@ public class FeesClaimsEntity implements IEntity {
 	// 是否免运费 0-不免运费 1-免运费
 	private String isDeliveryFree;
 	// 理赔商品金额
-	private BigDecimal productAmount;
+	private Double productAmount;
 	// 改地址退件费
-	private BigDecimal returnedAmount;
+	private Double returnedAmount;
 	// 处罚金额
 	private BigDecimal amerceAmount;
 	// 赔付日期
@@ -242,23 +242,24 @@ public class FeesClaimsEntity implements IEntity {
         this.isDeliveryFree = isDeliveryFree;
     }
 
-    public BigDecimal getProductAmount() {
-		return this.productAmount;
-	}
+  
+	public Double getProductAmount() {
+        return productAmount;
+    }
 
-	public void setProductAmount(BigDecimal productAmount) {
-		this.productAmount = productAmount;
-	}
-	
-	public BigDecimal getReturnedAmount() {
-		return this.returnedAmount;
-	}
+    public void setProductAmount(Double productAmount) {
+        this.productAmount = productAmount;
+    }
 
-	public void setReturnedAmount(BigDecimal returnedAmount) {
-		this.returnedAmount = returnedAmount;
-	}
-	
-	public BigDecimal getAmerceAmount() {
+    public Double getReturnedAmount() {
+        return returnedAmount;
+    }
+
+    public void setReturnedAmount(Double returnedAmount) {
+        this.returnedAmount = returnedAmount;
+    }
+
+    public BigDecimal getAmerceAmount() {
 		return this.amerceAmount;
 	}
 
