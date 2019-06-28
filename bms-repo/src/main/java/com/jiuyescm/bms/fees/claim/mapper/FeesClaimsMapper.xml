@@ -113,78 +113,6 @@
   <update id="update" parameterType="com.jiuyescm.bms.fees.claim.FeesClaimsEntity">
         update fees_claims
         <trim prefix="set" suffixOverrides=",">
-			<if test=" masterId != null and masterId !='' ">
-				master_id = #{masterId,jdbcType=BIGINT},
-			</if>
-			<if test=" waybillNo != null and waybillNo !='' ">
-				waybill_no = #{waybillNo,jdbcType=VARCHAR},
-			</if>
-			<if test=" outstockNo != null and outstockNo !='' ">
-				outstock_no = #{outstockNo,jdbcType=VARCHAR},
-			</if>
-			<if test=" externalNo != null and externalNo !='' ">
-				external_no = #{externalNo,jdbcType=VARCHAR},
-			</if>
-			<if test=" workOrderNo != null and workOrderNo !='' ">
-				work_order_no = #{workOrderNo,jdbcType=VARCHAR},
-			</if>
-			<if test=" payId != null and payId !='' ">
-				pay_id = #{payId,jdbcType=VARCHAR},
-			</if>
-			<if test=" dutyType != null and dutyType !='' ">
-				duty_type = #{dutyType,jdbcType=VARCHAR},
-			</if>
-			<if test=" payType != null and payType !='' ">
-				pay_type = #{payType,jdbcType=VARCHAR},
-			</if>
-			<if test=" customerId != null and customerId !='' ">
-				customer_id = #{customerId,jdbcType=VARCHAR},
-			</if>
-			<if test=" customerName != null and customerName !='' ">
-				customer_name = #{customerName,jdbcType=VARCHAR},
-			</if>
-			<if test=" warehouseCode != null and warehouseCode !='' ">
-				warehouse_code = #{warehouseCode,jdbcType=VARCHAR},
-			</if>
-			<if test=" warehouseName != null and warehouseName !='' ">
-				warehouse_name = #{warehouseName,jdbcType=VARCHAR},
-			</if>
-			<if test=" carrierId != null and carrierId !='' ">
-				carrier_id = #{carrierId,jdbcType=VARCHAR},
-			</if>
-			<if test=" carrierName != null and carrierName !='' ">
-				carrier_name = #{carrierName,jdbcType=VARCHAR},
-			</if>
-			<if test=" deliverId != null and deliverId !='' ">
-				deliver_id = #{deliverId,jdbcType=VARCHAR},
-			</if>
-			<if test=" deliverName != null and deliverName !='' ">
-				deliver_name = #{deliverName,jdbcType=VARCHAR},
-			</if>
-			<if test=" payDirection != null and payDirection !='' ">
-				pay_direction = #{payDirection,jdbcType=VARCHAR},
-			</if>
-			<if test=" productAmount != null and productAmount !='' ">
-				product_amount = #{productAmount,jdbcType=DECIMAL},
-			</if>
-			<if test=" returnedAmount != null and returnedAmount !='' ">
-				returned_amount = #{returnedAmount,jdbcType=DECIMAL},
-			</if>
-			<if test=" amerceAmount != null and amerceAmount !='' ">
-				amerce_amount = #{amerceAmount,jdbcType=DECIMAL},
-			</if>
-			<if test=" createTime != null and createTime !='' ">
-				create_time = #{createTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test=" crePersonId != null and crePersonId !='' ">
-				cre_person_id = #{crePersonId,jdbcType=VARCHAR},
-			</if>
-			<if test=" crePerson != null and crePerson !='' ">
-				cre_person = #{crePerson,jdbcType=VARCHAR},
-			</if>
-			<if test=" remark != null and remark !='' ">
-				remark = #{remark,jdbcType=VARCHAR},
-			</if>
 			<if test=" modPersonId != null and modPersonId !='' ">
 				mod_person_id = #{modPersonId,jdbcType=VARCHAR},
 			</if>
@@ -194,20 +122,11 @@
 			<if test=" modTime != null and modTime !='' ">
 				mod_time = #{modTime,jdbcType=TIMESTAMP},
 			</if>
-			<if test=" writeTime != null and writeTime !='' ">
-				write_time = #{writeTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test=" syncTime != null and syncTime !='' ">
-				sync_time = #{syncTime,jdbcType=TIMESTAMP},
-			</if>
 			<if test=" billYear != null and billYear !='' ">
 				bill_year = #{billYear,jdbcType=VARCHAR},
 			</if>
 			<if test=" billMonth != null and billMonth !='' ">
 				bill_month = #{billMonth,jdbcType=VARCHAR},
-			</if>
-			<if test=" waybillTime != null and waybillTime !='' ">
-				waybill_time = #{waybillTime,jdbcType=TIMESTAMP},
 			</if>
         </trim>
         where waybill_no = #{waybillNo} and work_order_no = #{workOrderNo} and del_flag='0'
