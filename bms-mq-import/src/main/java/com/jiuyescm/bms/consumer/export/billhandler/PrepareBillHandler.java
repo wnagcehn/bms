@@ -2341,6 +2341,8 @@ public class PrepareBillHandler {
         Map<String, String> cuMap = new HashMap<String, String>();
         List<Map<String, String>> cuList = new ArrayList<Map<String, String>>();
         List<FeesTransportVo> transportList = new ArrayList<FeesTransportVo>();
+        //按照主商家生成，存在两个子商家
+        List<FeesTransportVo> allCusList = new ArrayList<FeesTransportVo>();
 
         cond.put("beginTime", condition.get("startTime"));
         cond.put("endTime", condition.get("endTime"));
@@ -2354,7 +2356,7 @@ public class PrepareBillHandler {
             cuMap.put("customerId", customerId);
             cuList.add(cuMap);
         }
-
+   
         for (Map<String, String> map : cuList) {
             try {
                 result = tmsForOmsService.getAccountBillOrderCount(map.get("customerId"), condition.get("createMonth").toString());
@@ -2370,22 +2372,23 @@ public class PrepareBillHandler {
             
             cond.put("customerId", map.get("customerId"));
             transportList = feesTransportMasterService.queryForPrepareBill(cond);
+            allCusList.addAll(transportList);
+            
             if (result != transportList.size()) {
                 //TMS条数和BMS干线条数不等
                 updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 0,StringUtils.isBlank(entity.getRemark())?"该商家" + condition.get("month").toString() + "月有干线计费未提交至BMS，请联系干线运营人员及时提交结算数据，提交后重新生成预账单，谢谢！": 
                             entity.getRemark()+";该商家" + condition.get("month").toString()+"月有干线计费未提交至BMS，请联系干线运营人员及时提交结算数据，提交后重新生成预账单，谢谢！", null);
                 continue;
             }
-            
-            
+
         }
         
-        if (CollectionUtils.isEmpty(transportList)) {
+        if (CollectionUtils.isEmpty(allCusList)) {
             return;
         }
         
         List<Map<String, Object>> headTransportList = getTransportHead();
-        List<Map<String, Object>> dataTransportList = getTransportItem(transportList);
+        List<Map<String, Object>> dataTransportList = getTransportItem(allCusList);
         dataTransportList.addAll(getTransportSumItem());
         
         poiUtil.exportExcel2FilePath(poiUtil, workbook, "干线", 1, headTransportList, dataTransportList);
