@@ -49,7 +49,9 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
 
 	
 	private Map<String, Object> errorMap = null;
-
+	private List<BizDispatchPackageEntity> bizList =null;
+	private List<FeesReceiveStorageEntity> fees=null;
+	
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
 		initConf();
@@ -68,8 +70,8 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
 	@Override
 	public void calcu(Map<String, Object> map){
 		
-		List<BizDispatchPackageEntity> bizList = bizDispatchPackageService.query(map);
-		List<FeesReceiveStorageEntity> fees = new ArrayList<>();
+		bizList = bizDispatchPackageService.query(map);
+		fees = new ArrayList<>();
 		if(bizList == null || bizList.size() == 0){
 			commonService.taskCountReport(taskVo, "STORAGE");
 			return;

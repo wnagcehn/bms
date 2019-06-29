@@ -92,7 +92,8 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	private List<SystemCodeEntity> throwWeightList=null;
 	private Map<String, String> contractItemMap = null;
     private CalcuContractVo contract=null;
-	
+    private List<BizDispatchBillEntity> bizList =null;
+    private List<FeesReceiveDispatchEntity> fees=null;
 	
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
@@ -108,8 +109,8 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 	@Override
 	public void calcu(Map<String, Object> map) {
 		
-		List<BizDispatchBillEntity> bizList = bizDispatchBillService.query(map);
-		List<FeesReceiveDispatchEntity> fees = new ArrayList<>();
+		bizList = bizDispatchBillService.query(map);
+		fees = new ArrayList<>();
 		if(bizList == null || bizList.size() == 0){
 			commonService.taskCountReport(taskVo, "DISPATCH");
 			return;

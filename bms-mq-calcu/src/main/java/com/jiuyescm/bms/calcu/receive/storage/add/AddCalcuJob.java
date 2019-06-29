@@ -75,7 +75,9 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	private Map<String, Object> errorMap = null;
 	private GenericTemplateEntity addQuoTemplete;
 	private List<String> noCalList=null;
-
+	private List<BizAddFeeEntity> bizList =null;
+	private List<FeesReceiveStorageEntity> fees=null;
+	
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
 		getQuoTemplete();
@@ -107,8 +109,8 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 	@Override
 	public void calcu(Map<String, Object> map){
 		
-		List<BizAddFeeEntity> bizList = bizAddFeeService.querybizAddFee(map);
-		List<FeesReceiveStorageEntity> fees = new ArrayList<>();
+		bizList = bizAddFeeService.querybizAddFee(map);
+		fees = new ArrayList<>();
 		if(bizList == null || bizList.size() == 0){
 			commonService.taskCountReport(taskVo, "STORAGE");
 			return;

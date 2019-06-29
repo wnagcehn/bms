@@ -77,9 +77,11 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 	private PriceGeneralQuotationEntity quoTemplete = null;
 	private Map<String, Object> errorMap = null;
 	
-	List<String> cusList=null;
-	List<String> cusNames = null;
-	List<String> materialCusNames=null;
+	private List<String> cusList=null;
+	private List<String> cusNames = null;
+	private List<String> materialCusNames=null;
+	private List<BizPalletInfoEntity> bizList=null;
+	private List<FeesReceiveStorageEntity> fees=null;
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
@@ -101,8 +103,8 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 	@Override
 	public void calcu(Map<String, Object> map) {
 		
-		List<BizPalletInfoEntity> bizList = bizPalletInfoService.querybizPallet(map);
-		List<FeesReceiveStorageEntity> fees = new ArrayList<>();
+		bizList = bizPalletInfoService.querybizPallet(map);
+		fees = new ArrayList<>();
 		if(bizList == null || bizList.size() == 0){
 			commonService.taskCountReport(taskVo, "STORAGE");
 			return;
