@@ -73,7 +73,9 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 	
 	private PriceGeneralQuotationEntity quoTemplete = null;
 	private Map<String, Object> errorMap = null;
-    Map<String, String> temMap = null;
+    private Map<String, String> temMap = null;
+    private List<BizOutstockMasterEntity> bizList=null;
+    private List<FeesReceiveStorageEntity> fees =null;
 	
 	public void process(BmsCalcuTaskVo taskVo, String contractAttr) {
 		super.process(taskVo, contractAttr);
@@ -109,8 +111,8 @@ public class OutstockCalcuJob extends BmsContractBase implements ICalcuService<B
 	@Override
 	public void calcu(Map<String, Object> map){
 
-		List<BizOutstockMasterEntity> bizList = bizOutstockMasterService.query(map);
-		List<FeesReceiveStorageEntity> fees = new ArrayList<>();
+		bizList = bizOutstockMasterService.query(map);
+		fees = new ArrayList<>();
 		if(bizList == null || bizList.size() == 0){
 			commonService.taskCountReport(taskVo, "STORAGE");
 			return;
