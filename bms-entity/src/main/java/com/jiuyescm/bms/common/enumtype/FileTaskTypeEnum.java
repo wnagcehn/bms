@@ -25,6 +25,7 @@ public enum FileTaskTypeEnum {
 	BIZ_PRO_OUTSTOCK("pro_outstock", "商品出库单"),
 	BIZ_PACK_OUTSTOCK("pack_outstock", "耗材出库明细"),
 	BIZ_PACKAGE_OUTSTOCK("package_outstock", "标准包装方案"),
+	BIZ_TRANSPORT("transport", "干线"),
 	BIZ_INSTOCK("instock", "入库单"),
 	BIZ_INSTOCK_HANDWORK("instockhandwork", "入库卸货单"),
 	BIZ_OUTSTOCK("outstock","出库数据"),
@@ -43,6 +44,7 @@ public enum FileTaskTypeEnum {
 	BILL_RE_DOWN("bill_re_down","账单预下载"),
 	Calcu_Error("calcu_error", "计费异常数据下载"),
 	BIZ_BMS_OUTSTOCK("biz_bms_outstock","BMS原始出库数据"),
+	FEES_CLAIM("fees_claim","理赔费用"),
 	BIZ_WMS_OUTSTOCK("biz_wms_outstock","WMS原始结算数据");
 	private String code;
 	private String desc;

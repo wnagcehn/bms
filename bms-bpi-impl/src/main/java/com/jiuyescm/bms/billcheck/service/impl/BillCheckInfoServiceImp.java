@@ -225,7 +225,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
             throw new BizException("请先去商家账期设置界面配置！");
         }
         //超期时间
-        long overTime = 0l;
+        long overTime = 0L;
         Calendar c = Calendar.getInstance();
         String result = "";
         try {

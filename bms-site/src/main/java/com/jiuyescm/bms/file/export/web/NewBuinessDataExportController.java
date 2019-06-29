@@ -285,9 +285,9 @@ public class NewBuinessDataExportController extends BaseController {
 							}
 							// 耗材分仓
 							if ((Boolean)condition.get("isSepWarehouse")) {
-							    entity.setMaterialSplit(1l);;
+							    entity.setMaterialSplit(1L);;
 							}else{
-							    entity.setMaterialSplit(0l);
+							    entity.setMaterialSplit(0L);
 							}
 							// 是否自动折扣
 							if ((Boolean)condition.get("isDiscount")) {

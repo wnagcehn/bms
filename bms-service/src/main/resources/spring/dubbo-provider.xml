@@ -81,10 +81,17 @@
 	<dubbo:service interface="com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialCancelService" ref="bizOutstockPackmaterialCancelService"/>
 	<dubbo:service interface="com.jiuyescm.bms.base.dict.api.IPubPackageDictService" ref="pubPackageDictService"/>
 	<dubbo:service interface="com.jiuyescm.bms.biz.storage.service.IAddFeeService" ref="addFeeService" />
-	<dubbo:service interface="com.jiuyescm.bms.calculate.api.IBmsCalcuExceptionService" ref="bmsCalcuExceptionService" />	
+
+	<dubbo:service interface="com.jiuyescm.bms.calculate.api.IBmsCalcuExceptionService" ref="bmsCalcuExceptionService" />
 	<dubbo:service interface="com.jiuyescm.bms.calculate.api.IBmsDiscountCalcuService" ref="bmsDiscountCalcuService"/>
+	
+	<!-- 干线 -->
+	<dubbo:service interface="com.jiuyescm.bms.fees.transport.service.IFeesTransportMasterService" ref="feesTransportMasterService" />
+	<!-- 理赔 -->
+	<dubbo:service interface="com.jiuyescm.bms.feeclaim.service.IFeesClaimService" ref="feesClaimService" />
 	<!-- 商家账期 -->
 	<dubbo:service interface="com.jiuyescm.bms.bill.customer.service.IBillPeriodInfoService" ref="billPeriodInfoService" />
 	<!-- 结算进度 -->
 	<dubbo:service interface="com.jiuyescm.bms.bill.customer.service.IBillCustomerDetailService" ref="billCustomerDetailService" />
+
 </beans>

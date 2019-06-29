@@ -155,7 +155,7 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
 	    ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
 		contractCalcuService.calcuForContract(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
 		if("succ".equals(errorMap.get("success").toString())){
-            fee.setCalcuMsg(CalculateState.Finish.getDesc());
+            fee.setIsCalculated(CalculateState.Finish.getCode());
 			if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
 				logger.info("计算成功，费用【{}】",fee.getCost());
                 fee.setCalcuMsg("计算成功");
