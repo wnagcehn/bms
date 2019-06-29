@@ -59,7 +59,7 @@ public interface IBizPalletInfoRepository {
 	 * @param list
 	 * @return
 	 */
-	int retryCalculate(List<BizPalletInfoEntity> list);
+    int retryCalculate(Map<String, Object> param);
 	
 	/**
 	 * 批量更新费用表计算状态(99)和调整数量
@@ -90,4 +90,5 @@ public interface IBizPalletInfoRepository {
     int cancalCustomerBiz(Map<String,Object> map);
     
     int restoreCustomerBiz(Map<String,Object> map);
+
 }

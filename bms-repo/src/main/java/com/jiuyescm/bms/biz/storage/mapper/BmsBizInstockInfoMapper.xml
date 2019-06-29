@@ -198,7 +198,7 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
         update fees_receive_storage b
         INNER JOIN biz_instock_info a on b.fees_no=a.fees_no  
         set b.is_calculated='99', b.calcu_msg=''
-        where b.del_flag='0' and a.del_flag='0'
+        where b.del_flag='0'
         <if test=" customerId != null and customerId !='' ">
 			and a.customer_id = #{customerId}
 		</if>
@@ -207,6 +207,24 @@ instock_no, external_num, warehouse_code, warehouse_name, customer_id, customer_
 		</if>
 		<if test="createEndTime != null and createEndTime !='' " >
 			and <![CDATA[a.create_time <= #{createEndTime}]]>
+		</if>
+		<if test=" instockNo != null and instockNo !='' ">
+			and a.instock_no = #{instockNo}
+		</if>
+       	<if test=" externalNum != null and externalNum !='' ">
+			and a.external_num = #{externalNum}
+		</if>
+		<if test=" warehouseCode != null and warehouseCode !='' ">
+			and a.warehouse_code = #{warehouseCode}
+		</if>
+		<if test=" delFlag != null and delFlag !='' ">
+			and a.del_flag = #{delFlag}
+		</if>
+		<if test=" isCalculated != null and isCalculated !='' ">
+			and b.is_calculated = #{isCalculated}
+		</if>
+		<if test=" subjectCode != null and subjectCode !='' ">
+			and b.subject_code = #{subjectCode}
 		</if>
     </update>
     
