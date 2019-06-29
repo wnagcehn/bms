@@ -81,7 +81,9 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 	//private String quoTempleteCode = null;					//签约服务中的模板编号
 	private PriceGeneralQuotationEntity quoTemplete = null;	//报价模板对象
 	private Map<String, Object> errorMap = null;			//用户合同在线计算
-	List<String> cusList=null; 								//按重量算商品存储费的商家
+	private List<String> cusList=null; 								//按重量算商品存储费的商家
+	private List<BizProductStorageEntity> bizList =null;
+	private List<FeesReceiveStorageEntity> fees=null;
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
@@ -115,8 +117,8 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 	@Override
 	public void calcu(Map<String, Object> map){
 		
-		List<BizProductStorageEntity> bizList = bizProductStorageService.query(map);
-		List<FeesReceiveStorageEntity> fees = new ArrayList<>();
+		bizList = bizProductStorageService.query(map);
+		fees = new ArrayList<>();
 		if(bizList == null || bizList.size() == 0){
 			commonService.taskCountReport(taskVo, "STORAGE");
 			return;

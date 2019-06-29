@@ -60,6 +60,8 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 	//private String quoTempleteCode = null;
 	private PriceGeneralQuotationEntity quoTemplete = null;
 	private Map<String, Object> errorMap = null;
+	private List<BmsBizInstockInfoEntity> bizList =null;
+	private List<FeesReceiveStorageEntity> fees=null;
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
@@ -86,8 +88,8 @@ public class InstockCalcuJob extends BmsContractBase implements ICalcuService<Bm
 	@Override
 	public void calcu(Map<String, Object> map){
 		
-		List<BmsBizInstockInfoEntity> bizList = bmsBizInstockInfoRepository.getInStockInfoList(map);
-		List<FeesReceiveStorageEntity> fees = new ArrayList<>();
+		bizList = bmsBizInstockInfoRepository.getInStockInfoList(map);
+		fees = new ArrayList<>();
 		if(bizList == null || bizList.size() == 0){
 			commonService.taskCountReport(taskVo, "STORAGE");
 			return;
