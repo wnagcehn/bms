@@ -141,8 +141,8 @@ public class BizPalletInfoServiceImpl implements IBizPalletInfoService {
      * @return
      */
 	@Override
-	public int retryCalculate(List<BizPalletInfoEntity> list) {
-		return bizPalletInfoRepository.retryCalculate(list);
+	public int retryCalculate(Map<String, Object> map) {
+		return bizPalletInfoRepository.retryCalculate(map);
 	}
 	
 	/**

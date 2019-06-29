@@ -119,9 +119,9 @@ public class BizPalletInfoRepositoryImpl extends MyBatisDao implements IBizPalle
      */
 	@SuppressWarnings("unchecked")
 	@Override
-	public int retryCalculate(List<BizPalletInfoEntity> list) {
+	public int retryCalculate(Map<String, Object> param) {
 		try{
-			updateBatch("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.retryForCalcuNew", list);
+			update("com.jiuyescm.bms.biz.pallet.BizPalletInfoMapper.retryForCalcuNew", param);
 			return 1;
 		}
 		catch(Exception ex){
