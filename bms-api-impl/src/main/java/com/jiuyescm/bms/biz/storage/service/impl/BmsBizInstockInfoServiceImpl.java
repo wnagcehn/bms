@@ -136,5 +136,12 @@ public class BmsBizInstockInfoServiceImpl implements IBmsBizInstockInfoService {
             int pageNo, int pageSize){
 		return bmsBizInstockInfoRepository.groupCount(condition, pageNo, pageSize);
 	}
+
+    @Override
+    public int reTry(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return bmsBizInstockInfoRepository.reCalculate(condition);
+    }
+
 	
 }
