@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.calcu.base;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -148,7 +149,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			bmsCalcuTaskService.update(taskVo);
 			
 			//查询合同归属
-			String contractAttr = bmsCalcuService.queryContractAttr(taskVo.getCustomerId());
+			/*String contractAttr = bmsCalcuService.queryContractAttr(taskVo.getCustomerId());
 			logger.info("taskId={} contractAttr={}",taskVo.getTaskId(),contractAttr);
 			if(StringUtil.isEmpty(contractAttr)){
 				taskVo.setTaskStatus(30);//合同归属不存在，计算异常
@@ -157,17 +158,24 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 				bmsCalcuTaskService.update(taskVo);
 				logger.info("taskId={} 合同归属不存在，任务丢弃",taskVo.getTaskId());
 				return;
-			}
+			}*/
 			//费用计算
 			Map<String, Object> cond = getQueryMap(taskVo);
 			logger.info("taskId={} 数据查询条件{}",taskVo.getTaskId(),cond);
 			
-			generalCalcu(taskVo, contractAttr,cond);
-			
+			generalCalcu(taskVo, "",cond);	
 			
 			//总单量统计，计算单量统计
 			BmsFeesQtyVo feesQtyVoFinish = feesCountReport(taskVo);
 			logger.info("taskId={} 计算完成后统计单量{}",taskVo.getTaskId(),JSONObject.fromObject(feesQtyVoFinish));
+			
+			//总费用统计，以月份，商家，科目维度
+			BmsFeesQtyVo amountVo = totalAmountReport(taskVo);
+			if (null == amountVo) {
+			    taskVo.setTotalAmount(BigDecimal.ZERO); 
+            }else {
+                taskVo.setTotalAmount(amountVo.getTotalAmount());
+            }
 			
 			taskVo.setUncalcuCount(feesQtyVoFinish.getUncalcuCount()==null?0:feesQtyVoFinish.getUncalcuCount());//本次待计算的费用数
 			taskVo.setCalcuCount(feesQtyVo.getUncalcuCount()==null?0:feesQtyVo.getUncalcuCount());//计算完成的费用总数    
@@ -175,11 +183,12 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			taskVo.setFinishCount(feesQtyVoFinish.getFinishCount()==null?0:feesQtyVoFinish.getFinishCount());//计算成功总数
 			taskVo.setSysErrorCount(feesQtyVoFinish.getSysErrorCount()==null?0:feesQtyVoFinish.getSysErrorCount());//系统错误用总数
 			taskVo.setContractMissCount(feesQtyVoFinish.getContractMissCount()==null?0:feesQtyVoFinish.getContractMissCount());//合同缺失总数
+	        taskVo.setNoDinggouCount(feesQtyVoFinish.getNoDinggouCount()==null?0:feesQtyVoFinish.getNoDinggouCount());//未订购服务总数
 			taskVo.setQuoteMissCount(feesQtyVoFinish.getQuoteMissCount()==null?0:feesQtyVoFinish.getQuoteMissCount());//报价缺失总数
 			taskVo.setNoExeCount(feesQtyVoFinish.getNoExeCount()==null?0:feesQtyVoFinish.getNoExeCount());//不计算费用总数
 			taskVo.setCalcuStatus(feesQtyVoFinish.getCalcuStatus());
 			taskVo.setTaskStatus(20);//合同归属不存在，计算异常
-			taskVo.setTaskRate(100);
+			taskVo.setTaskRate(100);	
 			taskVo.setFinishTime(JAppContext.currentTimestamp());//计算完成时间
 			bmsCalcuTaskService.update(taskVo);
 			
@@ -187,7 +196,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 			logger.error("taskId={} 计算任务执行异常",taskVo.getTaskId(),e1);
 			taskVo.setTaskStatus(30);
 			taskVo.setTaskRate(99);
-			taskVo.setRemark("系统错误");
+			taskVo.setRemark("系统错误"); 
 			return;
 		}
 	}
@@ -213,6 +222,8 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 	protected abstract void generalCalcu(BmsCalcuTaskVo vo,String contractAttr,Map<String, Object>cond);
 
 	protected abstract BmsFeesQtyVo feesCountReport(BmsCalcuTaskVo taskVo);
+	
+	protected abstract BmsFeesQtyVo totalAmountReport(BmsCalcuTaskVo taskVo);
 	
 	
 }

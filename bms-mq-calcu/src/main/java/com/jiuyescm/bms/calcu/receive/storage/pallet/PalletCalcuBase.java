@@ -43,4 +43,10 @@ public class PalletCalcuBase extends CalcuTaskListener<BizPalletInfoEntity,FeesR
 		return feesQtyVo;
 	}
 
+    @Override
+    protected BmsFeesQtyVo totalAmountReport(BmsCalcuTaskVo taskVo) {
+        BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryTotalAmountForStoPallet(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
+        return feesQtyVo;
+    }
+
 }

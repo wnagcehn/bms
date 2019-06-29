@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.calcu.receive;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,9 @@ import com.jiuyescm.bms.calculate.vo.CalcuBaseInfoVo;
 import com.jiuyescm.bms.chargerule.receiverule.entity.BillRuleReceiveEntity;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.drools.IFeesCalcuService;
+import com.jiuyescm.bms.general.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.general.entity.FeesReceiveDispatchEntity;
+import com.jiuyescm.bms.general.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.bs.util.StringUtil;
 import com.jiuyescm.contract.quote.api.IContractQuoteInfoService;
@@ -63,6 +66,9 @@ public class ContractCalcuService {
             errorMap.put("success", "fail");
             errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
             errorMap.put("msg", ex.getMessage());
+            errorMap.put("code", ex.getCode());
+            //对返回的错误特殊处理
+            hand(vo,entity,fee,errorMap);
             return;
         }
         if (cqVo == null) {
@@ -232,9 +238,46 @@ public class ContractCalcuService {
             }  
         }
 
-        newList = levelMap.get(levelMap.lastKey());
-        
+        if(levelMap.size()>0 && levelMap.get(levelMap.lastKey())!=null){
+            newList = levelMap.get(levelMap.lastKey());
+        }
+             
         return newList;
     }
 
+    private void hand(BmsCalcuTaskVo vo, Object entity,Object fee,Map<String, Object> errorMap){
+        if(errorMap.get("code")!=null){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            //如果是配送
+            if("de_delivery_amount".equals(vo.getSubjectCode())){
+                FeesReceiveDispatchEntity dispatch=(FeesReceiveDispatchEntity) fee;
+                if("CONTRACT_LIST_NULL".equals(errorMap.get("code"))){                   
+                    //合同不存在
+                    errorMap.put("msg", "商家【"+vo.getCustomerName()+"】在【"+sdf.format(dispatch.getCreateTime())+"】未签订任何合同且该商家未有关联合同商家!");
+                }else if("CONTRACT_CONFIG_NULL".equals(errorMap.get("code")) || "CONTRACT_SUBJECT_NULL".equals(errorMap.get("code"))){
+                    //服务未配置 或者未订购科目
+                    errorMap.put("msg", "商家【"+vo.getCustomerName()+"】物流商【"+dispatch.getCarrierName()+"】未订购科目【配送费】的服务项!");
+                    errorMap.put("is_calculated", CalculateState.No_Dinggou.getCode());               
+                 }
+            }else{ //仓储
+                FeesReceiveStorageEntity storage=(FeesReceiveStorageEntity) fee;
+                if("CONTRACT_LIST_NULL".equals(errorMap.get("code"))){                   
+                    //合同不存在
+                    errorMap.put("msg", "商家【"+vo.getCustomerName()+"】在【"+sdf.format(storage.getCreateTime())+"】未签订任何合同且该商家未有关联合同商家!");
+                }
+          
+                if("CONTRACT_SUBJECT_NULL".equals(errorMap.get("code"))){
+                    errorMap.put("is_calculated", CalculateState.No_Dinggou.getCode());
+                    //未订购科目
+                    if("wh_value_add_subject".equals(vo.getSubjectCode())){
+                        BizAddFeeEntity add=(BizAddFeeEntity) entity;
+                        errorMap.put("msg", "商家【"+vo.getCustomerName()+"】未订购科目【"+add.getFeesTypeName()+"】的服务项!");
+                    }else{
+                        errorMap.put("msg", "商家【"+vo.getCustomerName()+"】未订购科目【"+vo.getSubjectName()+"】的服务项!");
+                    }
+                }
+            }
+        }
+    }
+    
 }

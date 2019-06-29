@@ -37,7 +37,11 @@ public class ExceptionConstant {
 	/***********文件下载 异常信息***************/
 	public static final String ASYN_REC_DISPATCH_FEE_EXCEL_EX_MSG = "异步生成应收宅配费用文件异常！";
 	
-	public static final String ASYN_REC_TRANSPORT_FEE_EXCEL_EX_MSG = "异步生成应收宅配费用文件异常！";
+
+	public static final String ASYN_REC_TRANSPORT_FEE_EXCEL_EX_MSG = "异步生成应收干线费用文件异常！";
+
+	public static final String ASYN_REC_PACKAGE_FEE_EXCEL_EX_MSG = "异步生成应收标准包装方案费用文件异常！";
+
 	
 	public static final String ASYN_PAY_DISPATCH_FEE_EXCEL_EX_MSG = "异步生成应付宅配费用文件异常！";
 	

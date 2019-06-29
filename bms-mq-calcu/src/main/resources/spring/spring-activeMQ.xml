@@ -81,7 +81,7 @@
 	但是在activemq补充了一个自定义的ACK模式:
 	INDIVIDUAL_ACKNOWLEDGE = 4：单条消息确认 -->
     
-     <jms:listener-container task-executor="lessExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="10-20">
+     <jms:listener-container task-executor="lessExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-10">
      	<jms:listener destination="BMS.QUEUE.CALCU.VALUE.VALUEADD" ref="addUseCalcuListener"/>    
      	<jms:listener destination="BMS.QUEUE.CALCU.INSTOCK.INSTOCKWORK" ref="whInstockWorkCalcuListener"/>
     	<jms:listener destination="BMS.QUEUE.CALCU.INSTOCK.B2CHANDWORK" ref="whInstockB2BCalcuListener"/>
@@ -90,21 +90,21 @@
 	    <jms:listener destination="BMS.QUEUE.CALCU.OUTSTOCK.B2CWORK" ref="outstockB2CWorkCalcuListener"/>
      </jms:listener-container>
      
-     <jms:listener-container task-executor="storageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-10">
+     <jms:listener-container task-executor="storageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-6">
      	<jms:listener destination="BMS.QUEUE.CALCU.PALLET.PRODUCTSTORAGE" ref="palletProductCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.PALLET.MATERIALSTORAGE" ref="palletMaterialCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.PALLET.DISPOSAL" ref="palletDisposalCalcuListener"/>
      </jms:listener-container>
      
-     <jms:listener-container task-executor="dispatchExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-10">
+     <jms:listener-container task-executor="dispatchExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-6">
 	    <jms:listener destination="BMS.QUEUE.CALCU.WAYBILL.DISPATCH" ref="dispatchCalcuListener"/>
 	 </jms:listener-container>
     
-     <jms:listener-container task-executor="materialuseExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-10">
+     <jms:listener-container task-executor="materialuseExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-6">
 	    <jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.MATERIALUSE" ref="materialUseCalcuListener"/>
      </jms:listener-container>
     
-     <jms:listener-container task-executor="dispatchPackageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="5-10">
+     <jms:listener-container task-executor="dispatchPackageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-6">
      	<jms:listener destination="BMS.QUEUE.CALCU.PRODUCT.PRODUCTSTORAGE" ref="productItemCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.DISPATCHPACKAGE" ref="dispatchPackageCalcuListener"/>    
      </jms:listener-container>

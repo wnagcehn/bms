@@ -6,7 +6,6 @@ package com.jiuyescm.bms.biz.storage.web;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
@@ -22,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.annotation.Expose;
@@ -32,7 +31,6 @@ import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.base.system.BaseController;
-import com.jiuyescm.bms.biz.storage.controller.BmsBizInstockInfoController;
 import com.jiuyescm.bms.biz.storage.entity.BizProductStorageEntity;
 import com.jiuyescm.bms.biz.storage.service.IBizProductStorageService;
 import com.jiuyescm.bms.common.constants.ExceptionConstant;
@@ -48,7 +46,6 @@ import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
-import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 /**
  * 商品存储费
@@ -438,55 +435,23 @@ public class BizProductStorageController extends BaseController {
 
 	@Expose
 	public String reCalculate(Map<String, Object> param) {
-		// 查询业务数据
-		List<BizProductStorageEntity> bizList = bizProductStorageService
-				.queryList(param);
-		if (CollectionUtils.isNotEmpty(bizList)) {
-			List<String> feeNoList = new ArrayList<>();
-			for (BizProductStorageEntity bizProductStorageEntity : bizList) {
-				feeNoList.add(bizProductStorageEntity.getFeesNo());
-			}
-			Map<String, Object> feeMap = new HashMap<String, Object>();
-			feeMap.put("feeList", feeNoList);
-			// 修改费用数据计算状态
-			if (bizProductStorageService.reCalculate(feeMap) == 0) {
-				return "重算异常";
-			}
-			// 发送MQ
-			sendTask(param);
-		}
-		return "操作成功! 正在重算...";
+	    // 更改费用计算状态为99
+        if(bizProductStorageService.reCalculate(param)==0){
+            return "重算异常";
+        }else{
+            //汇总需要发mq的数据
+            List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryProTask(param);
+            for (BmsCalcuTaskVo calcuTaskVo : list) {
+                calcuTaskVo.setCrePerson(ContextHolder.getLoginUser().getCname());
+                calcuTaskVo.setCrePersonId(ContextHolder.getLoginUserName());
+                try {
+                    bmsCalcuTaskService.sendTask(calcuTaskVo);
+                    logger.info("mq发送成功,商家id:"+calcuTaskVo.getCustomerId()+",年月:"+calcuTaskVo.getCreMonth()+",科目id:"+calcuTaskVo.getSubjectCode());
+                } catch (Exception e) {
+                    logger.error("mq发送失败:", e);
+                }
+            }
+        }
+        return "操作成功! 正在重算...";
 	}
-
-	private static final String FEE_1 = "wh_product_storage";
-	private static final List<String> subjectList = Arrays.asList(FEE_1);
-	private static final Map<String, Object> sendTaskMap = new HashMap<String, Object>();
-	static {
-		sendTaskMap.put("isCalculated", "99");
-		sendTaskMap.put("subjectList", subjectList);
-	}
-
-	private void sendTask(Map<String, Object> param) {
-		// 对这些费用按照商家、科目、时间排序
-		List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryProTask(param);
-		for (BmsCalcuTaskVo vo : list) {
-			vo.setCrePerson(JAppContext.currentUserName());
-			vo.setCrePersonId(JAppContext.currentUserID());
-			vo.setCreTime(JAppContext.currentTimestamp());
-			// 为了区分商品按件存储费和商品按托存储费
-			vo.setFeesType("item");
-			try {
-				bmsCalcuTaskService.sendTask(vo);
-				logger.info("mq发送，商家id为----{0}，业务年月为----{0}，科目id为---{0}",
-						vo.getCustomerId(), vo.getCreMonth(),
-						vo.getSubjectCode());
-			} catch (Exception e) {
-				logger.info(
-						"mq任务失败：商家id为----{0}，业务年月为----{0}，科目id为---{0}，错误信息：{0}",
-						vo.getCustomerId(), vo.getCreMonth(),
-						vo.getSubjectCode(), e);
-			}
-		}
-	}
-
 }

@@ -93,9 +93,9 @@ public class BmsDiscountRepositoryImpl extends MyBatisDao implements IBmsDiscoun
 		return delete("com.jiuyescm.bms.discount.mapper.BmsDiscountMapper.deleteFeeStorageDiscount", condition);
 	}
 
-
-
-
-
-
+    @Override
+    public List<BmsDiscountAccountEntity> queryServiceAccount(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return selectList("com.jiuyescm.bms.discount.mapper.BmsDiscountMapper.queryServiceAccount", condition);
+    }
 }

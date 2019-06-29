@@ -46,8 +46,12 @@ public interface IBizDispatchPackageService {
      * @param condition
      * @param pageNo
      * @param pageSize
+     * @param operateTypeMap 
+     * @param timeMap 
+     * @param boxMap 
+     * @param transportMap 
      * @return
      */
-    PageInfo<BizDispatchPackageEntity> queryToExport(Map<String, Object> condition, int pageNo, int pageSize);
+    PageInfo<BizDispatchPackageEntity> queryToExport(Map<String, Object> condition, int pageNo, int pageSize, Map<String, String> transportMap, Map<String, String> boxMap, Map<String, String> timeMap, Map<String, String> operateTypeMap);
 
 }

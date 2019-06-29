@@ -25,8 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.jiuyescm.bms.appconfig.TenantConfig;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
+import com.jiuyescm.bms.bill.customer.BillPeriodInfoEntity;
+import com.jiuyescm.bms.bill.customer.repository.IBillPeriodInfoRepository;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterEntity;
 import com.jiuyescm.bms.bill.receive.entity.BillReceiveMasterRecordEntity;
 import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRecordRepository;
@@ -43,7 +46,7 @@ import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
 import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
-import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.crm.module.api.IModuleDataOpenService;
 import com.jiuyescm.crm.module.vo.FieldDataOpenVO;
 import com.jiuyescm.crm.module.vo.ModuleDataOpenVO;
@@ -64,15 +67,29 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
     private IBillReceiveMasterRecordRepository billReceiveMasterRecordRepository;
     @Autowired
     private IModuleDataOpenService moduleDataOpenService;
-
+    @Autowired
+    private IBillPeriodInfoRepository billPeriodInfoRepository;
+    
     @Autowired
     private TenantConfig tenantConfig;
-
+    
+    private static final String BILL_DAY = "BILL_DAY";
+    private static final String BILL_DAY_NEXT_MONTH = "BILL_DAY_NEXT_MONTH";
+    private static final String INVOICE_DAY = "INVOICE_DAY";
+    private static final String INVOICE_DAY_NEXT_MONTH = "INVOICE_DAY_NEXT_MONTH";
+    private static final String yyyyMMdd = "yyyy-MM-dd";
+    private static SimpleDateFormat sdf= new SimpleDateFormat(yyyyMMdd);
+    
     @Override
     public PageInfo<BillCheckInfoVo> query(Map<String, Object> condition, int pageNo, int pageSize) {
         try {
 
-            long current = JAppContext.currentTimestamp().getTime();
+            //获取当前日期的long值
+            Timestamp tt = new Timestamp(System.currentTimeMillis());
+            Date d = new Date();
+            d = tt;
+            String time = sdf.format(d) + " 00:00:00";
+            long current = sdf.parse(time).getTime();
 
             String overStatus = "";
             if (condition != null && condition.get("overStatus") != null) {
@@ -145,36 +162,23 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
                 if (adjustEntity != null) {
                     entity.setAdjustMoney(adjustEntity.getAdjustAmount() == null ? m : adjustEntity.getAdjustAmount());
                 }
-                // 判断超期状态
-                // 开票30天内:正常
-                // 开票30天以上,小于45天:临期--包含30天
-                // 超期:开票45天以上,包含45天;
-                if (entity.getUnReceiptAmount() != null && entity.getUnReceiptAmount().compareTo(new BigDecimal(1)) > 0) {
-                    if ("1".equals(entity.getIsneedInvoice()) && entity.getInvoiceDate() != null) {
-                        // 需要开票时用开票时间去判断
-                        long time = entity.getInvoiceDate().getTime();
-
-                        int days = (int) ((current - time) / (1000 * 60 * 60 * 24));
-                        if (days >= 0 && days < 30) {
-                            entity.setOverStatus("正常");
-                        } else if (days >= 30 && days < 45) {
-                            entity.setOverStatus("临期");
-                        } else if (days >= 45) {
-                            entity.setOverStatus("超期");
-                        }
-
-                    } else if ("0".equals(entity.getIsneedInvoice()) && entity.getConfirmDate() != null) {
-                        long time = entity.getConfirmDate().getTime();
-
-                        int days = (int) ((current - time) / (1000 * 60 * 60 * 24));
-                        if (days >= 0 && days < 30) {
-                            entity.setOverStatus("正常");
-                        } else if (days >= 30 && days < 45) {
-                            entity.setOverStatus("临期");
-                        } else if (days >= 45) {
-                            entity.setOverStatus("超期");
-                        }
+                
+                // 判断超期状态（新）
+                // 从商家账期表中获取，分为四种情况
+                // 1.账单日（业务月份的最后一天）取后一天
+                // 2.账单日次月初（业务月份的最后一天）取下个月第一天
+                // 3.开票日（判断是否需要开票和开票日期是否为空）取后一天
+                // 4.开票日次月初（判断是否需要开票和开票日期是否为空）取下个月第一天
+                // 5.加上月数和天数后的日期减去当前日期
+                // 6.小于等于0为超期， 大于0小于20为临期，大于等于20为正常
+                if (entity.getUnReceiptAmount() != null && entity.getUnReceiptAmount().compareTo(new BigDecimal(1)) > 0) {    
+                    String res = "";
+                    try {
+                        res = isOverdue(current, entity);
+                    } catch (Exception e) {
+                        logger.error("判断是否超期异常", e);
                     }
+                    entity.setOverStatus(res);
                 }
 
                 // 设置预分配金额和待催款金额
@@ -200,9 +204,184 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
             result.setList(voList);
             return result;
         } catch (Exception ex) {
-            logger.error("转换失败:{0}", ex);
+            logger.error("转换失败:{0}", ex);         
         }
         return null;
+    }
+    
+    /**
+     * 判断是否超期
+     * 
+     * @author wangchen870
+     * @date 2019年7月1日 下午2:41:08
+     *
+     * @param current  当前时间
+     * @param entity   账单实体
+     * @return
+     */
+    private String isOverdue(long current, BillCheckInfoVo entity) {
+        BillPeriodInfoEntity periodInfo = getForPeriodInfo(entity);
+        if (null == periodInfo || null == periodInfo.getBasicCode()) {
+            throw new BizException("请先去商家账期设置界面配置！");
+        }
+        //超期时间
+        long overTime = 0L;
+        Calendar c = Calendar.getInstance();
+        String result = "";
+        try {
+          //取业务月份当月最后一天（如：1901，取2019-01-31）
+            String creMonth = DateUtil.getLastDay("20" + String.valueOf(entity.getCreateMonth()).substring(0, 2) + "-"+ String.valueOf(entity.getCreateMonth()).substring(2, 4) + "-01");
+            
+            switch (periodInfo.getBasicCode()) {
+            case BILL_DAY:
+                result = nextDay(current, entity, periodInfo, c, sdf, sdf.parse(creMonth), overTime);
+                break;
+            case BILL_DAY_NEXT_MONTH:
+                result = nextMonthFirstDay(current, entity, periodInfo, c, sdf, creMonth, overTime);
+                break;
+            default:
+                if ("1".equals(entity.getIsneedInvoice()) && entity.getInvoiceDate() != null) {
+                    // 需要开票时用开票时间去判断
+                    if (INVOICE_DAY.equals(periodInfo.getBasicCode())) {
+                        result = nextDay(current, entity, periodInfo, c, sdf, entity.getInvoiceDate(), overTime);
+                    }
+                    if (INVOICE_DAY_NEXT_MONTH.equals(periodInfo.getBasicCode())) {
+                        result = nextMonthFirstDay(current, entity, periodInfo, c, sdf, sdf.format(entity.getInvoiceDate()), overTime);
+                    }
+                } else if ("0".equals(entity.getIsneedInvoice()) && entity.getConfirmDate() != null) {
+                    // 不需要开票时用确认时间去判断
+                    if (INVOICE_DAY.equals(periodInfo.getBasicCode())) {
+                        result = nextDay(current, entity, periodInfo, c, sdf, entity.getConfirmDate(), overTime);
+                    }
+                    if (INVOICE_DAY_NEXT_MONTH.equals(periodInfo.getBasicCode())) {
+                        result = nextMonthFirstDay(current, entity, periodInfo, c, sdf, sdf.format(entity.getConfirmDate()), overTime);
+                    }
+                }
+                break;
+            }
+        } catch (Exception e) {
+            logger.error("日期转换异常：", e);
+            throw new BizException("日期转换异常!");
+        }
+        return result;
+    }
+
+    /**
+     * 
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月14日 下午5:16:38
+     *
+     * @param current   当前日期转long
+     * @param entity    账单vo    
+     * @param sdf       日期格式化
+     * @param creMonth  业务日期，当月最后一天（如1901，转成2019-01-31）
+     * @param overTime  超期日期
+     * @throws ParseException
+     */
+    private String nextMonthFirstDay(long current, BillCheckInfoVo entity, BillPeriodInfoEntity periodInfo, Calendar c,
+            SimpleDateFormat sdf, String creMonth, long overTime)
+            throws ParseException {
+        String nextMonthFirstDay = DateUtil.getFirstDayOfGivenMonth(creMonth, 1, yyyyMMdd);
+        c.setTime(sdf.parse(nextMonthFirstDay));
+        if (null != periodInfo.getAddMonth()) {
+            c.add(Calendar.MONTH, periodInfo.getAddMonth());
+            //可能出现1-31变成2-28的问题
+            if (c.get(Calendar.DAY_OF_MONTH) - c.get(Calendar.DAY_OF_MONTH) < 0) {
+                c.add(Calendar.DAY_OF_MONTH, 1);
+            }
+        }
+        if (null != periodInfo.getAddDay()) {
+            c.add(Calendar.DAY_OF_MONTH, periodInfo.getAddDay());
+        }
+        c.add(Calendar.DAY_OF_MONTH, 1);
+        overTime = c.getTime().getTime();
+        int days = (int) ((overTime - current) / (1000 * 60 * 60 * 24));
+        if (days >= 20) {
+            return "正常";
+        } else if (days > 0 && days < 20) {
+            return "临期";
+        } else {
+            //days <= 0
+            return "超期";
+        }
+    }
+
+    /**
+     * 加一天
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月14日 下午5:14:00
+     *
+     * @param current    当前日期转成long
+     * @param entity     账单vo
+     * @param periodInfo 商家账期配置
+     * @param c          Calendar日期类
+     * @param sdf        日期格式化
+     * @param creMonth   业务日期，当月最后一天（如1901，转成2019-01-31）
+     * @param overTime   超期日期
+     * @throws ParseException
+     */
+    private String nextDay(long current, BillCheckInfoVo entity, BillPeriodInfoEntity periodInfo, Calendar c,
+            SimpleDateFormat sdf, Date creMonth, long overTime) throws ParseException {
+        c.setTime(creMonth);  
+        c.add(Calendar.DAY_OF_MONTH, 1);
+        if (null != periodInfo.getAddMonth()) {
+            c.add(Calendar.MONTH, periodInfo.getAddMonth());
+            //可能出现1-31变成2-28的问题
+            if (c.get(Calendar.DAY_OF_MONTH) - c.get(Calendar.DAY_OF_MONTH) < 0) {
+                c.add(Calendar.DAY_OF_MONTH, 1);
+            }
+        }
+        if (null != periodInfo.getAddDay()) {
+            c.add(Calendar.DAY_OF_MONTH, periodInfo.getAddDay());
+        }
+ 
+        overTime = c.getTime().getTime();
+        int days = (int) ((overTime - current) / (1000 * 60 * 60 * 24));
+        if (days >= 20) {
+            return "正常";
+        } else if (days > 0 && days < 20) {
+            return "临期";
+        } else {
+            //days <= 0
+            return "超期";
+        }
+    }
+
+    /**
+     * 获取商家账期配置
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月14日 下午5:16:21
+     *
+     * @param entity
+     * @return
+     */
+    private BillPeriodInfoEntity getForPeriodInfo(BillCheckInfoVo entity) {
+        BillPeriodInfoEntity periodInfoEntity = new BillPeriodInfoEntity();
+        BillPeriodInfoEntity periodNullEntity = null;
+        Map<String, Object> map = Maps.newLinkedHashMap();
+        map.put("delFlag", "0");
+        List<BillPeriodInfoEntity> periodList = billPeriodInfoRepository.query(map); 
+        boolean exe = false;
+        for (BillPeriodInfoEntity periodEntity : periodList) {
+            if (StringUtils.isBlank(periodEntity.getInvoiceName())) {
+                periodNullEntity = periodEntity;
+            }
+            if (entity.getInvoiceName().equals(periodEntity.getInvoiceName())) {
+                periodInfoEntity = periodEntity;
+                exe = true;
+                break;
+            }
+        }
+        if (!exe) {
+            return periodNullEntity;
+        }
+        return periodInfoEntity;
     }
 
     @Override

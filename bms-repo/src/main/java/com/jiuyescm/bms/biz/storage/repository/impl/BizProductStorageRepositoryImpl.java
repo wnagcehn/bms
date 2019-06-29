@@ -109,7 +109,7 @@ public class BizProductStorageRepositoryImpl extends MyBatisDao implements IBizP
 	@Override
 	public int reCalculate(Map<String, Object> param) {
 		try{
-			update("com.jiuyescm.bms.biz.storage.BizProductStorageEntityMapper.retryForCalcu", param);
+			update("com.jiuyescm.bms.biz.storage.BizProductStorageEntityMapper.reCalculate", param);
 			return 1;
 		}
 		catch(Exception ex){

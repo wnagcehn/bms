@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.asyn.entity;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import com.jiuyescm.cfm.domain.IEntity;
@@ -64,6 +65,10 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 	private String remark;
 	
 	private String feesType;
+	
+	private BigDecimal totalAmount;
+	
+	private Integer noDinggouCount;
 	
 	public String getNewid() {
 		return newid;
@@ -483,5 +488,21 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 	public void setCalcuStatus(Integer calcuStatus) {
 		this.calcuStatus = calcuStatus;
 	}
-    
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Integer getNoDinggouCount() {
+        return noDinggouCount;
+    }
+
+    public void setNoDinggouCount(Integer noDinggouCount) {
+        this.noDinggouCount = noDinggouCount;
+    }
+
 }

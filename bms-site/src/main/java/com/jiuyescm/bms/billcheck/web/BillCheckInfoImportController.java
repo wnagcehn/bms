@@ -138,7 +138,9 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 			    
 				if(mkInvoiceName==null){
 				    mes+="商家合同名称["+vo.getInvoiceName()+"]未在BMS商家中心维护;";
-				}
+				}else {
+                    vo.setMkId(mkInvoiceName.getMkId());
+                }
 				
 			}else{
 				mes+="商家合同名称不能为空;";

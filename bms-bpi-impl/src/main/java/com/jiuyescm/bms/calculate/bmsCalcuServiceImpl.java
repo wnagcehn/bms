@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -284,6 +285,11 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 					entityTotal += entity.getFeesCount();
 					biaoshi=2;
 					break;
+                case "7"://未订购
+                    vo.setNoDinggouCount(entity.getFeesCount());
+                    entityTotal += entity.getFeesCount();
+                    biaoshi=2;
+                    break;
 				case "4"://报价缺失
 					vo.setQuoteMissCount(entity.getFeesCount());
 					entityTotal += entity.getFeesCount();
@@ -330,6 +336,158 @@ public class bmsCalcuServiceImpl implements IBmsCalcuService {
 		
 		
 		vo.setFeesCount(entityTotal);
+	}
+	
+	@Override
+    public BmsFeesQtyVo queryTotalAmountForStoOutstock(String customerId,
+            String subjectCode, Integer creMonth) {
+        BmsFeesQtyVo vo = new BmsFeesQtyVo();
+        try {
+            int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+            int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+            String startTime = startYear+"-"+startMonth+"-01";
+            String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+            
+            BmsFeesQtyEntity entity = bmsCalcuServiceImpl.queryTotalAmountForStoOutstock(customerId, subjectCode, startTime, endTime);
+            PropertyUtils.copyProperties(vo, entity);
+            return vo;
+        } catch (Exception e) {
+            logger.info("查询异常",e);
+        }
+        return vo;
+	}
+	
+	@Override
+	public BmsFeesQtyVo queryTotalAmountForStoInstock(String customerId,
+	        String subjectCode, Integer creMonth) {
+	    BmsFeesQtyVo vo = new BmsFeesQtyVo();
+	    try {
+	        int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+	        int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+	        String startTime = startYear+"-"+startMonth+"-01";
+	        String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+	        
+	        BmsFeesQtyEntity entity = bmsCalcuServiceImpl.queryTotalAmountForStoInstock(customerId, subjectCode, startTime, endTime);
+	        PropertyUtils.copyProperties(vo, entity);
+	        return vo;
+	    } catch (Exception e) {
+	        logger.info("查询异常",e);
+	    }
+	    return vo;
+	}
+	
+	@Override
+	public BmsFeesQtyVo queryTotalAmountForStoPallet(String customerId,
+	        String subjectCode, Integer creMonth) {
+	    BmsFeesQtyVo vo = new BmsFeesQtyVo();
+	    try {
+	        int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+	        int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+	        String startTime = startYear+"-"+startMonth+"-01";
+	        String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+	        
+	        BmsFeesQtyEntity entity = bmsCalcuServiceImpl.queryTotalAmountForStoPallet(customerId, subjectCode, startTime, endTime);
+	        PropertyUtils.copyProperties(vo, entity);
+	        return vo;
+	    } catch (Exception e) {
+	        logger.info("查询异常",e);
+	    }
+	    return vo;
+	}
+	
+	@Override
+	public BmsFeesQtyVo queryTotalAmountForStoProductItem(String customerId,
+	        String subjectCode, Integer creMonth) {
+	    BmsFeesQtyVo vo = new BmsFeesQtyVo();
+	    try {
+	        int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+	        int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+	        String startTime = startYear+"-"+startMonth+"-01";
+	        String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+	        
+	        BmsFeesQtyEntity entity = bmsCalcuServiceImpl.queryTotalAmountForStoProductItem(customerId, subjectCode, startTime, endTime);
+	        PropertyUtils.copyProperties(vo, entity);
+	        return vo;
+	    } catch (Exception e) {
+	        logger.info("查询异常",e);
+	    }
+	    return vo;
+	}
+	
+	@Override
+	public BmsFeesQtyVo queryTotalAmountForStoStandMaterial(String customerId,
+	        String subjectCode, Integer creMonth) {
+	    BmsFeesQtyVo vo = new BmsFeesQtyVo();
+	    try {
+	        int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+	        int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+	        String startTime = startYear+"-"+startMonth+"-01";
+	        String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+	        
+	        BmsFeesQtyEntity entity = bmsCalcuServiceImpl.queryTotalAmountForStoStandMaterial(customerId, subjectCode, startTime, endTime);
+	        PropertyUtils.copyProperties(vo, entity);
+	        return vo;
+	    } catch (Exception e) {
+	        logger.info("查询异常",e);
+	    }
+	    return vo;
+	}
+	
+	@Override
+	public BmsFeesQtyVo queryTotalAmountForStoAdd(String customerId,
+	        String subjectCode, Integer creMonth) {
+	    BmsFeesQtyVo vo = new BmsFeesQtyVo();
+	    try {
+	        int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+	        int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+	        String startTime = startYear+"-"+startMonth+"-01";
+	        String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+	        
+	        BmsFeesQtyEntity entity = bmsCalcuServiceImpl.queryTotalAmountForStoAdd(customerId, subjectCode, startTime, endTime);
+	        PropertyUtils.copyProperties(vo, entity);
+	        return vo;
+	    } catch (Exception e) {
+	        logger.info("查询异常",e);
+	    }
+	    return vo;
+	}
+	
+	@Override
+	public BmsFeesQtyVo queryTotalAmountForStoMaterial(String customerId,
+	        String subjectCode, Integer creMonth) {
+	    BmsFeesQtyVo vo = new BmsFeesQtyVo();
+	    try {
+	        int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+	        int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+	        String startTime = startYear+"-"+startMonth+"-01";
+	        String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+	        
+	        BmsFeesQtyEntity entity = bmsCalcuServiceImpl.queryTotalAmountForStoMaterial(customerId, subjectCode, startTime, endTime);
+	        PropertyUtils.copyProperties(vo, entity);
+	        return vo;
+	    } catch (Exception e) {
+	        logger.info("查询异常",e);
+	    }
+	    return vo;
+	}
+	
+	@Override
+	public BmsFeesQtyVo queryTotalAmountForStoDis(String customerId,
+	        String subjectCode, Integer creMonth) {
+	    BmsFeesQtyVo vo = new BmsFeesQtyVo();
+	    try {
+	        int startYear = Integer.parseInt(creMonth.toString().substring(0, 4));
+	        int startMonth = Integer.parseInt(creMonth.toString().substring(4, 6));
+	        String startTime = startYear+"-"+startMonth+"-01";
+	        String endTime = DateUtil.getFirstDayOfGivenMonth(startTime,1,"yyyy-MM-dd");
+	        
+	        BmsFeesQtyEntity entity = bmsCalcuServiceImpl.queryTotalAmountForStoDis(customerId, subjectCode, startTime, endTime);
+	        PropertyUtils.copyProperties(vo, entity);
+	        return vo;
+	    } catch (Exception e) {
+	        logger.info("查询异常",e);
+	    }
+	    return vo;
 	}
 
 }

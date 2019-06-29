@@ -505,7 +505,7 @@
     </select>
 
 	 <insert id="save" parameterType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
-        insert into bill_check_info(bill_no,create_month, invoice_name, bill_name, customer_name, bill_start_time, first_class_name, biz_type_name, project_name,seller_id, seller_name, dept_name, dept_code,project_manager_id, project_manager_name,balance_id, balance_name, bill_status, bill_check_status, bill_confirm_date, invoice_status, expect_amount, confirm_amount, confirm_date, confirm_man_id, confirm_man, isneed_invoice,isapply_bad, invoice_amount, invoice_date, expect_receipt_date, un_receipt_amount,confirm_un_invoice_amount, invoice_un_receipt_amount, receipt_amount, receipt_date, receipt_status, area, creator_id, creator, create_time, last_modifier_id, last_modifier, last_modify_time, invoice_man_id, invoice_man, receipt_man_id, receipt_man, bad_bill_amount, del_flag, remark, bill_excel_url,overdue_date)
+        insert into bill_check_info(bill_no,create_month, invoice_name, bill_name, customer_name, bill_start_time, first_class_name, biz_type_name, project_name,seller_id, seller_name, dept_name, dept_code,project_manager_id, project_manager_name,balance_id, balance_name, bill_status, bill_check_status, bill_confirm_date, invoice_status, expect_amount, confirm_amount, confirm_date, confirm_man_id, confirm_man, isneed_invoice,isapply_bad, invoice_amount, invoice_date, expect_receipt_date, un_receipt_amount,confirm_un_invoice_amount, invoice_un_receipt_amount, receipt_amount, receipt_date, receipt_status, area, creator_id, creator, create_time, last_modifier_id, last_modifier, last_modify_time, invoice_man_id, invoice_man, receipt_man_id, receipt_man, bad_bill_amount, del_flag, remark, bill_excel_url,overdue_date,mk_id)
         values (
 #{billNo,jdbcType=VARCHAR},
 #{createMonth,jdbcType=INTEGER}, 
@@ -559,7 +559,8 @@
 #{delFlag,jdbcType=VARCHAR}, 
 #{remark,jdbcType=VARCHAR}, 
 #{billExcelUrl,jdbcType=VARCHAR},
-#{overdueDate,jdbcType=DATE}
+#{overdueDate,jdbcType=DATE},
+#{mkId,jdbcType=VARCHAR}
         )
     </insert>
     
@@ -699,6 +700,7 @@
 <if test="billNo != null" >bill_no=#{billNo,jdbcType=VARCHAR},</if>
 <if test="createMonth != null" >create_month=#{createMonth,jdbcType=INTEGER},</if>
 <if test="invoiceName != null" >invoice_name=#{invoiceName,jdbcType=VARCHAR},</if>
+<if test="mkId != null" >mk_id=#{mkId,jdbcType=VARCHAR},</if>
 <if test="billName != null" >bill_name=#{billName,jdbcType=VARCHAR},</if>
 <if test="customerName != null" >customer_name=#{customerName,jdbcType=VARCHAR},</if>
 <if test="billStartTime != null" >bill_start_time=#{billStartTime,jdbcType=DATE},</if>
