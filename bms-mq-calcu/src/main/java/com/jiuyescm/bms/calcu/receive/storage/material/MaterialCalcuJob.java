@@ -93,10 +93,12 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	
 	private PriceGeneralQuotationEntity quoTemplete = null;
 	private Map<String, Object> errorMap = null;
-	Map<String,PubMaterialInfoVo> materialMap = null;
-	List<SystemCodeEntity> noCarrierMap=null;
-	Map<String,SystemCodeEntity> noFeesMap=null;
-
+	private Map<String,PubMaterialInfoVo> materialMap = null;
+	private List<SystemCodeEntity> noCarrierMap=null;
+	private Map<String,SystemCodeEntity> noFeesMap=null;
+	private List<BizOutstockPackmaterialEntity> bizList=null;
+	private List<FeesReceiveStorageEntity> fees = null;
+	
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
 		super.process(taskVo, contractAttr);
 		getQuoTemplete();
@@ -148,8 +150,8 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	@Override
 	public void calcu(Map<String, Object> map){
 		
-		List<BizOutstockPackmaterialEntity> bizList = bizOutstockPackmaterialService.query(map);
-		List<FeesReceiveStorageEntity> fees = new ArrayList<>();
+		bizList = bizOutstockPackmaterialService.query(map);
+		fees = new ArrayList<>();
 		if(bizList == null || bizList.size() == 0){
 			commonService.taskCountReport(taskVo, "STORAGE");
 			return;
