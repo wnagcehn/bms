@@ -8,6 +8,10 @@
         <Property></Property>
         <Property name="label">商家</Property>
       </PropertyDef>
+      <PropertyDef name="customerName">
+        <Property></Property>
+        <Property name="label">商家</Property>
+      </PropertyDef>
       <PropertyDef name="billYear">
         <Property></Property>
         <Property name="label">账单月份</Property>
@@ -775,6 +779,7 @@ view.id(&quot;updateAction&quot;).execute(&#xD;
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
 if (data != null) {&#xD;
 	view.get(&quot;#formCondition.entity&quot;).set(&quot;customerId&quot;,data.get(&quot;customerid&quot;));&#xD;
+    view.get(&quot;#formCondition.entity&quot;).set(&quot;customerName&quot;,data.get(&quot;customername&quot;));	&#xD;
 }</ClientEvent>
       <Property name="caption">商家选择</Property>
       <Property name="center">true</Property>

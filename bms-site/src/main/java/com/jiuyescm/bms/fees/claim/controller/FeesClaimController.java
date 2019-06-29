@@ -35,6 +35,7 @@ import com.jiuyescm.bms.feeclaim.service.IFeesClaimService;
 import com.jiuyescm.bms.feeclaim.vo.FeesClaimsVo;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
+import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
 
@@ -108,13 +109,28 @@ public class FeesClaimController {
     public String asynExport(Map<String, Object> param) {       
         try {    
             FileExportTaskEntity entity = new FileExportTaskEntity();
-            entity.setTaskName("理赔费用");        
             entity.setTaskType(FileTaskTypeEnum.FEES_CLAIM.getCode());
             entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
             entity.setProgress(0d);
             entity.setCreator(JAppContext.currentUserName());
             entity.setCreateTime(JAppContext.currentTimestamp());
             entity.setDelFlag(ConstantInterface.DelFlag.NO);
+            
+            if(param.get("kesuStartTime")!=null){
+                entity.setStartTime(DateUtil.formatTimestamp(param.get("kesuStartTime")));
+            }   
+            if(param.get("kesuEndTime")!=null){
+                entity.setEndTime(DateUtil.formatTimestamp(param.get("kesuEndTime")));
+            }
+            
+            if(param.get("customerName")!=null){
+                entity.setTaskName("理赔费用-"+param.get("customerName"));        
+
+            }else{
+                entity.setTaskName("理赔费用");
+            }
+            
+            
             entity = fileExportTaskService.save(entity);
             
             //生成账单文件
