@@ -442,6 +442,7 @@ public class BizProductStorageController extends BaseController {
             //汇总需要发mq的数据
             List<BmsCalcuTaskVo> list = bmsCalcuTaskService.queryProTask(param);
             for (BmsCalcuTaskVo calcuTaskVo : list) {
+                calcuTaskVo.setFeesType("item");
                 calcuTaskVo.setCrePerson(ContextHolder.getLoginUser().getCname());
                 calcuTaskVo.setCrePersonId(ContextHolder.getLoginUserName());
                 try {
