@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,12 @@ public class DispatchPackageCalcuJob extends BmsContractBase implements ICalcuSe
 				fees.add(fee);
 				if(isNoExe(entity, fee)){
 					continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
+				}
+				//如果包材组编号为空,则直接提示系统异常
+				if(StringUtils.isBlank(entity.getPackGroupNo())){
+				    fee.setIsCalculated(CalculateState.Sys_Error.getCode());
+	                fee.setCalcuMsg("包材组编号为空");
+	                continue;
 				}
 				//优先合同在线计算
                 calcuForContract(entity,fee);
