@@ -89,13 +89,13 @@ public class CustomerContractController {
 			if("999".equals(parameter.get("contractState"))){
 				parameter.put("contractState","");
 			}
-			if(parameter.get("startTime")!="" && parameter.get("startTime")!=null){
+			if(parameter.containsKey("startTime") && !"".equals(parameter.get("startTime"))){
 			    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
                 String dateString=formatter.format(parameter.get("startTime"));
                 dateString=dateString+" 00:00:00";
                 parameter.put("startTime", Timestamp.valueOf(dateString));
 			}
-			if(parameter.get("endTime")!="" && parameter.get("endTime")!=null){
+			if(parameter.containsKey("endTime") && !"".equals(parameter.get("endTime"))){
 			    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
                 String dateString=formatter.format(parameter.get("endTime"));
                 dateString=dateString+" 23:59:59";

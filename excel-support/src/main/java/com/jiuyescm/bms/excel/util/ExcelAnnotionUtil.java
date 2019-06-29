@@ -2,9 +2,13 @@ package com.jiuyescm.bms.excel.util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import com.jiuyescm.bms.excel.annotation.ExcelAnnotation.ExcelField;
 
@@ -50,10 +54,29 @@ public class ExcelAnnotionUtil {
                 Map<String, Object> itemMap = new HashMap<String, Object>();
                 itemMap.put("title", excelField.title());
                 itemMap.put("columnWidth", 50);
-                itemMap.put("dataKey","XH"+excelField.num() );
+                itemMap.put("dataKey","XH"+excelField.num());
+                itemMap.put("num", excelField.num());
                 headInfoList.add(itemMap);
         	}
 		}
+        if (CollectionUtils.isNotEmpty(headInfoList)) {
+            Collections.sort(headInfoList, new Comparator<Map<String, Object>>(){
+                /*
+                 * 返回负数表示：m1小于m2，
+                 * 返回0 表示：m1和m2相等，
+                 * 返回正数表示：m1大于m2
+                 */
+                public int compare(Map<String, Object> m1, Map<String, Object> m2) {
+                    if(((Integer) m1.get("num")) > ((Integer)m2.get("num"))){
+                        return 1;
+                    }
+                    if(((Integer) m1.get("num")) == ((Integer)m2.get("num"))){
+                        return 0;
+                    }
+                    return -1;
+                }
+            });
+        }
 		return headInfoList;
 	}
     

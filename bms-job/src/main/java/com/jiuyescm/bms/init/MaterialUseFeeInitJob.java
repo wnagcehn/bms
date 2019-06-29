@@ -54,7 +54,7 @@ public class MaterialUseFeeInitJob extends IJobHandler{
 
 
 	protected void initConf(){
-		materialMap=queryAllMaterial();
+		materialMap=queryAllMaterial();                            
         noCalculateList=bmsGroupCustomerService.queryCustomerByGroupCode("no_calculate_customer");
 	}
 

@@ -75,25 +75,25 @@ public class BillCustomerDetailController {
             param = new HashMap<String, Object>();
         }
 	    try {
-	        if(param.get("receiptDate")!="" && param.get("receiptDate")!=null){
+	        if(param.containsKey("receiptDate") && !"".equals(param.get("receiptDate"))){
 	            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
 	            String dateString=formatter.format(param.get("receiptDate"));
 	            dateString=dateString+" 00:00:00";
 	            param.put("receiptDate", formatter.parse(dateString));
 	        }
-	        if(param.get("receiptEndDate")!="" && param.get("receiptEndDate")!=null){
+	        if(param.containsKey("receiptEndDate") && !"".equals(param.get("receiptEndDate"))){
 	            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
 	            String dateString=formatter.format(param.get("receiptEndDate"));
 	            dateString=dateString+" 23:59:59";
 	            param.put("receiptEndDate", formatter.parse(dateString));
 	        }
-	        if(param.get("invoiceDate")!="" && param.get("invoiceDate")!=null){
+	        if(param.containsKey("invoiceDate") && !"".equals(param.get("invoiceDate"))){
 	            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
 	            String dateString=formatter.format(param.get("invoiceDate"));
 	            dateString=dateString+" 00:00:00";
 	            param.put("invoiceDate", formatter.parse(dateString));
 	        }
-	        if(param.get("invoiceEndDate")!="" && param.get("invoiceEndDate")!=null){
+	        if(param.containsKey("invoiceEndDate") && !"".equals(param.get("invoiceEndDate"))){
 	            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
 	            String dateString=formatter.format(param.get("invoiceEndDate"));
 	            dateString=dateString+" 23:59:59";

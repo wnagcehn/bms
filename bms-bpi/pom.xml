@@ -47,6 +47,12 @@
     		<groupId>com.jiuyescm.crm</groupId>
     		<artifactId>crm-open-api</artifactId>
     		<version>0.0.1-SNAPSHOT</version>
+    		<exclusions>
+				<exclusion>
+					<groupId>com.jiuyescm.scm</groupId>
+  					<artifactId>scm-beans</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<dependency>

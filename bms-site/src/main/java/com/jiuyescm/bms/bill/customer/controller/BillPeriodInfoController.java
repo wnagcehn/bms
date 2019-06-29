@@ -22,7 +22,6 @@ import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
 import com.jiuyescm.bms.base.dict.api.ICustomerDictService;
 import com.jiuyescm.bms.bill.customer.BillPeriodInfoEntity;
 import com.jiuyescm.bms.bill.customer.service.IBillPeriodInfoService;
-import com.jiuyescm.exception.BizException;
 
 /**
  * ..Controller

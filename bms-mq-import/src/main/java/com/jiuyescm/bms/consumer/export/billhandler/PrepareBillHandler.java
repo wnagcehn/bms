@@ -60,22 +60,28 @@ import com.jiuyescm.bms.biz.storage.service.IBmsBizInstockInfoService;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.enumtype.CalculateState;
 import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
-import com.jiuyescm.bms.fees.abnormal.entity.FeesAbnormalEntity;
-import com.jiuyescm.bms.fees.abnormal.service.IFeesAbnormalService;
+import com.jiuyescm.bms.feeclaim.service.IFeesClaimService;
+import com.jiuyescm.bms.feeclaim.vo.FeesClaimsVo;
 import com.jiuyescm.bms.fees.dispatch.entity.FeesReceiveDispatchEntity;
 import com.jiuyescm.bms.fees.dispatch.service.IFeesReceiveDispatchService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial;
+import com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity;
+import com.jiuyescm.bms.fees.transport.service.IFeesTransportMasterService;
+import com.jiuyescm.bms.fees.transport.vo.FeesTransportVo;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.DoubleUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
+import com.jiuyescm.constants.BmsEnums;
+import com.jiuyescm.exception.BizException;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.model.StorePath;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
 import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.jiuyescm.tms.open.api.ITmsForOmsService;
 
 /**
  * <功能描述>
@@ -114,9 +120,13 @@ public class PrepareBillHandler {
     @Autowired
     private IBmsGroupSubjectService bmsGroupSubjectService;
     @Autowired
-    private IFeesAbnormalService feesAbnormalService;
+    private IFeesClaimService feesClaimService;
     @Autowired
     private StorageClient storageClient;
+    @Autowired
+    private IFeesTransportMasterService feesTransportMasterService;
+    @Autowired
+    private ITmsForOmsService tmsForOmsService;
     
     private static final int PAGESIZE = 10000;
     FastDateFormat sdf = FastDateFormat.getInstance("yyyy-MM-dd");
@@ -128,6 +138,8 @@ public class PrepareBillHandler {
     private static ThreadLocal<Double> totalProductAmount = new ThreadLocal<Double>();
     //改地址退件费
     private static ThreadLocal<Double> totalReturnAmount = new ThreadLocal<Double>();
+    //干线应付总费用
+    private static ThreadLocal<Double> paytotalAmount = new ThreadLocal<Double>();
     
     private Double process = 0d;
     private Map<String, String> mapWarehouse;
@@ -258,7 +270,7 @@ public class PrepareBillHandler {
         updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), process+=20, null, null);
         
         try {
-            //出库(TB)
+            // 出库(TB)
             handOutstock(xssfWorkbook, poiUtil, condition, temMap);
             //入库
             handInstock(xssfWorkbook, poiUtil, condition);
@@ -268,8 +280,10 @@ public class PrepareBillHandler {
             handAbnormal(xssfWorkbook, poiUtil, condition);
             // 改地址和退件费
             handAbnormalChange(xssfWorkbook, poiUtil, condition); 
+            // 干线
+            handTransport(taskId, xssfWorkbook, poiUtil, condition, entity);
         } catch (Exception e) {
-            logger.error("其它费用导出失败!", e);
+            logger.error("其它费用导出失败:", e);
             updateExportTask(taskId, FileTaskStateEnum.FAIL.getCode(), 0,StringUtils.isBlank(entity.getRemark())?"其它费用导出失败":entity.getRemark()+";其它费用导出失败", null);
             return;
         }
@@ -1641,11 +1655,10 @@ public class PrepareBillHandler {
         int abnormalLineNo = 1;
         boolean doLoop = true;
         totalProductAmount.set(0d);// 置零
-        totalDeliveryCost.set(0d);
         totalReturnAmount.set(0d);
 
         while (doLoop) {
-            PageInfo<FeesAbnormalEntity> abnormalList = feesAbnormalService.queryPreBillAbnormal(condition, pageNo,
+            PageInfo<FeesClaimsVo> abnormalList = feesClaimService.queryPreBillClaim(condition, pageNo,
                     PAGESIZE);
             if (null != abnormalList && abnormalList.getList().size() > 0) {
                 if (abnormalList.getList().size() < PAGESIZE) {
@@ -1688,13 +1701,19 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "运单日期");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "createTime");
+        itemMap.put("dataKey", "waybillTime");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "运单号");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "expressnum");
+        itemMap.put("dataKey", "waybillNo");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "工单号");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "workOrderNo");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
@@ -1718,7 +1737,7 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "赔付商品金额");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "productAmountJ2c");
+        itemMap.put("dataKey", "productAmount");
         headInfoList.add(itemMap);
 
 //      itemMap = new HashMap<String, Object>();
@@ -1730,13 +1749,13 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "是否免运费");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "isDeliveryFreeJ2c");
+        itemMap.put("dataKey", "isDeliveryFree");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "登记人");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "createPersonName");
+        itemMap.put("dataKey", "crePerson");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
@@ -1751,36 +1770,36 @@ public class PrepareBillHandler {
     /**
      * 理赔-content
      */
-    private List<Map<String, Object>> getAbnormalItem(List<FeesAbnormalEntity> list) {
+    private List<Map<String, Object>> getAbnormalItem(List<FeesClaimsVo> list) {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = null;
         double t_productAmount = 0d;
         double t_deliveryCost = 0d;
-        for (FeesAbnormalEntity entity : list) {
+        for (FeesClaimsVo entity : list) {
             dataItem = new HashMap<String, Object>();
             dataItem.put("warehouseName", entity.getWarehouseName());
-            dataItem.put("createTime", sdf.format(entity.getCreateTime()));
-            dataItem.put("expressnum", entity.getExpressnum());
-            dataItem.put("customerName", entity.getCustomerName());
-            dataItem.put("dutyType", entity.getReason());
-            dataItem.put("payType", entity.getReasonDetail());
-            double productAmount=entity.getProductAmountJ2c()==null?0d:entity.getProductAmountJ2c();
-            t_productAmount+=productAmount;
-            dataItem.put("productAmountJ2c", productAmount);
-            double deliveryCost=entity.getDeliveryCost()==null?0d:entity.getDeliveryCost();
-            t_deliveryCost+=deliveryCost;
-            if("0".equals(entity.getIsDeliveryFreeJ2c())){
-                dataItem.put("isDeliveryFreeJ2c", "否"); 
-            }else if("1".equals(entity.getIsDeliveryFreeJ2c())){
-                dataItem.put("isDeliveryFreeJ2c", "是");
+            if(entity.getWaybillTime()!=null){
+                dataItem.put("waybillTime", sdf.format(entity.getWaybillTime()));
             }
-            dataItem.put("createPersonName", entity.getCreatePersonName());
+            dataItem.put("waybillNo", entity.getWaybillNo());
+            dataItem.put("workOrderNo", entity.getWorkOrderNo());
+            dataItem.put("customerName", entity.getCustomerName());
+            dataItem.put("dutyType", entity.getDutyType());
+            dataItem.put("payType", entity.getPayType());
+            double productAmount=entity.getProductAmount();
+            t_productAmount+=productAmount;
+            dataItem.put("productAmount", productAmount);
+            if("0".equals(entity.getIsDeliveryFree())){
+                dataItem.put("isDeliveryFree", "否"); 
+            }else if("1".equals(entity.getIsDeliveryFree())){
+                dataItem.put("isDeliveryFree", "是");
+            }
+            dataItem.put("crePerson", entity.getCrePerson());
             dataItem.put("remark", entity.getRemark());
             dataList.add(dataItem);
         }
 
         totalProductAmount.set(totalProductAmount.get() + t_productAmount);
-        totalDeliveryCost.set(totalDeliveryCost.get() + t_deliveryCost);
         return dataList;
     }
 
@@ -1790,9 +1809,8 @@ public class PrepareBillHandler {
     private List<Map<String, Object>> getAbnormalSumItem() {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = new HashMap<String, Object>();
-        dataItem.put("expressnum", "合计金额");
-        dataItem.put("productAmountJ2c", totalProductAmount.get());
-        dataItem.put("deliveryCost", totalDeliveryCost.get());
+        dataItem.put("waybillNo", "合计金额");
+        dataItem.put("productAmount", totalProductAmount.get());
         dataList.add(dataItem);
         return dataList;
     }
@@ -1811,11 +1829,10 @@ public class PrepareBillHandler {
         int abnormalLineNo = 1;
         boolean doLoop = true;
         totalProductAmount.set(0d);// 置零
-        totalDeliveryCost.set(0d);
         totalReturnAmount.set(0d);
         
         while (doLoop) {
-            PageInfo<FeesAbnormalEntity> abnormalList = feesAbnormalService.queryPreBillAbnormalChange(condition,
+            PageInfo<FeesClaimsVo> abnormalList = feesClaimService.queryPreBillClaimChange(condition,
                     pageNo, PAGESIZE);
             if (null != abnormalList && abnormalList.getList().size() > 0) {
                 if (abnormalList.getList().size() < PAGESIZE) {
@@ -1859,19 +1876,19 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "运单日期");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "createTime");
+        itemMap.put("dataKey", "waybillTime");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "运单号");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "expressnum");
+        itemMap.put("dataKey", "waybillNo");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
-        itemMap.put("title", "退货单号");
+        itemMap.put("title", "工单号");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "returnOrderno");
+        itemMap.put("dataKey", "workOrderNo");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
@@ -1895,13 +1912,13 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "金额");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "returnedAmountC2j");
+        itemMap.put("dataKey", "returnedAmount");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "登记人");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "createPersonName");
+        itemMap.put("dataKey", "crePerson");
         headInfoList.add(itemMap);
 
         itemMap = new HashMap<String, Object>();
@@ -1916,28 +1933,29 @@ public class PrepareBillHandler {
     /**
      * 改地址推荐费-content
      */
-    private List<Map<String, Object>> getAbnormalChangeItem(List<FeesAbnormalEntity> list) {
+    private List<Map<String, Object>> getAbnormalChangeItem(List<FeesClaimsVo> list) {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = null;
         double t_amount = 0d;
 
-        for (FeesAbnormalEntity entity : list) {
+        for (FeesClaimsVo entity : list) {
             dataItem = new HashMap<String, Object>();       
             dataItem.put("warehouseName", entity.getWarehouseName());
-            dataItem.put("createTime", sdf.format(entity.getCreateTime()));
-            dataItem.put("expressnum", entity.getExpressnum());
-            dataItem.put("returnOrderno", entity.getReturnOrderno());
+            if(entity.getWaybillTime()!=null){
+                dataItem.put("waybillTime", sdf.format(entity.getWaybillTime()));
+            }
+            dataItem.put("waybillNo", entity.getWaybillNo());
+            dataItem.put("workOrderNo", entity.getWorkOrderNo());
             dataItem.put("customerName", entity.getCustomerName());
-            dataItem.put("dutyType", entity.getReason());
-            dataItem.put("payType", entity.getReasonDetail());
-            double amount = (entity.getReturnedAmountC2j() == null ? 0 : entity.getReturnedAmountC2j());
+            dataItem.put("dutyType", entity.getDutyType());
+            dataItem.put("payType", entity.getPayType());
+            double amount = entity.getReturnedAmount();
             t_amount += amount;
-            dataItem.put("returnedAmountC2j", amount);
-            dataItem.put("createPersonName", entity.getCreatePersonName());
+            dataItem.put("returnedAmount", amount);
+            dataItem.put("crePerson", entity.getCrePerson());
             dataItem.put("remark", entity.getRemark());
             dataList.add(dataItem);
         }
-
         totalReturnAmount.set(totalReturnAmount.get() + t_amount);
         return dataList;
     }
@@ -1948,8 +1966,8 @@ public class PrepareBillHandler {
     private List<Map<String, Object>> getAbnormalChangeSumItem() {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = new HashMap<String, Object>();
-        dataItem.put("expressnum", "合计金额");
-        dataItem.put("returnedAmountC2j", totalReturnAmount.get());
+        dataItem.put("waybillNo", "合计金额");
+        dataItem.put("returnedAmount", totalReturnAmount.get());
         dataList.add(dataItem);
         return dataList;
     }
@@ -2299,6 +2317,555 @@ public class PrepareBillHandler {
             }
 
         }
+    }
+    
+    /**
+     * 干线费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月25日 上午10:12:20
+     *
+     * @param taskId
+     * @param workbook
+     * @param poiUtil
+     * @param condition
+     * @param entity
+     * @throws Exception
+     */
+    private void handTransport(String taskId, SXSSFWorkbook workbook, POISXSSUtil poiUtil,
+            Map<String, Object> condition, BillPrepareExportTaskEntity entity) throws Exception {
+        int result = 0;
+        paytotalAmount.set(0d);
+        Map<String, Object> cond = new HashMap<String, Object>();
+        Map<String, String> cuMap = new HashMap<String, String>();
+        List<Map<String, String>> cuList = new ArrayList<Map<String, String>>();
+        List<FeesTransportVo> transportList = new ArrayList<FeesTransportVo>();
+        //按照主商家生成，存在两个子商家
+        List<FeesTransportVo> allCusList = new ArrayList<FeesTransportVo>();
+
+        cond.put("beginTime", condition.get("startTime"));
+        cond.put("endTime", condition.get("endTime"));
+        cond.put("delFlag", "0");
+
+        String customerId = condition.get("customerid").toString();
+        // 区分是否按照子商家生成
+        if (!(Boolean) condition.get("isChildCustomer")) {
+            cuList = billPrepareExportTaskService.getChildCustomer(customerId);
+        } else {
+            cuMap.put("customerId", customerId);
+            cuList.add(cuMap);
+        }
+   
+        for (Map<String, String> map : cuList) {
+            try {
+                result = tmsForOmsService.getAccountBillOrderCount(map.get("customerId"), condition.get("createMonth").toString());
+            } catch (Exception e) {
+                logger.error("调用TMS接口异常：", e);
+                throw new BizException("调用TMS接口异常:", e);
+            }
+            
+            // TMS无计算费用
+            if (result == 0) {
+                continue; 
+            }
+            
+            cond.put("customerId", map.get("customerId"));
+            transportList = feesTransportMasterService.queryForPrepareBill(cond);
+            allCusList.addAll(transportList);
+            
+            if (result != transportList.size()) {
+                //TMS条数和BMS干线条数不等
+                updateExportTask(taskId, FileTaskStateEnum.INPROCESS.getCode(), 0,StringUtils.isBlank(entity.getRemark())?"该商家" + condition.get("month").toString() + "月有干线计费未提交至BMS，请联系干线运营人员及时提交结算数据，提交后重新生成预账单，谢谢！": 
+                            entity.getRemark()+";该商家" + condition.get("month").toString()+"月有干线计费未提交至BMS，请联系干线运营人员及时提交结算数据，提交后重新生成预账单，谢谢！", null);
+                continue;
+            }
+
+        }
+        
+        if (CollectionUtils.isEmpty(allCusList)) {
+            return;
+        }
+        
+        List<Map<String, Object>> headTransportList = getTransportHead();
+        List<Map<String, Object>> dataTransportList = getTransportItem(allCusList);
+        dataTransportList.addAll(getTransportSumItem());
+        
+        poiUtil.exportExcel2FilePath(poiUtil, workbook, "干线", 1, headTransportList, dataTransportList);
+
+    }
+
+    /*
+     * 日期转换
+     */
+    private String exchangeDate(Map<String, Object> condition, String year, String month) {
+        String creMonth;
+        if (condition.containsKey("year") && condition.containsKey("month")) {
+            year = condition.get("year").toString();
+            month = condition.get("month").toString();
+        }
+        if (Integer.parseInt(month) < 10) {
+            creMonth = year + "-0" + month;
+        } else {
+            creMonth = year + "-" + month;
+        }
+        return creMonth;
+    }
+
+    
+    /**
+     * 干线费-title
+     */
+    private List<Map<String, Object>> getTransportHead() {
+        List<Map<String, Object>> headInfoList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> itemMap = new HashMap<String, Object>();
+
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "订单创建日期");
+        itemMap.put("columnWidth", 30);
+        itemMap.put("dataKey", "creDate");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "运输订单号");
+        itemMap.put("columnWidth", 30);
+        itemMap.put("dataKey", "orderNo");
+        headInfoList.add(itemMap);
+
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "外部订单号");
+        itemMap.put("columnWidth", 30);
+        itemMap.put("dataKey", "outstockNo");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "温控");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "temperatureTypeCode");
+        headInfoList.add(itemMap);
+
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "派车单号");
+        itemMap.put("columnWidth", 30);
+        itemMap.put("dataKey", "routeNo");
+        headInfoList.add(itemMap);
+
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "调度人");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "dispatcherName");
+        headInfoList.add(itemMap);
+
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "交接单号");
+        itemMap.put("columnWidth", 30);
+        itemMap.put("dataKey", "transportNo");
+        headInfoList.add(itemMap);
+
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "商家全称");
+        itemMap.put("columnWidth", 40);
+        itemMap.put("dataKey", "customerName");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "承运产品");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "projectName");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "始发站");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "sendSite");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "始发省份");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "sendProvince");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "始发城市");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "sendCity");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "始发区");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "sendDistrict");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "目的站");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "receiveSite");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "目的省份");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "receiveProvince");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "目的城市");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "receiveCity");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "目的区");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "receiveDistrict");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "目的地址");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "receiveAddress");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "体积");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "actualVolume");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "重量");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "actualWeight");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "是否泡货");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "isLight");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "车型");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "carModel");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "实发箱数");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "actualPackingQty");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "实发件数");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "actualGoodsQty");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "实收箱数");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "receiptPackingQty");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "实收件数");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "receiptGoodsQty");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "是否退货");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "isBacktrack");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "发货日期");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "beginDate");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "收货日期");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "endDate");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "提货费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsTakes");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "运费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsTransAmount");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "送货费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsSend");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "装货费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "ysZh");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "卸货费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "ysXh");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "逆向物流费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsReverseLogistic");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "延时等待费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsDelayWaiting");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "缠绕膜费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsWrappingFilm");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "放空费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsEmptying");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "赔付费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsClaim");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "纸面回单费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "ysZmhd");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "拆箱费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "ysCx");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "贴码费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "ysTm");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "保险费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsInsurance");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "分流费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsFl");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "上楼搬运费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsSlby");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "过夜制冷费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsGyzl");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "单据打印费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsDjdy");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "加点费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsAddSite");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "中转费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsZz");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "垫付费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsDf");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "押车费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsYc");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "理货费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsTallying");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "交货费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsJh");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "过路费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsGl");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "码货费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsMh");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "托盘费");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "tsPallet");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "应付总计");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "payTotalAmount");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "客户是否需要保险");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "needInsurance");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "备注");
+        itemMap.put("columnWidth", 50);
+        itemMap.put("dataKey", "remark");
+        headInfoList.add(itemMap);
+
+        return headInfoList;
+    }
+    
+    /**
+     * 干线费-content
+     */
+    private List<Map<String, Object>> getTransportItem(List<FeesTransportVo> list) {
+        List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+        double t_payTotalAmount = 0d;
+        Map<String, Object> dataItem = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (FeesTransportVo entity : list) {
+            dataItem = new HashMap<String, Object>();       
+            dataItem.put("creDate", entity.getCreatedDt()==null?"":sdf.format(entity.getCreatedDt()));
+            dataItem.put("orderNo", entity.getOrderNo());
+            dataItem.put("outstockNo", entity.getOutstockNo());
+            dataItem.put("temperatureTypeCode", entity.getTemperatureTypeCode()==null?"":BmsEnums.tempretureType.getDesc(entity.getTemperatureTypeCode()));
+            dataItem.put("routeNo", entity.getRouteNo());
+            dataItem.put("dispatcherName", entity.getDispatcherName());
+            dataItem.put("transportNo", entity.getTransportNo());
+            dataItem.put("customerName", entity.getCustomerName());
+            dataItem.put("projectName", entity.getProjectName());
+            dataItem.put("sendSite", entity.getSendSite());
+            dataItem.put("sendProvince", entity.getSendProvince());
+            dataItem.put("sendCity", entity.getSendCity());
+            dataItem.put("sendDistrict", entity.getSendDistrict());
+            dataItem.put("receiveSite", entity.getReceiveSite());
+            dataItem.put("receiveProvince", entity.getReceiveProvince());
+            dataItem.put("receiveCity", entity.getReceiveCity());
+            dataItem.put("receiveDistrict", entity.getReceiveDistrict());
+            dataItem.put("receiveAddress", entity.getReceiveAddress());
+            dataItem.put("actualVolume", entity.getActualVolume()==null?"":entity.getActualVolume().doubleValue());
+            dataItem.put("actualWeight", entity.getActualWeight()==null?"":entity.getActualWeight().doubleValue());
+            dataItem.put("isLight", entity.getLight()==null?"":BmsEnums.light.getDesc(entity.getLight()));
+            //车型
+            dataItem.put("carModel", entity.getCarModel());
+            dataItem.put("actualPackingQty", entity.getActualPackingQty()==null?"":entity.getActualPackingQty().doubleValue());
+            dataItem.put("actualGoodsQty", entity.getActualGoodsQty()==null?"":entity.getActualGoodsQty().doubleValue());
+            dataItem.put("receiptPackingQty", entity.getReceiptPackingQty()==null?"":entity.getReceiptPackingQty().doubleValue());
+            dataItem.put("receiptGoodsQty", entity.getReceiptGoodsQty()==null?"":entity.getReceiptGoodsQty().doubleValue());
+            dataItem.put("isBacktrack", entity.getHasBacktrack()==null?"":BmsEnums.hasBacktrack.getDesc(entity.getHasBacktrack()));
+            dataItem.put("beginDate", entity.getBeginTime()==null?"":sdf.format(entity.getBeginTime()));
+            dataItem.put("endDate", entity.getEndTime()==null?"":sdf.format(entity.getEndTime()));
+            dataItem.put("tsTakes", entity.getTsTakes());
+            dataItem.put("tsTransAmount", entity.getTsTransAmount());
+            dataItem.put("tsSend", entity.getTsSend());
+            dataItem.put("ysZh", entity.getYsZh());
+            dataItem.put("ysXh", entity.getYsXh());
+            dataItem.put("tsReverseLogistic", entity.getTsReverseLogistic());
+            dataItem.put("tsDelayWaiting", entity.getTsDelayWaiting());
+            dataItem.put("tsWrappingFilm", entity.getTsWrappingFilm());
+            dataItem.put("tsEmptying", entity.getTsEmptying());
+            dataItem.put("tsClaim", entity.getTsClaim());
+            dataItem.put("ysZmhd", entity.getYsZmhd());
+            dataItem.put("ysCx", entity.getYsCx());
+            dataItem.put("ysTm", entity.getYsTm());
+            dataItem.put("tsInsurance", entity.getTsInsurance());
+            dataItem.put("tsFl", entity.getTsFl());
+            dataItem.put("tsSlby", entity.getTsSlby());
+            dataItem.put("tsGyzl", entity.getTsGyzl());
+            dataItem.put("tsDjdy", entity.getTsDjdy());
+            dataItem.put("tsAddSite", entity.getTsAddSite());
+            dataItem.put("tsZz", entity.getTsZz());
+            dataItem.put("tsDf", entity.getTsDf());
+            dataItem.put("tsYc", entity.getTsYc());
+            dataItem.put("tsTallying", entity.getTsTallying());
+            dataItem.put("tsJh", entity.getTsJh());
+            dataItem.put("tsGl", entity.getTsGl());
+            dataItem.put("tsMh", entity.getTsMh());
+            dataItem.put("tsPallet", entity.getTsPallet());
+            dataItem.put("payTotalAmount", entity.getPayTotalAmount());
+            t_payTotalAmount += entity.getPayTotalAmount()==null?0d:entity.getPayTotalAmount();
+            dataItem.put("needInsurance", entity.getNeedInsurance()==null?"":BmsEnums.needInsurance.getDesc(entity.getNeedInsurance()));
+            dataItem.put("remark", entity.getRemark());            
+            dataList.add(dataItem);
+        }
+        
+        paytotalAmount.set(t_payTotalAmount);
+        return dataList;
+    }
+    
+    /**
+     * 干线-合计
+     */
+    private List<Map<String, Object>> getTransportSumItem() {
+        List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> dataItem = new HashMap<String, Object>();
+        dataItem.put("tsPallet", "合计金额");
+        dataItem.put("payTotalAmount", paytotalAmount.get());
+        dataList.add(dataItem);
+        return dataList;
     }
     
 }
