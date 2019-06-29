@@ -38,6 +38,13 @@ public interface IBmsBizInstockInfoService {
 	 */
 	int reCalculate(List<BmsBizInstockInfoEntity> list);
 	
+	   /**
+     * 重算
+     * @param param
+     * @return
+     */
+    int reTry(Map<String, Object> condition);
+	
 	/**
 	 * 分组统计
 	 * @param condition

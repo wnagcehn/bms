@@ -58,7 +58,7 @@ public interface IBizPalletInfoService {
 	 * @param list
 	 * @return
 	 */
-	int retryCalculate(List<BizPalletInfoEntity> list);
+    int retryCalculate(Map<String, Object> map);
 
 
 }

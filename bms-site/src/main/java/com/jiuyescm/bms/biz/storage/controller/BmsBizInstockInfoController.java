@@ -947,12 +947,12 @@ public class BmsBizInstockInfoController {
 	
 	@Expose
 	public String reCalculate(Map<String, Object> param){
-		List<BmsBizInstockInfoEntity> list = bmsBizInstockInfoService.query(param);
+/*		List<BmsBizInstockInfoEntity> list = bmsBizInstockInfoService.query(param);
 		if (CollectionUtils.isEmpty(list)) {
 			return "没有数据重算";
-		}
+		}*/
 		//更改费用计算状态为99
-		if(bmsBizInstockInfoService.reCalculate(list) == 0){
+		if(bmsBizInstockInfoService.reTry(param) == 0){
 			return "重算异常";
 		}
 		sendMq(param);

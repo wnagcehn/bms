@@ -687,12 +687,7 @@ public class BizPalletInfoController {
 		if ("outstock".equals(param.get("bizType").toString())) {
 			return "出库托数不进行重算";
 		}
-		List<BizPalletInfoEntity> list = bizPalletInfoService.query(param);
-		if (CollectionUtils.isEmpty(list)) {
-			return "没有数据重算";
-		}
-		
-		if(bizPalletInfoService.retryCalculate(list) == 0){
+		if(bizPalletInfoService.retryCalculate(param) == 0){
 			return "重算异常";
 		}else {
 			List<BmsCalcuTaskVo> taskVos = bmsCalcuTaskService.queryPalletTask(param);
