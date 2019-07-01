@@ -38,5 +38,11 @@ public class MaterialUseCalcuBase extends CalcuTaskListener<BizOutstockPackmater
 		BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryFeesQtyForStoMaterial(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
 		return feesQtyVo;
 	}
+	
+    @Override
+    protected BmsFeesQtyVo totalAmountReport(BmsCalcuTaskVo taskVo) {
+        BmsFeesQtyVo feesQtyVo = bmsCalcuService.queryTotalAmountForStoMaterial(taskVo.getCustomerId(), taskVo.getSubjectCode(), taskVo.getCreMonth());
+        return feesQtyVo;
+    }
 
 }

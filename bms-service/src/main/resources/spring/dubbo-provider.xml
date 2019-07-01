@@ -86,4 +86,6 @@
 	
 	<!-- 商家账期 -->
 	<dubbo:service interface="com.jiuyescm.bms.bill.customer.service.IBillPeriodInfoService" ref="billPeriodInfoService" />
+	<!-- 结算进度 -->
+	<dubbo:service interface="com.jiuyescm.bms.bill.customer.service.IBillCustomerDetailService" ref="billCustomerDetailService" />
 </beans>

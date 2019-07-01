@@ -98,4 +98,117 @@ public interface IBmsCalcuService {
      */
     BmsFeesQtyVo queryFeesQtyForStoStandMaterial(String customerId,String subjectCode,Integer creMonth);
 
+    /**
+     * 出库总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午2:58:40
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param creMonth
+     * @return
+     */
+    BmsFeesQtyVo queryTotalAmountForStoOutstock(String customerId, String subjectCode, Integer creMonth);
+
+    /**
+     * 入库总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午2:59:33
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param creMonth
+     * @return
+     */
+    BmsFeesQtyVo queryTotalAmountForStoInstock(String customerId, String subjectCode, Integer creMonth);
+
+    /**
+     * 托数总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午3:00:06
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param creMonth
+     * @return
+     */
+    BmsFeesQtyVo queryTotalAmountForStoPallet(String customerId, String subjectCode, Integer creMonth);
+
+    /**
+     * 商品按件总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午3:00:37
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param creMonth
+     * @return
+     */
+    BmsFeesQtyVo queryTotalAmountForStoProductItem(String customerId, String subjectCode, Integer creMonth);
+
+    /**
+     * 标准耗材总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午3:01:02
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param creMonth
+     * @return
+     */
+    BmsFeesQtyVo queryTotalAmountForStoStandMaterial(String customerId, String subjectCode, Integer creMonth);
+
+    /**
+     * 增值总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午3:01:27
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param creMonth
+     * @return
+     */
+    BmsFeesQtyVo queryTotalAmountForStoAdd(String customerId, String subjectCode, Integer creMonth);
+
+    /**
+     * 耗材总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午3:01:50
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param creMonth
+     * @return
+     */
+    BmsFeesQtyVo queryTotalAmountForStoMaterial(String customerId, String subjectCode, Integer creMonth);
+
+    /**
+     * 配送总费用
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年6月15日 下午3:02:21
+     *
+     * @param customerId
+     * @param subjectCode
+     * @param creMonth
+     * @return
+     */
+    BmsFeesQtyVo queryTotalAmountForStoDis(String customerId, String subjectCode, Integer creMonth);
+    
+    
 }
