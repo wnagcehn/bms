@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.discount.repository.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -93,9 +94,9 @@ public class BmsDiscountRepositoryImpl extends MyBatisDao implements IBmsDiscoun
 		return delete("com.jiuyescm.bms.discount.mapper.BmsDiscountMapper.deleteFeeStorageDiscount", condition);
 	}
 
-
-
-
-
-
+    @Override
+    public List<BmsDiscountAccountEntity> queryServiceAccount(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return selectList("com.jiuyescm.bms.discount.mapper.BmsDiscountMapper.queryServiceAccount", condition);
+    }
 }

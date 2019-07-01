@@ -75,7 +75,7 @@
     </jms:listener-container>
     
     <jms:listener-container task-executor="discountExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-2">
-    	<jms:listener destination="BMS.DISCOUNT.ASYN.TASK" ref="bmsReceiveDispatchListener"/>
+    	<jms:listener destination="BMS.DISCOUNT.ASYN.TASK" ref="newBmsReceiveDispatchListener"/>
     </jms:listener-container>
     
 </beans>
