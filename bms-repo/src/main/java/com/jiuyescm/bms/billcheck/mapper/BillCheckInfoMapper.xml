@@ -422,7 +422,7 @@
     </select>
     
     <select id="queryList" parameterType="java.util.Map"
-        resultType="com.jiuyescm.bms.billcheck.BillCheckInfoEntity">
+        resultMap="baseResultMap">
         select
         <include refid="baseColumns" />
         from bill_check_info

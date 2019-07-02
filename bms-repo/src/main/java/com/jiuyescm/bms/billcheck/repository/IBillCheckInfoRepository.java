@@ -76,6 +76,14 @@ public interface IBillCheckInfoRepository {
 	 * @return
 	 */
 	public int updateOne(BillCheckInfoEntity billCheckInfoEntity);
+	
+	
+	   /**
+     * 更新单个账单
+     * @param billCheckInfoVo
+     * @return
+     */
+    public int updateCrm(BillCheckInfoEntity billCheckInfoEntity);
 
 	/**
 	 * 根据条件查询
