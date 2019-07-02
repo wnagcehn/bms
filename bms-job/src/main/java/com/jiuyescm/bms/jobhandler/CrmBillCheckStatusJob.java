@@ -93,10 +93,10 @@ public class CrmBillCheckStatusJob  extends IJobHandler{
 	        }
         } catch (Exception e) {
             // TODO: handle exception
-            XxlJobLogger.log("获取时间异常：", e); 
+            XxlJobLogger.log("获取时间异常：{0}", e); 
             return printLog("获取时间异常", sw, FAIL);
         }
-        
+        elCondition.put("lastTime", map.get("endTime"));
 	    try {
 	        XxlJobLogger.log("查询条件map:【{0}】  ",map);        
 	        //根据时间查询需要推送的账单跟踪
@@ -108,12 +108,10 @@ public class CrmBillCheckStatusJob  extends IJobHandler{
 	        } 
         } catch (Exception e) {
             // TODO: handle exception
-            XxlJobLogger.log("推送异常：", e); 
+            XxlJobLogger.log("推送异常：{0}", e); 
             elConditionRepository.updateByPullType(elCondition);
-
             return printLog("推送异常", sw, FAIL);
         }
-        elCondition.put("lastTime", map.get("endTime"));
         elConditionRepository.updateByPullType(elCondition);
         return ReturnT.SUCCESS;
 	}
@@ -166,20 +164,20 @@ public class CrmBillCheckStatusJob  extends IJobHandler{
         mkConditionMap.put("invoiceName", invoiceName);
         List<BillCheckInfoEntity> mkEntities = billCheckInfoRepository.querySourceId(mkConditionMap);
         if (CollectionUtils.isEmpty(mkEntities)) {
-            XxlJobLogger.log("根据invoiceName在pub_customer_base未查询到商家：" + invoiceName);
+            XxlJobLogger.log("根据invoiceName在pub_customer_base未查询到商家：{0}" , invoiceName);
             return null;
         }
         BillCheckInfoEntity mkEntity = mkEntities.get(0);
         String sourceIdString = mkEntity.getSourceId();
         if(StringUtils.isBlank(sourceIdString)){
-            XxlJobLogger.log("source_id为空：" + invoiceName);
+            XxlJobLogger.log("source_id为空：{0}" , invoiceName);
             return null;
         }
         Long sId = null;
         try {
             sId = Long.valueOf(sourceIdString);
         } catch (NumberFormatException e) {
-            XxlJobLogger.log("source_id转换long失败：" + invoiceName);
+            XxlJobLogger.log("source_id转换long失败：{0}" , invoiceName);
             e.printStackTrace();
             return null;
         }
