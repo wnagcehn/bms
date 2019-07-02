@@ -53,4 +53,7 @@
 		 <dubbo:reference id="bizOutstockPackmaterialCancelService" interface="com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialCancelService" version="1.0.0"/>
 		 <dubbo:reference id="pubPackageDictService" interface="com.jiuyescm.bms.base.dict.api.IPubPackageDictService" version="1.0.0"/>
 		 
+		 <!-- CRM -->
+		 <dubbo:reference interface="com.jiuyescm.crm.module.api.IModuleDataOpenService" version="1.0.0" id="moduleDataOpenService" timeout="1200000" check="false"/>
+		 
 </beans>							

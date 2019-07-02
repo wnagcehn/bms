@@ -439,6 +439,12 @@
 		<if test="(billName != null and billName !='')" >
 				and bill_name=#{billName}
 		</if>
+	    <if test="(beginTime != null and beginTime !='')" >
+			    and last_modify_time>= #{beginTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			    and <![CDATA[last_modify_time <= #{endTime} ]]>
+		</if>
     </select>
     
      <select id="queryOne" parameterType="java.util.Map"
@@ -676,7 +682,9 @@
 <if test="badBillAmount != null" >bad_bill_amount=#{badBillAmount,jdbcType=DECIMAL},</if>
 <if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 <if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
-<if test="billExcelUrl != null" >bill_excel_url=#{billExcelUrl,jdbcType=VARCHAR}</if>
+<if test="billExcelUrl != null" >bill_excel_url=#{billExcelUrl,jdbcType=VARCHAR},</if>
+<if test=" crmStatus != null and crmStatus !='' ">crm_status = #{crmStatus,jdbcType=TINYINT},</if>
+<if test=" crmAsynTime != null and crmAsynTime !='' ">crm_asyn_time = #{crmAsynTime,jdbcType=TIMESTAMP}</if>
 		</set>
         where 1=1 and del_flag='0'
 		<if test="(id != null and id !='')" >
@@ -756,8 +764,6 @@
 		</if>
     </update>
 	
-
-
 	<update id="deleteByBillNo" parameterType="String">
 		update bill_check_info set del_flag='1' where bill_no=#{billNo}
 	</update>

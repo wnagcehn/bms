@@ -672,7 +672,7 @@
 	   		b.customer_name as customerName, b.fees_no as feesNo, b.fees_type as otherSubjectCode,
 			a.cost, a.derate_amount as derateAmount, ifnull(a.cost,0)-ifnull(a.derate_amount,0) as receiptAmount,
 			b.num as exactQuantity, b.fees_unit as unit, a.unit_price as unitPrice, b.create_time as createTime,
-			b.service_content as serviceContent, b.external_no as externalNo, b.remark_content as remarkContent
+			b.service_content as serviceContent, b.external_no as externalNo, b.remark_content as remarkContent,a.pay_no as payNo
 		FROM biz_add_fee b
 		left join fees_receive_storage a 
 			on b.fees_no = a.fees_no and a.del_flag = '0'
