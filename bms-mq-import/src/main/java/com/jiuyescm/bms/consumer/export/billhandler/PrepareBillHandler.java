@@ -1787,12 +1787,8 @@ public class PrepareBillHandler {
             dataItem.put("payType", entity.getPayType());
             double productAmount=entity.getProductAmount();
             t_productAmount+=productAmount;
-            dataItem.put("productAmount", productAmount);
-            if("0".equals(entity.getIsDeliveryFree())){
-                dataItem.put("isDeliveryFree", "否"); 
-            }else if("1".equals(entity.getIsDeliveryFree())){
-                dataItem.put("isDeliveryFree", "是");
-            }
+            dataItem.put("productAmount", productAmount);         
+            dataItem.put("isDeliveryFree", entity.getIsDeliveryFree());           
             dataItem.put("crePerson", entity.getCrePerson());
             dataItem.put("remark", entity.getRemark());
             dataList.add(dataItem);
