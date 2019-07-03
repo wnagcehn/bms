@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.billcheck.repository.impl;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -83,15 +84,26 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	@SuppressWarnings("unchecked")
 	@Override
 	public int update(BillCheckInfoEntity billCheckInfoEntity) {
+	    billCheckInfoEntity.setLastModifyTime(new Timestamp(System.currentTimeMillis()));
 		return update("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.update", billCheckInfoEntity);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public int updateOne(BillCheckInfoEntity billCheckInfoEntity) {
+        billCheckInfoEntity.setLastModifyTime(new Timestamp(System.currentTimeMillis()));
 		return update("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.updateOne", billCheckInfoEntity);
 	}
+	
+    @SuppressWarnings("unchecked")
+    @Override
+    public int updateCrm(BillCheckInfoEntity billCheckInfoEntity) {
+        // TODO Auto-generated method stub
+        return update("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.update", billCheckInfoEntity);
+    }
 
+	
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public int saveList(List<BillCheckInfoEntity> list) {
@@ -326,4 +338,7 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
         PubCustomerBaseEntity entity=(PubCustomerBaseEntity) selectOne("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryMk", condition);
         return entity;
     }
+
+
+
 }

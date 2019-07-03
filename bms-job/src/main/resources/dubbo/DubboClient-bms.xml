@@ -53,4 +53,6 @@
 		 <dubbo:reference id="bizOutstockPackmaterialCancelService" interface="com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialCancelService" version="1.0.0"/>
 		 <dubbo:reference id="pubPackageDictService" interface="com.jiuyescm.bms.base.dict.api.IPubPackageDictService" version="1.0.0"/>
 		 
+		<dubbo:reference id="billCheckInfoService" interface="com.jiuyescm.bms.billcheck.service.IBillCheckInfoService" 
+			 version="1.0.0"/>		 
 </beans>							
