@@ -108,11 +108,9 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 
 	@Override
 	public void calcu(Map<String, Object> map) {
-	    int count=0;
+	    int count=1000;
 	    if(map!=null && map.get("num")!=null){
 	        count=(int) map.get("num");
-	    }else{
-	        count = 1000;
 	    }
         while(count == 1000){
           count = calcuDetail(map);

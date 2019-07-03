@@ -116,49 +116,58 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 	
 	@Override
 	public void calcu(Map<String, Object> map){
-		
-		bizList = bizProductStorageService.query(map);
-		fees = new ArrayList<>();
-		if(bizList == null || bizList.size() == 0){
-			commonService.taskCountReport(taskVo, "STORAGE");
-			return;
-		}
-		logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),bizList.size());
-		for (BizProductStorageEntity entity : bizList) {
-		    errorMap = new HashMap<String, Object>();//用户合同在线计算
-			FeesReceiveStorageEntity fee = initFee(entity);
-			try {
-				fees.add(fee);
-				if(isNoExe(entity, fee)){
-					continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
-				}
-			
+	    int count=1000;
+        if(map!=null && map.get("num")!=null){
+            count=(int) map.get("num");
+        }
+        while(count == 1000){
+          count = calcuDetail(map);
+        }
+        calcuDetail(map);   
+	}
+	
+	
+	private int calcuDetail(Map<String, Object> map){
+	    bizList = bizProductStorageService.query(map);
+        fees = new ArrayList<>();
+        if(bizList == null || bizList.size() == 0){
+            commonService.taskCountReport(taskVo, "STORAGE");
+            return 0;
+        }
+        logger.info("taskId={} 查询行数【{}】",taskVo.getTaskId(),bizList.size());
+        for (BizProductStorageEntity entity : bizList) {
+            errorMap = new HashMap<String, Object>();//用户合同在线计算
+            FeesReceiveStorageEntity fee = initFee(entity);
+            try {
+                fees.add(fee);
+                if(isNoExe(entity, fee)){
+                    continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
+                }
+            
                 calcuForBms(entity,fee);
-			} catch (Exception e) {
-				// TODO: handle exception
-				fee.setIsCalculated(CalculateState.Sys_Error.getCode());
-				fee.setCalcuMsg("系统异常");
-				logger.error("计算异常",e);
-			}
-			
-		}
-		updateBatch(bizList,fees);	
-		calceCount += bizList.size();
-		
-		//更新任务计算各字段
-		updateTask(taskVo,calceCount);		
-		
-		int taskRate = (int)Math.floor((calceCount*100)/unCalcuCount);
-		try {
-			if(unCalcuCount!=0){
-				bmsCalcuTaskService.updateRate(taskVo.getTaskId(), taskRate);
-			}
-		} catch (Exception e) {
-			logger.error("更新任务进度异常",e);
-		}
-		if(bizList!=null && bizList.size() == 1000){
-			calcu(map);
-		}
+            } catch (Exception e) {
+                // TODO: handle exception
+                fee.setIsCalculated(CalculateState.Sys_Error.getCode());
+                fee.setCalcuMsg("系统异常");
+                logger.error("计算异常",e);
+            }
+            
+        }
+        updateBatch(bizList,fees);  
+        calceCount += bizList.size();
+        
+        //更新任务计算各字段
+        updateTask(taskVo,calceCount);      
+        
+        int taskRate = (int)Math.floor((calceCount*100)/unCalcuCount);
+        try {
+            if(unCalcuCount!=0){
+                bmsCalcuTaskService.updateRate(taskVo.getTaskId(), taskRate);
+            }
+        } catch (Exception e) {
+            logger.error("更新任务进度异常",e);
+        }
+        return bizList.size();
 	}
 	
 	private void updateTask(BmsCalcuTaskVo taskVo,int calcuCount){
