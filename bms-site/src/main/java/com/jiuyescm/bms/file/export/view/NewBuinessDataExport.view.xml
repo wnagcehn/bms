@@ -20,6 +20,7 @@
       </PropertyDef>
       <PropertyDef name="customerName">
         <Property name="label">主商家名称</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
       <PropertyDef name="isOutstockData">
         <Property name="label">出库数据</Property>

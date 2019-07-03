@@ -158,6 +158,8 @@ public class FeesReceiveStorageEntity implements IEntity {
 	//精确数量
 	private BigDecimal exactQuantity;
 	
+	private String payNo;
+	
 	public BigDecimal getExactQuantity() {
 		return exactQuantity;
 	}
@@ -982,6 +984,14 @@ public class FeesReceiveStorageEntity implements IEntity {
 	public void setContinuePrice(Double continuePrice) {
 		this.continuePrice = continuePrice;
 	}
+
+    public String getPayNo() {
+        return payNo;
+    }
+
+    public void setPayNo(String payNo) {
+        this.payNo = payNo;
+    }
 	
 	
 }

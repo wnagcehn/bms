@@ -144,6 +144,10 @@ public class BillCheckInfoEntity implements IEntity {
 	//开票商家编码
     private String mkId;
     private String sourceId;
+    // 推送crm状态 0-未推送  1-已推送  2-推送失败
+    private Long crmStatus;
+    // 最后一次推送crm时间
+    private Timestamp crmAsynTime;
     
     public String getSourceId() {
         return sourceId;
@@ -981,6 +985,22 @@ public class BillCheckInfoEntity implements IEntity {
 	public void setMkInvoiceName(String mkInvoiceName) {
 		this.mkInvoiceName = mkInvoiceName;
 	}
+
+    public Long getCrmStatus() {
+        return crmStatus;
+    }
+
+    public void setCrmStatus(Long crmStatus) {
+        this.crmStatus = crmStatus;
+    }
+
+    public Timestamp getCrmAsynTime() {
+        return crmAsynTime;
+    }
+
+    public void setCrmAsynTime(Timestamp crmAsynTime) {
+        this.crmAsynTime = crmAsynTime;
+    }
 
 	
 }

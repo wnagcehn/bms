@@ -290,6 +290,9 @@ public class BillCheckInfoImportController extends HttpNewImport<BillCheckInfoVo
 			vo.setCreator(JAppContext.currentUserName());
 			vo.setCreatorId(JAppContext.currentUserID());
 			vo.setCreateTime(JAppContext.currentTimestamp());
+			vo.setLastModifier(JAppContext.currentUserName());
+			vo.setLastModifierId(JAppContext.currentUserID());
+			vo.setLastModifyTime(JAppContext.currentTimestamp());
 			vo.setReceiptStatus(BillCheckReceiptStateEnum.UN_RECEIPT.getCode());//未收款
 			vo.setDelFlag("0");
 			list.add(vo);

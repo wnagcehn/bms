@@ -241,7 +241,6 @@ public class PalletInitJob extends IJobHandler {
 		} else if ("outstock".equals(entity.getBizType())) {
 			//如果是出库托数,生成费用为0,不发MQ
 			subjectId = "outstock_pallet_vm";
-			entity.setIsCalculated("5");
 			feesEntity.setIsCalculated("5");
 		}
 		feesEntity.setSubjectCode(subjectId);
