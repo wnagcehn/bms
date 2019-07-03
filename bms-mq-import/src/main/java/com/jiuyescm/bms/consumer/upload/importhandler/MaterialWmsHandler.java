@@ -118,7 +118,7 @@ public class MaterialWmsHandler {
         repeatMap = new HashMap<String, Integer>();
         originColumn = new TreeMap<Integer,String>();
         wareHouseMap = bmsMaterialImportTaskCommon.queryAllWarehouse();
-        customerMap  = bmsMaterialImportTaskCommon.queryAllCustomer();
+        customerMap  = bmsMaterialImportTaskCommon.queryAllCustomerId();
         materialMap  = bmsMaterialImportTaskCommon.queryAllMaterial();
     }
     
@@ -183,10 +183,10 @@ public class MaterialWmsHandler {
                     
                     //----------校验表头
                     logger.info("任务ID【{}】 -> 校验表头...",taskId);
-                    String[] str = {"出库日期", "仓库", "商家", "出库单号", "运单号"}; //必填列
+                    String[] str = {"出库日期", "仓库", "商家ID", "商家", "出库单号", "运单号"}; //必填列
                     if(!checkTitle(columns,str)){
-                        logger.info("任务ID【{}】 -> 模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号",taskId);
-                        bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.FAIL.getCode(), "模板列格式错误,必须包含 出库日期,仓库,商家,出库单号,运单号");
+                        logger.info("任务ID【{}】 -> 模板列格式错误,必须包含 出库日期,仓库,商家ID,商家,出库单号,运单号",taskId);
+                        bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.FAIL.getCode(), "模板列格式错误,必须包含 出库日期,仓库,商家ID,商家,出库单号,运单号");
                         return;
                     }
                     logger.info("任务ID【{}】 -> 表头校验完成，准备读取Excel内容……",taskId); 
@@ -411,6 +411,7 @@ public class MaterialWmsHandler {
         
         materialCommonList.add("出库日期");
         materialCommonList.add("仓库");
+        materialCommonList.add("商家ID");
         materialCommonList.add("商家");
         materialCommonList.add("出库单号");
         materialCommonList.add("运单号");
@@ -518,7 +519,7 @@ public class MaterialWmsHandler {
     private List<BizOutstockPackmaterialTempEntity> loadTemp(DataRow dr, String errorMsg) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException{
         BizOutstockPackmaterialTempEntity tempEntity = null;
         List<BizOutstockPackmaterialTempEntity> tempList = new ArrayList<BizOutstockPackmaterialTempEntity>();
-        boolean isWaybillNull = false;
+//        boolean isWaybillNull = false;
         //本行是否拥有耗材
         boolean isHaveMaterial = false;
         tempEntity = new BizOutstockPackmaterialTempEntity();
@@ -546,15 +547,16 @@ public class MaterialWmsHandler {
                         errorMsg+="仓库是必填项;";
                     }
                     break;
+                case "商家ID":
+                    if (StringUtils.isNotBlank(dc.getColValue())) {
+                        tempEntity.setCustomerId(dc.getColValue());
+                    }else {
+                        errorMsg+="商家ID是必填项;";
+                    }
+                    break;
                 case "商家":
                     if (StringUtils.isNotBlank(dc.getColValue())) {
                         tempEntity.setCustomerName(dc.getColValue());
-                        //如果没找到，报错
-                        if (customerMap.containsKey(dc.getColValue())) {
-                            tempEntity.setCustomerId(customerMap.get(dc.getColValue()).getCustomerid());
-                        }else {
-                            errorMsg+="商家不存在;";
-                        }
                     }else {
                         errorMsg+="商家是必填项;";
                     }
@@ -571,7 +573,7 @@ public class MaterialWmsHandler {
                         tempEntity.setWaybillNo(dc.getColValue());
                     }else {
                         errorMsg+="运单号是必填项;";
-                        isWaybillNull = true;
+//                        isWaybillNull = true;
                     }
                     break;
                 default:
@@ -581,10 +583,22 @@ public class MaterialWmsHandler {
         } catch (Exception e) {
             errorMsg+="第【"+ dr.getRowNo() +"】行格式不正确;";
         }
+        
+        //商家ID和商家名称都存在时
+        if (StringUtils.isNotBlank(tempEntity.getCustomerId()) && StringUtils.isNotBlank(tempEntity.getCustomerName())) {
+            //如果商家ID不存在，报错; 如果商家ID存在，对应的名称是否和Excel中的名称相等，不相等报错
+            if (customerMap.containsKey(tempEntity.getCustomerId())) {
+                if (!customerMap.get(tempEntity.getCustomerId()).getCustomername().equals(tempEntity.getCustomerName())) {
+                    errorMsg+="商家ID："+ tempEntity.getCustomerId() + "，与商家名称不一致;";
+                }
+            }else {
+                errorMsg+="商家不存在;";
+            }
+        }
 
-        if (isWaybillNull) {
-            return tempList;
-        }   
+//        if (isWaybillNull) {
+//            return tempList;
+//        }   
         
         //****************************************************************** 遍历耗材
         for (Map<String,String> map : materialGroup) {
