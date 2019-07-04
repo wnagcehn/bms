@@ -73,6 +73,9 @@ public class SheetReader extends DefaultHandler {
 	}
 	
 	private void rowHander(){
+	    
+	    //是否需要回调
+	    boolean isCallBack = false;
 		DataRow row = new DataRow();
 		row.setRowNo(curRow);
 		/*Iterator<Map.Entry<String, DataColumn>> columnIterator = cellMap.entrySet().iterator();
@@ -86,13 +89,18 @@ public class SheetReader extends DefaultHandler {
 			Map.Entry<String, DataColumn> entry = columnIterator.next();
 			if(cellMap.containsKey(entry.getKey())){
 				row.addColumn(cellMap.get(entry.getKey()));
+				if (null != cellMap.get(entry.getKey()).getColValue()) {
+                    isCallBack = true;
+                }
 			}
 			else{
 				DataColumn cell = new DataColumn(entry.getKey(), entry.getValue().getTitleName(), null);
 				row.addColumn(cell);
 			}
 		}
-		callback.read(row);
+		if (isCallBack) {
+		    callback.read(row); 
+        }
 	}
 	
 	@Override
