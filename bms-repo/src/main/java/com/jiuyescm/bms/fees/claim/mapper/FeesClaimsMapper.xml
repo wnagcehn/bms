@@ -57,7 +57,7 @@
 		END as is_delivery_free
         ,sum(product_amount) as product_amount, sum(returned_amount) as returned_amount        
         from fees_claims
-        where 1 = 1 and  del_flag='0'
+        where 1 = 1 and  del_flag='0' and pay_direction in ('J2C','C2J')
         	<if test=" waybillNo != null and waybillNo !='' ">
 				and waybill_no = #{waybillNo}
 			</if>
@@ -72,9 +72,6 @@
 			</if>
         	<if test=" customerId != null and customerId !='' ">
 				and customer_id = #{customerId}
-			</if>
-        	<if test=" customerName != null and customerName !='' ">
-				and customer_name = #{customerName}
 			</if>
         	<if test=" warehouseCode != null and warehouseCode !='' ">
 				and warehouse_code = #{warehouseCode}
@@ -129,7 +126,7 @@
 				bill_month = #{billMonth,jdbcType=VARCHAR},
 			</if>
         </trim>
-        where waybill_no = #{waybillNo} and work_order_no = #{workOrderNo} and del_flag='0'
+        where waybill_no = #{waybillNo} and work_order_no = #{workOrderNo} and del_flag='0' and pay_direction in ('J2C','C2J')
     </update>  
    
 	 <!-- 预账单理赔 -->
@@ -140,7 +137,7 @@
 		WHEN 1 THEN '是' 
 		END as is_delivery_free
 		from fees_claims
-		where 1=1 and product_amount>0 and del_flag='0'
+		where 1=1 and product_amount>0 and del_flag='0' and pay_direction in ('J2C','C2J')
 		<if test="(year != null and year !='')">
 		   and bill_year=#{year}
 		</if>
@@ -163,7 +160,7 @@
 	<!-- 预账单改地址 -->
 	<select id="queryPreBillClaimChange" parameterType="com.jiuyescm.bms.bill.receive.entity.BmsBillInfoEntity" resultType="com.jiuyescm.bms.fees.claim.FeesClaimsEntity">
 	   select warehouse_name,waybill_time,waybill_no,work_order_no,customer_id,customer_name,duty_type,pay_type,sum(returned_amount) as returned_amount,cre_person,remark from fees_claims
-		where 1=1 and returned_amount>0 and del_flag='0'
+		where 1=1 and returned_amount>0 and del_flag='0' and pay_direction in ('J2C','C2J')
 		<if test="(year != null and year !='')">
 		   and bill_year=#{year}
 		</if>

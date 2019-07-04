@@ -46,6 +46,7 @@ import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
 import com.jiuyescm.bms.billcheck.vo.BillReceiptFollowVo;
 import com.jiuyescm.bms.common.enumtype.CheckBillStatusEnum;
+import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.crm.module.api.IModuleDataOpenService;
 import com.jiuyescm.crm.module.vo.FieldDataOpenVO;
@@ -1027,6 +1028,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
     @Override
     public void saveCrm(BillCheckInfoEntity entity) {
         try {
+            entity.setCrmAsynTime(JAppContext.currentTimestamp());
             // 根据id获取账单
             Map<String, Object> conditionMap = new HashMap<>();
             conditionMap.put("id", entity.getId());
@@ -1049,8 +1051,18 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
             logger.info("发送CRM参数：" + json);
             Long result = moduleDataOpenService.saveModuleData(tenantId, "bill", moduleVo);
             logger.info("接收crm结果：" + result);
+            entity.setCrmStatus(1l);
         } catch (Exception e) {
-            logger.error("CRM保存接口失败:{0}", e);
+            logger.error("CRM保存接口失败:", e);
+            entity.setCrmStatus(2l);
+        }
+        
+        try {
+            billCheckInfoRepository.updateCrm(entity);
+        } catch (Exception e) {
+            // TODO: handle exception
+            logger.error("BMS保存CRM推送状态和推送时间失败失败:", e);
+
         }
     }
 

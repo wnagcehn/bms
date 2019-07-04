@@ -67,7 +67,6 @@ import com.jiuyescm.bms.fees.dispatch.service.IFeesReceiveDispatchService;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.bms.fees.storage.service.IFeesReceiveStorageService;
 import com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial;
-import com.jiuyescm.bms.fees.transport.entity.FeesTransportMasterEntity;
 import com.jiuyescm.bms.fees.transport.service.IFeesTransportMasterService;
 import com.jiuyescm.bms.fees.transport.vo.FeesTransportVo;
 import com.jiuyescm.common.utils.DateUtil;
@@ -1531,7 +1530,7 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "增值编号");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "wmsId");
+        itemMap.put("dataKey", "payNo");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
@@ -1607,7 +1606,7 @@ public class PrepareBillHandler {
         double amount = 0d;
         for (FeesReceiveStorageEntity entity : list) {
             dataItem = new HashMap<String, Object>();
-            dataItem.put("wmsId", entity.getWmsId());
+            dataItem.put("payNo", entity.getPayNo());
             dataItem.put("createTime", sdf.format(entity.getCreateTime()));
             dataItem.put("warehouseName", entity.getWarehouseName());
             dataItem.put("customerName", entity.getCustomerName());
@@ -1788,12 +1787,8 @@ public class PrepareBillHandler {
             dataItem.put("payType", entity.getPayType());
             double productAmount=entity.getProductAmount();
             t_productAmount+=productAmount;
-            dataItem.put("productAmount", productAmount);
-            if("0".equals(entity.getIsDeliveryFree())){
-                dataItem.put("isDeliveryFree", "否"); 
-            }else if("1".equals(entity.getIsDeliveryFree())){
-                dataItem.put("isDeliveryFree", "是");
-            }
+            dataItem.put("productAmount", productAmount);         
+            dataItem.put("isDeliveryFree", entity.getIsDeliveryFree());           
             dataItem.put("crePerson", entity.getCrePerson());
             dataItem.put("remark", entity.getRemark());
             dataList.add(dataItem);
