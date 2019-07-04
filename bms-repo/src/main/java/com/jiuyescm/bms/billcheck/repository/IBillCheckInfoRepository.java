@@ -220,4 +220,16 @@ public interface IBillCheckInfoRepository {
     PageInfo<BillCheckInfoEntity> querySimple(Map<String, Object> condition, int pageNo, int pageSize);
     
     PubCustomerBaseEntity queryMk(Map<String, Object> condition);
+    
+    /**
+     * 更新回款调整
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月3日 下午1:45:00
+     *
+     * @param entity
+     * @return
+     */
+    int updateAdjustInfo(BillCheckAdjustInfoEntity entity);
 }

@@ -940,9 +940,9 @@ public class BillCheckInfoController{
 		billCheckInfoService.update(checkVo);
 		
         // 保存CRM
-        BillCheckInfoEntity checkEntity = new BillCheckInfoEntity();
-        checkEntity.setId(temp.getBillCheckId());
-        billCheckInfoService.saveCrm(checkEntity);
+//        BillCheckInfoEntity checkEntity = new BillCheckInfoEntity();
+//        checkEntity.setId(temp.getBillCheckId());
+//        billCheckInfoService.saveCrm(checkEntity);
 	}
 	
 	
@@ -1067,10 +1067,10 @@ public class BillCheckInfoController{
 		
 		billCheckInfoService.update(checkVo);
 		
-        // 保存CRM
-        BillCheckInfoEntity checkEntity = new BillCheckInfoEntity();
-        checkEntity.setId(checkVo.getId());
-        billCheckInfoService.saveCrm(checkEntity);
+//        // 保存CRM
+//        BillCheckInfoEntity checkEntity = new BillCheckInfoEntity();
+//        checkEntity.setId(checkVo.getId());
+//        billCheckInfoService.saveCrm(checkEntity);
 	}
 	
 	
