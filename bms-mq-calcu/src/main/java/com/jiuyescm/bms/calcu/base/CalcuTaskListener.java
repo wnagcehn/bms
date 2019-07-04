@@ -213,7 +213,7 @@ public abstract class CalcuTaskListener<T,F> implements MessageListener{
 		cond.put("customerId", vo.getCustomerId());
 		cond.put("beginTime", startTime);
 		cond.put("endTime", endTime);
-		cond.put("num", 1000);
+		cond.put("num", 200);
 		cond.put("isCalculated", "99");
 		cond.put("subjectCode", vo.getSubjectCode());
 		return cond;
