@@ -1151,4 +1151,16 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
         // TODO Auto-generated method stub
         return billCheckInfoRepository.queryMk(condition);
     }
+    
+    @Override
+    public int updateAdjustInfo(BillCheckAdjustInfoVo vo) {
+        BillCheckAdjustInfoEntity entity = new BillCheckAdjustInfoEntity();
+        try {
+            PropertyUtils.copyProperties(entity, vo);
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}", ex);
+        }
+        return billCheckInfoRepository.updateAdjustInfo(entity);
+    }
+    
 }

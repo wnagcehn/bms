@@ -234,5 +234,17 @@ public interface IBillCheckInfoService {
     PageInfo<BillCheckInfoVo> querySimple(Map<String, Object> condition, int pageNo, int pageSize); 
     
     PubCustomerBaseEntity queryMk(Map<String, Object> condition);
+
+    /**
+     * 修改回款调整
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月3日 下午1:46:22
+     *
+     * @param vo
+     * @return
+     */
+    int updateAdjustInfo(BillCheckAdjustInfoVo vo);
 	
-	}
+}

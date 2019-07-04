@@ -298,32 +298,39 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 		return list;
 	}
 	
-   @Override
+    @Override
     public List<BillCheckInfoEntity> querySourceId(Map<String,Object> condition) {
         List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.querySourceId",condition);
         return list;
     }
    
-   @Override
-   public List<BillCheckInfoEntity> queryId(Map<String,Object> condition) {
-       List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryId",condition);
-       return list;
-   }
+    @Override
+    public List<BillCheckInfoEntity> queryId(Map<String,Object> condition) {
+        List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryId",condition);
+        return list;
+    }
    
-   @SuppressWarnings("unchecked")
-   @Override
-   public PageInfo<BillCheckInfoEntity> querySimple(Map<String, Object> condition,
-           int pageNo, int pageSize) {
-       List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.querySimple", condition,new RowBounds(pageNo,pageSize));
-       PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
-       return page;
-   }
+    @SuppressWarnings("unchecked")
+    @Override
+    public PageInfo<BillCheckInfoEntity> querySimple(Map<String, Object> condition,
+            int pageNo, int pageSize) {
+        List<BillCheckInfoEntity> list=selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.querySimple", condition,new RowBounds(pageNo,pageSize));
+        PageInfo<BillCheckInfoEntity> page=new PageInfo<>(list);
+        return page;
+    }
 
     @SuppressWarnings("unchecked")
     @Override
     public PubCustomerBaseEntity queryMk(Map<String, Object> condition) {
-        // TODO Auto-generated method stub
+    // TODO Auto-generated method stub
         PubCustomerBaseEntity entity=(PubCustomerBaseEntity) selectOne("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.queryMk", condition);
         return entity;
     }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public int updateAdjustInfo(BillCheckAdjustInfoEntity entity) {
+        return update("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.updateAdjustInfo", entity);
+    }
+    
 }
