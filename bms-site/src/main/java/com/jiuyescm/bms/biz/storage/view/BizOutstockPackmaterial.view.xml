@@ -130,6 +130,22 @@
       <PropertyDef name="costRemark">
         <Property name="label">成本备注</Property>
       </PropertyDef>
+      <PropertyDef name="unitPrice">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="rowExcelNo">
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="rowExcelName">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="materialType">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="zexpressnum">
+        <Property/>
+        <Property name="label">转寄后运单号</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
       <PropertyDef name="feesNo">
@@ -1138,6 +1154,9 @@ view.get(&quot;#updateAction&quot;).execute(&#xD;
           </DataColumn>
           <DataColumn name="waybillNo">
             <Property name="property">waybillNo</Property>
+          </DataColumn>
+          <DataColumn name="zexpressnum">
+            <Property name="property">zexpressnum</Property>
           </DataColumn>
           <DataColumn>
             <Property name="property">customerName</Property>

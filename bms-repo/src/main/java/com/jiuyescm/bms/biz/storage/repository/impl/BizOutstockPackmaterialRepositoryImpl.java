@@ -394,4 +394,10 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
         // TODO Auto-generated method stub
         return update("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.restoreCustomerBiz", map);
     }
+
+    @Override
+    public String getWayBillNo(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return (String) selectOne("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.getWayBillNo", condition);
+    }
 }
