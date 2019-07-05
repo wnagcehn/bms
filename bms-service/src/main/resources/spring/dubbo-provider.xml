@@ -93,5 +93,7 @@
 	<dubbo:service interface="com.jiuyescm.bms.bill.customer.service.IBillPeriodInfoService" ref="billPeriodInfoService" />
 	<!-- 结算进度 -->
 	<dubbo:service interface="com.jiuyescm.bms.bill.customer.service.IBillCustomerDetailService" ref="billCustomerDetailService" />
+	<!-- wms二级类目，单位映射 -->
+	<dubbo:service interface="com.jiuyescm.bms.biz.storage.service.IAddFeeUnitService" ref="addFeeUnitService" />
 
 </beans>
