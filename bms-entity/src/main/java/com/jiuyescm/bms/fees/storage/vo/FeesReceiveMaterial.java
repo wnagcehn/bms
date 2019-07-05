@@ -61,6 +61,8 @@ public class FeesReceiveMaterial implements IEntity {
 	
 	private String waybillNo;
 	
+	private String zexpressnum;
+	
 	private Timestamp createTime;
 	
 	private String carrierName;
@@ -349,5 +351,14 @@ public class FeesReceiveMaterial implements IEntity {
     public void setPackGroupNo(String packGroupNo) {
         this.packGroupNo = packGroupNo;
     }
+
+    public String getZexpressnum() {
+        return zexpressnum;
+    }
+
+    public void setZexpressnum(String zexpressnum) {
+        this.zexpressnum = zexpressnum;
+    }
 	
+    
 }

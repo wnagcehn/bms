@@ -564,6 +564,7 @@
 		a.warehouse_name, 
 		a.customer_name, 
 		a.waybill_no as waybillNo,
+		a.zexpressnum,
 		a.outstock_no,
 		a.totalqty,
 		a.product_detail,
@@ -897,6 +898,6 @@
     </update>
     
     <select id="getWayBillNo" parameterType="java.util.Map" resultType="String">
-    	SELECT waybill_no from biz_dispatch_bill where 1=1 and del_flag='0' and (waybill_no=#{waybillNo} or zexpressnum=#{waybillNo})  
+    	SELECT waybill_no from biz_dispatch_bill where 1=1 and del_flag='0' and (waybill_no=#{waybillNo} or zexpressnum=#{waybillNo}) limit 1
     </select>
 </mapper>
