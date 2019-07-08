@@ -2858,7 +2858,7 @@ public class PrepareBillHandler {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = new HashMap<String, Object>();
         dataItem.put("tsPallet", "合计金额");
-        dataItem.put("payTotalAmount", paytotalAmount.get());
+        dataItem.put("paymentTotle", paytotalAmount.get());
         dataList.add(dataItem);
         return dataList;
     }
