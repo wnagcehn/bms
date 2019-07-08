@@ -97,6 +97,7 @@ public class FeesTransportMasterEntity implements IEntity {
 	@ExcelField(title = "收货日期", num = 28)
 	private String endDate;
 	// 应付总计
+    @ExcelField(title = "应付总计", num = 56)
 	private Double paymentTotle;
 	// 客户是否需要保险
 	@ExcelField(title = "客户是否需要保险", num = 57)
@@ -223,8 +224,7 @@ public class FeesTransportMasterEntity implements IEntity {
 	//托盘费
 	@ExcelField(title = "托盘费", num = 55)
 	private Double tsPallet;
-	//应付总计
-	@ExcelField(title = "应付总计", num = 56)
+	
 	private Double payTotalAmount;
 
 	public FeesTransportMasterEntity() {

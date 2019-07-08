@@ -511,7 +511,7 @@
 #{calculateTime,jdbcType=TIMESTAMP}, 
 #{writeTime,jdbcType=TIMESTAMP}, 
 #{adjustNum,jdbcType=DOUBLE},
-#{remark},
+#{remark,jdbcType=VARCHAR},
 #{externalNo,jdbcType=VARCHAR},
 #{serviceContent,jdbcType=VARCHAR},
 #{remarkContent,jdbcType=VARCHAR},
