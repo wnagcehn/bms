@@ -826,9 +826,10 @@ view.get(&quot;#queryForm.entity&quot;).set({&#xD;
         <Property name="property">tsPallet</Property>
         <Property name="width">100</Property>
       </DataColumn>
-      <DataColumn name="payTotalAmount">
-        <Property name="property">payTotalAmount</Property>
+      <DataColumn>
+        <Property name="property">paymentTotle</Property>
         <Property name="width">100</Property>
+        <Property name="name">paymentTotle</Property>
       </DataColumn>
       <DataColumn>
         <Property name="property">needInsurance</Property>
