@@ -149,14 +149,13 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	
 	@Override
 	public void calcu(Map<String, Object> map){
-	    int count=1000;
-        if(map!=null && map.get("num")!=null){
-            count=(int) map.get("num");
-        }
-        while(count == 1000){
+	    int count=(int) map.get("num");
+        //原始进来的数量
+        int recount=count;
+        while(count == recount){
           count = calcuDetail(map);
         }
-        calcuDetail(map); 
+        calcuDetail(map);   
 	}
 	
 	
