@@ -47,7 +47,7 @@ public class AddFeeServiceImpl implements IAddFeeService {
         }
         List<BizAddFeeEntity> list = new ArrayList<BizAddFeeEntity>();
         for (BizAddFeeVo vo : listVo) {
-            logger.info("增值服务单，OMS入参：" + vo.toString());
+            logger.info("增值服务单，OMS入参：" + JsonUtils.toJson(vo));
             BizAddFeeEntity paramEntity = new BizAddFeeEntity();
             try {
                 PropertyUtils.copyProperties(paramEntity, vo);
