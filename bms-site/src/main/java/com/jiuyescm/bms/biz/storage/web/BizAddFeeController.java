@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -125,6 +126,10 @@ public class BizAddFeeController {
 	public void query(Page<BizAddFeeEntity> page, Map<String, Object> param) {
 		PageInfo<BizAddFeeEntity> pageInfo = bizAddFeeService.query(param, page.getPageNo(), page.getPageSize());
 		if (pageInfo != null) {
+		    for(BizAddFeeEntity entity:pageInfo.getList()){
+		        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		        entity.setCreateDate(sdf.format(entity.getCreateTime()));
+		    }
 			page.setEntities(pageInfo.getList());
 			page.setEntityCount((int) pageInfo.getTotal());
 		}

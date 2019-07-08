@@ -47,7 +47,7 @@
         <Property name="label">创建者</Property>
       </PropertyDef>
       <PropertyDef name="createTime">
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
         <Property name="label">创建时间</Property>
       </PropertyDef>
       <PropertyDef name="lastModifier">
@@ -158,6 +158,13 @@
         <Property></Property>
         <Property name="label">增值主科目名称</Property>
       </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property/>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="totalNum">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dataTypeCondition">
       <PropertyDef name="dataNum">
@@ -184,11 +191,11 @@
       </PropertyDef>
       <PropertyDef name="startTime">
         <Property name="label">库存日期:</Property>
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="endTime">
         <Property name="label">——</Property>
-        <Property name="dataType">DateTime</Property>
+        <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="delFlag">
         <Property></Property>
@@ -685,8 +692,8 @@ if(data.current){&#xD;
           <Property name="width">120</Property>
           <Editor/>
         </DataColumn>
-        <DataColumn name="createTime">
-          <Property name="property">createTime</Property>
+        <DataColumn name="createDate">
+          <Property name="property">createDate</Property>
           <Property name="width">120</Property>
         </DataColumn>
         <DataColumn name="warehouseName">
