@@ -127,7 +127,7 @@
 				and a.carrier_id = #{logistics}
 		</if>
 		<if test="(waybillNo != null and waybillNo !='')" >
-				and a.waybill_no = #{waybillNo}
+				and (a.waybill_no = #{waybillNo} || a.zexpressnum = #{waybillNo})
 		</if>
 		<if test="(accountState != null and accountState !='')" >
 				and c.is_calculated =#{accountState}
@@ -143,9 +143,6 @@
 		</if>
 		<if test="(endTime != null and endTime !='')" >
 			    and <![CDATA[a.create_time <= #{endTime} ]]>
-		</if>
-		<if test="(zexpressnum != null and zexpressnum !='')" >
-				and a.zexpressnum = #{zexpressnum}
 		</if>
 		<if test="(bigstatus != null and bigstatus !='')" >
 				and a.bigstatus = #{bigstatus}

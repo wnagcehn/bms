@@ -52,7 +52,7 @@ public class Test {
     					StringBuilder sb  = new StringBuilder();
     					sb.append("\t"+dr.getRowNo()+"\t");
                 		for (DataColumn dc : dr.getColumns()) {
-                         	sb.append("\t"+dc.getColValue()+"\t"+dc.getColNo());
+                         	sb.append("\t"+dc.getColValue());
                         }
                 		System.out.println(sb.toString());
     				}

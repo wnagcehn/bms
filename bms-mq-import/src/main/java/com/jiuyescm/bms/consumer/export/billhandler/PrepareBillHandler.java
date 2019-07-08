@@ -131,8 +131,6 @@ public class PrepareBillHandler {
     FastDateFormat sdf = FastDateFormat.getInstance("yyyy-MM-dd");
     
     private static ThreadLocal<Double> totalAmount = new ThreadLocal<Double>();
-    //运费
-    private static ThreadLocal<Double> totalDeliveryCost = new ThreadLocal<Double>();
     //商品金额
     private static ThreadLocal<Double> totalProductAmount = new ThreadLocal<Double>();
     //改地址退件费
@@ -2258,7 +2256,8 @@ public class PrepareBillHandler {
                         materialEntity.getWarehouseName());
                 dataItem.put("customerName",
                         materialEntity.getCustomerName());
-                dataItem.put("waybillNo", materialEntity.getWaybillNo());
+                //有转寄运单号取转寄的   没有的取运单号
+                dataItem.put("waybillNo", StringUtils.isBlank(materialEntity.getZexpressnum())?materialEntity.getWaybillNo():materialEntity.getZexpressnum());
                 dataItem.put("outstockNo", materialEntity.getOutstockNo());
                 dataItem.put("totalqty", materialEntity.getTotalqty());
                 dataItem.put("productDetail",

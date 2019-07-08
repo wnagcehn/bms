@@ -553,7 +553,7 @@
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="adjustDate">
-        <Property name="dataType">Long</Property>
+        <Property name="dataType">Date</Property>
         <Property name="label">调整日期</Property>
       </PropertyDef>
       <PropertyDef name="adjustAmount">
@@ -820,8 +820,6 @@ dataList.each(function(item){&#xD;
 	}&#xD;
 });&#xD;
 &#xD;
-&#xD;
-&#xD;
 dataList.each(function(item){&#xD;
     if (item.get(&quot;id&quot;) == view.id(&quot;receiptId&quot;).get(&quot;text&quot;)) {&#xD;
 		view.id(&quot;receiptId&quot;).set(&quot;text&quot;,&quot;&quot;);&#xD;
@@ -830,6 +828,13 @@ dataList.each(function(item){&#xD;
 	}&#xD;
 });&#xD;
 &#xD;
+dataList.each(function(item){&#xD;
+    if (item.get(&quot;id&quot;) == view.id(&quot;adjustId&quot;).get(&quot;text&quot;)) {&#xD;
+		view.id(&quot;adjustId&quot;).set(&quot;text&quot;,&quot;&quot;);&#xD;
+		dataList.setCurrent(item);&#xD;
+		return;&#xD;
+	}&#xD;
+});&#xD;
 </ClientEvent>
       <Property name="dataType">[dtBillCheckInfo]</Property>
       <Property name="dataProvider">billCheckInfoController#queryAll</Property>
@@ -907,6 +912,9 @@ subData1.clear();&#xD;
 //清除回款子表&#xD;
 var subData2=view.get(&quot;#dsBillCheckReceipt.data&quot;);&#xD;
 subData2.clear();&#xD;
+//清除回款调整子表&#xD;
+var subData3=view.get(&quot;#dsBillCheckAdjustInfo.data&quot;);&#xD;
+subData3.clear();&#xD;
 &#xD;
 var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);			  &#xD;
 var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
@@ -958,7 +966,6 @@ if(selectDatas.length == 1){&#xD;
 			flushAsync();	&#xD;
 		}&#xD;
 		//查询收款调整的信息&#xD;
-		var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
 		with (view.get(&quot;#dsBillCheckAdjustInfo&quot;)){&#xD;
 			//定义查询条件json结构&#xD;
 			var queryJson={&#xD;
@@ -1632,8 +1639,20 @@ if(index==2){&#xD;
 	}&#xD;
 }&#xD;
 &#xD;
-//回款反馈&#xD;
+//回款调整&#xD;
 if(index==3){&#xD;
+	with (view.get(&quot;#dsBillCheckAdjustInfo&quot;)){&#xD;
+		//定义查询条件json结构&#xD;
+		var queryJson={&#xD;
+			billCheckId:entity.get(&quot;id&quot;),&#xD;
+		};&#xD;
+		set(&quot;parameter&quot;, queryJson);&#xD;
+		flushAsync();	&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+//回款反馈&#xD;
+if(index==4){&#xD;
 	with (view.get(&quot;#dsReceiptFollow&quot;)){&#xD;
 		//定义查询条件json结构&#xD;
 		var queryJson={&#xD;
@@ -2336,6 +2355,209 @@ with (view.get(&quot;#dsBillCheckReceipt&quot;)){&#xD;
               </Container>
             </ControlTab>
             <ControlTab>
+              <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+if(entity!=null){&#xD;
+	with (view.get(&quot;#dsBillCheckAdjustInfo&quot;)){&#xD;
+		//定义查询条件json结构&#xD;
+		var queryJson={&#xD;
+			billCheckId:entity.get(&quot;id&quot;)&#xD;
+		};&#xD;
+		set(&quot;parameter&quot;, queryJson);&#xD;
+		flushAsync();	&#xD;
+	}&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">回款调整</Property>
+              <Property name="width">100</Property>
+              <Container>
+                <ToolBar>
+                  <DataPilot>
+                    <Property name="dataSet">dsBillCheckAdjustInfo</Property>
+                    <Property name="itemCodes">pages,pageSize</Property>
+                  </DataPilot>
+                  <ToolBarButton>
+                    <ClientEvent name="onClick">var data=view.get(&quot;#dsBillCheckAdjustInfo.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#dialogAdjustEdit&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}</ClientEvent>
+                    <Property name="caption">修改</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+                  </ToolBarButton>
+                  <ToolBarButton>
+                    <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+var datas = view.get(&quot;#dsBillCheckAdjustInfo.data&quot;);&#xD;
+var currentData = datas.current;&#xD;
+if(currentData){&#xD;
+	if(entity.get(&quot;billStatus&quot;)==&quot;RECEIPTED&quot;){&#xD;
+		dorado.MessageBox.alert(&quot;已收款状态下无法删除!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	dorado.MessageBox.confirm(&quot;是否确定要删除此条记录?&quot;,function(){&#xD;
+		view.get(&quot;#deleteAdjustAction&quot;).execute(&#xD;
+			function(result){&#xD;
+				dorado.MessageBox.alert(result);&#xD;
+				var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+				var tmpFormCondition=view.get(&quot;#formCondition&quot;);			&#xD;
+				tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+				&#xD;
+				//记录当前对应主表的id&#xD;
+				view.id(&quot;adjustId&quot;).set(&quot;text&quot;,currentData.get(&quot;billCheckId&quot;));&#xD;
+&#xD;
+			}&#xD;
+		);&#xD;
+		with (view.get(&quot;#dsBillCheckAdjustInfo&quot;)){&#xD;
+			//定义查询条件json结构&#xD;
+			var queryJson={&#xD;
+				billCheckId:entity.get(&quot;id&quot;),&#xD;
+			};&#xD;
+			set(&quot;parameter&quot;, queryJson);&#xD;
+			flushAsync();	&#xD;
+		}&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请选择需要修改的记录!&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                    <Property name="caption">删除</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -80px -120px</Property>
+                  </ToolBarButton>
+                </ToolBar>
+                <DataGrid id="adjustGrid">
+                  <Property name="dataSet">dsBillCheckAdjustInfo</Property>
+                  <Property name="readOnly">true</Property>
+                  <RowNumColumn/>
+                  <DataColumn>
+                    <Property name="name">id</Property>
+                    <Property name="property">id</Property>
+                    <Property name="visible">false</Property>
+                  </DataColumn>
+                  <DataColumn>
+                    <Property name="property">adjustDate</Property>
+                    <Property name="name">adjustDate</Property>
+                  </DataColumn>
+                  <DataColumn>
+                    <Property name="property">adjustAmount</Property>
+                    <Property name="name">adjustAmount</Property>
+                  </DataColumn>
+                  <DataColumn name="remark">
+                    <Property name="property">remark</Property>
+                  </DataColumn>
+                </DataGrid>
+                <Dialog id="dialogAdjustEdit">
+                  <ClientEvent name="onClose">view.id(&quot;dsBillCheckAdjustInfo&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+                  <Property name="height">280</Property>
+                  <Property name="width">350</Property>
+                  <Buttons>
+                    <Button>
+                      <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckAdjustInfo.data&quot;).current;&#xD;
+var data=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;adjustDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;调整日期必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;adjustAmount&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;调整金额必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;updateAdjustAction&quot;).execute(function(result){&#xD;
+	var dataList=view.get(&quot;#dsBillCheckInfo.data&quot;);&#xD;
+	dorado.MessageBox.alert(result);&#xD;
+	var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+	var tmpFormCondition=view.get(&quot;#formCondition&quot;);			&#xD;
+	tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+	&#xD;
+	view.id(&quot;adjustId&quot;).set(&quot;text&quot;,entity.get(&quot;billCheckId&quot;));&#xD;
+	view.id(&quot;dialogAdjustEdit&quot;).hide();&#xD;
+});&#xD;
+&#xD;
+with (view.get(&quot;#dsBillCheckAdjustInfo&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		billCheckId:data.get(&quot;id&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();	&#xD;
+}</ClientEvent>
+                      <Property name="caption">保存</Property>
+                    </Button>
+                    <Button>
+                      <ClientEvent name="onClick">	dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBillCheckAdjustInfo&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogAdjustEdit&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+                      <Property name="caption">取消</Property>
+                    </Button>
+                  </Buttons>
+                  <Children>
+                    <AutoForm>
+                      <Property name="dataSet">dsBillCheckAdjustInfo</Property>
+                      <Property name="editorWidth">200</Property>
+                      <Property name="labelWidth">80</Property>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">adjustDate</Property>
+                        <Property name="property">adjustDate</Property>
+                        <Property name="readOnly">false</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">adjustAmount</Property>
+                        <Property name="property">adjustAmount</Property>
+                        <Property name="readOnly">false</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2;rowSpan:15">
+                        <Property name="name">remark</Property>
+                        <Property name="property">remark</Property>
+                        <Property name="editorType">TextArea</Property>
+                        <Property name="width">320</Property>
+                        <Property name="height">120</Property>
+                        <Property name="readOnly">false</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement>
+                        <Property name="name">id</Property>
+                        <Property name="property">id</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement>
+                        <Property name="hideMode">display</Property>
+                        <Property name="name">billCheckId</Property>
+                        <Property name="property">billCheckId</Property>
+                        <Property name="visible">false</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                    </AutoForm>
+                  </Children>
+                  <Tools/>
+                </Dialog>
+                <UpdateAction id="updateAdjustAction">
+                  <Property name="dataResolver">billCheckAdjustInfoController#update</Property>
+                  <UpdateItem>
+                    <Property name="dataSet">dsBillCheckAdjustInfo</Property>
+                    <Property name="autoResetEntityState">true</Property>
+                    <Property name="dataPath">!DIRTY_TREE</Property>
+                    <Property name="refreshMode">value</Property>
+                  </UpdateItem>
+                </UpdateAction>
+                <UpdateAction id="deleteAdjustAction">
+                  <Property name="dataResolver">billCheckAdjustInfoController#delete</Property>
+                  <UpdateItem>
+                    <Property name="dataSet">dsBillCheckAdjustInfo</Property>
+                    <Property name="dataPath">[#current]</Property>
+                  </UpdateItem>
+                </UpdateAction>
+              </Container>
+            </ControlTab>
+            <ControlTab>
               <Property name="caption">回款反馈</Property>
               <Container>
                 <ToolBar>
@@ -2933,10 +3155,6 @@ view.id(&quot;updateBillStatus&quot;).execute(&#xD;
       </Children>
       <Tools/>
     </Dialog>
-    <DownloadAction id="downloadTemplateAction">
-      <Property name="fileProvider">dfsHelper#downTempletExcel</Property>
-      <Property name="hotkey">                    </Property>
-    </DownloadAction>
     <Dialog id="importDialog">
       <ClientEvent name="onClose">$(&quot;#d_progressLabel&quot;).hide();&#xD;
 $(&quot;#d_importProgressBar&quot;).hide();&#xD;
@@ -3092,26 +3310,6 @@ if(data.succ!=null){&#xD;
       </Children>
       <Tools/>
     </Dialog>
-    <UpdateAction id="updateBillModifyAction">
-      <Property name="dataResolver">billCheckInfoController#saveAll</Property>
-      <UpdateItem>
-        <Property name="dataSet">dsBillCheckInfoModify</Property>
-      </UpdateItem>
-    </UpdateAction>
-    <UpdateAction id="confirmBillCheckAction">
-      <Property name="dataResolver">billCheckInfoController#confirmBillCheckInfo</Property>
-      <UpdateItem>
-        <Property name="dataSet">dsBillCheckInfo</Property>
-        <Property name="dataPath">[#current]</Property>
-      </UpdateItem>
-    </UpdateAction>
-    <UpdateAction id="updateBillStatus">
-      <Property name="dataResolver">billCheckInfoController#updateBillStatus</Property>
-      <UpdateItem>
-        <Property name="dataSet">dsBillCheckInfo</Property>
-        <Property name="dataPath">[#current]</Property>
-      </UpdateItem>
-    </UpdateAction>
     <Dialog id="returnFollowDialog">
       <ClientEvent name="onClose">view.id(&quot;dsReceiptFollow&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
       <ClientEvent name="onHide">view.id(&quot;dsReceiptFollow&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
@@ -3394,16 +3592,6 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </Dialog>
-    <UpdateAction id="insertLogAction">
-      <Property name="dataResolver">billCheckInfoController#addLog</Property>
-      <UpdateItem>
-        <Property name="dataSet">dsBillCheckLog</Property>
-        <Property name="dataPath">[#current]</Property>
-      </UpdateItem>
-    </UpdateAction>
-    <DownloadAction id="downloadfileAction">
-      <Property name="fileProvider">billCheckInfoController#downFileExcel</Property>
-    </DownloadAction>
     <Dialog id="errorMsgDialog">
       <Property name="caption">消息提示!</Property>
       <Property name="width">540</Property>
@@ -3423,164 +3611,6 @@ if (data != null) {&#xD;
       </Children>
       <Tools/>
     </Dialog>
-    <Trigger id="triggerDeptUser">
-      <ClientEvent name="onExecute">/*&#xD;
-var subview = view.get(&quot;#viewSelectDeptUser&quot;).get(&quot;subView&quot;);&#xD;
-subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
-var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
-&#xD;
-dsEntity.set(&quot;deptId&quot;,&quot;1002&quot;);&#xD;
-dsEntity.set(&quot;deptName&quot;,&quot;财务部&quot;);&#xD;
-subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
-*/&#xD;
-//var entity=subview.get(&quot;#dsDept.data&quot;).current;&#xD;
-&#xD;
-//entity.get(&quot;children&quot;).set(&quot;parentId&quot;,&quot;7&quot;);&#xD;
-//subview.get(&quot;#dsDept&quot;).flushAsync();&#xD;
-//subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
-//var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
-//dsEntity.set(&quot;deptId&quot;,&quot;1005&quot;);&#xD;
-//subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
-view.get(&quot;#panelDeptUser&quot;).show();</ClientEvent>
-    </Trigger>
-    <FloatPanel id="panelDeptUser">
-      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeptUser.userData&quot;);&#xD;
-if (data != null) {&#xD;
-	//view.get(&quot;#formCondition.entity&quot;).set(&quot;balanceId&quot;,data.userId);&#xD;
-	view.get(&quot;#formCondition.entity&quot;).set(&quot;balanceName&quot;,data.userName);&#xD;
-}</ClientEvent>
-      <Property name="caption">用户选择</Property>
-      <Property name="center">true</Property>
-      <Property name="closeable">true</Property>
-      <Property name="contentOverflow">scroll</Property>
-      <Property name="height">450</Property>
-      <Property name="modal">true</Property>
-      <Property name="width">800</Property>
-      <Buttons/>
-      <Children>
-        <SubViewHolder id="viewSelectDeptUser">
-          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
-        </SubViewHolder>
-      </Children>
-      <Tools/>
-    </FloatPanel>
-    <Trigger id="triggerDeptProject">
-      <ClientEvent name="onExecute">/*&#xD;
-var subview = view.get(&quot;#viewSelectDeptProject&quot;).get(&quot;subView&quot;);&#xD;
-subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
-var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
-&#xD;
-dsEntity.set(&quot;deptId&quot;,&quot;100134&quot;);&#xD;
-dsEntity.set(&quot;deptName&quot;,&quot;项目保障&quot;);&#xD;
-subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
-*/&#xD;
-view.get(&quot;#panelDeptProject&quot;).show();</ClientEvent>
-    </Trigger>
-    <FloatPanel id="panelDeptProject">
-      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeptProject.userData&quot;);&#xD;
-if (data != null) {&#xD;
-	//view.get(&quot;#formCondition.entity&quot;).set(&quot;projectManagerId&quot;,data.userId);&#xD;
-	view.get(&quot;#formCondition.entity&quot;).set(&quot;projectManagerName&quot;,data.userName);&#xD;
-}</ClientEvent>
-      <Property name="caption">用户选择</Property>
-      <Property name="center">true</Property>
-      <Property name="closeable">true</Property>
-      <Property name="contentOverflow">scroll</Property>
-      <Property name="height">450</Property>
-      <Property name="modal">true</Property>
-      <Property name="width">800</Property>
-      <Buttons/>
-      <Children>
-        <SubViewHolder id="viewSelectDeptProject">
-          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
-        </SubViewHolder>
-      </Children>
-      <Tools/>
-    </FloatPanel>
-    <Trigger id="triggerDeptSeller">
-      <ClientEvent name="onExecute">/*&#xD;
-var subview = view.get(&quot;#viewSelectDeptSeller&quot;).get(&quot;subView&quot;);&#xD;
-subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
-var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
-&#xD;
-dsEntity.set(&quot;deptId&quot;,&quot;1006&quot;);&#xD;
-dsEntity.set(&quot;deptName&quot;,&quot;销售部&quot;);&#xD;
-subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
-*/&#xD;
-view.get(&quot;#panelDeptSeller&quot;).show();</ClientEvent>
-    </Trigger>
-    <FloatPanel id="panelDeptSeller">
-      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeptSeller.userData&quot;);&#xD;
-if (data != null) {&#xD;
-	view.get(&quot;#formCondition.entity&quot;).set(&quot;sellerName&quot;,data.userName);&#xD;
-}</ClientEvent>
-      <Property name="caption">用户选择</Property>
-      <Property name="center">true</Property>
-      <Property name="closeable">true</Property>
-      <Property name="contentOverflow">scroll</Property>
-      <Property name="height">450</Property>
-      <Property name="modal">true</Property>
-      <Property name="width">800</Property>
-      <Buttons/>
-      <Children>
-        <SubViewHolder id="viewSelectDeptSeller">
-          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
-        </SubViewHolder>
-      </Children>
-      <Tools/>
-    </FloatPanel>
-    <UpdateAction id="billDownAction"/>
-    <Export2ReportAction id="export2ReportAction">
-      <Property name="caption">导出Excel数据</Property>
-      <Property name="dataScope">serverAll</Property>
-      <Property name="template">dsBillGrid</Property>
-      <Property name="dataFontSize">10</Property>
-      <Property name="maxSize">100000</Property>
-    </Export2ReportAction>
-    <AjaxAction id="ajaxUserAction">
-      <Property name="service">billCheckInfoController#getUserDetail</Property>
-    </AjaxAction>
-    <Trigger id="triggerReurnFollowMan">
-      <ClientEvent name="onExecute">view.get(&quot;#panelReturnFollowMan&quot;).show();</ClientEvent>
-    </Trigger>
-    <FloatPanel id="panelReturnFollowMan">
-      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectReurnFollowMan.userData&quot;);&#xD;
-if (data != null) {&#xD;
-	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptManId&quot;,data.userId);&#xD;
-	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptMan&quot;,data.userName);&#xD;
-	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptDept&quot;,data.deptName);&#xD;
-	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptDeptId&quot;,data.deptId);&#xD;
-}</ClientEvent>
-      <Property name="caption">用户选择</Property>
-      <Property name="center">true</Property>
-      <Property name="closeable">true</Property>
-      <Property name="contentOverflow">scroll</Property>
-      <Property name="height">450</Property>
-      <Property name="modal">true</Property>
-      <Property name="width">800</Property>
-      <Buttons/>
-      <Children>
-        <SubViewHolder id="viewSelectReurnFollowMan">
-          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
-        </SubViewHolder>
-      </Children>
-      <Tools/>
-    </FloatPanel>
-    <UpdateAction id="finishAction">
-      <Property name="dataResolver">billCheckInfoController#finishBill</Property>
-    </UpdateAction>
-    <UpdateAction id="updateBill">
-      <Property name="dataResolver">billCheckInfoController#updateBill</Property>
-      <UpdateItem>
-        <Property name="dataPath">[#current]</Property>
-        <Property name="dataSet">dsBillCheckInfo</Property>
-      </UpdateItem>
-    </UpdateAction>
-    <DownloadAction id="downloadAction">
-      <Property name="fileProvider">billCheckInfoController#export</Property>
-      <Property name="caption">导出</Property>
-      <Property name="parameter"></Property>
-    </DownloadAction>
     <Dialog id="dialogWarn">
       <ClientEvent name="onClose">view.id(&quot;dsBillCheckLog&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
       <ClientEvent name="onHide">view.id(&quot;dsBillCheckLog&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
@@ -3823,21 +3853,138 @@ arg.dom.innerHTML=&quot;&lt;span style='color:red;'>&quot;+amount+&quot;&lt;/spa
       </Children>
       <Tools/>
     </Dialog>
-    <DownloadAction id="downloadWarnAction">
-      <Property name="fileProvider">billCheckInfoController#exportWarn</Property>
-      <Property name="caption">导出</Property>
-      <Property name="parameter"></Property>
-    </DownloadAction>
-    <AjaxAction id="ajaxUserAreaAction">
-      <Property name="service">billCheckInfoController#getUserArea</Property>
-    </AjaxAction>
-    <UpdateAction id="updateStatus">
-      <Property name="dataResolver">billCheckInfoController#updateStatus</Property>
-      <UpdateItem>
-        <Property name="dataSet">dsBillCheckInfo</Property>
-        <Property name="dataPath">[#current]</Property>
-      </UpdateItem>
-    </UpdateAction>
+    <Trigger id="triggerDeptUser">
+      <ClientEvent name="onExecute">/*&#xD;
+var subview = view.get(&quot;#viewSelectDeptUser&quot;).get(&quot;subView&quot;);&#xD;
+subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+&#xD;
+dsEntity.set(&quot;deptId&quot;,&quot;1002&quot;);&#xD;
+dsEntity.set(&quot;deptName&quot;,&quot;财务部&quot;);&#xD;
+subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+*/&#xD;
+//var entity=subview.get(&quot;#dsDept.data&quot;).current;&#xD;
+&#xD;
+//entity.get(&quot;children&quot;).set(&quot;parentId&quot;,&quot;7&quot;);&#xD;
+//subview.get(&quot;#dsDept&quot;).flushAsync();&#xD;
+//subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+//var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+//dsEntity.set(&quot;deptId&quot;,&quot;1005&quot;);&#xD;
+//subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+view.get(&quot;#panelDeptUser&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDeptUser">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeptUser.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	//view.get(&quot;#formCondition.entity&quot;).set(&quot;balanceId&quot;,data.userId);&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;balanceName&quot;,data.userName);&#xD;
+}</ClientEvent>
+      <Property name="caption">用户选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDeptUser">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerDeptProject">
+      <ClientEvent name="onExecute">/*&#xD;
+var subview = view.get(&quot;#viewSelectDeptProject&quot;).get(&quot;subView&quot;);&#xD;
+subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+&#xD;
+dsEntity.set(&quot;deptId&quot;,&quot;100134&quot;);&#xD;
+dsEntity.set(&quot;deptName&quot;,&quot;项目保障&quot;);&#xD;
+subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+*/&#xD;
+view.get(&quot;#panelDeptProject&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDeptProject">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeptProject.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	//view.get(&quot;#formCondition.entity&quot;).set(&quot;projectManagerId&quot;,data.userId);&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;projectManagerName&quot;,data.userName);&#xD;
+}</ClientEvent>
+      <Property name="caption">用户选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDeptProject">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerDeptSeller">
+      <ClientEvent name="onExecute">/*&#xD;
+var subview = view.get(&quot;#viewSelectDeptSeller&quot;).get(&quot;subView&quot;);&#xD;
+subview.get(&quot;#dataTreeDept&quot;).set(&quot;visible&quot;,false);&#xD;
+var dsEntity=subview.get(&quot;#dsUserQuery.data&quot;).current;&#xD;
+&#xD;
+dsEntity.set(&quot;deptId&quot;,&quot;1006&quot;);&#xD;
+dsEntity.set(&quot;deptName&quot;,&quot;销售部&quot;);&#xD;
+subview.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,subview.get(&quot;#dsUserQuery.data&quot;).current).flushAsync();&#xD;
+*/&#xD;
+view.get(&quot;#panelDeptSeller&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelDeptSeller">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectDeptSeller.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#formCondition.entity&quot;).set(&quot;sellerName&quot;,data.userName);&#xD;
+}</ClientEvent>
+      <Property name="caption">用户选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectDeptSeller">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
+    <Trigger id="triggerReurnFollowMan">
+      <ClientEvent name="onExecute">view.get(&quot;#panelReturnFollowMan&quot;).show();</ClientEvent>
+    </Trigger>
+    <FloatPanel id="panelReturnFollowMan">
+      <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectReurnFollowMan.userData&quot;);&#xD;
+if (data != null) {&#xD;
+	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptManId&quot;,data.userId);&#xD;
+	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptMan&quot;,data.userName);&#xD;
+	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptDept&quot;,data.deptName);&#xD;
+	view.get(&quot;#dsReceiptFollow.data&quot;).current.set(&quot;receiptDeptId&quot;,data.deptId);&#xD;
+}</ClientEvent>
+      <Property name="caption">用户选择</Property>
+      <Property name="center">true</Property>
+      <Property name="closeable">true</Property>
+      <Property name="contentOverflow">scroll</Property>
+      <Property name="height">450</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Buttons/>
+      <Children>
+        <SubViewHolder id="viewSelectReurnFollowMan">
+          <Property name="subView">com.jiuyescm.bms.lookup.view.DeptUserLookUp</Property>
+        </SubViewHolder>
+      </Children>
+      <Tools/>
+    </FloatPanel>
     <DataSetDropDown id="billCheckStatusDataSetDropDown">
       <ClientEvent name="beforeExecute">var subDropDown = view.get(&quot;#billCheckStatusDataSetDropDown&quot;);&#xD;
 subDropDown.set(&quot;dataSet&quot;,&quot;dsBillCheckStatusEntity&quot;);&#xD;
@@ -3860,6 +4007,64 @@ if(arg.selectedValue.get(&quot;remark&quot;) == '已确认'){&#xD;
       <Property name="dataSet">dsBillCheckStatusEntity</Property>
       <Property name="assignmentMap">billCheckStatus=billCheckStatus</Property>
     </DataSetDropDown>
+    <UpdateAction id="insertLogAction">
+      <Property name="dataResolver">billCheckInfoController#addLog</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckLog</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateBillModifyAction">
+      <Property name="dataResolver">billCheckInfoController#saveAll</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckInfoModify</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="confirmBillCheckAction">
+      <Property name="dataResolver">billCheckInfoController#confirmBillCheckInfo</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateBillStatus">
+      <Property name="dataResolver">billCheckInfoController#updateBillStatus</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="billDownAction"/>
+    <UpdateAction id="finishAction">
+      <Property name="dataResolver">billCheckInfoController#finishBill</Property>
+    </UpdateAction>
+    <UpdateAction id="updateBill">
+      <Property name="dataResolver">billCheckInfoController#updateBill</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateStatus">
+      <Property name="dataResolver">billCheckInfoController#updateStatus</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="unFinishAction">
+      <Property name="dataResolver">billCheckInfoController#unFinishBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <AjaxAction id="ajaxUserAction">
+      <Property name="service">billCheckInfoController#getUserDetail</Property>
+    </AjaxAction>
+    <AjaxAction id="ajaxUserAreaAction">
+      <Property name="service">billCheckInfoController#getUserArea</Property>
+    </AjaxAction>
     <Label id="invoiceId">
       <Property name="visible">false</Property>
       <Property name="hideMode">display</Property>
@@ -3868,12 +4073,33 @@ if(arg.selectedValue.get(&quot;remark&quot;) == '已确认'){&#xD;
       <Property name="visible">false</Property>
       <Property name="hideMode">display</Property>
     </Label>
-    <UpdateAction id="unFinishAction">
-      <Property name="dataResolver">billCheckInfoController#unFinishBill</Property>
-      <UpdateItem>
-        <Property name="dataSet">dsBillCheckInfo</Property>
-        <Property name="dataPath">[#current]</Property>
-      </UpdateItem>
-    </UpdateAction>
+    <Label id="adjustId">
+      <Property name="visible">false</Property>
+      <Property name="hideMode">display</Property>
+    </Label>
+    <DownloadAction id="downloadfileAction">
+      <Property name="fileProvider">billCheckInfoController#downFileExcel</Property>
+    </DownloadAction>
+    <DownloadAction id="downloadTemplateAction">
+      <Property name="fileProvider">dfsHelper#downTempletExcel</Property>
+      <Property name="hotkey">                    </Property>
+    </DownloadAction>
+    <DownloadAction id="downloadAction">
+      <Property name="fileProvider">billCheckInfoController#export</Property>
+      <Property name="caption">导出</Property>
+      <Property name="parameter"></Property>
+    </DownloadAction>
+    <DownloadAction id="downloadWarnAction">
+      <Property name="fileProvider">billCheckInfoController#exportWarn</Property>
+      <Property name="caption">导出</Property>
+      <Property name="parameter"></Property>
+    </DownloadAction>
+    <Export2ReportAction id="export2ReportAction">
+      <Property name="caption">导出Excel数据</Property>
+      <Property name="dataScope">serverAll</Property>
+      <Property name="template">dsBillGrid</Property>
+      <Property name="dataFontSize">10</Property>
+      <Property name="maxSize">100000</Property>
+    </Export2ReportAction>
   </View>
 </ViewConfig>

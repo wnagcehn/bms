@@ -1167,4 +1167,19 @@ FROM bill_check_info
 			</if>
    	    limit 1
    </select>
+   
+	<update id="updateAdjustInfo" parameterType="com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity">
+		update bill_check_adjust_info
+		<set >
+			<if test="adjustDate != null" >adjust_date=#{adjustDate,jdbcType=DATE},</if>
+			<if test="adjustAmount != null" >adjust_amount=#{adjustAmount,jdbcType=DECIMAL},</if>
+			<if test="lastModifier != null" >last_modifier=#{lastModifier,jdbcType=VARCHAR},</if>
+			<if test="lastModifierId != null" >last_modifier_id=#{lastModifierId,jdbcType=VARCHAR},</if>
+			<if test="lastModifyTime != null" >last_modify_time=#{lastModifyTime,jdbcType=TIMESTAMP},</if>
+			<if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
+			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+    </update>
+   
 </mapper>

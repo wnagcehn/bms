@@ -97,6 +97,21 @@ public class BmsMaterialImportTask {
 		return custMap;
 	}
 	
+	 /**
+     * 查询商家ID-商家映射
+     * @return
+     */
+    public Map<String, CustomerVo> queryAllCustomerId(){
+        List<CustomerVo> list = customerService.queryAll();
+        Map<String, CustomerVo> custMap = new HashMap<String, CustomerVo>();
+        for (CustomerVo vo : list) {
+            if(!StringUtils.isBlank(vo.getCustomerid())){
+                custMap.put(vo.getCustomerid(), vo);
+            }
+        }
+        return custMap;
+    }
+	
 	/**
 	 * 查询耗材编码-耗材映射
 	 * @return

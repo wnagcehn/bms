@@ -323,8 +323,13 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
 		// TODO Auto-generated method stub
 		logger.info("删除纸箱"+JSONObject.fromObject(condition));
 		int result=repository.deleteOldZx(condition);		
-		return result;
-		
+		return result;		
 	}
+
+    @Override
+    public String getWayBillNo(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return repository.getWayBillNo(condition);
+    }
 
 }

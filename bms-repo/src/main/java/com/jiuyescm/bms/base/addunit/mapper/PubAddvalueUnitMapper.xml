@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiuyescm.bms.base.addunit.PubAddvalueUnitMapper" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.biz.storage.entity.PubAddvalueUnitEntity" >
+       		<id column="id" property="id" jdbcType="INTEGER" />
+		   	<result column="second_subject_code" property="secondSubjectCode" jdbcType="VARCHAR" />
+		   	<result column="second_subject_name" property="secondSubjectName" jdbcType="VARCHAR" />
+		   	<result column="unit" property="unit" jdbcType="VARCHAR" />
+		   	<result column="cre_person" property="crePerson" jdbcType="VARCHAR" />
+		   	<result column="cre_person_id" property="crePersonId" jdbcType="VARCHAR" />
+		   	<result column="cre_time" property="creTime" jdbcType="TIMESTAMP" />
+		   	<result column="mod_person" property="modPerson" jdbcType="VARCHAR" />
+		   	<result column="mod_person_id" property="modPersonId" jdbcType="VARCHAR" />
+		   	<result column="mod_time" property="modTime" jdbcType="TIMESTAMP" />
+		   	<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    </resultMap>
+  
+    <sql id="BASE_COLUMNS_ALL">
+        id, second_subject_code, second_subject_name, unit, cre_person, cre_person_id, cre_time, mod_person, mod_person_id, mod_time, del_flag
+    </sql>
+    
+    <sql id="BASE_COLUMNS_WITHOUT_ID">
+		second_subject_code, second_subject_name, unit, cre_person, cre_person_id, cre_time, mod_person, mod_person_id, mod_time, del_flag
+    </sql>
+	
+	<!-- 分页查询 -->
+    <select id="queryBySecondSubject" parameterType="java.util.Map" resultType="java.lang.String">
+        select Distinct unit
+        from pub_addvalue_unit
+        where 1 = 1
+        	<if test=" id != null and id !='' ">
+				and id = #{id}
+			</if>
+        	<if test=" secondSubjectCode != null and secondSubjectCode !='' ">
+				and second_subject_code = #{secondSubjectCode}
+			</if>
+        	<if test=" secondSubjectName != null and secondSubjectName !='' ">
+				and second_subject_name = #{secondSubjectName}
+			</if>
+        	<if test=" unit != null and unit !='' ">
+				and unit = #{unit}
+			</if>
+        	<if test=" crePerson != null and crePerson !='' ">
+				and cre_person = #{crePerson}
+			</if>
+        	<if test=" crePersonId != null and crePersonId !='' ">
+				and cre_person_id = #{crePersonId}
+			</if>
+        	<if test=" creTime != null and creTime !='' ">
+				and cre_time = #{creTime}
+			</if>
+        	<if test=" modPerson != null and modPerson !='' ">
+				and mod_person = #{modPerson}
+			</if>
+        	<if test=" modPersonId != null and modPersonId !='' ">
+				and mod_person_id = #{modPersonId}
+			</if>
+        	<if test=" modTime != null and modTime !='' ">
+				and mod_time = #{modTime}
+			</if>
+        	<if test=" delFlag != null and delFlag !='' ">
+				and del_flag = #{delFlag}
+			</if>
+    </select>
+
+</mapper>
