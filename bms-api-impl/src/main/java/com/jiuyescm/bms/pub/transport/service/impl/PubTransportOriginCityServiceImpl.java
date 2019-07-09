@@ -7,7 +7,6 @@ package com.jiuyescm.bms.pub.transport.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +22,6 @@ import com.jiuyescm.bms.pub.transport.service.IPubTransportOriginCityService;
  */
 @Service("pubTransportOriginCityService")
 public class PubTransportOriginCityServiceImpl implements IPubTransportOriginCityService {
-
-	private static final Logger logger = Logger.getLogger(PubTransportOriginCityServiceImpl.class.getName());
 	
 	@Autowired
     private IPubTransportOriginCityRepository pubTransportOriginCityRepository;

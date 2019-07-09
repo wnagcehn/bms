@@ -42,7 +42,7 @@ public class BillReceiveMasterRecordServiceImpl implements IBillReceiveMasterRec
 		try {
             PropertyUtils.copyProperties(vo, entity);
         } catch (Exception ex) {
-        	logger.error("转换失败:{0}",ex);
+        	logger.error("转换失败:",ex);
         }
 		
         return vo;
@@ -66,7 +66,7 @@ public class BillReceiveMasterRecordServiceImpl implements IBillReceiveMasterRec
     		try {
                 PropertyUtils.copyProperties(vo, entity);
             } catch (Exception ex) {
-                logger.error("转换失败:{0}",ex);
+                logger.error("转换失败:",ex);
             }
     		voList.add(vo);
     	}
@@ -90,7 +90,7 @@ public class BillReceiveMasterRecordServiceImpl implements IBillReceiveMasterRec
     		try {
                 PropertyUtils.copyProperties(vo, entity);
             } catch (Exception ex) {
-                logger.error("转换失败:{0}",ex);
+                logger.error("转换失败:",ex);
             }
     		voList.add(vo);
     	}
@@ -110,7 +110,7 @@ public class BillReceiveMasterRecordServiceImpl implements IBillReceiveMasterRec
             int k = billReceiveMasterRecordRepository.save(entity);
             return k;
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败",ex);
         }
 		return 0;
     }
@@ -131,7 +131,7 @@ public class BillReceiveMasterRecordServiceImpl implements IBillReceiveMasterRec
             return returnVo;
             
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败",ex);
         }
 		return returnVo;  
     }

@@ -44,6 +44,7 @@ public class BillCheckFollowServiceImpl implements IBillCheckFollowService {
 			billCheckFollowRepository.addBillCheckFollowEntity(entity);
 			return 1;
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 	}
@@ -63,6 +64,7 @@ public class BillCheckFollowServiceImpl implements IBillCheckFollowService {
 			billCheckLogRepository.addCheckLog(logEntity);
 			return 1;
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 	}
@@ -86,6 +88,7 @@ public class BillCheckFollowServiceImpl implements IBillCheckFollowService {
 				pageVoInfo.setList(list);
 			}
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 		return pageVoInfo;
@@ -103,6 +106,7 @@ public class BillCheckFollowServiceImpl implements IBillCheckFollowService {
 			billCheckLogRepository.addCheckLog(logEntity);
 			return billCheckFollowRepository.updateFollowStatus(entity);
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 	}
@@ -119,6 +123,7 @@ public class BillCheckFollowServiceImpl implements IBillCheckFollowService {
 			billCheckLogRepository.addCheckLog(logEntity);
 			return billCheckFollowRepository.finishFollow(entity);
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 	}

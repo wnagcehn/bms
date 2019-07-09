@@ -5,7 +5,6 @@
 package com.jiuyescm.bms.fees.storage.service.impl;
 
 import java.util.Map;
-import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +21,6 @@ import com.jiuyescm.bms.fees.storage.service.IFeesPayStorageService;
  */
 @Service("feesPayStorageService")
 public class FeesPayStorageServiceImpl implements IFeesPayStorageService {
-
-	private static final Logger logger = Logger.getLogger(FeesPayStorageServiceImpl.class.getName());
 	
 	@Autowired
     private IFeesPayStorageRepository feesPayStorageRepository;

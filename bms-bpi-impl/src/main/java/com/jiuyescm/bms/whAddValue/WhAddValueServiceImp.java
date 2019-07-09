@@ -87,7 +87,7 @@ public class WhAddValueServiceImp implements IWhAddValueService{
 			try {
 	            PropertyUtils.copyProperties(newEntity, vo);
 	        } catch (Exception ex) {
-	        	logger.error(ex);
+	        	logger.error("异常",ex);
 	        	ResultVo resultVo=new ResultVo(vo.getWmsId()+"","fail","转换失败");
 				returnList.add(resultVo);
 				continue;

@@ -35,7 +35,7 @@ public class BmsDiscountServiceImpl implements IBmsDiscountService{
             PropertyUtils.copyProperties(vo, entity);
             return vo;
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败",ex);
         }
 		return null;
 	}
@@ -55,7 +55,7 @@ public class BmsDiscountServiceImpl implements IBmsDiscountService{
 	    	
             return voList;
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败",ex);
         }
 		return null;
 	}
@@ -69,7 +69,7 @@ public class BmsDiscountServiceImpl implements IBmsDiscountService{
             PropertyUtils.copyProperties(vo, entity);
             return vo;
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败",ex);
         }
 		return null;
 	}

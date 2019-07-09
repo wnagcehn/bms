@@ -22,8 +22,6 @@ import com.jiuyescm.bms.rule.receiveRule.repository.IPubRuleCustomerReceivableRe
  */
 @Service("pubRuleCustomerReceivableService")
 public class PubRuleCustomerReceivableServiceImpl implements IPubRuleCustomerReceivableService {
-
-	private static final Logger logger = Logger.getLogger(PubRuleCustomerReceivableServiceImpl.class.getName());
 	
 	@Autowired
     private IPubRuleCustomerReceivableRepository pubRuleCustomerReceivableRepository;

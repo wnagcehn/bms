@@ -7,7 +7,6 @@ package com.jiuyescm.bms.report.month.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +22,6 @@ import com.jiuyescm.bms.report.month.service.IReportGoodsProfitService;
  */
 @Service("reportGoodsProfitService")
 public class ReportGoodsProfitServiceImpl implements IReportGoodsProfitService {
-
-	private static final Logger logger = Logger.getLogger(ReportGoodsProfitServiceImpl.class.getName());
 	
 	@Autowired
     private IReportGoodsProfitRepository reportGoodsProfitRepository;

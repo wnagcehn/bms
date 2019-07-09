@@ -63,6 +63,7 @@ public class BillCheckLogServiceImp implements IBillCheckLogService {
             
             return billCheckLogRepository.addCheckLog(entity);
         } catch (Exception e) {
+            logger.error("异常", e);
             throw e;
         }
     }

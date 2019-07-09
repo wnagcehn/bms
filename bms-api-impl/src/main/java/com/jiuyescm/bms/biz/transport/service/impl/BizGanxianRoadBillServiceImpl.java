@@ -7,7 +7,6 @@ package com.jiuyescm.bms.biz.transport.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +22,6 @@ import com.jiuyescm.bms.biz.transport.service.IBizGanxianRoadBillService;
  */
 @Service("bizGanxianRoadBillService")
 public class BizGanxianRoadBillServiceImpl implements IBizGanxianRoadBillService {
-
-	private static final Logger logger = Logger.getLogger(BizGanxianRoadBillServiceImpl.class.getName());
 	
 	@Autowired
     private IBizGanxianRoadBillRepository bizGanxianRoadbillRepository;

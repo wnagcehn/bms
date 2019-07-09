@@ -78,7 +78,7 @@ public class BmsRuleServiceImpl implements IBmsRuleService{
 	    		try {
 	                PropertyUtils.copyProperties(vo, entity);
 	            } catch (Exception ex) {
-	                logger.error("Error ImprestWriteoffEntity to VO runtimeException");
+	                logger.error("Error ImprestWriteoffEntity to VO runtimeException",ex);
 	            }
 	    		list.add(vo);
 	    	}

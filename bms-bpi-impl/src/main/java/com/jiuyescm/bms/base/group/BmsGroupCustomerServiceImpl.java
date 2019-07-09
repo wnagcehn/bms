@@ -137,6 +137,7 @@ public class BmsGroupCustomerServiceImpl implements IBmsGroupCustomerService {
 				pageVoInfo.setList(list);
 			}
 		}catch(Exception e){
+		    logger.error("异常",e);
 			throw e;
 		}
 		return pageVoInfo;

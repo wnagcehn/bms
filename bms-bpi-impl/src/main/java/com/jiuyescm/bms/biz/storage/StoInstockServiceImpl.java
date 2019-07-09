@@ -30,7 +30,7 @@ public class StoInstockServiceImpl implements IStoInstockService {
     		try {
                 PropertyUtils.copyProperties(retVo, entity);
             } catch (Exception ex) {
-               logger.error("转换失败");
+               logger.error("转换失败",ex);
             }
     		voList.add(retVo);
     	}
@@ -49,7 +49,7 @@ public class StoInstockServiceImpl implements IStoInstockService {
     		try {
                 PropertyUtils.copyProperties(paramEntity, vo);
             } catch (Exception ex) {
-               logger.error("转换失败");
+               logger.error("转换失败",ex);
             }
     		list.add(paramEntity);
     	}

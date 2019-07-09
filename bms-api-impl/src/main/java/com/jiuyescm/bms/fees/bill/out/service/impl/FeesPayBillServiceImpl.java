@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -43,8 +42,6 @@ import com.jiuyescm.exception.BizException;
  */
 @Service("feesOutBillService")
 public class FeesPayBillServiceImpl implements IFeesPayBillService {
-
-	private static final Logger logger = Logger.getLogger(FeesPayBillServiceImpl.class.getName());
 	
 	@Autowired
     private IFeesPayBillRepository feesPayBillRepository;
