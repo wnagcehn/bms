@@ -14,11 +14,17 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		
-		<!-- <dependency>
-			<groupId>com.jiuyescm.bms</groupId>
-			<artifactId>bms-api-impl</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency> -->
+		<dependency>
+    		<groupId>com.jiuyescm.crm</groupId>
+    		<artifactId>crm-open-api</artifactId>
+    		<version>1.4.3</version>
+    		<exclusions>
+				<exclusion>
+					<groupId>com.jiuyescm.scm</groupId>
+  					<artifactId>scm-beans</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>

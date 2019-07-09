@@ -113,7 +113,7 @@ public class StroageStepQuoteController {
 					model.setUrlName("");
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return "SUCCESS";
 			}else{
@@ -124,7 +124,7 @@ public class StroageStepQuoteController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -159,7 +159,7 @@ public class StroageStepQuoteController {
 					model.setUrlName("");
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return "SUCCESS";
 			}else{
@@ -170,7 +170,7 @@ public class StroageStepQuoteController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -205,7 +205,7 @@ public class StroageStepQuoteController {
 					model.setUrlName("");
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return "SUCCESS";
 			}else{
@@ -216,7 +216,7 @@ public class StroageStepQuoteController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -243,13 +243,13 @@ public class StroageStepQuoteController {
 				model.setUrlName("");
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "succ";
 		}catch(Exception e){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-
+			logger.error("异常:", e);
 			return e.getMessage();
 		}
 	}
@@ -276,13 +276,13 @@ public class StroageStepQuoteController {
 				model.setUrlName("");
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "succ";
 		}catch(Exception e){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-
+			logger.error("异常:", e);
 			return e.getMessage();
 		}
 	}
@@ -471,7 +471,7 @@ public class StroageStepQuoteController {
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error("异常:", e);
 		}
 		return map;
 	}
@@ -501,8 +501,7 @@ public class StroageStepQuoteController {
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-
-			e.printStackTrace();
+			logger.error("异常:", e);
 		}
 		return null;
 	}

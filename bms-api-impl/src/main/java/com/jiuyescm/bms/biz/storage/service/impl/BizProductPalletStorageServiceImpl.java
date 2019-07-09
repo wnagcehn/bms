@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -30,8 +29,6 @@ import com.jiuyescm.bms.fees.storage.repository.IFeesReceiveStorageRepository;
  */
 @Service("bizProductPalletStorageService")
 public class BizProductPalletStorageServiceImpl implements IBizProductPalletStorageService {
-
-	private static final Logger logger = Logger.getLogger(BizProductPalletStorageServiceImpl.class.getName());
 	
 	@Autowired
     private IBizProductPalletStorageRepository bizProductPalletStorageRepository;

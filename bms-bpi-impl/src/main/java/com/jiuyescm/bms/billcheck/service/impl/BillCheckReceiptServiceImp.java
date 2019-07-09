@@ -102,7 +102,7 @@ public class BillCheckReceiptServiceImp implements IBillCheckReceiptService{
     		try {
                 PropertyUtils.copyProperties(vo, entity);
             } catch (Exception ex) {
-                logger.error("转换失败");
+                logger.error("转换失败",ex);
             }
     		voList.add(vo);
     	}
@@ -117,7 +117,7 @@ public class BillCheckReceiptServiceImp implements IBillCheckReceiptService{
 		try {
             PropertyUtils.copyProperties(entity, vo);
         } catch (Exception ex) {
-        	logger.error("转换失败:{0}",ex);
+        	logger.error("转换失败:",ex);
         }
 		return billCheckReceiptRepository.save(entity);
 	}
@@ -130,7 +130,7 @@ public class BillCheckReceiptServiceImp implements IBillCheckReceiptService{
 		try {
             PropertyUtils.copyProperties(entity, vo);
         } catch (Exception ex) {
-        	logger.error("转换失败:{0}",ex);
+        	logger.error("转换失败:",ex);
         }
 		return billCheckReceiptRepository.update(entity);
 	}
@@ -180,7 +180,7 @@ public class BillCheckReceiptServiceImp implements IBillCheckReceiptService{
 		try {
             PropertyUtils.copyProperties(entity, vo);
         } catch (Exception ex) {
-        	logger.error("转换失败:{0}",ex);
+        	logger.error("转换失败:",ex);
         }
 		
 		//更新账单金额和状态
@@ -265,7 +265,7 @@ public class BillCheckReceiptServiceImp implements IBillCheckReceiptService{
 	    		try {
 	                PropertyUtils.copyProperties(vo, entity);
 	            } catch (Exception ex) {
-	            	logger.error("转换失败:{0}",ex);
+	            	logger.error("转换失败:",ex);
 	            }
 	    		voList.add(vo);
 	    	}

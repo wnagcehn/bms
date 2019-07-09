@@ -1,12 +1,14 @@
 package com.jiuyescm.bms.asyn.service.impl;
 
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.asyn.api.IAsynCalcuService;
 import com.jiuyescm.bms.asyn.entity.AsynCalcuEntity;
@@ -21,6 +23,9 @@ import com.jiuyescm.bms.asyn.vo.AsynCalcuVo;
 @Service("asynCalcuService")
 public class AsynCalcuServiceImpl implements IAsynCalcuService {
 
+    private static final Logger logger = Logger.getLogger(AsynCalcuServiceImpl.class.getName());
+
+    
 	@Autowired
     private IAsynCalcuRepository AsynCalcuRepository;
 
@@ -48,6 +53,7 @@ public class AsynCalcuServiceImpl implements IAsynCalcuService {
 				pageVoInfo.setList(list);
 			}
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 		return pageVoInfo;
@@ -67,6 +73,7 @@ public class AsynCalcuServiceImpl implements IAsynCalcuService {
 			PropertyUtils.copyProperties(entity, acentity);
 			return AsynCalcuRepository.save(acentity);
 		}catch(Exception e){
+	        logger.error("异常", e);
 			throw e;
 		}    
     }
@@ -84,6 +91,7 @@ public class AsynCalcuServiceImpl implements IAsynCalcuService {
 			PropertyUtils.copyProperties(entity, acentity);
 			return AsynCalcuRepository.update(acentity);
 		}catch(Exception e){
+	        logger.error("异常", e);
 			throw e;
 		}  
     }
@@ -95,6 +103,7 @@ public class AsynCalcuServiceImpl implements IAsynCalcuService {
 			PropertyUtils.copyProperties(entity, voEntity);
 			return AsynCalcuRepository.delete(entity);
 		}catch(Exception e){
+	        logger.error("异常", e);
 			throw e;
 		}
 	}

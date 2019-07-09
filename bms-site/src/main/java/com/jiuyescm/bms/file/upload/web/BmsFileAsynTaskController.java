@@ -73,7 +73,6 @@ public class BmsFileAsynTaskController {
 			}
 		} catch (Exception e) {
 			logger.error("BMS异步任务查询异常：", e);
-			e.printStackTrace();
 		}
 	}
 	

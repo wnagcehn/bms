@@ -249,7 +249,7 @@ public class CustomerDictService implements ICustomerDictService {
 			} catch (IllegalAccessException | InvocationTargetException
 					| NoSuchMethodException e) {
 				logger.info("转换失败 pageEntity:{}", pageEntity);
-				e.printStackTrace();
+				logger.error("异常",e);
 				return null;
 			}
 		}
@@ -275,7 +275,7 @@ public class CustomerDictService implements ICustomerDictService {
 			} catch (IllegalAccessException | InvocationTargetException
 					| NoSuchMethodException e) {
 				logger.info("转换失败 pageEntity:{}", pageEntity);
-				e.printStackTrace();
+				logger.error("异常",e);
 				return null;
 			}
 		}
@@ -308,7 +308,7 @@ public class CustomerDictService implements ICustomerDictService {
 		try {
 			PropertyUtils.copyProperties(vo,list.get(0));
 		} catch (Exception ex) {
-			logger.info("转换失败 ", ex);
+			logger.error("转换失败 ", ex);
 		}
 		return vo;
 	}

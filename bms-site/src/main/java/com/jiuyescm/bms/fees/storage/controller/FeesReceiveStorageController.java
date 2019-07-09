@@ -306,7 +306,7 @@ public class FeesReceiveStorageController {
     		
 			this.appendSheet(poiUtil, hssfWorkbook, "应收费用仓储费", path + "\\BmsStorage_" + tmep + ".xls", feesReceiveStorageEntities, dictcodeMap);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);
@@ -761,7 +761,7 @@ public class FeesReceiveStorageController {
 			}
 			return productList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);

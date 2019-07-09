@@ -3,6 +3,8 @@ package com.jiuyescm.bms.biz.storage;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,6 +25,8 @@ import com.jiuyescm.exception.BizException;
  */
 @Service("bizOutstockPackmaterialCancelService")
 public class BizOutstockPackmaterialCancelServiceImpl implements IBizOutstockPackmaterialCancelService {
+
+    private Logger logger = LoggerFactory.getLogger(AddFeeUnitServiceImpl.class);
 
 	@Autowired
     private IBizOutstockPackmaterialCancelRepository bizOutstockPackmaterialCancelRepository;
@@ -101,6 +105,7 @@ public class BizOutstockPackmaterialCancelServiceImpl implements IBizOutstockPac
             bizOutstockPackmaterialCancelRepository.saveOrUpdate(cancelList);
             return 1;
         } catch (Exception e) {
+            logger.error("异常",e);
             return 0;
         }   
     }
@@ -124,6 +129,7 @@ public class BizOutstockPackmaterialCancelServiceImpl implements IBizOutstockPac
             bizOutstockPackmaterialCancelRepository.updateBatchStatus(list);
             return 1;
         } catch (Exception e) {
+            logger.error("异常",e);
             return 0;
         }   
     }

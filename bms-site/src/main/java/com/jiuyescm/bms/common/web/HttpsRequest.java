@@ -14,7 +14,12 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
+import org.apache.log4j.Logger;
+
 public class HttpsRequest {
+    
+    private static final Logger logger = Logger.getLogger(HttpsRequest.class.getName());
+    
 	public String SendHttpsPOST(String url, String data) {
 		String result = null;
 		// 使用此工具可以将键值对编码成"Key=Value&amp;Key2=Value2&amp;Key3=Value3&rdquo;形式的请求参数
@@ -56,16 +61,15 @@ public class HttpsRequest {
 			}
 			in.close();
 		} catch (KeyManagementException e) {
-			
-			e.printStackTrace();
+			logger.error(e);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+		    logger.error(e);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+		    logger.error(e);
 		} catch (ProtocolException e) {
-			e.printStackTrace();
+		    logger.error(e);
 		} catch (IOException e) {
-			e.printStackTrace();
+		    logger.error(e);
 		}
 		return result;
 	}

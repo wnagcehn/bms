@@ -398,8 +398,7 @@ public class FeesPayTransportController {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			// TODO: handle exception
+		    logger.error(e);
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
@@ -765,8 +764,7 @@ public class FeesPayTransportController {
 			return map;
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e);
 		}
 		
 		return map;

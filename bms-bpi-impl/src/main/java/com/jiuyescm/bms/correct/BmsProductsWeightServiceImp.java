@@ -35,7 +35,7 @@ public class BmsProductsWeightServiceImp implements IBmsProductsWeightService{
     		try {
                 PropertyUtils.copyProperties(vo, entity);
             } catch (Exception ex) {
-               logger.error("转换失败");
+               logger.error("转换失败",ex);
             }
     		voList.add(vo);
     	}
@@ -52,7 +52,7 @@ public class BmsProductsWeightServiceImp implements IBmsProductsWeightService{
     		try {
                 PropertyUtils.copyProperties(vo, entity);
             } catch (Exception ex) {
-               logger.error("转换失败");
+               logger.error("转换失败",ex);
             }
     		voList.add(vo);
     	}
@@ -68,7 +68,7 @@ public class BmsProductsWeightServiceImp implements IBmsProductsWeightService{
     		try {
                 PropertyUtils.copyProperties(entity, vo);
             } catch (Exception ex) {
-                logger.error("转换失败");
+                logger.error("转换失败",ex);
             }
     		enList.add(entity);
     	}
@@ -84,7 +84,7 @@ public class BmsProductsWeightServiceImp implements IBmsProductsWeightService{
             PropertyUtils.copyProperties(vo, entity);
             return vo;
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败",ex);
         }
 		return null;
 	}
@@ -98,7 +98,7 @@ public class BmsProductsWeightServiceImp implements IBmsProductsWeightService{
             PropertyUtils.copyProperties(vo, entity);
             return vo;
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败",ex);
         }
 		return null;
 	}
@@ -115,7 +115,7 @@ public class BmsProductsWeightServiceImp implements IBmsProductsWeightService{
     		try {
                 PropertyUtils.copyProperties(vo, entity);
             } catch (Exception ex) {
-               logger.error("转换失败");
+               logger.error("转换失败",ex);
             }
     		voList.add(vo);
     	}
@@ -131,7 +131,7 @@ public class BmsProductsWeightServiceImp implements IBmsProductsWeightService{
     		try {
                 PropertyUtils.copyProperties(entity, vo);
             } catch (Exception ex) {
-                logger.error("转换失败");
+                logger.error("转换失败",ex);
             }
     		enList.add(entity);
     	}

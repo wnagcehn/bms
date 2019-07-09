@@ -200,7 +200,7 @@ public abstract class HttpNewImport<T,U> {
 	                } catch (Exception e) {  
 	                    value = cell.getStringCellValue().toString();  
 	                    cell.getCellFormula(); 
-	                    e.printStackTrace();
+	                    logger.error(e);
 	                }  
 	                break;  
 	            default:  

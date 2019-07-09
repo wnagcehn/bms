@@ -207,7 +207,7 @@ public class FeesReceiveDispatchController {
 
         	//this.appendSheet(poiUtil, hssfWorkbook, "应收费用配送费", path + "\\BmsDistribution_" + tmep + ".xls", entityList, dictcodeMap);
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.error(e);
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity(this.getClass().getSimpleName(), this.getClass().getSimpleName(), "", e.toString());
 			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);

@@ -45,7 +45,6 @@ import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.bill.check.service.IBillCheckFollowService;
 import com.jiuyescm.bms.bill.check.vo.BillCheckInfoFollowVo;
 import com.jiuyescm.bms.bill.customer.service.IBillCustomerInfoService;
-import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.BillCheckLogEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;

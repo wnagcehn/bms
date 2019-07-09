@@ -101,8 +101,7 @@ public class ReportCollectionRateController {
 				}		
 			}	
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    logger.error("异常:", e);
 		}
 		
 		//日期转换

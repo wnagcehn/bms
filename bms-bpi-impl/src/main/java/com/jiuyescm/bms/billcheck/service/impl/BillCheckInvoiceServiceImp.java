@@ -109,7 +109,7 @@ public class BillCheckInvoiceServiceImp implements IBillCheckInvoiceService{
     		try {
                 PropertyUtils.copyProperties(vo, entity);
             } catch (Exception ex) {
-                logger.error("转换失败");
+                logger.error("转换失败",ex);
             }
     		voList.add(vo);
     	}

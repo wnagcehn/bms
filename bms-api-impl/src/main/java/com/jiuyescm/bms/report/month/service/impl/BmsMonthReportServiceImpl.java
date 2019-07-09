@@ -3,7 +3,6 @@ package com.jiuyescm.bms.report.month.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +13,6 @@ import com.jiuyescm.bms.report.month.vo.BmsMonthReportVo;
 
 @Service("bmsMonthReportService")
 public class BmsMonthReportServiceImpl implements IBmsMonthReportService {
-
-	private static final Logger logger = Logger.getLogger(BmsMonthReportServiceImpl.class.getName());
 	
 	@Autowired
     private IBmsMonthReportRepository bmsReportCompanyProfitRepository;
