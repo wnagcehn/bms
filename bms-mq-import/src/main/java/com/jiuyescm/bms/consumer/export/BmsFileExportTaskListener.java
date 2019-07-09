@@ -24,14 +24,14 @@ public class BmsFileExportTaskListener implements MessageListener{
 		try {
 			taskId = ((TextMessage)message).getText();
 		} catch (JMSException e1) {
-			logger.info("取出消息失败");
+			logger.error("取出消息失败",e1);
 			return;
 		}
 		try {
 			logger.info("正在消费"+taskId);
 			Thread.sleep(3000);
 		} catch (Exception e1) {
-			logger.info("文件导出失败");
+			logger.error("文件导出失败",e1);
 			try {
 				
 			} catch (Exception e2) {
@@ -43,7 +43,7 @@ public class BmsFileExportTaskListener implements MessageListener{
 		try {
 			message.acknowledge();
 		} catch (JMSException e) {
-			logger.info("消息应答失败");
+			logger.error("消息应答失败",e);
 		}
 		logger.info("--------------------MQ处理操作日志结束,耗时:"+(end-start)+"ms---------------");
 	}

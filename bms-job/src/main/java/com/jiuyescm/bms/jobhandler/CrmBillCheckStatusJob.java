@@ -11,13 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
 import com.google.common.collect.Maps;
-import com.jiuyescm.bms.appconfig.TenantConfig;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.correct.ElConditionEntity;
 import com.jiuyescm.bms.correct.repository.ElConditionRepository;
-import com.jiuyescm.crm.module.api.IModuleDataOpenService;
 //import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;

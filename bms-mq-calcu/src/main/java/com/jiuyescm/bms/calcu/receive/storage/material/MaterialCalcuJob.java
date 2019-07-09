@@ -434,6 +434,7 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 		}catch(Exception ex){
 			fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 			fee.setCalcuMsg("计算错误");
+			logger.error("计算错误",ex);
 			//XxlJobLogger.log("-->"+entity.getId()+"系统异常，费用【0】");
 		}
 		

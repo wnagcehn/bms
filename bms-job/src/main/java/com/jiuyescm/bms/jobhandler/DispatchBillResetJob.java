@@ -48,7 +48,7 @@ public class DispatchBillResetJob extends IJobHandler{
 		    	map = JobParameterHandler.handler(params);//处理定时任务参数
 		    } catch (Exception e) {
 	            current = System.currentTimeMillis();
-	            XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："+ (current - btime) + "毫秒");
+	            XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:{0},耗时{1}",e,(current - btime));
 	            return ReturnT.FAIL;
 	        }
 		}else {
@@ -183,7 +183,7 @@ public class DispatchBillResetJob extends IJobHandler{
 			}
 			catch(Exception ex){
 				updateEntity.setIsCalculated("2");
-				XxlJobLogger.log("执行异常:",ex);
+				XxlJobLogger.log("执行异常:{0}",ex);
 				bizDispatchBillUpdateService.updateToIsCalculated(updateEntity);
 			}
 		}

@@ -74,7 +74,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 		try {
 			taskId = ((TextMessage)message).getText();
 		} catch (JMSException e1) {
-			logger.info("取出消息失败");
+			logger.error("取出消息失败",e1);
 			return;
 		}
 		
@@ -123,11 +123,11 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 					bmsCalcuTaskService.sendTask(vo);
 					logger.info("重算运单mq发送成功，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode());
 				} catch (Exception e) {
-					logger.info("重算运单mq发送失败，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode()+",错误信息"+e);
+					logger.error("重算运单mq发送失败，商家id为----"+vo.getCustomerId()+"，业务年月为----"+vo.getCreMonth()+"，科目id为---"+vo.getSubjectCode()+",错误信息"+e);
 				}
 			}			
 		} catch (Exception e1) {
-			logger.error(taskId+"处理耗材统一失败：{}",e1);
+			logger.error(taskId+"处理耗材统一失败",e1);
 			return;
 		}
 		
@@ -135,7 +135,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 		try {
 			message.acknowledge();
 		} catch (JMSException e) {
-			logger.info("消息应答失败");
+			logger.error("消息应答失败",e);
 		}
 		logger.info("--------------------MQ处理操作日志结束,耗时:"+(end-start)+"ms---------------");
 	}
@@ -259,7 +259,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 								try {
 					                PropertyUtils.copyProperties(packEntity, pack);
 					            } catch (Exception ex) {
-					               logger.error("转换失败");
+					               logger.error("转换失败",ex);
 					            }						
 								packEntity.setConsumerMaterialCode(entity.getConsumerMaterialCode());
 								packEntity.setConsumerMaterialName(entity.getConsumerMaterialName());
@@ -338,7 +338,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 				bmsCorrectAsynTaskService.update(taskVo);				
 			}
 		} catch (Exception e) {
-			logger.error(taskId+"纸箱调整异常，错误日志：{}",e);
+			logger.error(taskId+"纸箱调整异常，错误日志",e);
 			errorMessage.append("纸箱调整异常;");
 			taskVo.setRemark(errorMessage.toString());
 			taskVo.setTaskRate(65);
@@ -436,7 +436,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 								try {
 					                PropertyUtils.copyProperties(packEntity, pack);
 					            } catch (Exception ex) {
-					               logger.error("转换失败");
+					               logger.error("转换失败",ex);
 					            }						
 								packEntity.setConsumerMaterialCode(entity.getConsumerMaterialCode());
 								packEntity.setConsumerMaterialName(entity.getConsumerMaterialName());
@@ -708,7 +708,7 @@ public class BmsCorrectMaterialTaskNewListener implements MessageListener{
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.info("获取最高保温袋最大体积失败"+e.getMessage());
+			logger.error("获取最高保温袋最大体积失败",e);
 		}
 		return metrialDetail;
 	}

@@ -74,8 +74,7 @@ public class DispatchBillInitJob extends IJobHandler {
 				map = JobParameterHandler.handler(params);// 处理定时任务参数
 			} catch (Exception e) {
 				watch.stop();
-				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："
-						+ watch.getTotalTimeSeconds() + "毫秒");
+	            XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:{0},耗时{1}毫秒" , e , watch.getTotalTimeSeconds());
 				return ReturnT.FAIL;
 			}
 		} else {
@@ -140,7 +139,7 @@ public class DispatchBillInitJob extends IJobHandler {
 				updateAndInsertBatch(bizList,feesList);
 			}
 		} catch (Exception e) {
-			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0}", e.getMessage());
+			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0}", e);
 			return;
 		}
 		
@@ -248,7 +247,7 @@ public class DispatchBillInitJob extends IJobHandler {
 			current = System.currentTimeMillis();
 			XxlJobLogger.log("更新费用数据耗时：【{0}】毫秒 ", (current - start));
 		} catch (Exception e) {
-			XxlJobLogger.log("-->批量保存异常" + e.getMessage());
+			XxlJobLogger.log("-->批量保存异常{0}" , e);
 		}
 
 	}
