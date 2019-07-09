@@ -301,6 +301,7 @@ public class AddCalcuJob extends BmsContractBase implements ICalcuService<BizAdd
 		}catch(Exception ex){
 			fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 			fee.setCalcuMsg("费用计算异常");
+			logger.error("费用计算异常",ex);
 		}
 	}
 	

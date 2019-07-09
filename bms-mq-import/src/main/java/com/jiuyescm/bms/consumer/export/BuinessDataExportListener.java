@@ -40,7 +40,7 @@ public class BuinessDataExportListener implements MessageListener{
             json = ((TextMessage)message).getText();
             logger.info("消息Json【{}】", json);
         } catch (JMSException e1) {
-            logger.info("取出消息失败");
+            logger.error("取出消息失败",e1);
             return;
         }
         //导出
@@ -49,13 +49,13 @@ public class BuinessDataExportListener implements MessageListener{
             PrepareBillHandler prepareBillHandler = (PrepareBillHandler)ctx.getBean("prepareBillHandler");
             prepareBillHandler.export(json);
         } catch (Exception e1) {
-            logger.info("文件导出失败", e1);
+            logger.error("文件导出失败", e1);
             return;
         }
         try {
             message.acknowledge();
         } catch (JMSException e) {
-            logger.info("消息应答失败");
+            logger.error("消息应答失败",e);
         }
         sw.stop();
         logger.info("--------------------MQ处理操作日志结束,耗时:"+sw.getTotalTimeMillis()+"ms---------------");   
