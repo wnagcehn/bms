@@ -23,8 +23,6 @@ import com.jiuyescm.bms.pub.origincity.repository.IPubOriginCityElecWarehouseRep
  */
 @Service("pubOriginCityElecWarehouseService")
 public class PubOriginCityElecWarehouseServiceImpl implements IPubOriginCityElecWarehouseService {
-
-	private static final Logger logger = Logger.getLogger(PubOriginCityElecWarehouseServiceImpl.class.getName());
 	
 	@Autowired
     private IPubOriginCityElecWarehouseRepository pubOriginCityElecWarehouseRepository;

@@ -3,7 +3,6 @@ package com.jiuyescm.bms.quotation.storage.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +18,6 @@ import com.jiuyescm.bms.quotation.storage.service.IPriceGeneralQuotationService;
  */
 @Service("priceGeneralQuotationService")
 public class PriceGeneralQuotationServiceImpl implements IPriceGeneralQuotationService {
-
-	private static final Logger logger = Logger.getLogger(PriceGeneralQuotationServiceImpl.class.getName());
 	
 	@Autowired
     private IPriceGeneralQuotationRepository priceGeneralQuotationRepository;

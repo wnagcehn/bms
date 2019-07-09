@@ -42,6 +42,7 @@ public class BillCustomerInfoServiceImpl implements IBillCustomerInfoService{
 				pageVoInfo.setList(list);
 			}
 		}catch(Exception e){
+		    logger.error("异常",e);
 			throw e;
 		}
 		return pageVoInfo;
@@ -56,6 +57,7 @@ public class BillCustomerInfoServiceImpl implements IBillCustomerInfoService{
 			PropertyUtils.copyProperties(entity, voEntity);
 			return billCustomerInfoRepository.insertEntity(entity);
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 	}
@@ -68,6 +70,7 @@ public class BillCustomerInfoServiceImpl implements IBillCustomerInfoService{
 			PropertyUtils.copyProperties(entity, voEntity);
 			return billCustomerInfoRepository.updateEntity(entity);
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 	}
@@ -79,6 +82,7 @@ public class BillCustomerInfoServiceImpl implements IBillCustomerInfoService{
 			PropertyUtils.copyProperties(entity, voEntity);
 			return billCustomerInfoRepository.deleteEntity(entity);
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 	}
@@ -116,6 +120,7 @@ public class BillCustomerInfoServiceImpl implements IBillCustomerInfoService{
 			}
 			return billCustomerInfoRepository.saveBatch(list);
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 		
@@ -132,6 +137,7 @@ public class BillCustomerInfoServiceImpl implements IBillCustomerInfoService{
 			}
 			return billCustomerInfoRepository.updateBatch(list);
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 	}
@@ -141,6 +147,7 @@ public class BillCustomerInfoServiceImpl implements IBillCustomerInfoService{
 		try{
 			return billCustomerInfoRepository.checkSysCustomerHasBind(sysCustomerId,customerId);
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 	}

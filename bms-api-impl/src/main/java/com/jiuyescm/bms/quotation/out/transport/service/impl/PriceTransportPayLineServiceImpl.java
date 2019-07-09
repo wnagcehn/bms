@@ -7,7 +7,6 @@ package com.jiuyescm.bms.quotation.out.transport.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +22,6 @@ import com.jiuyescm.bms.quotation.out.transport.service.IPriceTransportPayLineSe
  */
 @Service("priceTransportPayLineService")
 public class PriceTransportPayLineServiceImpl implements IPriceTransportPayLineService {
-
-	private static final Logger logger = Logger.getLogger(PriceTransportPayLineServiceImpl.class.getName());
 	
 	@Autowired
     private IPriceTransportPayLineRepository priceTransportPayLineRepository;

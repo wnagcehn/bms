@@ -49,7 +49,7 @@ public class BmsBillAccountInfoServiceImpl implements IBmsAccountInfoService {
 	    	}
 	    	result.setList(voList);
 		} catch (Exception ex) {
-            logger.error("转换失败:{0}",ex);
+            logger.error("转换失败:",ex);
         }
     	
 		return result;
@@ -66,7 +66,7 @@ public class BmsBillAccountInfoServiceImpl implements IBmsAccountInfoService {
 		try {
             PropertyUtils.copyProperties(billAccountInfoVo, entity);
         } catch (Exception ex) {
-            logger.error("转换失败:{0}",ex);
+            logger.error("转换失败:",ex);
         }
 		return billAccountInfoVo;
 	}
@@ -82,7 +82,7 @@ public class BmsBillAccountInfoServiceImpl implements IBmsAccountInfoService {
             PropertyUtils.copyProperties(returnVo,returnEntity);
             
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败",ex);
         }
 		return returnVo;
 	}
@@ -98,7 +98,7 @@ public class BmsBillAccountInfoServiceImpl implements IBmsAccountInfoService {
             PropertyUtils.copyProperties(returnVo,returnEntity);
             
         } catch (Exception ex) {
-            logger.error("转换失败");
+            logger.error("转换失败",ex);
         }
 		return returnVo;
 	}

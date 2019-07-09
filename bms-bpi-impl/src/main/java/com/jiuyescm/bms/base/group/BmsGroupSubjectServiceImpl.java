@@ -115,6 +115,7 @@ public class BmsGroupSubjectServiceImpl implements IBmsGroupSubjectService {
 				pageVoInfo.setList(list);
 			}
 		}catch(Exception e){
+		    logger.error("异常",e);
 			throw e;
 		}
 		return pageVoInfo;

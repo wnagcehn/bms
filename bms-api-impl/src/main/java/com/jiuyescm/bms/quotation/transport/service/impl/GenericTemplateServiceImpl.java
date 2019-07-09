@@ -2,7 +2,6 @@ package com.jiuyescm.bms.quotation.transport.service.impl;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +16,7 @@ import com.jiuyescm.bms.quotation.transport.service.IGenericTemplateService;
  */
 @Service("genericTemplateService")
 public class GenericTemplateServiceImpl implements IGenericTemplateService{
-	
-	private static final Logger logger = Logger.getLogger(GenericTemplateServiceImpl.class.getName());
-	
+		
 	@Autowired
 	private IGenericTemplateRepository genericTemplateRepository;
 	

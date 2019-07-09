@@ -280,7 +280,7 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
         try {
             list = bmsCorrectAsynTaskRepository.queryList(queryCondition);
         } catch (Exception e1) {
-            e1.printStackTrace();
+            logger.error("异常",e1);
         }
         if (CollectionUtils.isNotEmpty(list)) {
             return "创建失败：当前商家在当前月份已存在纠正任务";
@@ -366,7 +366,7 @@ public class BmsCorrectAsynTaskServiceImpl implements IBmsCorrectAsynTaskService
                 }
            
             } catch (Exception e) {
-                logger.info("send MQ fail:", e);
+                logger.error("send MQ fail:", e);
                 return "MQ发送失败！";
             }
         }

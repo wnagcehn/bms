@@ -6,7 +6,6 @@ package com.jiuyescm.bms.chargerule.payrule;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +22,6 @@ import com.jiuyescm.bms.rule.payRule.repository.IPubRuleDeliverPayableRepository
 @Service("pubRuleDeliverPayableService")
 public class PubRuleDeliverPayableServiceImpl implements IPubRuleDeliverPayableService {
 
-	private static final Logger logger = Logger.getLogger(PubRuleDeliverPayableServiceImpl.class.getName());
-	
 	@Autowired
     private IPubRuleDeliverPayableRepository pubRuleDeliverPayableRepository;
 
