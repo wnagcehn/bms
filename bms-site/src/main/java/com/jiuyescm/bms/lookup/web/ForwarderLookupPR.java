@@ -10,13 +10,8 @@ import org.springframework.stereotype.Component;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
-import com.jiuyescm.cfm.common.JAppContext;
-import com.jiuyescm.mdm.customer.api.ICustomerService;
-import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.forwarder.api.IForwarderService;
 import com.jiuyescm.mdm.forwarder.vo.ForwarderVo;
-import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
-import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
 @Component("forwarderLookupPR")
 public class ForwarderLookupPR {

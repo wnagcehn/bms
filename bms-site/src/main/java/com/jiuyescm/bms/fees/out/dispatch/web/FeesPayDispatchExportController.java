@@ -213,7 +213,7 @@ public class FeesPayDispatchExportController {
 	    	logger.info("====应付配送费用导出：写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
 
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.error(e);
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);

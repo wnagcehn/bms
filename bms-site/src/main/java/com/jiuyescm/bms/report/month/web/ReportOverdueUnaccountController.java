@@ -99,8 +99,7 @@ public class ReportOverdueUnaccountController {
 				}
 			}	
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    logger.error("异常:", e);
 		}
 		
 		//超期未收款日期转换
@@ -321,7 +320,7 @@ public class ReportOverdueUnaccountController {
 //		
 //		//如果区域不存在，加权限
 //		if (!param.containsKey("area")) {
-//			BmsGroupUserVo groupUser = bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
+//			BmsGroupUserVo groupUser = bmsGroupUs  erService.queryEntityByUserId(JAppContext.currentUserID());
 //			if (null != groupUser) {
 //				List<String> userIds = bmsGroupUserService.queryContainUserIds(groupUser);
 //				if (userIds.size() != 0) {

@@ -131,7 +131,7 @@ public class FeesPayImportController{
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error(e);
 			return "数据库操作失败";
 		}
 			
@@ -159,7 +159,7 @@ public class FeesPayImportController{
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error(e);
 			return "数据库操作失败";
 		}
 			
@@ -188,11 +188,9 @@ public class FeesPayImportController{
 				   Map<String, Object> re=importTemplate(file,parameter,infoList,map);
 				   return re;
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					//写入日志
 					bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-					
-					e.printStackTrace();
+					logger.error(e);
 				}
 				return null;
 			}
@@ -331,8 +329,7 @@ public class FeesPayImportController{
 			}
 			
 		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
+			logger.error(e);
 		}
 		
 		return paramMap;
@@ -575,8 +572,7 @@ public class FeesPayImportController{
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			
-			e.printStackTrace();
+			logger.error(e);
 		}
 		return null;
 	}
@@ -613,7 +609,7 @@ public class FeesPayImportController{
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error(e);
 			return null;
 		}
 	}

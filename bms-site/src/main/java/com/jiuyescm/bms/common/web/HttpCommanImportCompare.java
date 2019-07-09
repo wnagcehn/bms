@@ -2,13 +2,13 @@ package com.jiuyescm.bms.common.web;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.bstek.dorado.uploader.UploadFile;
 import com.bstek.dorado.web.DoradoContext;
@@ -22,7 +22,6 @@ import com.jiuyescm.common.utils.excel.FileReaderFactory;
 import com.jiuyescm.common.utils.excel.IFileReader;
 import com.jiuyescm.common.utils.upload.BaseDataType;
 import com.jiuyescm.common.utils.upload.DataProperty;
-import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 /**
  * 导入文件比较公共方法
@@ -32,6 +31,8 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
  */
 public abstract class HttpCommanImportCompare<T,U> {
 
+    private static final Logger logger = Logger.getLogger(HttpCommanImportCompare.class.getName());
+    
 	protected abstract List<T> getOrgList(Map<String,Object> parameter);
 	/**
 	 * 设置导入excel 模板 实体 
@@ -370,9 +371,9 @@ public abstract class HttpCommanImportCompare<T,U> {
 	                    // 得到此属性的值
 	                    listChild.put(f.getName(), val);// 设置键值
 	                } catch (IllegalArgumentException e) {
-	                    e.printStackTrace();
+	                    logger.error(e);
 	                } catch (IllegalAccessException e) {
-	                    e.printStackTrace();
+	                    logger.error(e);
 	                }
 	            }
 	            list.add(listChild);// 将map加入到list集合中
@@ -397,9 +398,9 @@ public abstract class HttpCommanImportCompare<T,U> {
 	                    // 得到此属性的值
 	                    listChild.put(f.getName(), val);// 设置键值
 	                } catch (IllegalArgumentException e) {
-	                    e.printStackTrace();
+	                    logger.error(e);
 	                } catch (IllegalAccessException e) {
-	                    e.printStackTrace();
+	                    logger.error(e);
 	                }
 	            }
 	            list.add(listChild);// 将map加入到list集合中

@@ -128,7 +128,7 @@ public class PriceTransportLineRangeController {
 				model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 		} catch (Exception e) {
 			logger.error(ExceptionConstant.LINERANGE_SAVE_EXCEPTION_MSG, e);
@@ -184,14 +184,13 @@ public class PriceTransportLineRangeController {
 				model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 		}
 		catch(Exception ex){
 			logger.error(ExceptionConstant.LINERANGE_UPDATE_EXCEPTION_MSG, ex);
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
 			return ExceptionConstant.LINERANGE_UPDATE_EXCEPTION_MSG;
 		}
 		return ConstantInterface.StatusResult.SUCC;
@@ -219,14 +218,14 @@ public class PriceTransportLineRangeController {
 				model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		}
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}

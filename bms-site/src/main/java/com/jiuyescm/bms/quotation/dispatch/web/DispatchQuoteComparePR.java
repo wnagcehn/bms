@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -22,7 +23,6 @@ import com.jiuyescm.bms.common.vo.ExportDataVoEntity;
 import com.jiuyescm.bms.common.web.HttpCommanExport;
 import com.jiuyescm.bms.common.web.HttpCommanImportCompare;
 import com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo;
-import com.jiuyescm.bms.quotation.dispatch.entity.vo.PriceMainDispatchImportEntity;
 import com.jiuyescm.bms.quotation.dispatch.service.IBmsQuoteDispatchDetailService;
 import com.jiuyescm.common.utils.upload.BaseDataType;
 import com.jiuyescm.common.utils.upload.DispatchQuoteCompareDataType;
@@ -40,6 +40,8 @@ import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 @Controller("dispatchQuoteComparePR")
 public class DispatchQuoteComparePR extends HttpCommanImportCompare<BmsQuoteDispatchDetailVo,BmsQuoteDispatchDetailVo> {
 
+    private static final Logger logger = Logger.getLogger(DispatchQuoteComparePR.class.getName());
+    
 	@Resource
 	private IBmsQuoteDispatchDetailService bmsQuoteDispatchDetailService;
 	@Autowired
@@ -78,7 +80,7 @@ public class DispatchQuoteComparePR extends HttpCommanImportCompare<BmsQuoteDisp
 				setTimeliness(entity,timelinessCodeList);//设置时效
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.error("异常：", e);
 		}
 		return list;
 	}

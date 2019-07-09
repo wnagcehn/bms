@@ -98,7 +98,7 @@ public class PriceTransportPayLineRangeController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 		} else {
 			entity.setLastModifier(JAppContext.currentUserName());
@@ -119,7 +119,7 @@ public class PriceTransportPayLineRangeController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 		}
 		return null;
@@ -152,7 +152,7 @@ public class PriceTransportPayLineRangeController {
 					model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else if (EntityState.DELETED.equals(EntityUtils.getState(temp))) {
 				priceTransportPayLineRangeService.delete(temp.getId());
@@ -171,7 +171,7 @@ public class PriceTransportPayLineRangeController {
 					model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else {
 				// do nothing;
@@ -202,14 +202,14 @@ public class PriceTransportPayLineRangeController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		}
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常：", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -236,14 +236,14 @@ public class PriceTransportPayLineRangeController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		}
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常：", ex);
 			return "数据库操作失败";
 		}
 	}

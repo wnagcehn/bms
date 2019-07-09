@@ -108,8 +108,7 @@ public class ReportReceiptTargetController {
 			}
 			return page;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    logger.error("异常:", e);
 		}
 		
 		//时间转换
