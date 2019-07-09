@@ -50,7 +50,7 @@ public class BmsPackmaterialImportTaskListener implements MessageListener{
 		try {
 			message.acknowledge();
 		} catch (JMSException e) {
-			logger.info("任务ID【{}】 -> 消息应答异常{}",taskId,e);
+			logger.error("任务ID【{}】 -> 消息应答异常{}",taskId,e);
 		}
 
 		sw.stop();

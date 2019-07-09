@@ -75,8 +75,7 @@ public class MaterialToDelJob extends IJobHandler {
                 map = JobParameterHandler.handler(params);// 处理定时任务参数
             } catch (Exception e) {
                 sw.stop();
-                XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："
-                        + sw.getTotalTimeMillis() + "毫秒");
+                XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:{0},耗时{1}", e,sw.getTotalTimeMillis());
                 return ReturnT.FAIL;
             }
         } else {
@@ -190,7 +189,7 @@ public class MaterialToDelJob extends IJobHandler {
         try {
             bizOutstockPackmaterialCancelService.updateBatchStatusAndDelMaterial(delList, delMaterialList);
         } catch (Exception e) {
-            XxlJobLogger.log(e.getMessage());
+            XxlJobLogger.log("作废耗材，作废费用，修改作废表状态失败{0}",e);
         }
         printTime(sw);
         

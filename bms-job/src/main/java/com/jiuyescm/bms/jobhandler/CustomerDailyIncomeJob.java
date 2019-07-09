@@ -69,7 +69,7 @@ public class CustomerDailyIncomeJob extends IJobHandler{
 			}
 		} catch (Exception e) {
 			current = System.currentTimeMillis();
-            XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："+ (current - btime) + "毫秒");
+            XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:{0},耗时{1}", e,current - btime);
             return ReturnT.FAIL;
 		}
 		String beginPreDate = preDate + " 00:00:00";

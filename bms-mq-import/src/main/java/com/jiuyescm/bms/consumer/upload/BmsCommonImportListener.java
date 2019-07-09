@@ -78,7 +78,7 @@ public abstract class BmsCommonImportListener implements MessageListener{
 		try {
 			message.acknowledge();
 		} catch (JMSException e) {
-			logger.info("消息应答失败");
+			logger.error("消息应答失败",e);
 		}
 		logger.info("--------------------MQ处理操作日志结束,耗时:"+(end-start)+"ms---------------");
 	}
