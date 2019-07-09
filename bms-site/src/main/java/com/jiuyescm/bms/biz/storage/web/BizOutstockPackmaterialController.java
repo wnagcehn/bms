@@ -138,7 +138,7 @@ public class BizOutstockPackmaterialController {
 		}
 		
 		//运单号不为空的情况下，根据运单号或者转寄后运单后得到其实际对应得运单号
-		if(param.get("waybillNo")!=null){
+		if(param.get("waybillNo")!=null && param.get("waybillNo")!=""){
 		    String waybillNo=service.getWayBillNo(param);
 		    if(StringUtils.isNotBlank(waybillNo)){
 		          param.put("waybillNo", waybillNo);

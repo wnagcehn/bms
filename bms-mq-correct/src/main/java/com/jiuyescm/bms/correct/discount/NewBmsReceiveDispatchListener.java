@@ -129,7 +129,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
 		try {
 			json = ((TextMessage)message).getText();
 		} catch (JMSException e1) {
-			logger.info("获取消息失败");
+			logger.error("获取消息失败",e1);
 			return;
 		}
 	    
@@ -149,7 +149,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
 			logger.info(taskId+"折扣计算结束");
 			
 		} catch (Exception e1) {
-			logger.error(taskId+"折扣计算失败：{}",e1);
+			logger.error(taskId+"折扣计算失败",e1);
 			if(entity!=null){
 			    entity.setProgress(0d);
 			    entity.setRemark("折扣失败");
@@ -168,7 +168,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
 		try {
 			message.acknowledge();
 		} catch (JMSException e) {
-			logger.info("消息应答失败");
+			logger.error("消息应答失败",e);
 		}
 		logger.info("--------------------MQ处理结束,耗时:"+(end-start)+"ms---------------");
 		
@@ -286,7 +286,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
                         configVo=contractDiscountService.queryDiscount(queryVo);
                     } catch (Exception e) {
                         // TODO: handle exception
-                        logger.info(taskId+"合同在线查询折扣报价失败"+e.getMessage());
+                        logger.error(taskId+"合同在线查询折扣报价失败",e);
                         task.setRemark("合同在线查询折扣报价失败"+e.getMessage());              
                         task.setTaskRate(80);
                         task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
@@ -347,7 +347,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
                         }
                     } catch (Exception e) {
                         // TODO: handle exception
-                        logger.info(taskId+"循环同在线折扣报价计算异常");
+                        logger.error(taskId+"循环同在线折扣报价计算异常",e);
                         doLoop = false;
                     }
                 }
@@ -361,7 +361,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
             updateProgress(task,100);
             
         } catch (Exception e1) {
-            logger.info(taskId+"折扣处理失败",e1);
+            logger.error(taskId+"折扣处理失败",e1);
             task.setTaskRate(80);
             task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
             task.setRemark("折扣处理失败");
@@ -652,7 +652,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
 					}	
 				} catch (Exception e) {
 					// TODO: handle exception
-					logger.info(taskId+"循环bms折扣报价计算异常");
+					logger.error(taskId+"循环bms折扣报价计算异常",e);
 					doLoop = false;
 				}
 						
@@ -665,7 +665,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
 			task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.SUCCESS.getCode());
 			updateProgress(task,100);
 		} catch (Exception e1) {
-			logger.info(taskId+"折扣处理失败",e1);
+			logger.error(taskId+"折扣处理失败",e1);
 			task.setTaskRate(80);
 			task.setTaskStatus(BmsCorrectAsynTaskStatusEnum.FAIL.getCode());
 			bmsDiscountAsynTaskService.update(task);
@@ -1123,7 +1123,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
         try {
             map = (Map<String, Object>)JSON.parse(json);
         } catch (Exception e) {
-            logger.error("JSON解析异常 {}", e);
+            logger.error("JSON解析异常", e);
             return null;
         }
         return map;
