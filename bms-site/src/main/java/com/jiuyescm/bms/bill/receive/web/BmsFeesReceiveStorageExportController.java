@@ -316,7 +316,7 @@ public class BmsFeesReceiveStorageExportController {
 	    	logger.info("====应收配送费用导出： 写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
 
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.error("明细导出异常：", e);
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
 			bmsErrorLogInfoEntity.setClassName("BmsFeesReceiveStorageExportController");

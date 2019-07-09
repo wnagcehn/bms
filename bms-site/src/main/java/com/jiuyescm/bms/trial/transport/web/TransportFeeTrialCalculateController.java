@@ -1,7 +1,5 @@
 package com.jiuyescm.bms.trial.transport.web;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;

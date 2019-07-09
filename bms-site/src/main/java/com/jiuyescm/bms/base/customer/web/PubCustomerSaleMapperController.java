@@ -176,7 +176,7 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 					//写入日志
 					bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 					
-					e.printStackTrace();
+					logger.error("导入异常：", e);
 				}
 				return null;
 			}
@@ -517,7 +517,7 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error("导入异常：", e);
 		}
 	
 		return map;
@@ -550,8 +550,8 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 				pubCustomerSaleList.add(p);
 			}
 			return pubCustomerSaleList;
-		} catch (Exception e) {			
-			e.printStackTrace();
+		} catch (Exception e) {	
+		    logger.error("读取Excel异常:", e);
 		}
 		return null;
 	}
@@ -644,7 +644,7 @@ public class PubCustomerSaleMapperController extends CommonComparePR<PubCustomer
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error("MD5加密异常：", e);
 			return null;
 		}
 	}

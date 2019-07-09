@@ -185,8 +185,26 @@
 <if test="delFlag != null" >del_flag=#{delFlag,jdbcType=VARCHAR},</if>
 <if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 <if test="remark != null" >receipt_type=#{receiptType,jdbcType=VARCHAR},</if>
+<if test="crmStatus != null" >crm_status=#{crmStatus,jdbcType=VARCHAR},</if>
+<if test="crmAsynTime != null" >crm_asyn_time=#{crmAsynTime,jdbcType=VARCHAR},</if>
 		</set>
         where id=#{id}
     </update>
+    
+    <select id="queryReceiptToCrm" parameterType="java.util.Map"
+        resultType="com.jiuyescm.bms.billcheck.BillCheckReceiptEntity">
+        select
+		a.id,a.bill_check_id as billCheckId,a.receipt_date as receiptDate,a.receipt_amount as receiptAmount,
+		a.del_flag as delFlag,b.mk_id as mkId,b.invoice_name as invoiceName,b.seller_id as sellerId
+		from bill_check_receipt a
+		LEFT JOIN bill_check_info b on a.bill_check_id=b.id and b.del_flag='0'
+		WHERE a.del_flag='0'
+		<if test="(startTime != null and startTime !='')" >
+			and a.create_time >= #{startTime}
+		</if>
+		<if test="(endTime != null and endTime !='')" >
+			and <![CDATA[a.create_time <= #{endTime}]]>
+		</if>
+    </select>
 	
 </mapper>

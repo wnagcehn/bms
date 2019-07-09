@@ -216,7 +216,7 @@ public class FeesAbnormalController {
 					}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error(e);
 				}
 				
 				entity.setOrderStatus("2");

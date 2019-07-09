@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import com.bstek.dorado.annotation.DataProvider;
@@ -37,7 +39,7 @@ import com.jiuyescm.cfm.common.JAppContext;
 @Controller("bmsBillCountController")
 public class BmsBillCountController {
 	
-
+    private static final Logger logger = LoggerFactory.getLogger(BmsBillCountController.class.getName());
 	
 	@Resource
 	private IBmsBillInfoService bmsBillInfoService;
@@ -148,8 +150,7 @@ public class BmsBillCountController {
 				return "保存成功";
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("更新异常：", e);
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();
 			bmsErrorLogInfoEntity.setClassName("BmsBillCountController");

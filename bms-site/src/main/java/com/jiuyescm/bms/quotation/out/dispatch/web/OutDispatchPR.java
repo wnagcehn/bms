@@ -215,7 +215,7 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 						model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_BASE_PRICE.getCode());
 						pubRecordLogService.AddRecordLog(model);
 					}catch(Exception e){
-						logger.error("记录日志失败,失败原因:"+e.getMessage());
+						logger.error("记录日志失败,失败原因:", e);
 					}
 				}else if(EntityState.MODIFIED.equals(EntityUtils.getState(temp))){
 					temp.setLastModifier(userid);
@@ -237,7 +237,7 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 						model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_BASE_PRICE.getCode());
 						pubRecordLogService.AddRecordLog(model);
 					}catch(Exception e){
-						logger.error("记录日志失败,失败原因:"+e.getMessage());
+						logger.error("记录日志失败,失败原因:", e);
 					}
 				
 				}
@@ -249,7 +249,7 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			
+			logger.error("异常：", e);
 			return "数据库操作失败";
 		}
 		
@@ -284,14 +284,14 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 				model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "数据库操作成功";
 			
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			
+			logger.error("异常：", e);
 			return "数据库操作失败";
 		}
 			
@@ -336,8 +336,7 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 				   Map<String, Object> re=importTemplate(file,parameter,infoList,map);
 				   return re;
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				    logger.error("异常：", e);
 					//写入日志
 					bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 					
@@ -482,7 +481,7 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 					model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_BASE_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:",e);
 				}
 				DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 1000);
 				
@@ -533,7 +532,7 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 			}
 			return productList;
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.error("异常：", e);
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 			
@@ -714,7 +713,7 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-			
+			logger.error("异常：", ex);
 			return "数据库操作失败";
 		}
 		
@@ -897,7 +896,7 @@ public class OutDispatchPR extends CommonComparePR<PriceOutMainDispatchEntity>{
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			
+			logger.error("异常：", e);
 			return null;
 		}
 	}

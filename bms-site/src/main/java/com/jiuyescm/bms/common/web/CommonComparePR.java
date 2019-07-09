@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.jiuyescm.bms.common.entity.ErrorMessageVo;
 import com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity;
 import com.jiuyescm.bms.quotation.transport.entity.PriceTransportLineEntity;
@@ -17,6 +19,8 @@ import com.jiuyescm.common.ConstantInterface;
  * @param <T>
  */
 public class CommonComparePR <T>{
+    
+    private static final Logger logger = Logger.getLogger(CommonComparePR.class.getName());
 
 	/**
 	 * 比较线上线下数据，判断重复值(返回Excel的行号)
@@ -120,9 +124,9 @@ public class CommonComparePR <T>{
 	                    // 得到此属性的值
 	                    listChild.put(f.getName(), val);// 设置键值
 	                } catch (IllegalArgumentException e) {
-	                    e.printStackTrace();
+	                    logger.error(e);
 	                } catch (IllegalAccessException e) {
-	                    e.printStackTrace();
+	                    logger.error(e);
 	                }
 	            }
 	            list.add(listChild);// 将map加入到list集合中

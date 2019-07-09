@@ -1,11 +1,9 @@
 package com.jiuyescm.bms.report.bill.web;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,22 +11,20 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.data.provider.Page;
-import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.report.bill.CheckReceiptEntity;
-import com.jiuyescm.bms.report.vo.BizWarehouseNotImportVo;
 import com.jiuyescm.common.tool.ListTool;
 import com.jiuyescm.common.utils.DateUtil;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 
 @Controller("checkReceiptReportController")
 public class CheckReceiptReportController {
@@ -107,7 +103,7 @@ public class CheckReceiptReportController {
 					try {
 						checkReceiptEntity.setExpectDate(format.parse(dateString));
 					} catch (ParseException e) {
-						e.printStackTrace();
+					    logger.error("异常:", e);
 					}
 					String areaString = entity.getCodeName();
 					checkReceiptEntity.setArea(areaString);

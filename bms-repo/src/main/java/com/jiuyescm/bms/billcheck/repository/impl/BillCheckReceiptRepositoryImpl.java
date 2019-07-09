@@ -73,5 +73,10 @@ public class BillCheckReceiptRepositoryImpl extends MyBatisDao<BillCheckReceiptE
 		return page;
 	}
 
+    @Override
+    public List<BillCheckReceiptEntity> queryReceiptToCrm(Map<String, Object> condition) {
+        List<BillCheckReceiptEntity> list = selectList("com.jiuyescm.bms.billcheck.mapper.BillCheckReceiptMapper.queryReceiptToCrm", condition);
+        return list;
+    }
 
 }

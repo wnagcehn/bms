@@ -239,6 +239,7 @@ public class BmsGroupController {
 			}
 			return "";
 		}catch(Exception e){
+		    logger.error("删除异常：", e);
 			mes=e.getMessage();
 			return mes;
 		}

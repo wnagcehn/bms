@@ -132,7 +132,7 @@ public class StroageExtraQuoteController {
 					model.setUrlName(RecordLogUrlNameEnum.IN_STORAGE_OTHER_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return "SUCCESS";
 			}else{
@@ -143,7 +143,7 @@ public class StroageExtraQuoteController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -195,7 +195,7 @@ public class StroageExtraQuoteController {
 					model.setUrlName(RecordLogUrlNameEnum.IN_STORAGE_OTHER_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return "SUCCESS";
 			}else{
@@ -206,7 +206,7 @@ public class StroageExtraQuoteController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -241,7 +241,7 @@ public class StroageExtraQuoteController {
 					model.setUrlName(RecordLogUrlNameEnum.IN_STORAGE_OTHER_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return "SUCCESS";
 			}else{
@@ -252,7 +252,7 @@ public class StroageExtraQuoteController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -269,7 +269,7 @@ public class StroageExtraQuoteController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败:"+ex.getMessage();
 		}
 	}
@@ -291,7 +291,7 @@ public class StroageExtraQuoteController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败:"+ex.getMessage();
 		}
 	}
@@ -452,7 +452,7 @@ public class StroageExtraQuoteController {
 			}
 			return productList;
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.error("异常:", e);
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 
@@ -519,7 +519,7 @@ public class StroageExtraQuoteController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 		

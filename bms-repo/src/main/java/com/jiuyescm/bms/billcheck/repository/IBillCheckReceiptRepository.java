@@ -30,4 +30,17 @@ public interface IBillCheckReceiptRepository {
 	int save(BillCheckReceiptEntity entity);
 
 	public int update(BillCheckReceiptEntity entity);
+
+	/**
+	 * 查询需要往crm推的回款明细
+	 * <功能描述>
+	 * 
+	 * @author wangchen870
+	 * @date 2019年7月5日 下午2:15:40
+	 *
+	 * @param condition
+	 * @return
+	 */
+    List<BillCheckReceiptEntity> queryReceiptToCrm(Map<String, Object> condition);
+    
 }

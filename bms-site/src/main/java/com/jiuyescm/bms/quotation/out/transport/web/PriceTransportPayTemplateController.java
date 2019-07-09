@@ -164,7 +164,7 @@ public class PriceTransportPayTemplateController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 		} else {
 			entity.setLastModifier(JAppContext.currentUserName());
@@ -185,7 +185,7 @@ public class PriceTransportPayTemplateController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 		}
 		return null;
@@ -218,7 +218,7 @@ public class PriceTransportPayTemplateController {
 					model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else if (EntityState.DELETED.equals(EntityUtils.getState(temp))) {
 				priceTransportPayTemplateService.delete(temp.getId());
@@ -237,7 +237,7 @@ public class PriceTransportPayTemplateController {
 					model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else {
 				// do nothing;
@@ -268,7 +268,7 @@ public class PriceTransportPayTemplateController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		}
@@ -341,7 +341,7 @@ public class PriceTransportPayTemplateController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		}
@@ -535,7 +535,7 @@ public class PriceTransportPayTemplateController {
 					model.setUrlName(RecordLogUrlNameEnum.OUT_TRANSPORT_BASE_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return map;
 			}
@@ -543,8 +543,7 @@ public class PriceTransportPayTemplateController {
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-
-			// TODO: handle exception
+			logger.error("异常：", e);
 		} finally{
 			PropertiesUtil proUtil = new PropertiesUtil();
 			String path = proUtil.getImpExcelFilePath();
@@ -594,8 +593,7 @@ public class PriceTransportPayTemplateController {
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-
-			e.printStackTrace();
+			logger.error("异常：", e);
 		}
 		return null;
 	}

@@ -174,7 +174,6 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 				page.setEntityCount((int) tmpPageInfo.getTotal());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("查询所有的九曳配送模板信息异常：", e);
 		}
 	}
@@ -291,7 +290,7 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error("异常：", e);
 			return "数据库操作失败";
 		}
 	}
@@ -338,8 +337,7 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 				} catch (Exception e) {
 					//写入日志
 					bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-					
-					e.printStackTrace();
+					logger.error("异常：", e);
 				}
 				return null;
 			}
@@ -537,7 +535,7 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error("异常：", e);
 		}
 	
 		return map;
@@ -575,8 +573,7 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			
-			e.printStackTrace();
+			logger.error("异常：", e);
 		}
 		return null;
 	}
@@ -798,7 +795,7 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-			ex.printStackTrace();
+			logger.error("异常：", ex);
 			return "数据库操作失败";
 		}
 		
@@ -940,7 +937,7 @@ public class DispatchQuotePR extends CommonComparePR<BmsQuoteDispatchDetailVo>{
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error("异常：", e);
 			return null;
 		}
 	}

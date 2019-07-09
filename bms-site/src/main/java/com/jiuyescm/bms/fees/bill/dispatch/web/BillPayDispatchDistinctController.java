@@ -287,7 +287,7 @@ public class BillPayDispatchDistinctController {
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 			bmsErrorLogInfoService.log(bmsErrorLogInfoEntity);
-			e.printStackTrace();
+			logger.error(e);
 		}
 		return null;
 	}

@@ -240,7 +240,7 @@ public class PriceTransportTemplateController extends CommonComparePR<PriceTrans
 				model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 		} else {
 			if (queryEntity.getId() != entity.getId()) {
@@ -264,7 +264,7 @@ public class PriceTransportTemplateController extends CommonComparePR<PriceTrans
 				model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 		}
 		return null;
@@ -297,7 +297,7 @@ public class PriceTransportTemplateController extends CommonComparePR<PriceTrans
 					model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else if (EntityState.DELETED.equals(EntityUtils.getState(temp))) {
 				priceTransportTemplateService.delete(temp.getId());
@@ -316,7 +316,7 @@ public class PriceTransportTemplateController extends CommonComparePR<PriceTrans
 					model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else {
 				// do nothing;
@@ -348,13 +348,13 @@ public class PriceTransportTemplateController extends CommonComparePR<PriceTrans
 				model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		} catch (Exception ex) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-			ex.printStackTrace();
+			logger.error("数据库操作失败:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -420,11 +420,11 @@ public class PriceTransportTemplateController extends CommonComparePR<PriceTrans
 				model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		} catch (Exception ex) {
-			logger.info("错误信息"+ex.getMessage());
+		    logger.error("异常:", ex);
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
 
@@ -483,7 +483,7 @@ public class PriceTransportTemplateController extends CommonComparePR<PriceTrans
 		} catch (Exception ex) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -599,17 +599,16 @@ public class PriceTransportTemplateController extends CommonComparePR<PriceTrans
 		
 		lock.lock(lockString, 300, new LockCallback<Map<String, Object>>() {
 			@Override
-			public Map<String, Object> handleObtainLock() {
-				// TODO Auto-generated method stub
-				try {
-				   Map<String, Object> re=importTransportLine(file,parameter,infoList,map);
-				   return re;
-				   	} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return null;
-			}
+            public Map<String, Object> handleObtainLock() {
+                // TODO Auto-generated method stub
+                try {
+                    Map<String, Object> re = importTransportLine(file, parameter, infoList, map);
+                    return re;
+                } catch (Exception e) {
+                    logger.error("异常:", e);
+                }
+                return null;
+            }
 
 			@Override
 			public Map<String, Object> handleNotObtainLock() throws LockCantObtainException {
@@ -771,7 +770,7 @@ public class PriceTransportTemplateController extends CommonComparePR<PriceTrans
 				model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return map;
 		}
@@ -2038,7 +2037,7 @@ public class PriceTransportTemplateController extends CommonComparePR<PriceTrans
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error("异常:", e);
 			return null;
 		}
 	}

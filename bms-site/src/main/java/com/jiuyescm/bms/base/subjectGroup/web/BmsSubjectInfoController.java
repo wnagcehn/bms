@@ -22,7 +22,6 @@ import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.jiuyescm.bms.base.dictionary.entity.BmsSubjectInfoEntity;
 import com.jiuyescm.bms.base.dictionary.service.IBmsSubjectInfoService;
 import com.jiuyescm.bms.common.tool.Session;
@@ -196,6 +195,7 @@ public class BmsSubjectInfoController {
 			
 		} catch (Exception e) {
 			//写入日志
+		    logger.error("数据库操作失败：", e);
 			e.printStackTrace();
 			return "数据库操作失败";
 		}

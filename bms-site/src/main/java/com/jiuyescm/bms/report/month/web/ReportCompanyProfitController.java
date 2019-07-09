@@ -231,7 +231,7 @@ public class ReportCompanyProfitController {
 				try{
 					startYear=Integer.valueOf(sysStart.getExtattr1());
 				}catch(Exception e){
-					
+				    logger.error("异常:", e);
 				}
 			}
 		}
@@ -242,7 +242,7 @@ public class ReportCompanyProfitController {
 				try{
 					endYear=Integer.valueOf(sysEnd.getExtattr1());
 				}catch(Exception e){
-					
+				    logger.error("异常:", e);
 				}
 			}
 		}

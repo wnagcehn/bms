@@ -36,8 +36,6 @@ import com.jiuyescm.bms.common.system.ResponseVo;
 import com.jiuyescm.bms.common.tool.Session;
 import com.jiuyescm.bms.pub.IPubRecordLogService;
 import com.jiuyescm.bms.pub.PubRecordLogEntity;
-import com.jiuyescm.bms.quotation.contract.entity.ContractDetailEntity;
-import com.jiuyescm.bms.quotation.contract.entity.PriceContractInfoEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceGeneralQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.entity.PriceStepQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.service.IPriceGeneralQuotationService;
@@ -161,7 +159,7 @@ public class GeneralStorageQuoteController {
 					model.setUrlName(RecordLogUrlNameEnum.IN_STORAGE_BASE_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return new ResponseVo(ResponseVo.SUCCESS, MessageConstant.OPERATOR_SUCCESS_MSG);
 			}else{
@@ -226,7 +224,7 @@ public class GeneralStorageQuoteController {
 				model.setUrlName(RecordLogUrlNameEnum.IN_STORAGE_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			priceGeneralQuotationService.update(entity);
 			return "SUCCESS";
@@ -234,7 +232,7 @@ public class GeneralStorageQuoteController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常：", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -310,7 +308,7 @@ public class GeneralStorageQuoteController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常：", ex);
 			return "数据库操作失败";
 		}
 		

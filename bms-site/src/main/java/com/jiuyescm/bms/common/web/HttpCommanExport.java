@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import com.bstek.dorado.uploader.DownloadFile;
@@ -23,6 +24,9 @@ import com.jiuyescm.common.utils.upload.DataProperty;
  *
  */
 public class HttpCommanExport {
+    
+    private static final Logger logger = Logger.getLogger(HttpCommanExport.class.getName());
+    
 	private String path;
 	public HttpCommanExport(String path){
 		this.path=path;
@@ -34,7 +38,7 @@ public class HttpCommanExport {
         	this.appendExcelSheet(poiUtil,hssfWorkbook,path,voEntity);
         	poiUtil.write2FilePath(hssfWorkbook, path);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 			throw e;
 		}
 	}
@@ -45,7 +49,7 @@ public class HttpCommanExport {
         	this.appendExcelSheet(poiUtil,hssfWorkbook,path+File.separator+voEntity.getTitleName()+".xls",voEntity);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.error(e);
 		}
         
         InputStream is = new FileInputStream(path+File.separator+voEntity.getTitleName()+".xls");
@@ -59,7 +63,7 @@ public class HttpCommanExport {
         	this.appendExcelSheet(poiUtil,hssfWorkbook,path+File.separator+voEntity.getTitleName()+".xlsx",voEntity);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.error(e);
 		}
         
         InputStream is = new FileInputStream(path+File.separator+voEntity.getTitleName()+".xlsx");
@@ -74,7 +78,7 @@ public class HttpCommanExport {
         		this.appendExcelSheet(poiUtil,hssfWorkbook,path+File.separator+fileName+".xls",vo);
         	}
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.error(e);
 		}
         
         InputStream is = new FileInputStream(path+File.separator+fileName+".xls");
