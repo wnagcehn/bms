@@ -222,7 +222,7 @@ public class PalletInitJob extends IJobHandler {
 		}
 
 		feesEntity.setQuantity(num); // 数量
-		feesEntity.setUnit("pallet"); // 单位
+		feesEntity.setUnit("PALLETS"); // 单位
 		feesEntity.setTempretureType(entity.getTemperatureTypeCode()); // 设置温度类型
 		feesEntity.setUnitPrice(0d); // 单价
 		feesEntity.setBizType(entity.getBizType()); // 托数类型
