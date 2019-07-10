@@ -10,7 +10,12 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 public class HttpRequest {
+    
+    private static final Logger logger = Logger.getLogger(HttpRequest.class.getName());
+
 	/**
 	 * 向指定URL发送GET方法的请求
 	 * 
@@ -50,8 +55,7 @@ public class HttpRequest {
 				result += line;
 			}
 		} catch (Exception e) {
-			System.out.println("发送GET请求出现异常！" + e);
-			e.printStackTrace();
+			logger.error("发送GET请求出现异常！", e);
 		}
 		// 使用finally块来关闭输入流
 		finally {
@@ -60,7 +64,7 @@ public class HttpRequest {
 					in.close();
 				}
 			} catch (Exception e2) {
-				e2.printStackTrace();
+			    logger.error(e2);
 			}
 		}
 		return result;
@@ -106,8 +110,7 @@ public class HttpRequest {
 				result += line;
 			}
 		} catch (Exception e) {
-			System.out.println("发送 POST 请求出现异常！" + e);
-			e.printStackTrace();
+			logger.error("发送 POST 请求出现异常！", e);
 		}
 		// 使用finally块来关闭输出流、输入流
 		finally {
@@ -119,7 +122,7 @@ public class HttpRequest {
 					in.close();
 				}
 			} catch (IOException ex) {
-				ex.printStackTrace();
+			    logger.error(ex);
 			}
 		}
 		return result;

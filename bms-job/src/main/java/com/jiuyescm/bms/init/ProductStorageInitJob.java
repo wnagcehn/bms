@@ -67,9 +67,7 @@ public class ProductStorageInitJob extends IJobHandler {
 			try {
 				map = JobParameterHandler.handler(params);// 处理定时任务参数
 			} catch (Exception e) {
-				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage()
-						+ ",耗时：" + (System.currentTimeMillis() - startTime)
-						+ "毫秒");
+				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:{0},耗时{1}",e,(System.currentTimeMillis() - startTime));
 				return ReturnT.FAIL;
 			}
 		} else {

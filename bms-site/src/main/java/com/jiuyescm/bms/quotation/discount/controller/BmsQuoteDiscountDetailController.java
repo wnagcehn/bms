@@ -143,7 +143,7 @@ public class BmsQuoteDiscountDetailController {
 		try {
 			startTime = sdf.parse(start);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error("", e);
 		}
 		entity.setStartTime(new Timestamp(startTime.getTime()));
 		String end = sdf.format(entity.getEndTime());
@@ -153,7 +153,7 @@ public class BmsQuoteDiscountDetailController {
 		try {
 			endTime = sdf2.parse(end+" 23:59:59");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error("异常：", e);
 		}
 		entity.setEndTime(new Timestamp(endTime.getTime()));
 		

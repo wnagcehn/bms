@@ -116,7 +116,7 @@ public class OutDeliverOtherTemplateController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return new ResponseVo(ResponseVo.SUCCESS, MessageConstant.OPERATOR_SUCCESS_MSG);
 		}
@@ -124,7 +124,6 @@ public class OutDeliverOtherTemplateController {
 			logger.error(ExceptionConstant.STORAGE_ADD_GENQUOTE_EX_MSG, ex);
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-			ex.printStackTrace();
 			return new ResponseVo(ResponseVo.ERROR, MessageConstant.SYSTEM_ERROR_MSG);
 		}
 	}
@@ -156,7 +155,7 @@ public class OutDeliverOtherTemplateController {
 					model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_OTHER_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else if (EntityState.DELETED.equals(EntityUtils.getState(temp))) {
 				priceOutDispatchTemplateService.delete(temp);
@@ -175,7 +174,7 @@ public class OutDeliverOtherTemplateController {
 					model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_OTHER_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else {
 				// do nothing;
@@ -206,14 +205,14 @@ public class OutDeliverOtherTemplateController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		}
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-			ex.printStackTrace();
+			logger.error("异常：", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -254,7 +253,7 @@ public class OutDeliverOtherTemplateController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return new ResponseVo(ResponseVo.SUCCESS, MessageConstant.DELETE_INFO_SUCCESS_MSG);
 		}
@@ -262,7 +261,7 @@ public class OutDeliverOtherTemplateController {
 			logger.error(ExceptionConstant.DISPATCH_DEL_QUOTE_EX_MSG, ex);
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-			ex.printStackTrace();
+			logger.error("异常：", ex);
 			return new ResponseVo(ResponseVo.ERROR, MessageConstant.SYSTEM_ERROR_MSG);
 		}
 	}
@@ -292,7 +291,7 @@ public class OutDeliverOtherTemplateController {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
 			
-			ex.printStackTrace();
+			logger.error("异常：", ex);
 			return "作废报价失败";
 		}
 	}

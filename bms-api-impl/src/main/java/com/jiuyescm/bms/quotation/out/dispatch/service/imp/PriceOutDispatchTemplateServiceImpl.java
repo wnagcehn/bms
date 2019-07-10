@@ -3,7 +3,6 @@ package com.jiuyescm.bms.quotation.out.dispatch.service.imp;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +17,7 @@ import com.jiuyescm.bms.quotation.out.dispatch.service.IPriceOutDispatchTemplate
  */
 @Service("outDeliverTemplateService")
 public class PriceOutDispatchTemplateServiceImpl implements IPriceOutDispatchTemplateService{
-	
-	private static final Logger logger = Logger.getLogger(PriceOutDispatchTemplateServiceImpl.class.getName());
-	
+		
 	@Autowired
 	private IPriceOutDispatchTemplateDao priceOutDispatchTemplateDao;
 	

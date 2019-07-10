@@ -470,7 +470,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			// TODO: handle exception
 			fee.setIsCalculated(CalculateState.Sys_Error.getCode());
 			fee.setCalcuMsg("系统异常");
-			logger.info("初始化费用失败【{}】",e);	
+			logger.error("初始化费用失败",e);	
 		}
 		return fee;
 		
@@ -632,7 +632,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
                 fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
             }
 		}catch(Exception ex){
-			
+			logger.error("计算失败",ex);
 		}
 	}
 
@@ -686,7 +686,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			logger.info("taskId={} 更新配送费用数据行数【{}】 耗时【{}】",taskVo.getTaskId(),feeList.size(),sw.getLastTaskTimeMillis());
 			
 		} catch (Exception e) {
-			logger.info("-->批量保存异常"+e.getMessage());
+			logger.error("-->批量保存异常",e);
 		}
 	}
 	
@@ -787,6 +787,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 					}			
 				} catch (Exception e) {
 					e.printStackTrace();
+					logger.error("查询九曳配送范围异常",e);
 				}
 				
 		    }	
@@ -883,7 +884,7 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 					throwWeight=(double)Math.round(throwWeight*100)/100;
 				}			
 			}catch(Exception ex){ 
-				logger.error("-->"+entity.getId()+"获取泡重失败:{1}",ex.getMessage());
+				logger.error("-->"+entity.getId()+"获取泡重失败",ex);
 			}
 			return throwWeight;
 		}

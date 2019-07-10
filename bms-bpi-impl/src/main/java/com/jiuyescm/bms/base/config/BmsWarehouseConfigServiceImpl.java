@@ -49,6 +49,7 @@ public class BmsWarehouseConfigServiceImpl implements IBmsWarehouseConfigService
 				return bmsWarehouseConfigRepository.insertEntity(entity);
 			}
 		}catch(Exception e){
+		    logger.error("异常",e);
 			throw e;
 		}
 		

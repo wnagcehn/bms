@@ -1,6 +1,5 @@
 package com.jiuyescm.bms.quotation.discount.controller;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,8 +47,6 @@ import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountDetailEntity;
 import com.jiuyescm.bms.quotation.discount.entity.BmsQuoteDiscountTemplateEntity;
 import com.jiuyescm.bms.quotation.discount.service.IBmsQuoteDiscountDetailService;
 import com.jiuyescm.bms.quotation.discount.service.IBmsQuoteDiscountTemplateService;
-import com.jiuyescm.bms.quotation.dispatch.entity.vo.BmsQuoteDispatchDetailVo;
-import com.jiuyescm.bms.quotation.dispatch.service.IBmsQuoteDispatchDetailService;
 import com.jiuyescm.bms.quotation.transport.entity.GenericTemplateEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.cfm.common.sequence.SequenceGenerator;
@@ -61,15 +58,7 @@ import com.jiuyescm.common.utils.excel.IFileReader;
 import com.jiuyescm.common.utils.upload.BaseDataType;
 import com.jiuyescm.common.utils.upload.DataProperty;
 import com.jiuyescm.common.utils.upload.DiscountQuoteTemplateDataType;
-import com.jiuyescm.common.utils.upload.DispatchQuoteCompareDataType;
-import com.jiuyescm.common.utils.upload.DispatchQuoteTemplateDataType;
 import com.jiuyescm.exception.BizException;
-import com.jiuyescm.framework.lock.LockCallback;
-import com.jiuyescm.framework.lock.LockCantObtainException;
-import com.jiuyescm.framework.lock.LockInsideExecutedException;
-import com.jiuyescm.mdm.customer.vo.ErrorMsgVo;
-import com.jiuyescm.mdm.customer.vo.RegionEncapVo;
-import com.jiuyescm.mdm.customer.vo.RegionVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
@@ -255,7 +244,7 @@ public class BmsQuoteDiscountTemplateController {
 		try {
 			list = carrierProductService.query(conditionMap);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+		    logger.error("异常", e1);
 		}
 		Set<String> servicenameSet = new HashSet<>();
 		if(CollectionUtils.isNotEmpty(list)){
@@ -398,7 +387,7 @@ public class BmsQuoteDiscountTemplateController {
 			// 写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),
 					Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error("异常：", e);
 		}
 
 		return map;
@@ -448,7 +437,7 @@ public class BmsQuoteDiscountTemplateController {
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),
 					Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 
-			e.printStackTrace();
+			logger.error("异常：", e);
 		}
 		return null;
 	}
@@ -651,7 +640,7 @@ public class BmsQuoteDiscountTemplateController {
 			try {
 				list = reader.getFileContent(file.getInputStream());
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("异常：", e);
 			}
 			List<DataProperty> props = bs.getDataProps();
 			for (Map<String, String> map : list) {

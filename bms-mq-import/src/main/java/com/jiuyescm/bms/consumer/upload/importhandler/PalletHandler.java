@@ -307,7 +307,7 @@ public class PalletHandler {
         //往正式表存数据
         try{
             saveData(insertList, updateList);
-            logger.error("托数从写入业务表成功");
+            logger.error("托数从临时表写入业务表成功");
             bmsMaterialImportTaskCommon.setTaskProcess(taskEntity.getTaskId(), 90);
             BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 100,FileAsynTaskStatusEnum.SUCCESS.getCode(), null, JAppContext.currentTimestamp(), null, null, "导入成功");
             bmsFileAsynTaskService.update(updateEntity);
@@ -354,7 +354,7 @@ public class PalletHandler {
         if (tmpPageInfo != null && tmpPageInfo.getList() != null && tmpPageInfo.getList().size()>0) {
             for(CustomerVo customer : tmpPageInfo.getList()){
                 if(customer != null){
-                    customerMap.put(customer.getCustomername().trim(), customer.getCustomerid());
+                    customerMap.put(customer.getCustomerid(), customer.getCustomername().trim());
                 }
             }
         }   
@@ -400,12 +400,12 @@ public class PalletHandler {
      * @return
      */
     protected List<String> initColumnNames() {
-        String[] str = {"库存日期","仓库","商家全称","商品冷冻","商品冷藏","商品常温","商品恒温","耗材冷冻","耗材冷藏","耗材常温","耗材恒温","入库托数","出库托数"};
+        String[] str = {"库存日期","仓库","商家ID","商家全称","商品冷冻","商品冷藏","商品常温","商品恒温","耗材冷冻","耗材冷藏","耗材常温","耗材恒温","入库托数","出库托数"};
         return Arrays.asList(str); 
     }
 
     protected String[] initColumnsNamesForNeed() {
-        String[] str = {"库存日期","仓库","商家全称"};
+        String[] str = {"库存日期","仓库","商家ID","商家全称"};
         return str;
     }
     
@@ -676,8 +676,8 @@ public class PalletHandler {
         BizPalletInfoTempEntity tempEntity10 = null;
         List<BizPalletInfoTempEntity> tempList = new ArrayList<BizPalletInfoTempEntity>();
         
-        boolean isCustomerNull = false;
-        boolean isDateNull = false;
+//        boolean isCustomerNull = false;
+//        boolean isDateNull = false;
         boolean isAllEmpty=false;
         tempEntity = new BizPalletInfoTempEntity();
         tempEntity.setRowExcelNo(dr.getRowNo());
@@ -688,7 +688,7 @@ public class PalletHandler {
         tempEntity.setChargeSource("import");
         
         try {
-            for (DataColumn dc : dr.getColumns()) {         
+            for (DataColumn dc : dr.getColumns()) {
                 switch (dc.getTitleName()) {
                 case "库存日期":
                     if (StringUtils.isNotBlank(dc.getColValue())) {
@@ -697,7 +697,7 @@ public class PalletHandler {
                         tempEntity.setCreateTime(DateUtil.transStringToTimeStamp(dc.getColValue()));
                     }else {
                         errorMsg += "库存日期必填;";
-                        isDateNull = true;
+//                        isDateNull = true;
                     }
                     break;
                 case "仓库":
@@ -713,23 +713,19 @@ public class PalletHandler {
                         errorMsg+="仓库必填;";
                     }
                     break;
+                case "商家ID":
+                    if (StringUtils.isNotBlank(dc.getColValue())) {
+                        tempEntity.setCustomerId(dc.getColValue());
+                    }else {
+                        errorMsg+="商家ID必填;";
+//                        isCustomerNull = true;
+                    }
+                    break;
                 case "商家全称":
                     if (StringUtils.isNotBlank(dc.getColValue())) {
                         tempEntity.setCustomerName(dc.getColValue());
-                        //如果没找到，报错
-                        if (customerMap.containsKey(dc.getColValue())) {
-                           /* //如果导入的商家不在 《使用导入商品托数的商家》中, 报错提示<此商家使用商品系统托数,不能重复导入
-                            if (cusNames.contains(dc.getColValue())) {*/
-                                tempEntity.setCustomerId(customerMap.get(dc.getColValue()));
-                            /*}else {
-                                errorMsg+="此商家使用商品系统托数,不能重复导入;";
-                            }*/
-                        }else {
-                            errorMsg+="商家不存在;";
-                        }
                     }else {
                         errorMsg+="商家必填;";
-                        isCustomerNull = true;
                     }
                     break;
                 case "商品冷冻":
@@ -888,9 +884,21 @@ public class PalletHandler {
             errorMsg+="第【"+ dr.getRowNo() +"】行格式不正确;";
         }
         
-        if (isDateNull && isCustomerNull) {
-            return tempList;
+        //商家ID和商家名称都存在时
+        if (StringUtils.isNotBlank(tempEntity.getCustomerId()) && StringUtils.isNotBlank(tempEntity.getCustomerName())) {
+            //如果商家ID不存在，报错; 如果商家ID存在，对应的名称是否和Excel中的名称相等，不相等报错
+            if (customerMap.containsKey(tempEntity.getCustomerId())) {
+                if (!customerMap.get(tempEntity.getCustomerId()).equals(tempEntity.getCustomerName())) {
+                    errorMsg+="商家ID："+ tempEntity.getCustomerId() + "，与商家名称不一致;";
+                }
+            }else {
+                errorMsg+="商家不存在;";
+            }
         }
+        
+//        if (isDateNull && isCustomerNull) {
+//            return tempList;
+//        }
         
         if(!isAllEmpty){
             errorMsg+="数值列不能都为空;";

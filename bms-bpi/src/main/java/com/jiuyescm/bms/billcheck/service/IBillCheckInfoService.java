@@ -6,6 +6,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.customer.entity.PubCustomerBaseEntity;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
+import com.jiuyescm.bms.billcheck.BillCheckReceiptEntity;
 import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckLogVo;
@@ -234,5 +235,28 @@ public interface IBillCheckInfoService {
     PageInfo<BillCheckInfoVo> querySimple(Map<String, Object> condition, int pageNo, int pageSize); 
     
     PubCustomerBaseEntity queryMk(Map<String, Object> condition);
+
+    /**
+     * 修改回款调整
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月3日 下午1:46:22
+     *
+     * @param vo
+     * @return
+     */
+    int updateAdjustInfo(BillCheckAdjustInfoVo vo);
+
+    /**
+     * 保存回款明细到crm接口
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月5日 下午2:27:04
+     *
+     * @param entity
+     */
+    void saveReceiptToCrm(BillCheckReceiptEntity entity);
 	
-	}
+}

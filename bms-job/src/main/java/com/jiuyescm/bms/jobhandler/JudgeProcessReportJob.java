@@ -77,8 +77,7 @@ public class JudgeProcessReportJob extends IJobHandler {
                 map = JobParameterHandler.handler(params);// 处理定时任务参数
             } catch (Exception e) {
                 sw.stop();
-                XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："
-                        + sw.getTotalTimeMillis() + "毫秒");
+                XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:{0},耗时{1}",e,sw.getTotalTimeMillis());
                 return ReturnT.FAIL;
             }
         } else {
@@ -115,7 +114,7 @@ public class JudgeProcessReportJob extends IJobHandler {
             try {
                 billCustomerMasterService.saveOrUpdate(taskAndCheckLogs);
             } catch (Exception e) {
-                XxlJobLogger.log("主表操作异常：", e);
+                XxlJobLogger.log("主表操作异常：{0}", e);
                 elConditionRepository.updateByPullType(elCondition);
                 return printLog("主表操作", sw, FAIL);
             }

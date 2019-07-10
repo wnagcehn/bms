@@ -75,8 +75,7 @@ public class MaterialToDelJob extends IJobHandler {
                 map = JobParameterHandler.handler(params);// 处理定时任务参数
             } catch (Exception e) {
                 sw.stop();
-                XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："
-                        + sw.getTotalTimeMillis() + "毫秒");
+                XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:{0},耗时{1}", e,sw.getTotalTimeMillis());
                 return ReturnT.FAIL;
             }
         } else {
@@ -162,6 +161,8 @@ public class MaterialToDelJob extends IJobHandler {
 
             //获取所有level和对应的marks
             TreeMap<Integer, Set<String>> levelMap = getAllLevel(packDickList, bizEntity);  
+            
+            XxlJobLogger.log("运单：{0}，匹配分数为：{1}", bizEntity.getWaybillNo(), levelMap.lastKey());
              
             //取出最大level对应的marks，来获取需要作废的耗材（去重）
             Set<String> marks = levelMap.get(levelMap.lastKey());
@@ -190,7 +191,7 @@ public class MaterialToDelJob extends IJobHandler {
         try {
             bizOutstockPackmaterialCancelService.updateBatchStatusAndDelMaterial(delList, delMaterialList);
         } catch (Exception e) {
-            XxlJobLogger.log(e.getMessage());
+            XxlJobLogger.log("作废耗材，作废费用，修改作废表状态失败{0}",e);
         }
         printTime(sw);
         

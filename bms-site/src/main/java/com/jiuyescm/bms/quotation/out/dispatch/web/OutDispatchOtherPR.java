@@ -170,7 +170,7 @@ public class OutDispatchOtherPR {
 						model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_OTHER_PRICE.getCode());
 						pubRecordLogService.AddRecordLog(model);
 					}catch(Exception e){
-						logger.error("记录日志失败,失败原因:"+e.getMessage());
+						logger.error("记录日志失败,失败原因:", e);
 					}
 					
 				}else if(EntityState.MODIFIED.equals(EntityUtils.getState(temp))){
@@ -193,7 +193,7 @@ public class OutDispatchOtherPR {
 						model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_OTHER_PRICE.getCode());
 						pubRecordLogService.AddRecordLog(model);
 					}catch(Exception e){
-						logger.error("记录日志失败,失败原因:"+e.getMessage());
+						logger.error("记录日志失败,失败原因:", e);
 					}
 				
 				}
@@ -205,7 +205,7 @@ public class OutDispatchOtherPR {
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			
+			logger.error("异常：", e);
 			return "数据库操作失败";
 		}
 		
@@ -240,14 +240,14 @@ public class OutDispatchOtherPR {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "数据库操作成功";
 			
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			
+			logger.error("异常：", e);
 			return "数据库操作失败";
 		}
 			
@@ -307,7 +307,7 @@ public class OutDispatchOtherPR {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-			
+			logger.error("异常：", ex);
 			return "数据库操作失败";
 		}
 		

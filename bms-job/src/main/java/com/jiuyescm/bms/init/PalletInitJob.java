@@ -81,8 +81,7 @@ public class PalletInitJob extends IJobHandler {
 				map = JobParameterHandler.handler(params);// 处理定时任务参数
 			} catch (Exception e) {
 				sw.stop();
-				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:" + e.getMessage() + ",耗时："
-						+ sw.getTotalTimeMillis() + "毫秒");
+				XxlJobLogger.log("【终止异常】,解析Job配置的参数出现错误,原因:{0},耗时{1}",e,sw.getTotalTimeMillis());
 				return ReturnT.FAIL;
 			}
 		} else {
@@ -149,7 +148,7 @@ public class PalletInitJob extends IJobHandler {
 				updateAndInsertBatch(bizList, feesList);
 			}
 		} catch (Exception e) {
-			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0}", e.getMessage());
+			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0}", e);
 			return;
 		}	
 		
@@ -223,7 +222,7 @@ public class PalletInitJob extends IJobHandler {
 		}
 
 		feesEntity.setQuantity(num); // 数量
-		feesEntity.setUnit("pallet"); // 单位
+		feesEntity.setUnit("PALLETS"); // 单位
 		feesEntity.setTempretureType(entity.getTemperatureTypeCode()); // 设置温度类型
 		feesEntity.setUnitPrice(0d); // 单价
 		feesEntity.setBizType(entity.getBizType()); // 托数类型

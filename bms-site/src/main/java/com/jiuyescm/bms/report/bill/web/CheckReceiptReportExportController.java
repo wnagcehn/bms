@@ -10,9 +10,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,8 +19,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +35,6 @@ import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
 import com.jiuyescm.bms.excel.constants.ExportConstants;
 import com.jiuyescm.bms.excel.write.ExcelExporterFactory;
 import com.jiuyescm.bms.excel.write.IExcelExporter;
-import com.jiuyescm.bms.excel.write.SXSSFExporter;
 import com.jiuyescm.bms.report.bill.CheckReceiptEntity;
 import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
@@ -126,7 +121,7 @@ public class CheckReceiptReportExportController{
 					try {
 						checkReceiptEntity.setExpectDate(format.parse(dateString));
 					} catch (ParseException e) {
-						e.printStackTrace();
+					    logger.error("异常:", e);
 					}
 					String areaString = entity.getCodeName();
 					checkReceiptEntity.setArea(areaString);
@@ -164,13 +159,13 @@ public class CheckReceiptReportExportController{
 		try {
 			path = export(dateList,codeEntities,reportMap);
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.error("异常:", e);
 		}
 		InputStream is = null;
 		try {
 			is = new FileInputStream(path);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		    logger.error("异常:", e);
 		}
     	return new DownloadFile("回款追踪报表" + FileConstant.SUFFIX_XLSX, is);
 	}

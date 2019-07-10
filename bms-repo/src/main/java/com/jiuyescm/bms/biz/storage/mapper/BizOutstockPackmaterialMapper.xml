@@ -85,9 +85,10 @@
         a.id, a.wms_id, a.outstock_no, a.waybill_no, a.customer_id, a.customer_name, a.consumer_material_code,
 	    a.consumer_material_name, a.warehouse_code, a.warehouse_name, a.num, a.adjust_num, a.fees_no, a.dbname, 
 	    b.is_calculated, a.creator, a.create_time, a.last_modifier, a.last_modify_time,a.write_time,a.calculate_time, a.del_flag, b.calcu_msg as remark,a.weight,
-	    a.spec_desc, a.extattr1,a.extattr2, a.extattr3, a.extattr4, a.extattr5,a.cost_fees_no,a.cost_calculate_time,a.cost_is_calculated,a.cost_remark
+	    a.spec_desc, a.extattr1,a.extattr2, a.extattr3, a.extattr4, a.extattr5,a.cost_fees_no,a.cost_calculate_time,a.cost_is_calculated,a.cost_remark,c.zexpressnum
         from  biz_outstock_packmaterial a
         left join fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
+        LEFT JOIN biz_dispatch_bill c on a.waybill_no=c.waybill_no and c.del_flag='0'
 		where a.del_flag='0'
         <if test="(feesNo != null and feesNo !='')" >
 				and a.fees_no = #{feesNo}
@@ -563,6 +564,7 @@
 		a.warehouse_name, 
 		a.customer_name, 
 		a.waybill_no as waybillNo,
+		a.zexpressnum,
 		a.outstock_no,
 		a.totalqty,
 		a.product_detail,
@@ -894,4 +896,8 @@
 	    and create_time>=#{beginTime} and <![CDATA[create_time<#{endTime}]]>
 	    and customer_id=#{customerId}
     </update>
+    
+    <select id="getWayBillNo" parameterType="java.util.Map" resultType="String">
+    	SELECT waybill_no from biz_dispatch_bill where 1=1 and del_flag='0' and (waybill_no=#{waybillNo} or zexpressnum=#{waybillNo}) limit 1
+    </select>
 </mapper>

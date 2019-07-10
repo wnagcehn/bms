@@ -270,6 +270,7 @@ public class BmsMaterialExportController {
 	    	logger.info("====应收配送费用导出： 写入Excel end.==总耗时：" + (System.currentTimeMillis() - beginTime));
 
 		} catch (Exception e) {
+		    logger.error("应收配送费用导出异常：", e);
 			e.printStackTrace();
 			//写入日志
 			BmsErrorLogInfoEntity bmsErrorLogInfoEntity=new BmsErrorLogInfoEntity();

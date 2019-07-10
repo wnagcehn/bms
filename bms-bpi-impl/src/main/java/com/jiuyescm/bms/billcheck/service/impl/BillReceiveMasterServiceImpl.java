@@ -67,7 +67,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 		try {
             PropertyUtils.copyProperties(vo, entity);
         } catch (Exception ex) {
-        	logger.error("转换失败:{0}",ex);
+        	logger.error("转换失败:",ex);
         }
 		
         return vo;
@@ -94,7 +94,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 			
 			result.setList(voList);
 		} catch (Exception ex) {
-			logger.error("转换失败:{0}", ex);
+			logger.error("转换失败:", ex);
 		}
 		return result;
 	}
@@ -114,7 +114,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
     		try {
                 PropertyUtils.copyProperties(vo, entity);
             } catch (Exception ex) {
-                logger.error("转换失败:{0}",ex);
+                logger.error("转换失败:",ex);
             }
     		voList.add(vo);
     	}
@@ -135,7 +135,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
             int k = billReceiveMasterRepository.save(entity);
             return k;
         } catch (Exception ex) {
-            logger.error("转换失败:{0}",ex);
+            logger.error("转换失败:",ex);
         }
 		return 0;
     }
@@ -151,7 +151,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
             int k = billReceiveMasterRepository.insertReportMaster(entity);
             return k;
         } catch (Exception ex) {
-            logger.error("转换失败:{0}",ex);
+            logger.error("转换失败:",ex);
         }
 		return 0;
 	}
@@ -166,7 +166,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
             int k = billReceiveMasterRepository.saveExpect(entity);
             return k;
         } catch (Exception ex) {
-            logger.error("转换失败:{0}",ex);
+            logger.error("转换失败:",ex);
         }
 		return 0;
 	}
@@ -183,7 +183,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 			PropertyUtils.copyProperties(entity, vo);      
             int k = billReceiveMasterRepository.update(entity);
         } catch (Exception ex) {
-            logger.error("转换失败:{0}",ex);
+            logger.error("转换失败:",ex);
         }
     }
 
@@ -243,7 +243,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 		try {
             PropertyUtils.copyProperties(vo, entity);
         } catch (Exception ex) {
-        	logger.error("转换失败:{0}",ex);
+        	logger.error("转换失败:",ex);
         }
 		
 		return vo;
@@ -257,7 +257,7 @@ public class BillReceiveMasterServiceImpl implements IBillReceiveMasterService {
 		try {
             PropertyUtils.copyProperties(vo, entity);
         } catch (Exception ex) {
-        	logger.error("转换失败:{0}",ex);
+        	logger.error("转换失败:",ex);
         }
 		return vo;
 	}	

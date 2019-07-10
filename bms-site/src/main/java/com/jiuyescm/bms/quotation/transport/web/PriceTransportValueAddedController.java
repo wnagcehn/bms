@@ -135,7 +135,7 @@ public class PriceTransportValueAddedController {
 				model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 		} else {
 			entity.setLastModifier(JAppContext.currentUserName());
@@ -172,7 +172,7 @@ public class PriceTransportValueAddedController {
 					model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else if (EntityState.DELETED.equals(EntityUtils.getState(temp))) {
 				priceTransportValueAddedService.delete(temp.getId());
@@ -191,7 +191,7 @@ public class PriceTransportValueAddedController {
 					model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else {
 				// do nothing;
@@ -222,14 +222,14 @@ public class PriceTransportValueAddedController {
 				model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		}
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-			
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -256,14 +256,14 @@ public class PriceTransportValueAddedController {
 				model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		}
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-			
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -389,7 +389,7 @@ public class PriceTransportValueAddedController {
 					model.setUrlName(RecordLogUrlNameEnum.IN_TRANSPORT_OTHER_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return map;
 			}
@@ -398,7 +398,7 @@ public class PriceTransportValueAddedController {
 			// TODO: handle exception
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			
+			logger.error("异常:", e);
 			DoradoContext.getAttachedRequest().getSession().setAttribute("progressFlag", 999);
 		} finally{
 			PropertiesUtil proUtil = new PropertiesUtil();
@@ -449,8 +449,7 @@ public class PriceTransportValueAddedController {
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			
-			e.printStackTrace();
+			logger.error("异常:", e);
 		}
 		return null;
 	}
@@ -645,7 +644,7 @@ public class PriceTransportValueAddedController {
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-			
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -666,7 +665,7 @@ public class PriceTransportValueAddedController {
 			model.setRemark("");
 			pubRecordLogService.AddRecordLog(model);
 		}catch(Exception e){
-			logger.error("记录日志失败,失败原因:"+e.getMessage());
+			logger.error("记录日志失败,失败原因:", e);
 		}
 		return k;
 	}

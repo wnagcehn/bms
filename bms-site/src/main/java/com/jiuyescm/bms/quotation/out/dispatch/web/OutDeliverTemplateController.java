@@ -124,7 +124,7 @@ public class OutDeliverTemplateController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return new ResponseVo(ResponseVo.SUCCESS, MessageConstant.OPERATOR_SUCCESS_MSG);
 		}
@@ -164,7 +164,7 @@ public class OutDeliverTemplateController {
 					model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_BASE_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else if (EntityState.DELETED.equals(EntityUtils.getState(temp))) {
 				priceOutDispatchTemplateService.delete(temp);
@@ -183,7 +183,7 @@ public class OutDeliverTemplateController {
 					model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_BASE_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 			} else {
 				// do nothing;
@@ -214,7 +214,7 @@ public class OutDeliverTemplateController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		}
@@ -262,7 +262,7 @@ public class OutDeliverTemplateController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return new ResponseVo(ResponseVo.SUCCESS, MessageConstant.DELETE_INFO_SUCCESS_MSG);
 		}
@@ -309,7 +309,7 @@ public class OutDeliverTemplateController {
 				model.setUrlName(RecordLogUrlNameEnum.OUT_DELIVER_BASE_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "SUCCESS";
 		}

@@ -11,13 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
 import com.google.common.collect.Maps;
-import com.jiuyescm.bms.appconfig.TenantConfig;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.correct.ElConditionEntity;
 import com.jiuyescm.bms.correct.repository.ElConditionRepository;
-import com.jiuyescm.crm.module.api.IModuleDataOpenService;
 //import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -43,7 +41,7 @@ public class CrmBillCheckStatusJob  extends IJobHandler{
     
 	@Override
 	public ReturnT<String> execute(String... params) throws Exception {
-		XxlJobLogger.log("CorrectJob start.");
+		XxlJobLogger.log("CrmBillCheckStatusJob start.");
 		XxlJobLogger.log("开始账单跟踪推送账单跟踪状态到CRM");
         return CalcJob(params);
 	}
@@ -91,11 +89,9 @@ public class CrmBillCheckStatusJob  extends IJobHandler{
 	        XxlJobLogger.log("查询条件map:【{0}】  ",map);        
 	        //根据时间查询需要推送的账单跟踪
 	        List<BillCheckInfoEntity> list=billCheckInfoRepository.queryList(map);
-	        if(list.size()>0){
-	            for(BillCheckInfoEntity entity:list){
-	                billCheckInfoService.saveCrm(entity);
-	            } 
-	        } 
+            for(BillCheckInfoEntity entity:list){
+                billCheckInfoService.saveCrm(entity);
+            }
         } catch (Exception e) {
             // TODO: handle exception
             XxlJobLogger.log("推送异常：{0}", e); 

@@ -103,6 +103,7 @@ public class BmsGroupUserServiceImpl implements IBmsGroupUserService {
 				pageVoInfo.setList(list);
 			}
 		}catch(Exception e){
+		    logger.error("异常", e);
 			throw e;
 		}
 		return pageVoInfo;

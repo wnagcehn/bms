@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +23,6 @@ import com.jiuyescm.bms.biz.storage.service.IBizProductStorageService;
  */
 @Service("bizProductStorageService")
 public class BizProductStorageServiceImpl implements IBizProductStorageService {
-
-	private static final Logger logger = Logger.getLogger(BizProductStorageServiceImpl.class.getName());
 	
 	@Autowired
     private IBizProductStorageRepository bizProductStorageRepository;

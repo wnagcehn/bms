@@ -15,7 +15,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
@@ -172,7 +171,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 					model.setUrlName(RecordLogUrlNameEnum.IN_STORAGE_MATERIAL_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return "SUCCESS";
 			}else{
@@ -183,10 +182,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
-//			if((ex.getMessage().indexOf("Duplicate entry"))>0){
-//				return "违反唯一性校验";
-//			}
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -232,7 +228,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 					model.setUrlName(RecordLogUrlNameEnum.IN_STORAGE_MATERIAL_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return "SUCCESS";
 			}else{
@@ -243,9 +239,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-//			if((ex.getMessage().indexOf("Duplicate entry"))>0){
-//				return "违反唯一性校验";
-//			}
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -280,7 +274,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 					model.setUrlName(RecordLogUrlNameEnum.IN_STORAGE_MATERIAL_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return "SUCCESS";
 			}else{
@@ -291,7 +285,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 	}
@@ -318,14 +312,14 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 				model.setUrlName(RecordLogUrlNameEnum.IN_STORAGE_MATERIAL_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "succ";
 		}
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败:"+ex.getMessage();
 		}
 	}
@@ -352,14 +346,14 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 				model.setUrlName(RecordLogUrlNameEnum.IN_STORAGE_MATERIAL_PRICE.getCode());
 				pubRecordLogService.AddRecordLog(model);
 			}catch(Exception e){
-				logger.error("记录日志失败,失败原因:"+e.getMessage());
+				logger.error("记录日志失败,失败原因:", e);
 			}
 			return "succ";
 		}
 		catch(Exception ex){
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", ex.toString());
-
+			logger.error("异常:", ex);
 			return "数据库操作失败:"+ex.getMessage();
 		}
 	}
@@ -390,9 +384,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 				} catch (Exception e) {
 					//写入日志
 					bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error("异常:", e);
 				}
 				return null;
 			}
@@ -565,7 +557,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 					model.setUrlName(RecordLogUrlNameEnum.IN_STORAGE_MATERIAL_PRICE.getCode());
 					pubRecordLogService.AddRecordLog(model);
 				}catch(Exception e){
-					logger.error("记录日志失败,失败原因:"+e.getMessage());
+					logger.error("记录日志失败,失败原因:", e);
 				}
 				return map;
 			}
@@ -618,7 +610,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			}
 			return productList;
 		} catch (Exception e) {
-			e.printStackTrace();
+		    logger.error("异常:", e);
 		}
 		return null;
 	}
@@ -681,6 +673,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			return "SUCCESS";
 		}
 		catch(Exception ex){
+		    logger.error("异常:", ex);
 			return "数据库操作失败";
 		}
 		
@@ -823,7 +816,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 			poiUtil.exportExcelFilePath(poiUtil, hssfWorkbook, "报价耗材", path+File.separator+"bmsMaterial_"+temp+".xls", headMapList, dataMapList);
 					
 		} catch (IOException e) {
-			logger.error(e.getMessage());
+		    logger.error("异常:", e);
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 
@@ -834,7 +827,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 		try {
 			is = new FileInputStream(path+File.separator+"bmsMaterial_"+temp+".xls");
 		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage());
+		    logger.error("异常:", e);
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
 
@@ -973,7 +966,7 @@ public class StroageMaterialQuoteController extends CommonComparePR<PriceMateria
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-			e.printStackTrace();
+			logger.error("异常:", e);
 			return null;
 		}
 	}

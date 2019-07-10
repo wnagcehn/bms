@@ -37,9 +37,11 @@ import com.jiuyescm.bms.bill.receive.repository.IBillReceiveMasterRepository;
 import com.jiuyescm.bms.billcheck.BillCheckAdjustInfoEntity;
 import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.BillCheckLogEntity;
+import com.jiuyescm.bms.billcheck.BillCheckReceiptEntity;
 import com.jiuyescm.bms.billcheck.BillReceiptFollowEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckInfoRepository;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
+import com.jiuyescm.bms.billcheck.repository.IBillCheckReceiptRepository;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.vo.BillCheckAdjustInfoVo;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
@@ -52,6 +54,7 @@ import com.jiuyescm.crm.module.api.IModuleDataOpenService;
 import com.jiuyescm.crm.module.vo.FieldDataOpenVO;
 import com.jiuyescm.crm.module.vo.ModuleDataOpenVO;
 import com.jiuyescm.exception.BizException;
+import com.jiuyescm.utils.JsonUtils;
 
 @Service("billCheckInfoService")
 public class BillCheckInfoServiceImp implements IBillCheckInfoService {
@@ -70,6 +73,8 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
     private IModuleDataOpenService moduleDataOpenService;
     @Autowired
     private IBillPeriodInfoRepository billPeriodInfoRepository;
+    @Autowired
+    private IBillCheckReceiptRepository billCheckReceiptRepository;
     
     @Autowired
     private TenantConfig tenantConfig;
@@ -1163,4 +1168,109 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
         // TODO Auto-generated method stub
         return billCheckInfoRepository.queryMk(condition);
     }
+    
+    @Override
+    public int updateAdjustInfo(BillCheckAdjustInfoVo vo) {
+        BillCheckAdjustInfoEntity entity = new BillCheckAdjustInfoEntity();
+        try {
+            PropertyUtils.copyProperties(entity, vo);
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}", ex);
+        }
+        return billCheckInfoRepository.updateAdjustInfo(entity);
+    }
+    
+    @Override
+    public void saveReceiptToCrm(BillCheckReceiptEntity entity) {
+        entity.setCrmAsynTime(new Timestamp(System.currentTimeMillis()));
+        try {
+            List<FieldDataOpenVO> listFieldDataOpenVO = getFieldDataOpenVOListForReceipt(entity);
+            if(CollectionUtils.isEmpty(listFieldDataOpenVO)){
+                logger.info("不向crm推送数据：" + entity.getId());
+                return;
+            }
+            //封装CRM参数
+            ModuleDataOpenVO moduleVo = new ModuleDataOpenVO();
+            moduleVo.setFieldDataVos(listFieldDataOpenVO);
+            moduleVo.setUniqueCheckFieldApiKey("id");
+            Long tenantId = tenantConfig.getTenantId();
+            String json = JSON.toJSON(moduleVo).toString();
+            logger.info("发送CRM参数：" + json);
+            Long result = moduleDataOpenService.saveModuleData(tenantId, "order_pay_record", moduleVo);
+            logger.info("接收crm结果：" + result);
+            entity.setCrmStatus(1l);
+        } catch (Exception e) {
+            logger.error("CRM保存接口失败:", e);
+            entity.setCrmStatus(2l);
+        }
+        
+        try {
+            billCheckReceiptRepository.update(entity);
+        } catch (Exception e) {
+            logger.error("BMS保存CRM推送状态和推送时间失败失败:", e);
+        }
+    }
+    
+    private List<FieldDataOpenVO> getFieldDataOpenVOListForReceipt(BillCheckReceiptEntity entity) {
+        Map<String, Object> mkConditionMap = new HashMap<>();
+        String invoiceName = entity.getInvoiceName();
+        mkConditionMap.put("invoiceName", invoiceName);
+        List<BillCheckInfoEntity> mkEntities = billCheckInfoRepository.querySourceId(mkConditionMap);
+        if (CollectionUtils.isEmpty(mkEntities)) {
+            logger.info("根据invoiceName在pub_customer_base未查询到商家：" + invoiceName);
+            return null;
+        }
+        BillCheckInfoEntity mkEntity = mkEntities.get(0);
+
+        logger.info("回款字段：" + JsonUtils.toJson(entity));
+        if (StringUtils.isBlank(mkEntity.getSourceId()) || null == entity.getId() || null == entity.getSellerId()
+                || null == entity.getReceiptDate() || null == entity.getReceiptAmount()
+                || null == entity.getBillCheckId()) {
+            logger.info("必传字段存在空值！");
+            return null;
+        }
+        
+        Long mkId = null;
+//        Long sellerId = null;
+        try {
+            mkId = Long.valueOf(mkEntity.getSourceId());
+//            sellerId = Long.valueOf(entity.getSellerId());
+        } catch (NumberFormatException e) {
+            logger.error("String转换Long失败：", e);
+            e.printStackTrace();
+            return null;
+        }
+        // 获取商家ID
+        FieldDataOpenVO vo1 = getFieldDataOpenVOForReceipt("mk_id",mkId, "customer", true, false);
+        // 获取回款流水ID
+        FieldDataOpenVO vo2 = getFieldDataOpenVOForReceipt("id", entity.getId(), null, null, null);
+        // 获取账单ID
+        FieldDataOpenVO vo3 = getFieldDataOpenVOForReceipt("id", entity.getBillCheckId().longValue(), "bill", true, true);
+        // 获取销售员ID
+//        FieldDataOpenVO vo4 = getFieldDataOpenVOForReceipt("seller_id", sellerId, null, null, null);
+        // 获取回款金额
+        FieldDataOpenVO vo5 = getFieldDataOpenVOForReceipt("receipt_amount", entity.getReceiptAmount(), null, null, null);
+        // 获取回款日期
+        FieldDataOpenVO vo6 = getFieldDataOpenVOForReceipt("receipt_date", entity.getReceiptDate().getTime(), null, null, null);
+
+        List<FieldDataOpenVO> list = new ArrayList<FieldDataOpenVO>();
+        list.add(vo1);
+        list.add(vo2);
+        list.add(vo3);
+//        list.add(vo4);
+        list.add(vo5);
+        list.add(vo6);
+        return list;
+    }
+    
+    private FieldDataOpenVO getFieldDataOpenVOForReceipt(String fieldApiKey, Object fieldValue, String relModule, Boolean relationField, Boolean transToDataId) {
+        FieldDataOpenVO vo = new FieldDataOpenVO();
+        vo.setFieldApiKey(fieldApiKey);
+        vo.setFieldValue(fieldValue);
+        vo.setRelModule(relModule);
+        vo.setRelationField(relationField);
+        vo.setTransToDataId(transToDataId);
+        return vo;
+    }
+    
 }

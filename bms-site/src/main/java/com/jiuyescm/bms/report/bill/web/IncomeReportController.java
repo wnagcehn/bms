@@ -3,8 +3,6 @@ package com.jiuyescm.bms.report.bill.web;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,23 +12,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.bstek.dorado.annotation.DataProvider;
-import com.bstek.dorado.data.provider.Page;
-import com.bstek.dorado.uploader.DownloadFile;
-import com.bstek.dorado.uploader.annotation.FileProvider;
-import com.github.pagehelper.PageInfo;
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
-import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
-import com.jiuyescm.bms.common.constants.FileConstant;
-import com.jiuyescm.bms.excel.write.SXSSFExporter;
-import com.jiuyescm.common.tool.ListTool;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import com.bstek.dorado.annotation.DataProvider;
+import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.uploader.DownloadFile;
+import com.bstek.dorado.uploader.annotation.FileProvider;
+import com.github.pagehelper.PageInfo;
+import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
+import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
+import com.jiuyescm.bms.common.constants.FileConstant;
+import com.jiuyescm.bms.excel.write.SXSSFExporter;
+import com.jiuyescm.common.tool.ListTool;
 
 @Controller("incomeReportController")
 public class IncomeReportController {
@@ -192,7 +189,7 @@ public class IncomeReportController {
     		logger.info("查询日期："+end);
             list.add(end);
         }catch (Exception e){
-            System.out.println("异常"+e.getMessage());
+            logger.error("异常:", e);
         }
 		return list;
 	}
@@ -208,14 +205,14 @@ public class IncomeReportController {
 			try {
 				path = export(reportList);
 			} catch (Exception e) {
-				e.printStackTrace();
+			    logger.error("异常:", e);
 			}
 			
 			InputStream is = null;
 			try {
 				is = new FileInputStream(path);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+			    logger.error("异常:", e);
 			}
 	    	return new DownloadFile("新增收入报表" + FileConstant.SUFFIX_XLSX, is);
 		}

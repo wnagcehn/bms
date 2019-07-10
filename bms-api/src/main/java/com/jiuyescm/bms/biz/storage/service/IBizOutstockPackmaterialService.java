@@ -145,4 +145,16 @@ public interface IBizOutstockPackmaterialService {
 	 * @return
 	 */
 	public int deleteOldBwd(Map<String,Object> condition);
+	
+	/**
+	 * 根据运单号或者转寄后运单后得到其实际对应得运单号
+	 * <功能描述>
+	 * 
+	 * @author zhaofeng
+	 * @date 2019年7月4日 下午2:54:46
+	 *
+	 * @param condition
+	 * @return
+	 */
+	String getWayBillNo(Map<String,Object> condition);
 }

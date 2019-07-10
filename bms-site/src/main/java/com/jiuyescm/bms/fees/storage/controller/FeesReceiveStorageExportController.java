@@ -301,8 +301,7 @@ public class FeesReceiveStorageExportController {
 		} catch (Exception e) {
 			//写入日志
 			bmsErrorLogInfoService.insertLog(this.getClass().getSimpleName(),Thread.currentThread().getStackTrace()[1].getMethodName(), "", e.toString());
-		
-			e.printStackTrace();
+			logger.error(e);
 		}
 	}
 	

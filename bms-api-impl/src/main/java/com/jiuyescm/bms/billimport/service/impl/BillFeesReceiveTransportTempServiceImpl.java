@@ -102,7 +102,7 @@ public class BillFeesReceiveTransportTempServiceImpl implements IBillFeesReceive
 			}
 		} catch (Exception e) {
 			//写入日志
-			logger.info("insertBatchTemp：e-{}",e);;
+			logger.error("insertBatchTemp：e-{}",e);;
 		}	
 		return i;
 	}
@@ -120,7 +120,7 @@ public class BillFeesReceiveTransportTempServiceImpl implements IBillFeesReceive
 			result = 1;	
 		} catch (Exception e) {
 			//写入日志
-			logger.info("insertBatchTemp：e-{}",e);;
+			logger.error("insertBatchTemp：e-{}",e);;
 		}
 		return result;
 	}

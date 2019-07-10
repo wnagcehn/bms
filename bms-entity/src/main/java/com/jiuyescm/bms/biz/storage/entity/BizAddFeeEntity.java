@@ -46,6 +46,8 @@ public class BizAddFeeEntity implements IEntity {
     private String creator;
     // 创建时间
     private Timestamp createTime;
+    // 创建时间
+    private String createDate;
     // 修改者
     private String lastModifier;
     // 修改时间
@@ -520,5 +522,15 @@ public class BizAddFeeEntity implements IEntity {
     public void setTotalNum(Integer totalNum) {
         this.totalNum = totalNum;
     }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+    
+    
 
 }

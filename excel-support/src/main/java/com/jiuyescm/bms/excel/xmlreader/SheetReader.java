@@ -2,12 +2,10 @@ package com.jiuyescm.bms.excel.xmlreader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -30,6 +28,7 @@ import com.jiuyescm.bms.excel.data.DataRow;
 public class SheetReader extends DefaultHandler {
 
 	private int curRow=0;		 		//当前行号 从1开始
+	private int totalRow = 0;           //总行数
 	private String curColNo = "";		//当前列对应的列值 eg A B AA...
 	private String colValue;	 		//单元格的值
 	private boolean isString = false; 	//单元格是否为字符串类型 true-字符串 false-非字符串
@@ -73,6 +72,9 @@ public class SheetReader extends DefaultHandler {
 	}
 	
 	private void rowHander(){
+	    
+	    //是否需要回调
+	    boolean isCallBack = false;
 		DataRow row = new DataRow();
 		row.setRowNo(curRow);
 		/*Iterator<Map.Entry<String, DataColumn>> columnIterator = cellMap.entrySet().iterator();
@@ -86,13 +88,19 @@ public class SheetReader extends DefaultHandler {
 			Map.Entry<String, DataColumn> entry = columnIterator.next();
 			if(cellMap.containsKey(entry.getKey())){
 				row.addColumn(cellMap.get(entry.getKey()));
+				if (null != cellMap.get(entry.getKey()).getColValue()) {
+				    totalRow += 1;
+                    isCallBack = true;
+                }
 			}
 			else{
 				DataColumn cell = new DataColumn(entry.getKey(), entry.getValue().getTitleName(), null);
 				row.addColumn(cell);
 			}
 		}
-		callback.read(row);
+		if (isCallBack) {
+		    callback.read(row); 
+        }
 	}
 	
 	@Override
@@ -160,7 +168,7 @@ public class SheetReader extends DefaultHandler {
 	}
 
 	public int getRowCount() {
-		return curRow-titleRowNo;
+		return totalRow;
 	}
 	
 	private Map<String, DataColumn> sortMapByKey(Map<String, DataColumn> map) {

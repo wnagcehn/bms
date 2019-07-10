@@ -101,7 +101,7 @@ public class CorrectJob  extends IJobHandler{
 			try {
 				correctAsynTaskList = bmsCorrectAsynTaskRepository.queryList(taskCondition);
 			} catch (Exception e) {
-				e.printStackTrace();
+                XxlJobLogger.log("查询异常:{0}",e);  
 			}
 			//对customerid去重
 			HashSet<String> existCustomeridSet = new HashSet<>();
@@ -165,7 +165,7 @@ public class CorrectJob  extends IJobHandler{
 	                endTime1 = new Timestamp(endTime.getTime());
                 } catch (Exception e) {
                     // TODO: handle exception
-                    XxlJobLogger.log("时间获取异常:", e);
+                    XxlJobLogger.log("时间获取异常:{0}", e);
                 }
                 
 				
@@ -226,7 +226,7 @@ public class CorrectJob  extends IJobHandler{
 		                       });
 						}
 					} catch (Exception e) {
-						XxlJobLogger.log("send MQ:", e);
+						XxlJobLogger.log("send MQ:{0}", e);
 						XxlJobLogger.log("fail", "MQ发送失败！");
 					}
 				}

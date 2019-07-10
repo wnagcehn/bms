@@ -45,7 +45,6 @@ import com.jiuyescm.bms.base.group.vo.BmsGroupUserVo;
 import com.jiuyescm.bms.bill.check.service.IBillCheckFollowService;
 import com.jiuyescm.bms.bill.check.vo.BillCheckInfoFollowVo;
 import com.jiuyescm.bms.bill.customer.service.IBillCustomerInfoService;
-import com.jiuyescm.bms.billcheck.BillCheckInfoEntity;
 import com.jiuyescm.bms.billcheck.BillCheckLogEntity;
 import com.jiuyescm.bms.billcheck.repository.IBillCheckLogRepository;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
@@ -940,9 +939,9 @@ public class BillCheckInfoController{
 		billCheckInfoService.update(checkVo);
 		
         // 保存CRM
-        BillCheckInfoEntity checkEntity = new BillCheckInfoEntity();
-        checkEntity.setId(temp.getBillCheckId());
-        billCheckInfoService.saveCrm(checkEntity);
+//        BillCheckInfoEntity checkEntity = new BillCheckInfoEntity();
+//        checkEntity.setId(temp.getBillCheckId());
+//        billCheckInfoService.saveCrm(checkEntity);
 	}
 	
 	
@@ -1067,10 +1066,10 @@ public class BillCheckInfoController{
 		
 		billCheckInfoService.update(checkVo);
 		
-        // 保存CRM
-        BillCheckInfoEntity checkEntity = new BillCheckInfoEntity();
-        checkEntity.setId(checkVo.getId());
-        billCheckInfoService.saveCrm(checkEntity);
+//        // 保存CRM
+//        BillCheckInfoEntity checkEntity = new BillCheckInfoEntity();
+//        checkEntity.setId(checkVo.getId());
+//        billCheckInfoService.saveCrm(checkEntity);
 	}
 	
 	

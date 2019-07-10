@@ -46,7 +46,20 @@ public class BillCheckReceiptEntity implements IEntity {
 	private String remark;
 	// receiptType
 	private String receiptType;
-
+	
+	//主商家ID
+	private String mkId;
+	//主商家名称
+	private String invoiceName;
+	//销售员ID
+	private String sellerId;
+	
+	// 推送crm状态 0-未推送  1-已推送  2-推送失败
+    private Long crmStatus;
+    // 最后一次推送crm时间
+    private Timestamp crmAsynTime;
+	
+	
 	public BillCheckReceiptEntity() {
 
 	}
@@ -236,5 +249,45 @@ public class BillCheckReceiptEntity implements IEntity {
 	public void setCreatorId(String creatorId) {
 		this.creatorId = creatorId;
 	}
+
+    public String getMkId() {
+        return mkId;
+    }
+
+    public void setMkId(String mkId) {
+        this.mkId = mkId;
+    }
+
+    public String getInvoiceName() {
+        return invoiceName;
+    }
+
+    public void setInvoiceName(String invoiceName) {
+        this.invoiceName = invoiceName;
+    }
+
+    public String getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(String sellerId) {
+        this.sellerId = sellerId;
+    }
+
+    public Timestamp getCrmAsynTime() {
+        return crmAsynTime;
+    }
+
+    public void setCrmAsynTime(Timestamp crmAsynTime) {
+        this.crmAsynTime = crmAsynTime;
+    }
+
+    public Long getCrmStatus() {
+        return crmStatus;
+    }
+
+    public void setCrmStatus(Long crmStatus) {
+        this.crmStatus = crmStatus;
+    }
     
 }

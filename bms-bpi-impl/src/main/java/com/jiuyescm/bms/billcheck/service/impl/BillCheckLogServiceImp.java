@@ -54,15 +54,16 @@ public class BillCheckLogServiceImp implements IBillCheckLogService {
     public int addBillCheckLog(BillCheckLogVo logVo) throws Exception {
         try {
             // 保存CRM
-            BillCheckInfoEntity checkEntity = new BillCheckInfoEntity();
-            checkEntity.setId(logVo.getBillCheckId());
-            billCheckInfoService.saveCrm(checkEntity);
+//            BillCheckInfoEntity checkEntity = new BillCheckInfoEntity();
+//            checkEntity.setId(logVo.getBillCheckId());
+//            billCheckInfoService.saveCrm(checkEntity);
             
             BillCheckLogEntity entity = new BillCheckLogEntity();
             PropertyUtils.copyProperties(entity, logVo);
             
             return billCheckLogRepository.addCheckLog(entity);
         } catch (Exception e) {
+            logger.error("异常", e);
             throw e;
         }
     }
