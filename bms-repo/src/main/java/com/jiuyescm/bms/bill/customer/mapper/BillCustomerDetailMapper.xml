@@ -40,7 +40,7 @@
 		b.receipt_amount as receiptAmount,a.balance_name as balanceName
 		From bill_customer_detail a
 		LEFT JOIN bill_check_info b on a.check_id=b.id
-		LEFT JOIN pub_customer_base c on a.mk_id=c.mk_id and c.del_flag='0'
+		LEFT JOIN pub_customer_base c on a.mk_id=c.mk_id
         where 1 = 1
         	<if test=" createMonth != null and createMonth !='' ">
 				and a.create_month >= #{createMonth}

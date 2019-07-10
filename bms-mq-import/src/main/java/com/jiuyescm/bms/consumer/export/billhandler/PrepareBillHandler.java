@@ -2753,7 +2753,7 @@ public class PrepareBillHandler {
         itemMap = new HashMap<String, Object>();
         itemMap.put("title", "应付总计");
         itemMap.put("columnWidth", 25);
-        itemMap.put("dataKey", "payTotalAmount");
+        itemMap.put("dataKey", "paymentTotle");
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
@@ -2839,8 +2839,8 @@ public class PrepareBillHandler {
             dataItem.put("tsGl", entity.getTsGl());
             dataItem.put("tsMh", entity.getTsMh());
             dataItem.put("tsPallet", entity.getTsPallet());
-            dataItem.put("payTotalAmount", entity.getPayTotalAmount());
-            t_payTotalAmount += entity.getPayTotalAmount()==null?0d:entity.getPayTotalAmount();
+            dataItem.put("paymentTotle", entity.getPaymentTotle());
+            t_payTotalAmount += entity.getPaymentTotle()==null?0d:entity.getPaymentTotle();
             dataItem.put("needInsurance", entity.getNeedInsurance()==null?"":BmsEnums.needInsurance.getDesc(entity.getNeedInsurance()));
             dataItem.put("remark", entity.getRemark());            
             dataList.add(dataItem);
@@ -2857,7 +2857,7 @@ public class PrepareBillHandler {
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> dataItem = new HashMap<String, Object>();
         dataItem.put("tsPallet", "合计金额");
-        dataItem.put("payTotalAmount", paytotalAmount.get());
+        dataItem.put("paymentTotle", paytotalAmount.get());
         dataList.add(dataItem);
         return dataList;
     }

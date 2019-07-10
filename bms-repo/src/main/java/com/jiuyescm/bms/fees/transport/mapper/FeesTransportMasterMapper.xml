@@ -98,7 +98,7 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 			sum(CASE b.subject_name WHEN '过路费' THEN b.amount ELSE 0 END) as tsGl,
 			sum(CASE b.subject_name WHEN '码货费' THEN b.amount ELSE 0 END) as tsMh,
 			sum(CASE b.subject_name WHEN '托盘费' THEN b.amount ELSE 0 END) as tsPallet,
-			SUM(b.amount_totle) as payTotalAmount
+			t.payment_totle as paymentTotle
 		from(
 			select a.oms_id,a.created_dt,a.order_no,a.outstock_no,a.temperature_type_code,
 			GROUP_CONCAT(c.route_no) as routeNo,GROUP_CONCAT(c.dispatcher_name) as dispatcherName,
@@ -108,7 +108,7 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 			a.receive_address,a.actual_volume,a.actual_weight,a.light,
 			a.actual_packing_qty,a.actual_goods_qty,a.receipt_packing_qty,a.receipt_goods_qty,
 			a.has_backtrack,a.begin_time,a.end_time,a.del_flag,
-			a.need_insurance,a.remark,c.car_model
+			a.need_insurance,a.remark,c.car_model,a.payment_totle
 			from fees_transport_master a
 			LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
 			WHERE a.del_flag='0'
@@ -348,7 +348,7 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 			sum(CASE b.subject_name WHEN '过路费' THEN b.amount ELSE 0 END) as tsGl,
 			sum(CASE b.subject_name WHEN '码货费' THEN b.amount ELSE 0 END) as tsMh,
 			sum(CASE b.subject_name WHEN '托盘费' THEN b.amount ELSE 0 END) as tsPallet,
-			SUM(b.amount_totle) as payTotalAmount
+			t.payment_totle as paymentTotle
 		from(
 			select a.oms_id,a.created_dt,a.order_no,a.outstock_no,a.temperature_type_code,
 			GROUP_CONCAT(c.route_no) as routeNo,GROUP_CONCAT(c.dispatcher_name) as dispatcherName,
@@ -358,7 +358,7 @@ oms_id, order_no, outstock_no, temperature_type_code, customer_id, customer_name
 			a.receive_address,a.actual_volume,a.actual_weight,a.light,
 			a.actual_packing_qty,a.actual_goods_qty,a.receipt_packing_qty,a.receipt_goods_qty,
 			a.has_backtrack,a.begin_time,a.end_time,a.del_flag,
-			a.need_insurance,a.remark,c.car_model
+			a.need_insurance,a.remark,c.car_model,a.payment_totle
 			from fees_transport_master a
 			LEFT JOIN fees_transport_routes c on a.oms_id=c.oms_id and c.del_flag='0'
 			GROUP BY a.order_no
