@@ -619,6 +619,17 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
         }
         return billCheckInfoRepository.saveAjustList(enList);
     }
+    
+    @Override
+    public int saveAjust(BillCheckAdjustInfoVo vo) {
+        BillCheckAdjustInfoEntity entity = new BillCheckAdjustInfoEntity();
+        try {
+            PropertyUtils.copyProperties(entity, vo);
+        } catch (Exception ex) {
+            logger.error("转换失败:{0}", ex);
+        }
+        return billCheckInfoRepository.saveAjust(entity);
+    }
 
     @Override
     public BillCheckAdjustInfoVo queryOneAdjust(Map<String, Object> condition) {

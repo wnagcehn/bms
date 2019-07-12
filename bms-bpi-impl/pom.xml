@@ -17,7 +17,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<dependency>
     		<groupId>com.jiuyescm.crm</groupId>
     		<artifactId>crm-open-api</artifactId>
-    		<version>1.4.3</version>
+    		<version>1.5.0-SNAPSHOT</version>
+    		<classifier>jdk17</classifier>
     		<exclusions>
 				<exclusion>
 					<groupId>com.jiuyescm.scm</groupId>

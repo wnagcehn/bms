@@ -48,7 +48,7 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		XxlJobLogger.log("上个月第一天：{0}",lastMonthFirstDay);
 		XxlJobLogger.log("明天：{0}",tomorrow);
 		//对日期进行分组
-		Map<String, String> dataMap = com.jiuyescm.common.utils.DateUtil.getSplitTime(lastMonthFirstDay,tomorrow,1);
+		Map<String, String> dataMap = DateUtil.getSplitTime(lastMonthFirstDay,tomorrow,1);
 
 		for (Map.Entry<String, String> entry : dataMap.entrySet()) {
 			long start = System.currentTimeMillis();// 系统开始时间
