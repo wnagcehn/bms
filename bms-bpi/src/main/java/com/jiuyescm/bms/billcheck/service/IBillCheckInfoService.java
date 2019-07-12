@@ -258,5 +258,17 @@ public interface IBillCheckInfoService {
      * @param entity
      */
     void saveReceiptToCrm(BillCheckReceiptEntity entity);
+
+    /**
+     * 新增回款调整接口
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月12日 上午10:13:34
+     *
+     * @param vo
+     * @return
+     */
+    int saveAjust(BillCheckAdjustInfoVo vo);
 	
 }

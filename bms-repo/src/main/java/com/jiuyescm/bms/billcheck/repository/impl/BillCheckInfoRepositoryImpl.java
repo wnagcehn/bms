@@ -152,6 +152,12 @@ public class BillCheckInfoRepositoryImpl extends MyBatisDao implements IBillChec
 	public int saveAjustList(List<BillCheckAdjustInfoEntity> list) {
 		return insertBatch("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.saveAjustList", list);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public int saveAjust(BillCheckAdjustInfoEntity entity) {
+	    return insert("com.jiuyescm.bms.billcheck.mapper.BillCheckInfoMapper.saveAjustList", entity);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
