@@ -258,5 +258,16 @@ public interface IBillCheckInfoService {
      * @param entity
      */
     void saveReceiptToCrm(BillCheckReceiptEntity entity);
+
+    /**
+     * 删除回款明细到crm接口
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月5日 下午2:27:04
+     *
+     * @param entity
+     */
+    void deleteReceiptToCrm(BillCheckReceiptEntity entity);
 	
 }
