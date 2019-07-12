@@ -146,7 +146,7 @@ public class PrepareBillHandler {
      */
     public void export(String json) throws Exception{
         //初始化进度
-        process = 0d;    
+        process = 30d;    
         logger.info("JSON开始解析……");
         Map<String, Object> condition = resolveJsonToMap(json);
         if (null == condition) {
@@ -194,7 +194,11 @@ public class PrepareBillHandler {
         
         //运行折扣（进度从折扣后的开始累加）
         if ((Boolean)condition.get("isDiscount")) {
-            process += entity.getProgress();
+            if(StringUtils.isNotBlank(entity.getRemark()) && entity.getRemark().contains("未查询到折扣报价")){
+                process += 30;
+            }else{
+                process += entity.getProgress();
+            }
         }
         //不运行折扣（直接从30开始累加）
         else {

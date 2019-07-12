@@ -83,6 +83,7 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
     private static final String BILL_DAY_NEXT_MONTH = "BILL_DAY_NEXT_MONTH";
     private static final String INVOICE_DAY = "INVOICE_DAY";
     private static final String INVOICE_DAY_NEXT_MONTH = "INVOICE_DAY_NEXT_MONTH";
+    private static final String receiptType = "order_pay_record";
     private static final String yyyyMMdd = "yyyy-MM-dd";
     private static SimpleDateFormat sdf= new SimpleDateFormat(yyyyMMdd);
     
@@ -1203,11 +1204,11 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
             //封装CRM参数
             ModuleDataOpenVO moduleVo = new ModuleDataOpenVO();
             moduleVo.setFieldDataVos(listFieldDataOpenVO);
-            moduleVo.setUniqueCheckFieldApiKey("id");
+            moduleVo.setUniqueCheckFieldApiKey("order_pay_record_id");
             Long tenantId = tenantConfig.getTenantId();
             String json = JSON.toJSON(moduleVo).toString();
             logger.info("发送CRM参数：" + json);
-            Long result = moduleDataOpenService.saveModuleData(tenantId, "order_pay_record", moduleVo);
+            Long result = moduleDataOpenService.saveModuleData(tenantId, receiptType, moduleVo);
             logger.info("接收crm结果：" + result);
             entity.setCrmStatus(1l);
         } catch (Exception e) {
@@ -1254,9 +1255,9 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
         // 获取商家ID
         FieldDataOpenVO vo1 = getFieldDataOpenVOForReceipt("mk_id",mkId, "customer", true, false);
         // 获取回款流水ID
-        FieldDataOpenVO vo2 = getFieldDataOpenVOForReceipt("id", entity.getId(), null, null, null);
+        FieldDataOpenVO vo2 = getFieldDataOpenVOForReceipt("order_pay_record_id", entity.getId(), null, null, null);
         // 获取账单ID
-        FieldDataOpenVO vo3 = getFieldDataOpenVOForReceipt("id", entity.getBillCheckId().longValue(), "bill", true, true);
+        FieldDataOpenVO vo3 = getFieldDataOpenVOForReceipt("id", entity.getBillCheckId(), "bill", true, true);
         // 获取销售员ID
 //        FieldDataOpenVO vo4 = getFieldDataOpenVOForReceipt("seller_id", sellerId, null, null, null);
         // 获取回款金额
@@ -1282,6 +1283,30 @@ public class BillCheckInfoServiceImp implements IBillCheckInfoService {
         vo.setRelationField(relationField);
         vo.setTransToDataId(transToDataId);
         return vo;
+    }
+    
+    @Override
+    public void deleteReceiptToCrm(BillCheckReceiptEntity entity){
+        ModuleDataOpenVO moduleDataVo = new ModuleDataOpenVO();
+        List<FieldDataOpenVO> fieldDataVos = new ArrayList<FieldDataOpenVO>();
+        FieldDataOpenVO fieldDataOpenVO = new FieldDataOpenVO();
+        Long tenantId = tenantConfig.getTenantId();
+        
+        //通过id主键删除
+        fieldDataOpenVO.setFieldApiKey("order_pay_record_id");
+        fieldDataOpenVO.setFieldValue(entity.getId());
+        fieldDataOpenVO.setTransToDataId(true);
+        fieldDataVos.add(fieldDataOpenVO);
+        moduleDataVo.setFieldDataVos(fieldDataVos);
+        
+        String json = JSON.toJSON(moduleDataVo).toString();
+        logger.info("发送CRM参数：" + json);
+        try {
+            moduleDataOpenService.deleteModuleData(tenantId, receiptType, moduleDataVo);
+        } catch (Exception e) {
+           logger.error("CRM删除接口失败:", e);
+        }
+        
     }
     
 }
