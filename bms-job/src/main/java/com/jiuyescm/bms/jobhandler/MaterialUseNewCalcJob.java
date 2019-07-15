@@ -18,6 +18,7 @@ import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.dict.api.IMaterialDictService;
+import com.jiuyescm.bms.base.dict.vo.PubMaterialVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
@@ -311,7 +312,7 @@ public class MaterialUseNewCalcJob extends CommonJobHandler<BizOutstockPackmater
 				PriceMaterialQuotationEntity stepQuoEntity = null;
 				
 				//判断耗材类型是否为泡沫箱
-				PubMaterialInfoVo materialInfoVo = materialDictService.getMaterialByCode(entity.getConsumerMaterialCode());
+				PubMaterialVo materialInfoVo = materialDictService.getMaterialByCode(entity.getConsumerMaterialCode());
 				if (null != materialInfoVo && "泡沫箱".equals(materialInfoVo.getMaterialType())) {
 					//获取当前月份
 					Calendar cale = Calendar.getInstance();

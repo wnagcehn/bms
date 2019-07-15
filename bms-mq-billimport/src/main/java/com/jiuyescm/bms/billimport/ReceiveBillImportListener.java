@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.jiuyescm.bms.base.dict.api.IWarehouseDictService;
+import com.jiuyescm.bms.base.dict.vo.PubWarehouseVo;
 import com.jiuyescm.bms.billcheck.service.IBillCheckInfoService;
 import com.jiuyescm.bms.billcheck.service.IBillReceiveMasterService;
 import com.jiuyescm.bms.billcheck.vo.BillCheckInfoVo;
@@ -44,7 +45,6 @@ import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.constants.BmsEnums;
 import com.jiuyescm.framework.fastdfs.client.StorageClient;
 import com.jiuyescm.framework.fastdfs.protocol.storage.callback.DownloadByteArray;
-import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
 
 @Service("receiveBillImportListener")
 public class ReceiveBillImportListener implements MessageListener {
@@ -117,7 +117,7 @@ public class ReceiveBillImportListener implements MessageListener {
 				logger.info("任务ID：{}，--------------准备读取sheet - {}", taskId,sheetName);
 				long startTime = System.currentTimeMillis();
 				// 仓储--上海01仓，北京01仓...............
-				WarehouseVo warehouseVo = warehouseDictService.getWarehouseByName(sheetName);
+				PubWarehouseVo warehouseVo = warehouseDictService.getWarehouseByName(sheetName);
 				if (null != warehouseVo.getWarehousename()) {
 					sheetName = "仓储";
 				}

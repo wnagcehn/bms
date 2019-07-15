@@ -23,6 +23,7 @@ import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dict.api.IMaterialDictService;
+import com.jiuyescm.bms.base.dict.vo.PubMaterialVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
@@ -343,7 +344,7 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 			PriceMaterialQuotationEntity stepQuoEntity = null;
 			
 			//判断耗材类型是否为泡沫箱
-			PubMaterialInfoVo materialInfoVo = materialDictService.getMaterialByCode(entity.getConsumerMaterialCode());
+			PubMaterialVo materialInfoVo = materialDictService.getMaterialByCode(entity.getConsumerMaterialCode());
 			if (null != materialInfoVo && "泡沫箱".equals(materialInfoVo.getMaterialType())) {
 				//获取当前月份
 				Calendar cale = Calendar.getInstance();

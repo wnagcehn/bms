@@ -12,14 +12,14 @@
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
         </dependency>
-        <!-- Dorado -->
+        
         <dependency>
             <groupId>com.jiuyescm.bms</groupId>
             <artifactId>bms-entity</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
         
-        <dependency>
+        <!-- <dependency>
 		  <groupId>com.jiuyescm.mdm</groupId>
 		  <artifactId>mdm-customer-api</artifactId>
 		  <version>${mdm.version}</version>
@@ -41,7 +41,7 @@
 		  <groupId>com.jiuyescm.mdm</groupId>
   		  <artifactId>mdm-deliver-api</artifactId>
 		  <version>${mdm.version}</version>
-		</dependency>
+		</dependency> -->
 	
 		<dependency>
 			<groupId>com.jiuyescm.contract</groupId>

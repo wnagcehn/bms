@@ -376,6 +376,30 @@
 		</dependency>
 		
 		<dependency>
+		  <groupId>com.jiuyescm.mdm</groupId>
+		  <artifactId>mdm-customer-api</artifactId>
+		  <version>${mdm.version}</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.mdm</groupId>
+  		  <artifactId>mdm-warehouse-api</artifactId>
+		  <version>${mdm.version}</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.mdm</groupId>
+  		  <artifactId>mdm-carrier-api</artifactId>
+		  <version>${mdm.version}</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.mdm</groupId>
+  		  <artifactId>mdm-deliver-api</artifactId>
+		  <version>${mdm.version}</version>
+		</dependency>
+		
+		<dependency>
 		  <groupId>com.jiuyescm.framework</groupId>
 		  <artifactId>fastdfs-client</artifactId>
 		  <version>1.0.0-SNAPSHOT</version>
