@@ -6,8 +6,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -15,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
 import com.alibaba.dubbo.common.utils.CollectionUtils;
@@ -23,10 +29,13 @@ import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dict.api.IMaterialDictService;
+import com.jiuyescm.bms.base.dict.api.IPubPackageDictService;
+import com.jiuyescm.bms.base.dict.entity.PubPackageDictEntity;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillEntity;
+import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchPackageEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
 import com.jiuyescm.bms.calcu.CalcuLog;
 import com.jiuyescm.bms.calcu.base.ICalcuService;
@@ -51,6 +60,7 @@ import com.jiuyescm.bms.quotation.storage.entity.PriceMaterialQuotationEntity;
 import com.jiuyescm.bms.quotation.storage.repository.IPriceMaterialQuotationRepository;
 import com.jiuyescm.bms.quotation.transport.repository.IGenericTemplateRepository;
 import com.jiuyescm.bms.receivable.dispatch.service.IBizDispatchBillService;
+import com.jiuyescm.bms.receivable.storage.service.IBizDispatchPackageService;
 import com.jiuyescm.bms.receivable.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.rule.receiveRule.repository.IReceiveRuleRepository;
 import com.jiuyescm.cfm.common.JAppContext;
@@ -89,6 +99,10 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	@Autowired private CommonService commonService;
 	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired IBmsCalcuService bmsCalcuService;
+	@Autowired private IBizDispatchPackageService bizDispatchPackageService;
+    @Autowired
+    private IPubPackageDictService pubPackageDictService;
+
 
 	
 	private PriceGeneralQuotationEntity quoTemplete = null;
@@ -149,6 +163,16 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	
 	@Override
 	public void calcu(Map<String, Object> map){
+	    
+	    try {
+            //处理同时存在的导入耗材和系统耗材
+            handMaterail(map);
+        } catch (Exception e) {
+            // TODO: handle exception
+            logger.error("作废耗材失败",e);
+        }
+
+	    
 	    int count=(int) map.get("num");
         //原始进来的数量
         int recount=count;
@@ -283,6 +307,11 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 			fee.setCalcuMsg("耗材不收钱");
 			return true;
 		}
+		
+		//标准包装方案对应的耗材不计费
+        handPackage(entity,fee);
+
+		
 		return false;		
 	}
 	
@@ -483,8 +512,125 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 		logger.info("taskId={} 更新仓储费用行数【{}】 耗时【{}】",taskVo.getTaskId(),feeList.size(),sw.getLastTaskTimeMillis());
 	}
 
+	private boolean handPackage(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity fee){
+        Map<String, Object> con = new HashMap<String, Object>();
+        con.put("delFlag", "0");
+        List<PubPackageDictEntity> packDickList = pubPackageDictService.query(con);
+        Map<String, List<String>> dicMap = new HashMap<String, List<String>>();  //key为mark，value为需要作废的耗材
+        for (PubPackageDictEntity dictEntity : packDickList) {
+            if (dicMap.containsKey(dictEntity.getPackMark())) {
+                dicMap.get(dictEntity.getPackMark()).add(dictEntity.getMaterialType());
+            }else {
+                List<String> materialList = new LinkedList<String>();
+                materialList.add(dictEntity.getMaterialType());
+                dicMap.put(dictEntity.getPackMark(), materialList);
+            }
+        }
+       
+        //配置表一定会配置数据，这一步可能多余
+        if (CollectionUtils.isEmpty(packDickList)) {
+            return false;
+        }      
+       
+       BizDispatchPackageEntity bizEntity=bizDispatchPackageService.queryOne(entity.getWaybillNo());
+       if(bizEntity!=null){
+           //获取所有level和对应的marks
+           TreeMap<Integer, Set<String>> levelMap = getAllLevel(packDickList, bizEntity);  
+           
+           logger.info("运单：{0}，匹配分数为：{1}", bizEntity.getWaybillNo(), levelMap.lastKey());
+            
+           //取出最大level对应的marks，来获取需要作废的耗材（去重）
+           Set<String> marks = levelMap.get(levelMap.lastKey());
+           Set<String> materialTypes = new HashSet<String>();
+           for (String mark : marks) {
+               List<String> materialTypeList = dicMap.get(mark);
+               for (String materialType : materialTypeList) {
+                   materialTypes.add(materialType);
+               }
+           }
+
+           if(materialTypes.contains(entity.getMaterialType())){
+               fee.setIsCalculated(CalculateState.No_Exe.getCode());
+               fee.setCalcuMsg("标准包装方案不计费");
+               return true;
+           }
+       }
+       
+       return false;
+    }
 
 	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    private void handMaterail(Map<String, Object> map){
+        StopWatch sw = new StopWatch();
+        sw.start();
+        feesReceiveStorageService.updateImportFee(map);
+        sw.stop();
+        logger.info("taskId={} 作废导入费用 耗时【{}】",taskVo.getTaskId(),sw.getLastTaskTimeMillis());
+        sw.start();
+        bizOutstockPackmaterialService.updateImportMaterial(map);
+        sw.stop();
+        logger.info("taskId={} 作废导入耗材 耗时【{}】",taskVo.getTaskId(),sw.getLastTaskTimeMillis());      
+    }
+    
+    /**
+     * 获取所有level和对应的marks
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年5月18日 下午5:29:37
+     *
+     * @param packDickList
+     * @param bizEntity
+     * @param level
+     * @return
+     */
+    private TreeMap<Integer, Set<String>> getAllLevel(List<PubPackageDictEntity> packDickList, BizDispatchPackageEntity bizEntity) {
+        TreeMap<Integer, Set<String>> levelMap = new TreeMap<Integer, Set<String>>();
+        for (PubPackageDictEntity dicEntity : packDickList) {
+            int level = 0;
+            //季节
+            if (bizEntity.getSeason().equals(dicEntity.getSeason())) {
+                level += 1;
+            }else if (StringUtils.isNotBlank(dicEntity.getSeason()) && !bizEntity.getSeason().equals(dicEntity.getSeason())) {
+                continue;
+            }
+            //保温时效
+            if (bizEntity.getHoldingTime().equals(dicEntity.getHoldingTime())) {
+                level += 1;
+            }else if (StringUtils.isNotBlank(dicEntity.getHoldingTime()) && !bizEntity.getHoldingTime().equals(dicEntity.getHoldingTime())) {
+                continue;
+            }
+            //配送温区
+            if (bizEntity.getTransportTemperatureType().equals(dicEntity.getTransportTemperatureType())) {
+                level += 1;
+            }else if (StringUtils.isNotBlank(dicEntity.getTransportTemperatureType()) && !bizEntity.getTransportTemperatureType().equals(dicEntity.getTransportTemperatureType())) {
+                continue;
+            }
+            //运输方式
+            if (bizEntity.getTransportType().equals(dicEntity.getTransportType())) {
+                level += 1;
+            }else if (StringUtils.isNotBlank(dicEntity.getTransportType()) && !bizEntity.getTransportType().equals(dicEntity.getTransportType())) {
+                continue;
+            }
+            //操作分类
+            if (bizEntity.getPackOperateType().equals(dicEntity.getPackOperateType())) {
+                level += 1;
+            }else if (StringUtils.isNotBlank(dicEntity.getPackOperateType()) && !bizEntity.getPackOperateType().equals(dicEntity.getPackOperateType())) {
+                continue;
+            }
+            
+            //可能存在一个运单，有2个一样打分等级的mark，2个mark对应的耗材都作废
+            if (levelMap.containsKey(level)) {
+                levelMap.get(level).add(dicEntity.getPackMark());
+            }else {
+                Set<String> marks = new HashSet<String>();
+                marks.add(dicEntity.getPackMark());
+                levelMap.put(level, marks);
+            }  
+        }     
+        return levelMap;
+    }
 
 	
 	
