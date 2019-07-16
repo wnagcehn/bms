@@ -17,4 +17,5 @@ public interface IBizDispatchPackageService {
 
     public void updateBatch(List<BizDispatchPackageEntity> list);
 
+    public BizDispatchPackageEntity queryOne(String waybillNo);
 }

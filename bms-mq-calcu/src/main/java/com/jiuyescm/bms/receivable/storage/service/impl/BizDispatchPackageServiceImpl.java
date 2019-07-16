@@ -39,6 +39,12 @@ public class BizDispatchPackageServiceImpl extends MyBatisDao<BizDispatchPackage
 			logger.error("【标准耗材使用费任务】批量更新主表异常"+ex.getMessage());
 		}
 	}
-	
+    @Override
+    public BizDispatchPackageEntity queryOne(String wayBillNo) {
+        // TODO Auto-generated method stub
+        BizDispatchPackageEntity entity = this.selectOne("com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper.queryOne", wayBillNo);
+        return entity;
+    }
+
 	
 }
