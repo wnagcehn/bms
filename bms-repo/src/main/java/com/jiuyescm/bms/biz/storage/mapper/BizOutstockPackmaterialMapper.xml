@@ -189,8 +189,8 @@
     </insert>
     
     <insert id="saveDataFromTemp" parameterType="java.util.Map">
-    	insert into biz_outstock_packmaterial (wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr5)
-    	select wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr5
+    	insert into biz_outstock_packmaterial (wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr5,source)
+    	select wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr5,'import'
     	from biz_outstock_packmaterial_temp where batchNum=#{batchNum}                             
     </insert>
     <select id="checkDataExist" parameterType="java.util.Map" resultType="Integer">
@@ -866,7 +866,7 @@
     	UPDATE fees_receive_storage a
     	INNER JOIN biz_outstock_packmaterial b on a.fees_no = b.fees_no and b.del_flag != '1' and b.del_flag != '2'
 		LEFT JOIN pub_material_info c on b.consumer_material_code=c.material_code and c.del_flag='0'
-		SET a.del_flag='1'
+		SET a.is_calculated='5',a.calcu_msg='标准包装方案不计费'
 		WHERE 1=1 
 		and c.material_type = #{materialType}
 		and b.waybill_no = #{waybillNo}

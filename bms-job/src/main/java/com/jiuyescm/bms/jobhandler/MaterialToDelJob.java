@@ -119,13 +119,13 @@ public class MaterialToDelJob extends IJobHandler {
         }
         printTime(sw);
 
-        //合同归属为"合同在线"的数据一条都没有，就没有需要作废的
+        //没有需要作废的
         if (CollectionUtils.isEmpty(waybillNoList)) {
             sw.start("结束2");
             return printLog("没有需要作废的运单", sw);
         }
         
-        sw.start("通过商家归属为'合同在线'的运单号，查出对应耗材");
+        sw.start("通过运单号查出对应耗材");
         List<BizOutstockPackmaterialEntity> materialLists = bizOutstockPackmaterialRepository.queryByWaybillNo(waybillNoList);
         printTime(sw);
         
@@ -179,7 +179,7 @@ public class MaterialToDelJob extends IJobHandler {
                 BizOutstockPackmaterialEntity packmaterialEntity = new BizOutstockPackmaterialEntity();
                 packmaterialEntity.setWaybillNo(bizEntity.getWaybillNo());
                 packmaterialEntity.setMaterialType(materialType);
-                packmaterialEntity.setDelFlag("3");
+                //packmaterialEntity.setDelFlag("3");
                 delMaterialList.add(packmaterialEntity);
             }
             

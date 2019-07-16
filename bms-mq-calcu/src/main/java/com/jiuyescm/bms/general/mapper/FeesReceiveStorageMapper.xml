@@ -332,4 +332,20 @@
         GROUP BY customer_id, other_subject_code
     </select>
     
+     <update id="updateImportFee" parameterType="java.util.Map">
+    	delete from fees_receive_storage a
+		INNER JOIN
+		(
+			select fees_no from biz_outstock_packmaterial a
+			INNER JOIN
+			(
+				select waybill_no from  biz_outstock_packmaterial 
+				where customer_id=#{customerId} and create_time>=#{beginTime} and <![CDATA[create_time< #{endTime}]]> and del_flag='0' and source in ('import','system')
+				GROUP BY waybill_no
+				having FIND_IN_SET('import',GROUP_CONCAT(source))>0 and FIND_IN_SET('system',GROUP_CONCAT(source))>0
+			) b on a.waybill_no=b.waybill_no
+			where a.source='import' and a.del_flag='0'
+		)c on a.fees_no=c.fees_no
+    </update>
+    
 </mapper>
