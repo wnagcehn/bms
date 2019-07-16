@@ -84,7 +84,7 @@ public class XlsxWorkBook {
 	private void read(Integer sheetId,SheetReadCallBack callback,int titleRowNo,int contentRowNo){
 		SheetReader sr = new SheetReader();
 		String sheetFileName = tempPath+"xl/"+sheetIdMap.get(sheetId);
-		sr.readSheet(sheetFileName, callback, sst, titleRowNo, contentRowNo);
+		sr.readSheet(sheetFileName, callback, sst, titleRowNo, contentRowNo);        
 		//为当前sheet设置总行数
 		for (Sheet sheet : sheets) {
 			if(sheet.getSheetId()==sheetId){
