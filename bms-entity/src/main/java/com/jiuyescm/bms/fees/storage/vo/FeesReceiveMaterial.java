@@ -78,6 +78,8 @@ public class FeesReceiveMaterial implements IEntity {
 	private String outstockNo;
 	private String specDesc;
 	
+	private String isCalculated;
+	
 	//包材方案编号，名称，包材组编号
 	private String packPlanNo;
 	private String packPlanName;
@@ -358,6 +360,14 @@ public class FeesReceiveMaterial implements IEntity {
 
     public void setZexpressnum(String zexpressnum) {
         this.zexpressnum = zexpressnum;
+    }
+
+    public String getIsCalculated() {
+        return isCalculated;
+    }
+
+    public void setIsCalculated(String isCalculated) {
+        this.isCalculated = isCalculated;
     }
 	
     

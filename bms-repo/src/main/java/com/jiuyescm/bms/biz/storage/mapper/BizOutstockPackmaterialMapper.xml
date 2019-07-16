@@ -585,7 +585,8 @@
 		d.pack_plan_no as packPlanNo,
 		d.pack_group_no as packGroupNo,
 		d.pack_plan_name as packPlanName,
-		e.cost as packPlanCost
+		e.cost as packPlanCost,
+		c.is_calculated as isCalculated
 		from  biz_dispatch_bill a 
 		LEFT JOIN biz_outstock_packmaterial b on a.waybill_no = b.waybill_no and b.del_flag='0'
 		LEFT JOIN fees_receive_storage c on  b.fees_no =c.fees_no and b.consumer_material_code=c.product_no and c.del_flag='0'
@@ -866,7 +867,7 @@
     	UPDATE fees_receive_storage a
     	INNER JOIN biz_outstock_packmaterial b on a.fees_no = b.fees_no and b.del_flag != '1' and b.del_flag != '2'
 		LEFT JOIN pub_material_info c on b.consumer_material_code=c.material_code and c.del_flag='0'
-		SET a.is_calculated='5',a.calcu_msg='标准包装方案不计费'
+		SET a.is_calculated='5',a.calcu_msg='使用标准包装方案的运单，套餐内耗材不再参与计算'
 		WHERE 1=1 
 		and c.material_type = #{materialType}
 		and b.waybill_no = #{waybillNo}
