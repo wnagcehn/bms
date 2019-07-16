@@ -109,6 +109,9 @@ public class MaterialHandler {
     //系统模板标识
     private boolean isSystem = true;
     
+    //检查抬头标识
+    private boolean titleCheck = true;
+    
     //----------初始化基础数据
     public void initKeyValue(){
         errMap = new HashMap<Integer, String>();
@@ -163,8 +166,8 @@ public class MaterialHandler {
                     //模板校验
                     if (columns.contains("冰袋名称")) {
                         isSystem = false;
-                        logger.info("任务ID【{}】 -> 模板错误，请使用系统模板!",taskId);
-                        BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 99,FileAsynTaskStatusEnum.FAIL.getCode(), null, JAppContext.currentTimestamp(), null, null, "模板错误，请使用系统模板!");
+                        logger.info("任务ID【{}】 -> 模板错误，请使用WMS模板!",taskId);
+                        BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 99,FileAsynTaskStatusEnum.FAIL.getCode(), null, JAppContext.currentTimestamp(), null, null, "模板错误，请使用WMS模板!");
                         bmsFileAsynTaskService.update(updateEntity);
                         return;
                     }
@@ -181,12 +184,14 @@ public class MaterialHandler {
                     if(!checkTitle(columns,str)){
                         logger.info("任务ID【{}】 -> 模板列格式错误,必须包含 出库日期,仓库,商家ID,商家,出库单号,运单号",taskId);
                         bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.FAIL.getCode(), "模板列格式错误,必须包含 出库日期,仓库,商家ID,商家,出库单号,运单号");
+                        titleCheck = false;
                         return;
                     }
                     // 表格列数
                     int cols = columns.size();
                     if((cols-6)%2 != 0){ // 如果列数不对则 返回
                         bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.FAIL.getCode(), "表格列数不对");
+                        titleCheck = false;
                         return;
                     }
                     
@@ -199,6 +204,7 @@ public class MaterialHandler {
                             mMap.add(codeName);
                         }else{
                             bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.FAIL.getCode(), "表格列名不对,存在重复列名，请检查");
+                            titleCheck = false;
                             return;
                         }
                     }
@@ -208,7 +214,7 @@ public class MaterialHandler {
 
                 @Override
                 public void read(DataRow dr) {
-                    if (!isSystem) {
+                    if (!isSystem || !titleCheck) {
                         return;
                     }
                     //行错误信息
@@ -246,7 +252,7 @@ public class MaterialHandler {
 
                 @Override
                 public void finish() {
-                    if (!isSystem) {
+                    if (!isSystem || !titleCheck) {
                         return;
                     }
                     repeatMap.clear();
@@ -262,13 +268,13 @@ public class MaterialHandler {
 
                 @Override
                 public void error(Exception ex) {
-                    if (!isSystem) {
+                    if (!isSystem || !titleCheck) {
                         return;
-                    }    
+                    }   
                 }  
             });
             
-            if (!isSystem) {
+            if (!isSystem || !titleCheck) {
                 return;
             }
             
