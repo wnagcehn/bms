@@ -794,6 +794,7 @@ public class DispatchBillPayExportController extends BaseController{
 		map.put("createTime", "出库日期");
 		map.put("warehouseName", "仓库");
 		map.put("customerName", "商家");
+		map.put("source", "数据来源");
 		map.put("outstockNo", "出库单号");
 		map.put("waybillNo", "运单号");
 		

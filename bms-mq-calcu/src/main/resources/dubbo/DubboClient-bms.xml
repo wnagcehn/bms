@@ -33,6 +33,6 @@
 		 version="1.0.0"/>
 		 <dubbo:reference id="pubMonthFeeCountService" interface="com.jiuyescm.bms.base.monthFeeCount.service.IPubMonthFeeCountService" 
 		 version="1.0.0"/>	
-		 
+		 <dubbo:reference id="pubPackageDictService" interface="com.jiuyescm.bms.base.dict.api.IPubPackageDictService" version="1.0.0"/> 
 		 <dubbo:reference id="bmsSubjectInfoService" interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService" version="1.0.0"/>	
 </beans> 

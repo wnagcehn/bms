@@ -261,6 +261,12 @@ public class BizOutstockPackmaterialExportController extends BaseController{
         headInfoList.add(itemMap);
         
         itemMap = new HashMap<String, Object>();
+        itemMap.put("title", "数据来源");
+        itemMap.put("columnWidth", 25);
+        itemMap.put("dataKey", "source");
+        headInfoList.add(itemMap);
+        
+        itemMap = new HashMap<String, Object>();
         itemMap.put("title", "耗材编码");
         itemMap.put("columnWidth", 25);
         itemMap.put("dataKey", "consumerMaterialCode");
@@ -338,6 +344,7 @@ public class BizOutstockPackmaterialExportController extends BaseController{
 	        	dataItem.put("outstockNo", entity.getOutstockNo());
 	        	dataItem.put("waybillNo", entity.getWaybillNo());
 	        	dataItem.put("customerName", entity.getCustomerName());
+	            dataItem.put("source", entity.getSource());
 	        	dataItem.put("consumerMaterialCode", entity.getConsumerMaterialCode());
 	        	dataItem.put("consumerMaterialName", entity.getConsumerMaterialName());
 	        	dataItem.put("specDesc", entity.getSpecDesc());
