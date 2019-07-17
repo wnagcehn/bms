@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.jiuyescm.bms.base.reportWarehouse.ReportWarehouseCustomerEntity;
 import com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity;
 import com.jiuyescm.bms.general.service.IReportWarehouseBizImportService;
@@ -38,7 +39,6 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 	}
 	
 	private ReturnT<String> CalcJob(String[] params) {
-		
 		long starttime= System.currentTimeMillis();// 系统开始时间
 		Timestamp createTime = JAppContext.currentTimestamp();
 		String lastMonthFirstDay = DateUtil.getFirstDayOfMonth(1,"yyyy-MM-dd");
@@ -59,11 +59,29 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 			param.put("startTime", entry.getKey());
 			param.put("endTime", entry.getValue());
 			int ret = reportWarehouseBizImportService.upsertPalletStorage(param);
-			ret = reportWarehouseBizImportService.upsertPackMaterial(param);
+			ret = reportWarehouseBizImportService.upsertPackMaterial(param);	
 			XxlJobLogger.log("影响行数【{0}】,耗时【{1}】毫秒",ret,(System.currentTimeMillis()-start));
 		}
 		
-		Map<String, Object> paramMonthMap = new HashMap<String, Object>();
+        // 耗材
+		materialHandler(lastMonthFirstDay, tomorrow);
+		
+        // 托数
+		try {
+		    palletHandler(lastMonthFirstDay, tomorrow);
+        } catch (Exception e) {
+            XxlJobLogger.log("托数处理异常：{0}", e);
+        }
+		
+        XxlJobLogger.log("各仓业务数据导入统计,总耗时："+ (System.currentTimeMillis() - starttime) + "毫秒");
+        return ReturnT.SUCCESS;
+	}
+
+	/*
+	 * 托数处理
+	 */
+    private void palletHandler(String lastMonthFirstDay, String tomorrow) {
+        Map<String, Object> paramMonthMap = new HashMap<String, Object>();
 		XxlJobLogger.log("处理上月商家免导配置");
 		paramMonthMap.put("startTime", lastMonthFirstDay);
 		wh_cust(paramMonthMap);
@@ -76,6 +94,7 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		Map<String, Object> importCondition = new HashMap<String, Object>();
 		importCondition.put("startTime", lastMonthFirstDay);
 		importCondition.put("importType", "THEORY");
+		importCondition.put("bizType", "PALLET");
 		List<ReportWarehouseBizImportEntity> theoryList = reportWarehouseBizImportService.queryImport(importCondition);
 		List<String> theory = new ArrayList<String>();
 		for (ReportWarehouseBizImportEntity entity : theoryList) {
@@ -83,6 +102,7 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		}
 		//2.找出所有实际导入
 		importCondition.put("importType", "ACTUAL");
+		importCondition.put("bizType", "PALLET");
 		List<ReportWarehouseBizImportEntity> actualList = reportWarehouseBizImportService.queryImport(importCondition);
 		List<Long> deleteIds = new ArrayList<Long>();
 		//3.对比实际导入和理论导入
@@ -96,16 +116,67 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		Map<String, Object> deleteCondition = new HashMap<String, Object>();
 		deleteCondition.put("ids", deleteIds);
 		reportWarehouseBizImportService.deletetReport(deleteCondition);
-        XxlJobLogger.log("各仓业务数据导入统计,总耗时："+ (System.currentTimeMillis() - starttime) + "毫秒");
-        return ReturnT.SUCCESS;
-	}
+    }
+
+    /*
+     * 耗材处理
+     */
+    private void materialHandler(String lastMonthFirstDay, String tomorrow) {
+        Map<String, Object> param = new HashMap<String, Object>();
+		param.put("startTime", lastMonthFirstDay);
+		param.put("endTime", tomorrow);
+		// 查出理论导入的商家，查询商家是否全部使用新方案
+        List<ReportWarehouseBizImportEntity> theoryCus = reportWarehouseBizImportService.queryCusByTheory(param);
+        for (ReportWarehouseBizImportEntity cus : theoryCus) {
+            XxlJobLogger.log("耗材处理：日期，{0}，商家：{1}，仓库{2}，",cus.getImportDate(),cus.getCustomerId(),cus.getWarehouseCode());
+            cus.setDelFlag("0");
+            param.put("customerId", cus.getCustomerId());
+            try {
+                List<String> isNewPlans = reportWarehouseBizImportService.queryIsNewPlanByCustomer(param);
+                if (CollectionUtils.isEmpty(isNewPlans)) {
+                    continue;
+                }
+                // 全部使用新方案
+                if (isNewPlans.size() == 1 && isNewPlans.contains("1")) {
+                    reportWarehouseBizImportService.upsertPackMaterialByNewPlan(cus);
+                    continue;
+                }
+                // 部分使用新方案/全部使用老方案
+                else {
+                    ReportWarehouseCustomerEntity wareCusEntity = reportWarehouseBizImportService.queryCusImportType(cus);
+                    //未配置免导入,有耗材来源为导入的吗（有：新增，没有：忽略）
+                    if (null == wareCusEntity) {     
+                        List<String> isImportMaterial = reportWarehouseBizImportService.queryIsImportMaterial(cus);
+                        if (CollectionUtils.isEmpty(isImportMaterial)) {
+                            continue;
+                        }else {
+                            reportWarehouseBizImportService.upsertPackMaterialByNewPlan(cus);
+                            continue;
+                        }
+                    }
+                    //配置免导入，理论和实际都作废
+                    else {
+                        reportWarehouseBizImportService.deleteMaterialReport(cus);
+                        continue;
+                    }
+                }
+            } catch (Exception e) {
+                XxlJobLogger.log("耗材：日期，{0}，商家：{1}，仓库{2} 异常",cus.getImportDate(),cus.getCustomerId(),cus.getWarehouseCode());
+                continue;
+            }
+        }
+    }
 	
+    /*
+     * 免导入商家处理(托数)
+     */
 	private void wh_cust(Map<String, Object> paramMonthMap){
 		long start = System.currentTimeMillis();// 系统开始时间
 		XxlJobLogger.log("免导商家处理  {0}",paramMonthMap);
+		paramMonthMap.put("bizType", "PALLET");
 		List<ReportWarehouseCustomerEntity> list=reportWarehouseBizImportService.queryWareList(paramMonthMap);
 		XxlJobLogger.log("免导商家配置数量【{0}】",list.size());
-
+		
 		//将表中存在免导商家配置的数据的删除标记置为1，包括理论导入和实际导入
 		if(list.size()>0){
 			reportWarehouseBizImportService.updateReport(list);
@@ -117,4 +188,6 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		
 		XxlJobLogger.log("免导配置处理耗时【{0}】毫秒",(System.currentTimeMillis()-start));
 	}
+	
+	
 }

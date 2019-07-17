@@ -111,6 +111,9 @@ public class MaterialWmsHandler {
     //WMS模板标识
     private boolean isWMS = true;
     
+    //抬头校验标识
+    private boolean titleCheck = true;
+    
     //----------初始化基础数据---------
     public void initKeyValue(){
         errMap = new HashMap<Integer, String>();
@@ -187,6 +190,7 @@ public class MaterialWmsHandler {
                     if(!checkTitle(columns,str)){
                         logger.info("任务ID【{}】 -> 模板列格式错误,必须包含 出库日期,仓库,商家ID,商家,出库单号,运单号",taskId);
                         bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.FAIL.getCode(), "模板列格式错误,必须包含 出库日期,仓库,商家ID,商家,出库单号,运单号");
+                        titleCheck = false;
                         return;
                     }
                     logger.info("任务ID【{}】 -> 表头校验完成，准备读取Excel内容……",taskId); 
@@ -195,7 +199,7 @@ public class MaterialWmsHandler {
 
                 @Override
                 public void read(DataRow dr) {
-                    if (!isWMS) {
+                    if (!isWMS || !titleCheck) {
                         return;
                     }
                     //行错误信息
@@ -232,7 +236,7 @@ public class MaterialWmsHandler {
 
                 @Override
                 public void finish() { 
-                    if (!isWMS) {
+                    if (!isWMS || !titleCheck) {
                         return;
                     }
                     repeatMap.clear();
@@ -248,13 +252,13 @@ public class MaterialWmsHandler {
 
                 @Override
                 public void error(Exception ex) {
-                    if (!isWMS) {
+                    if (!isWMS || !titleCheck) {
                         return;
                     } 
                 }
             });
             
-            if (!isWMS) {
+            if (!isWMS || !titleCheck) {
                 return;
             }
             
