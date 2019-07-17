@@ -148,7 +148,8 @@
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
-        </if>		
+        </if>
+        and d.is_new_plan='0'	
     	GROUP BY b.waybill_no
     	union
     	select b.* from bms_marking_products a 
@@ -162,7 +163,8 @@
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
-        </if>	
+        </if>
+       and  d.is_new_plan='0'	
     	GROUP BY b.waybill_no
      </select>
      
@@ -179,7 +181,8 @@
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
-        </if>		
+        </if>
+        and d.is_new_plan='0'			
     	GROUP BY b.waybill_no
     	union
     	select b.* from bms_marking_products a 
@@ -193,7 +196,8 @@
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
-        </if>	
+        </if>
+        and d.is_new_plan='0'		
     	GROUP BY b.waybill_no
      </select>
 	
@@ -414,7 +418,7 @@
      	 from
 			(select a.products_mark,a.pmx_type,a.pmx_mark,COUNT(a.pmx_mark) as num1 from bms_marking_products a
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
-			where 1=1 and a.pmx_mark!='' and a.pmx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+			where 1=1 and a.pmx_mark!='' and a.pmx_mark is not null and b.is_new_plan='0' and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
 	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
@@ -425,7 +429,7 @@
 		 LEFT JOIN 
 		 	(select a.products_mark,a.pmx_type,a.pmx_mark,COUNT(a.pmx_mark) as num2 from bms_marking_products a 
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
-			where 1=1 and a.pmx_mark!='' and a.pmx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+			where 1=1 and a.pmx_mark!='' and a.pmx_mark is not null and b.is_new_plan='0' and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
 	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
@@ -444,7 +448,7 @@
      	 from
 			(select a.products_mark,a.zx_type,a.zx_mark,COUNT(a.zx_mark) as num1 from bms_marking_products a
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
-			where 1=1 and a.zx_mark!='' and a.zx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+			where 1=1 and a.zx_mark!='' and a.zx_mark is not null and b.is_new_plan='0' and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
 	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
@@ -455,7 +459,7 @@
 		 LEFT JOIN 
 		 	(select a.products_mark,a.zx_type,a.zx_mark,COUNT(a.zx_mark) as num2 from bms_marking_products a 
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
-			where 1=1 and a.zx_mark!='' and a.zx_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+			where 1=1 and a.zx_mark!='' and a.zx_mark is not null and b.is_new_plan='0' and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
 	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
@@ -473,7 +477,7 @@
      	 from
 			(select a.products_mark,a.bwd_mark,COUNT(a.bwd_mark) as num1 from bms_marking_products a
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no
-			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.is_new_plan='0' and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
 	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
@@ -484,7 +488,7 @@
 		 LEFT JOIN 
 		 	(select a.products_mark,a.bwd_mark,COUNT(a.bwd_mark) as num2 from bms_marking_products a 
 			INNER JOIN biz_dispatch_bill b on a.waybill_no=b.waybill_no 
-			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
+			where 1=1 and a.bwd_mark!='' and a.bwd_mark is not null and b.is_new_plan='0' and b.del_flag='0' and b.customerid=#{customerId} and b.create_time>=#{startTime} and b.create_time<![CDATA[<=#{endTime}]]>
 			<if test="(orderList!=null and orderList.size()>0)">
 	        	and IFNULL(b.ordertypeid,'') not in
 	        	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
@@ -545,7 +549,8 @@
         	<foreach collection="orderList" index="index" item="item" open="(" separator="," close=")">
         	 	#{item}
         	</foreach>
-	    </if>	
+	    </if>
+	    and d.is_new_plan='0'		
      	union
      	select a.* from biz_outstock_packmaterial a 
 		INNER JOIN bms_marking_products b on a.waybill_no=b.waybill_no
@@ -559,6 +564,7 @@
         	 	#{item}
         	</foreach>
 	    </if>
+	    and d.is_new_plan='0'	
      </select>
    
      <!-- <select id="getMaterialMap" parameterType="java.util.Map" resultType="String">
