@@ -2281,36 +2281,44 @@ public class PrepareBillHandler {
                 dataItem.put("packPlanName", materialEntity.getPackPlanName());
                 dataItem.put("packPlanCost", materialEntity.getPackPlanCost());
 
-                //只走标准包装方案，无多余耗材的情况
-                if (StringUtils.isNotBlank(materialEntity.getProductNo())) {
-                    String marterialType = getMaterialType(materialInfoList,
-                            materialEntity.getProductNo()==null?"":materialEntity.getProductNo());
-                    dataItem.put(marterialType + "_name",
-                            materialEntity.getProductName()==null?"":materialEntity.getProductName());
-                    dataItem.put(marterialType + "_code",
-                            materialEntity.getProductNo()==null?"":materialEntity.getProductNo());
-                    dataItem.put(marterialType + "_type",
-                            materialEntity.getSpecDesc()==null?"":materialEntity.getSpecDesc());
-                    if (materialEntity.getProductNo().contains("GB")) {
-                        dataItem.put(marterialType + "_count", materialEntity
-                                .getWeight() == null ? "" : Double.valueOf(materialEntity
-                                .getWeight()));
-                    } else {
-                        dataItem.put(marterialType + "_count", materialEntity
-                                .getQuantity() == null ? "" : Double.valueOf(materialEntity
-                                .getQuantity()));
+                //包材组编号或标准包装方案编号不为空，则不显示状态5耗材
+                //包材方案编号或包材组编号均为空时，显示状态5耗材
+                if((StringUtils.isNotBlank(materialEntity.getPackPlanNo()) || StringUtils.isNotBlank(materialEntity.getPackGroupNo())) 
+                        && "5".equals(materialEntity.getIsCalculated())){
+
+                }else{               
+                    //只走标准包装方案，无多余耗材的情况
+                    if (StringUtils.isNotBlank(materialEntity.getProductNo())) {
+                        //有多余耗材的情况
+                        String marterialType = getMaterialType(materialInfoList,
+                                materialEntity.getProductNo()==null?"":materialEntity.getProductNo());
+                        dataItem.put(marterialType + "_name",
+                                materialEntity.getProductName()==null?"":materialEntity.getProductName());
+                        dataItem.put(marterialType + "_code",
+                                materialEntity.getProductNo()==null?"":materialEntity.getProductNo());
+                        dataItem.put(marterialType + "_type",
+                                materialEntity.getSpecDesc()==null?"":materialEntity.getSpecDesc());
+                        if (materialEntity.getProductNo().contains("GB")) {
+                            dataItem.put(marterialType + "_count", materialEntity
+                                    .getWeight() == null ? "" : Double.valueOf(materialEntity
+                                    .getWeight()));
+                        } else {
+                            dataItem.put(marterialType + "_count", materialEntity
+                                    .getQuantity() == null ? "" : Double.valueOf(materialEntity
+                                    .getQuantity()));
+                        }
+                        dataItem.put(marterialType + "_unitprice", materialEntity
+                                .getUnitPrice() == null ? "" : Double.valueOf(materialEntity
+                                .getUnitPrice()));
+                        dataItem.put(marterialType + "_cost", materialEntity
+                                .getCost() == null ? "" :Double.valueOf(materialEntity.getCost()));
+                        // 第一次加上包材的金额
+                        dataItem.put("totalCost", materialEntity.getCost()
+                                + (materialEntity.getPackPlanCost() == null ? 0d : materialEntity.getPackPlanCost()));
+                    }else {
+                        dataItem.put("totalCost", materialEntity.getPackPlanCost());// 包材金额
                     }
-                    dataItem.put(marterialType + "_unitprice", materialEntity
-                            .getUnitPrice() == null ? "" : Double.valueOf(materialEntity
-                            .getUnitPrice()));
-                    dataItem.put(marterialType + "_cost", materialEntity
-                            .getCost() == null ? "" :Double.valueOf(materialEntity.getCost()));
-                    // 第一次加上包材的金额
-                    dataItem.put("totalCost", materialEntity.getCost()
-                            + (materialEntity.getPackPlanCost() == null ? 0d : materialEntity.getPackPlanCost()));
-                }else {
-                    dataItem.put("totalCost", materialEntity.getPackPlanCost());// 包材金额
-                }                   
+                }
                 dataPackMaterialList.add(dataItem);
             }
 

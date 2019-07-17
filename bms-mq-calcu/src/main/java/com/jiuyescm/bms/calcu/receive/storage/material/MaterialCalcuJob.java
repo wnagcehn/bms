@@ -29,9 +29,9 @@ import com.google.common.collect.Maps;
 import com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService;
 import com.jiuyescm.bms.asyn.vo.BmsCalcuTaskVo;
 import com.jiuyescm.bms.base.dict.api.IMaterialDictService;
-import com.jiuyescm.bms.base.dict.vo.PubMaterialVo;
 import com.jiuyescm.bms.base.dict.api.IPubPackageDictService;
 import com.jiuyescm.bms.base.dict.entity.PubPackageDictEntity;
+import com.jiuyescm.bms.base.dict.vo.PubMaterialVo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService;
@@ -552,7 +552,7 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 
            if(materialTypes.contains(entity.getMaterialType())){
                fee.setIsCalculated(CalculateState.No_Exe.getCode());
-               fee.setCalcuMsg("标准包装方案不计费");
+               fee.setCalcuMsg("使用标准包装方案的运单，套餐内耗材不再参与计算");
                return true;
            }
        }
