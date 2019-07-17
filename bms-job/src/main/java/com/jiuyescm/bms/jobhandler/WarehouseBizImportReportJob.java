@@ -128,9 +128,11 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 		// 查出理论导入的商家，查询商家是否全部使用新方案
         List<ReportWarehouseBizImportEntity> theoryCus = reportWarehouseBizImportService.queryCusByTheory(param);
         for (ReportWarehouseBizImportEntity cus : theoryCus) {
-            XxlJobLogger.log("耗材处理：日期，{0}，商家：{1}，仓库{2}，",cus.getImportDate(),cus.getCustomerId(),cus.getWarehouseCode());
+            XxlJobLogger.log("耗材处理：日期，{0}，商家：{1}，仓库：{2}，",cus.getImportDate(),cus.getCustomerId(),cus.getWarehouseCode());
+            cus.setImportType("ACTUAL");
             cus.setDelFlag("0");
             param.put("customerId", cus.getCustomerId());
+            param.put("warehouseCode", cus.getWarehouseCode());
             try {
                 List<String> isNewPlans = reportWarehouseBizImportService.queryIsNewPlanByCustomer(param);
                 if (CollectionUtils.isEmpty(isNewPlans)) {
@@ -145,9 +147,11 @@ public class WarehouseBizImportReportJob extends IJobHandler{
                 else {
                     ReportWarehouseCustomerEntity wareCusEntity = reportWarehouseBizImportService.queryCusImportType(cus);
                     //未配置免导入,有耗材来源为导入的吗（有：新增，没有：忽略）
-                    if (null == wareCusEntity) {     
-                        List<String> isImportMaterial = reportWarehouseBizImportService.queryIsImportMaterial(cus);
+                    if (null == wareCusEntity) {
+                        List<String> isImportMaterial = reportWarehouseBizImportService.queryIsImportMaterial(param);
                         if (CollectionUtils.isEmpty(isImportMaterial)) {
+                            // 假如存在未导入或导入后手动作废的， 相当于未导入，作废掉
+                            reportWarehouseBizImportService.deleteActualMaterial(cus);
                             continue;
                         }else {
                             reportWarehouseBizImportService.upsertPackMaterialByNewPlan(cus);

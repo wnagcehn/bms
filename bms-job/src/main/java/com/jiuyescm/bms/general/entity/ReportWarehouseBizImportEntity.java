@@ -21,7 +21,7 @@ public class ReportWarehouseBizImportEntity implements IEntity {
 	// id
 	private Long id;
 	// 日期
-	private Date importDate;
+	private String importDate;
 	// 仓库编号
 	private String warehouseCode;
 	// 业务类型
@@ -65,23 +65,16 @@ public class ReportWarehouseBizImportEntity implements IEntity {
 		this.id = id;
 	}
 	
-	/**
-     * 日期
-     */
-	public Date getImportDate() {
-		return this.importDate;
-	}
+	
+	public String getImportDate() {
+        return importDate;
+    }
+
+    public void setImportDate(String importDate) {
+        this.importDate = importDate;
+    }
 
     /**
-     * 日期
-     *
-     * @param importDate
-     */
-	public void setImportDate(Date importDate) {
-		this.importDate = importDate;
-	}
-	
-	/**
      * 仓库编号
      */
 	public String getWarehouseCode() {

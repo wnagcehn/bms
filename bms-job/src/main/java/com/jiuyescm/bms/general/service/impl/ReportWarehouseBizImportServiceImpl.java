@@ -104,8 +104,13 @@ public class ReportWarehouseBizImportServiceImpl  extends MyBatisDao implements 
     }
     
     @Override
-    public List<String> queryIsImportMaterial(ReportWarehouseBizImportEntity entity) {
-        return selectList("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.queryIsImportMaterial", entity);
+    public List<String> queryIsImportMaterial(Map<String, Object> condition) {
+        return selectList("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.queryIsImportMaterial", condition);
+    }
+    
+    @Override
+    public int deleteActualMaterial(ReportWarehouseBizImportEntity entity) {
+        return update("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.deleteActualMaterial", entity);
     }
 	
 }

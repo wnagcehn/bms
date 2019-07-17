@@ -131,6 +131,18 @@ public interface IReportWarehouseBizImportService {
      * @param entity
      * @return
      */
-    List<String> queryIsImportMaterial(ReportWarehouseBizImportEntity entity);
+    List<String> queryIsImportMaterial(Map<String, Object> condition);
+
+    /**
+     * 作废-->实际导入后手动作废的
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月17日 下午5:04:32
+     *
+     * @param entity
+     * @return
+     */
+    int deleteActualMaterial(ReportWarehouseBizImportEntity entity);
 
 }
