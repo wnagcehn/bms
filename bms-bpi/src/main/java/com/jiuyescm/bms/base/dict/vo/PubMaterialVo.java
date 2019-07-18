@@ -3,14 +3,20 @@
  */
 package com.jiuyescm.bms.base.dict.vo;
 
+import java.io.Serializable;
+
 /**
  * <功能描述>
  * 
  * @author caojianwei
  * @date 2019年7月15日 下午7:51:13
  */
-public class PubMaterialVo {
+public class PubMaterialVo implements Serializable{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 831826684694906294L;
     // 物料编号
     private String materialNo;
     // 物料名称

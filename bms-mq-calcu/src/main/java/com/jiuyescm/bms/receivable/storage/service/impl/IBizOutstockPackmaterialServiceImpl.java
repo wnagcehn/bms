@@ -61,7 +61,7 @@ public class IBizOutstockPackmaterialServiceImpl extends MyBatisDao implements I
 	 @Override
 	    public void updateImportMaterial(Map<String, Object> condition) {
 	        // TODO Auto-generated method stub
-	        this.update("com.jiuyescm.bms.receivable.storage.BizOutstockPackmeterialMapper.updateImportMaterial", condition);      
+	        this.delete("com.jiuyescm.bms.receivable.storage.BizOutstockPackmeterialMapper.updateImportMaterial", condition);      
 	    }
 
 	

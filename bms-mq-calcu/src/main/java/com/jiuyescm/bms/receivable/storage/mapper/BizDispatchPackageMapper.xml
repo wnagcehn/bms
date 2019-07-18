@@ -66,8 +66,8 @@
 		a.write_time, a.remark, a.is_calculated, a.calculate_time, a.cre_time
 		 from biz_dispatch_package a 
 		where a.del_flag='0'
-		<if test=" waybillNo != null and waybillNo !='' ">
-			and a.waybill_no = #{waybillNo}
+		<if test=" wayBillNo != null and wayBillNo !='' ">
+			and a.waybill_no = #{wayBillNo}
 		</if>
 		limit 1
     </select>

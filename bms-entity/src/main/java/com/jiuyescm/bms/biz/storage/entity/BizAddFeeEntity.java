@@ -5,6 +5,7 @@
 package com.jiuyescm.bms.biz.storage.entity;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.jiuyescm.cfm.domain.IEntity;
 
@@ -86,6 +87,9 @@ public class BizAddFeeEntity implements IEntity {
     private Double fixedAmount;
     private String firstSubject;
     private String firstSubjectName;
+    
+    //耗材明细
+    private List<PubMaterialVo> list;
 
     public String getPayNo() {
         return payNo;
@@ -529,6 +533,14 @@ public class BizAddFeeEntity implements IEntity {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    public List<PubMaterialVo> getList() {
+        return list;
+    }
+
+    public void setList(List<PubMaterialVo> list) {
+        this.list = list;
     }
     
     

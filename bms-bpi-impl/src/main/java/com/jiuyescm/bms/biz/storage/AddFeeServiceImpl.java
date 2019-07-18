@@ -19,6 +19,7 @@ import org.springframework.util.CollectionUtils;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
+import com.jiuyescm.bms.biz.storage.entity.PubMaterialVo;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.biz.storage.service.IAddFeeService;
 import com.jiuyescm.bms.biz.storage.vo.BizAddFeeVo;
@@ -114,16 +115,6 @@ public class AddFeeServiceImpl implements IAddFeeService {
                     logger.info("增值服务单，商家名称为空" + payNo);
                     continue;
                 }
-                if (StringUtils.isEmpty(bizAddFeeEntity.getFeesUnit())) {
-                    resultMap.put(payNo, "增值服务单，费用单位为空");
-                    logger.info("增值服务单，费用单位为空" + payNo);
-                    continue;
-                }
-                if (null == bizAddFeeEntity.getNum()) {
-                    logger.info("增值服务单，数量为空" + payNo);
-                    resultMap.put(payNo, "增值服务单，数量为空");
-                    continue;
-                }
                 if (StringUtils.isEmpty(bizAddFeeEntity.getFirstSubject())) {
                     resultMap.put(payNo, "增值服务单，增值主科目编码为空");
                     logger.info("增值服务单，增值主科目编码为空" + payNo);
@@ -144,58 +135,85 @@ public class AddFeeServiceImpl implements IAddFeeService {
                     logger.info("增值服务单，费用类型名称为空" + payNo);
                     continue;
                 }
-                Double fixedAmount = bizAddFeeEntity.getFixedAmount();
-                // 如果一口价为空，设置默认值0
-                if (null == fixedAmount) {
-                    fixedAmount = 0.0;
-                }
-                param.put("payNo", payNo);
-                // 校验payNo是否存在
-                BizAddFeeEntity checkEntity = bizAddFeeRepository.queryPayNo(param);
-                if (null == checkEntity) {
-                    // 如果费用科目不需要计费
-                    logger.info("OMS增值费编号："+ payNo + ", 费用类型：" + bizAddFeeEntity.getFeesType());
-                    if (codeList.contains(bizAddFeeEntity.getFeesType())) {
-                        FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
-                        String feesNo = "STO" + snowflakeSequenceService.nextStringId();
-                        bizAddFeeEntity.setFeesNo(feesNo);
-                        // 更改业务数据状态
-                        bizAddFeeEntity.setIsCalculated("1");
-                        fee.setFeesNo(feesNo);
-                        // 金额
-                        fee.setCost(new BigDecimal(fixedAmount));
-                        fee.setCalculateTime(JAppContext.currentTimestamp());
-                        fee.setUnitPrice(bizAddFeeEntity.getUnitPrice());
-                        fee.setSubjectCode("wh_value_add_subject");
-                        fee.setOtherSubjectCode(bizAddFeeEntity.getFeesType());
-                        fee.setCustomerId(bizAddFeeEntity.getCustomerid());
-                        fee.setCustomerName(bizAddFeeEntity.getCustomerName());
-                        fee.setWarehouseCode(bizAddFeeEntity.getWarehouseCode());
-                        fee.setUnit(bizAddFeeEntity.getFeesUnit());
-                        fee.setParam1(bizAddFeeEntity.getItem());
-                        fee.setCustomerName(bizAddFeeEntity.getCustomerName());
-                        fee.setWarehouseName(bizAddFeeEntity.getWarehouseName());
-                        fee.setCreateTime(bizAddFeeEntity.getCreateTime());
-                        fee.setCreator("system");
-                        fee.setCostType("FEE_TYPE_GENEARL");
-                        fee.setDelFlag("0");
-                        fee.setStatus("0");
-                        fee.setExternalProductNo(bizAddFeeEntity.getExternalNo());
-                        // 计算成功
-                        fee.setIsCalculated("1");
-                        fee.setParam2(bizAddFeeEntity.getCreateTime()==null?"":new SimpleDateFormat("yyyyMM").format(bizAddFeeEntity.getCreateTime()));
-                        feelist.add(fee);
-                    } else {
-                        // 不生成费用，业务数据计算状态为0
-                        bizAddFeeEntity.setIsCalculated("0");
+                
+                //一级类型为“杂项销售出库”，二级类型为“耗材使用”的增值单 特殊处理写入耗材出库明细表
+                if("100010".equals(bizAddFeeEntity.getFirstSubject()) && "wh_consumablesuse".equals(bizAddFeeEntity.getFeesType())){
+                    if(bizAddFeeEntity.getList()==null || bizAddFeeEntity.getList().size()<=0){
+                        resultMap.put(payNo, "一级类型为“杂项销售出库”，二级类型为“耗材使用”的增值单 耗材明细必传");
+                        logger.info("一级类型为“杂项销售出库”，二级类型为“耗材使用”的增值单 耗材明细必传" + payNo);
+                        continue;
+                    }                   
+                    for(PubMaterialVo vo:bizAddFeeEntity.getList()){
+                        if(StringUtils.isEmpty(vo.getMaterialCode())){
+                            resultMap.put(payNo, "杂项销售出库，耗材编码为空");
+                            logger.info("杂项销售出库，耗材编码为空" + payNo);
+                            continue;
+                        }
                     }
-                    bizAddFeeEntity.setDelFlag("0");
-                    addlist.add(bizAddFeeEntity);
-                } else {
-                    logger.info("增值服务单，已存在" + payNo);
+                    
+                }else{
+                    if (StringUtils.isEmpty(bizAddFeeEntity.getFeesUnit())) {
+                        resultMap.put(payNo, "增值服务单，费用单位为空");
+                        logger.info("增值服务单，费用单位为空" + payNo);
+                        continue;
+                    }
+                    if (null == bizAddFeeEntity.getNum()) {
+                        logger.info("增值服务单，数量为空" + payNo);
+                        resultMap.put(payNo, "增值服务单，数量为空");
+                        continue;
+                    }                
+                    Double fixedAmount = bizAddFeeEntity.getFixedAmount();
+                    // 如果一口价为空，设置默认值0
+                    if (null == fixedAmount) {
+                        fixedAmount = 0.0;
+                    }
+                    param.put("payNo", payNo);
+                    // 校验payNo是否存在
+                    BizAddFeeEntity checkEntity = bizAddFeeRepository.queryPayNo(param);
+                    if (null == checkEntity) {
+                        // 如果费用科目不需要计费
+                        logger.info("OMS增值费编号："+ payNo + ", 费用类型：" + bizAddFeeEntity.getFeesType());
+                        if (codeList.contains(bizAddFeeEntity.getFeesType())) {
+                            FeesReceiveStorageEntity fee = new FeesReceiveStorageEntity();
+                            String feesNo = "STO" + snowflakeSequenceService.nextStringId();
+                            bizAddFeeEntity.setFeesNo(feesNo);
+                            // 更改业务数据状态
+                            bizAddFeeEntity.setIsCalculated("1");
+                            fee.setFeesNo(feesNo);
+                            // 金额
+                            fee.setCost(new BigDecimal(fixedAmount));
+                            fee.setCalculateTime(JAppContext.currentTimestamp());
+                            fee.setUnitPrice(bizAddFeeEntity.getUnitPrice());
+                            fee.setSubjectCode("wh_value_add_subject");
+                            fee.setOtherSubjectCode(bizAddFeeEntity.getFeesType());
+                            fee.setCustomerId(bizAddFeeEntity.getCustomerid());
+                            fee.setCustomerName(bizAddFeeEntity.getCustomerName());
+                            fee.setWarehouseCode(bizAddFeeEntity.getWarehouseCode());
+                            fee.setUnit(bizAddFeeEntity.getFeesUnit());
+                            fee.setParam1(bizAddFeeEntity.getItem());
+                            fee.setCustomerName(bizAddFeeEntity.getCustomerName());
+                            fee.setWarehouseName(bizAddFeeEntity.getWarehouseName());
+                            fee.setCreateTime(bizAddFeeEntity.getCreateTime());
+                            fee.setCreator("system");
+                            fee.setCostType("FEE_TYPE_GENEARL");
+                            fee.setDelFlag("0");
+                            fee.setStatus("0");
+                            fee.setExternalProductNo(bizAddFeeEntity.getExternalNo());
+                            // 计算成功
+                            fee.setIsCalculated("1");
+                            fee.setParam2(bizAddFeeEntity.getCreateTime()==null?"":new SimpleDateFormat("yyyyMM").format(bizAddFeeEntity.getCreateTime()));
+                            feelist.add(fee);
+                        } else {
+                            // 不生成费用，业务数据计算状态为0
+                            bizAddFeeEntity.setIsCalculated("0");
+                        }
+                        bizAddFeeEntity.setDelFlag("0");
+                        addlist.add(bizAddFeeEntity);
+                    } else {
+                        logger.info("增值服务单，已存在" + payNo);
+                    }
+                    resultMap.put(payNo, "SUCCESS");
                 }
-                resultMap.put(payNo, "SUCCESS");
-
             } catch (Exception e) {
                 logger.error("增值服务单,处理异常：" + payNo, e);
             }
