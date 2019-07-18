@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.receivable.storage.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +43,9 @@ public class BizDispatchPackageServiceImpl extends MyBatisDao<BizDispatchPackage
     @Override
     public BizDispatchPackageEntity queryOne(String wayBillNo) {
         // TODO Auto-generated method stub
-        BizDispatchPackageEntity entity = this.selectOne("com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper.queryOne", wayBillNo);
+        Map<String,Object> map=new HashMap<>();
+        map.put("wayBillNo", wayBillNo);
+        BizDispatchPackageEntity entity = (BizDispatchPackageEntity) this.selectOne("com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper.queryOne", map);
         return entity;
     }
 
