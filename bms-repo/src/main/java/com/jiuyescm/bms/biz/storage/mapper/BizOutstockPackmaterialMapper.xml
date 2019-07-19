@@ -164,7 +164,7 @@
     </update>
     
     <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
-        insert into biz_outstock_packmaterial(wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr4)
+        insert into biz_outstock_packmaterial(wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr4,source)
         values (
 			#{wmsId,jdbcType=VARCHAR}, 
 			#{outstockNo,jdbcType=VARCHAR}, 
@@ -190,7 +190,8 @@
 			#{writeTime,jdbcType=TIMESTAMP}, 
 			#{weight,jdbcType=DOUBLE},
 		    #{specDesc,jdbcType=VARCHAR},
-		    #{extattr4,jdbcType=VARCHAR}
+		    #{extattr4,jdbcType=VARCHAR},
+		    #{source,jdbcType=VARCHAR}
         )
     </insert>
     
