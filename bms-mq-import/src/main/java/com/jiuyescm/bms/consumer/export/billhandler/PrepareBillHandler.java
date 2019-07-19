@@ -146,7 +146,7 @@ public class PrepareBillHandler {
      */
     public void export(String json) throws Exception{
         //初始化进度
-        process = 30d;    
+        process = 0d;    
         logger.info("JSON开始解析……");
         Map<String, Object> condition = resolveJsonToMap(json);
         if (null == condition) {
@@ -2286,7 +2286,7 @@ public class PrepareBillHandler {
                 if((StringUtils.isNotBlank(materialEntity.getPackPlanNo()) || StringUtils.isNotBlank(materialEntity.getPackGroupNo())) 
                         && "5".equals(materialEntity.getIsCalculated())){
 
-                }else{               
+                }else{            
                     //只走标准包装方案，无多余耗材的情况
                     if (StringUtils.isNotBlank(materialEntity.getProductNo())) {
                         //有多余耗材的情况
@@ -2321,7 +2321,7 @@ public class PrepareBillHandler {
                 }
                 dataPackMaterialList.add(dataItem);
             }
-
+                
         }
     }
     
