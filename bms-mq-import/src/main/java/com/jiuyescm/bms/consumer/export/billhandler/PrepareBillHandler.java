@@ -2238,20 +2238,19 @@ public class PrepareBillHandler {
                         matchMap.put(
                                 marterialType + "_count",
                                 matchMap.get(marterialType + "_count")
-                                        + "," + materialEntity.getWeight() == null ? ""
-                                        : Double.valueOf(materialEntity.getWeight()));
+                                         + (materialEntity.getWeight() == null ? ""
+                                        : ","+ Double.valueOf(materialEntity.getWeight())));
                     } else {
                         matchMap.put(
                                 marterialType + "_count",
                                 matchMap.get(marterialType + "_count")
-                                        + ","
-                                        + materialEntity.getQuantity() == null ? ""
-                                        : Double.valueOf(materialEntity.getQuantity()));
+                                        + (materialEntity.getQuantity() == null ? ""
+                                        : ","+Double.valueOf(materialEntity.getQuantity())));
                     }
                     matchMap.put(marterialType + "_cost",
-                            matchMap.get(marterialType + "_cost") + ","
-                                    + materialEntity.getCost() == null ? ""
-                                    : Double.valueOf(materialEntity.getCost()));
+                            matchMap.get(marterialType + "_cost")
+                                    + (materialEntity.getCost() == null ? ""
+                                    : ","+Double.valueOf(materialEntity.getCost())));
                     double totleCost = matchMap.get("totalCost") == null ? 0d
                             : Double.parseDouble(matchMap.get("totalCost")
                                     .toString());
@@ -2398,20 +2397,19 @@ public class PrepareBillHandler {
                         matchMap.put(
                                 marterialType + "_count",
                                 matchMap.get(marterialType + "_count")
-                                        + "," + materialEntity.getWeight() == null ? ""
-                                        : Double.valueOf(materialEntity.getWeight()));
+                                        + (materialEntity.getWeight() == null ? ""
+                                        :","+ Double.valueOf(materialEntity.getWeight())));
                     } else {
                         matchMap.put(
                                 marterialType + "_count",
                                 matchMap.get(marterialType + "_count")
-                                        + ","
-                                        + materialEntity.getQuantity() == null ? ""
-                                        : Double.valueOf(materialEntity.getQuantity()));
+                                        + (materialEntity.getQuantity() == null ? ""
+                                        :","+ Double.valueOf(materialEntity.getQuantity())));
                     }
                     matchMap.put(marterialType + "_cost",
-                            matchMap.get(marterialType + "_cost") + ","
-                                    + materialEntity.getCost() == null ? ""
-                                    : Double.valueOf(materialEntity.getCost()));
+                            matchMap.get(marterialType + "_cost")
+                                    +( materialEntity.getCost() == null ? ""
+                                    :","+ Double.valueOf(materialEntity.getCost())));
                     double totleCost = matchMap.get("totalCost") == null ? 0d
                             : Double.parseDouble(matchMap.get("totalCost")
                                     .toString());
