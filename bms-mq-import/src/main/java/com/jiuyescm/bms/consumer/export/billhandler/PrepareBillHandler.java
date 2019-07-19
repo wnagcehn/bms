@@ -2178,8 +2178,8 @@ public class PrepareBillHandler {
             boolean flag = false;
             Map<String, Object> matchMap = null;
             for (Map<String, Object> map : dataPackMaterialList) {
-                if (map.get("waybillNo").equals(
-                        materialEntity.getWaybillNo())) {
+                if (map.get("waybillNo").equals(materialEntity.getWaybillNo())
+                  || map.get("waybillNo").equals(materialEntity.getZexpressnum())) {
                     flag = true;
                     matchMap = map;
                     break;
@@ -2190,29 +2190,41 @@ public class PrepareBillHandler {
                 String marterialType = getMaterialType(materialInfoList,
                         materialEntity.getProductNo());
                 if (matchMap.containsKey(marterialType + "_name")) {
-                    matchMap.put(
-                            marterialType + "_name",
-                            matchMap.get(marterialType + "_name") + ","
-                                    + materialEntity.getProductName() == null ? ""
-                                    : materialEntity.getProductName());
+                    matchMap.put(marterialType + "_name",
+                            matchMap.get(marterialType + "_name") 
+                                    + (materialEntity.getProductName() == null ? ""
+                                    : ","+materialEntity.getProductName()));
+                    
+                    matchMap.put(marterialType + "_code",
+                            matchMap.get(marterialType + "_code") 
+                            + (materialEntity.getProductNo() == null ? ""
+                            : ","+materialEntity.getProductNo()));
+                    matchMap.put(marterialType + "_type",
+                            matchMap.get(marterialType + "_type") 
+                            + (materialEntity.getSpecDesc() == null ? ""
+                            : ","+materialEntity.getSpecDesc()));
+                    matchMap.put(marterialType + "_unitprice",
+                            matchMap.get(marterialType + "_unitprice") 
+                            + (materialEntity.getUnitPrice() == null ? ""
+                            : ","+Double.valueOf(materialEntity.getUnitPrice())));
+                    
                     if (materialEntity.getProductNo().contains("GB")) {
                         matchMap.put(
                                 marterialType + "_count",
                                 matchMap.get(marterialType + "_count")
-                                        + "," + materialEntity.getWeight() == null ? ""
-                                        : Double.valueOf(materialEntity.getWeight()));
+                                        +( materialEntity.getWeight() == null ? ""
+                                        : ","+Double.valueOf(materialEntity.getWeight())));
                     } else {
                         matchMap.put(
                                 marterialType + "_count",
-                                matchMap.get(marterialType + "_count")
-                                        + ","
-                                        + materialEntity.getQuantity() == null ? ""
-                                        : Double.valueOf(materialEntity.getQuantity()));
+                                matchMap.get(marterialType + "_count") 
+                                        + (materialEntity.getQuantity() == null ? ""
+                                        :","+ Double.valueOf(materialEntity.getQuantity())));
                     }
                     matchMap.put(marterialType + "_cost",
-                            matchMap.get(marterialType + "_cost") + ","
-                                    + materialEntity.getCost() == null ? ""
-                                    : Double.valueOf(materialEntity.getCost()));
+                            matchMap.get(marterialType + "_cost")
+                                    + (materialEntity.getCost() == null ? ""
+                                    : ","+Double.valueOf(materialEntity.getCost())));
                     double totleCost = matchMap.get("totalCost") == null ? 0d
                             : Double.parseDouble(matchMap.get("totalCost")
                                     .toString());
