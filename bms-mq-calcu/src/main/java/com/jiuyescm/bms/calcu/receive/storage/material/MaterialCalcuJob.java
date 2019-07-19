@@ -310,10 +310,11 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 		}
 		
 		//标准包装方案对应的耗材不计费
-        handPackage(entity,fee);
+      /*  if(handPackage(entity,fee)==true){
+            return true;
+        }*/
 
-		
-		return false;		
+		return handPackage(entity,fee);		
 	}
 	
 	@Override

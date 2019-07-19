@@ -260,6 +260,12 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
 		// TODO Auto-generated method stub
 		return this.selectList("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.queryMaterial", condition);
 	}
+	
+    @Override
+    public List<FeesReceiveMaterial> queryMaterialSellData(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return this.selectList("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.queryMaterialSellData", condition);
+    }
 
 	@Override
 	public int updateList(List<BizOutstockPackmaterialEntity> list) {
@@ -400,4 +406,6 @@ public class BizOutstockPackmaterialRepositoryImpl extends MyBatisDao implements
         // TODO Auto-generated method stub
         return (String) selectOne("com.jiuyescm.bms.biz.storage.mapper.BizOutstockPackmaterialMapper.getWayBillNo", condition);
     }
+
+
 }

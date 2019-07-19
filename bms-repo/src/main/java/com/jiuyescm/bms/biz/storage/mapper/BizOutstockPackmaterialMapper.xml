@@ -623,6 +623,40 @@
 	  	</if>
     </select>
     
+    <select id="queryMaterialSellData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial">
+        select  
+		a.warehouse_name, 
+		a.customer_name, 
+		a.outstock_no,
+		a.create_time,
+		a.consumer_material_code as productNo, 
+		a.consumer_material_name as product_name, 
+		b.quantity,
+		b.weight,
+		IFNULL(b.cost,0) as cost,
+		b.unit_price as unitPrice,
+		b.is_calculated as isCalculated
+		from biz_outstock_packmaterial a
+		LEFT JOIN fees_receive_storage b on  a.fees_no =b.fees_no and b.del_flag='0'
+		where a.create_time>=#{startTime} 
+		and <![CDATA[a.create_time<#{endTime}]]> 
+		and a.del_flag='0' and  a.source='seller'
+    	<if test="warehouseCode!=null and warehouseCode!=''">
+    		and a.warehouse_code=#{warehouseCode}
+    	</if>
+		<if test="(customerId != null and customerId !='')" >
+			and a.customer_id=#{customerId}
+		</if>
+	  	<if test="(customerIds != null and customerIds !='')" >
+	  		and a.customer_id in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 	order by a.customer_id
+	  	</if>   
+    </select>
+      
+    
     <select id="queryAllWarehouseFromBizData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
     	select warehouse_code,warehouse_name 
     	from biz_outstock_packmaterial where 1=1 and <![CDATA[create_time>=#{startTime}]]>
