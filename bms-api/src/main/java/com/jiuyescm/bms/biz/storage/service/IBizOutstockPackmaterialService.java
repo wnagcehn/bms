@@ -79,6 +79,9 @@ public interface IBizOutstockPackmaterialService {
 
 	PageInfo<FeesReceiveMaterial> queryMaterialFromBizData(
 			Map<String, Object> condition, int pageNo, int size);
+	
+	List<FeesReceiveMaterial> queryMaterialSellData(
+	            Map<String, Object> condition);
 
 	List<BizOutstockPackmaterialEntity> queryAllWarehouseFromBizData(
 			Map<String, Object> condition);
@@ -157,4 +160,7 @@ public interface IBizOutstockPackmaterialService {
 	 * @return
 	 */
 	String getWayBillNo(Map<String,Object> condition);
+	
+	
+	
 }
