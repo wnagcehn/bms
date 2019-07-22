@@ -54,6 +54,8 @@ public class BizOutstockPackmaterialExportController extends BaseController{
 	@Resource
 	private JmsTemplate jmsQueueTemplate;
 	
+	private static final Integer MAX_PAGE = 900000;
+	
 	@DataProvider
 	public void query(Page<BizOutstockPackmaterialEntity> page, Map<String, Object> param){
 		if("ALL".equals(param.get("isCalculated"))){
@@ -222,6 +224,15 @@ public class BizOutstockPackmaterialExportController extends BaseController{
 			//头、内容信息
 			List<Map<String, Object>> headDetailMapList = getBizHead(); 
 			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList());
+			
+//			if (lineNo >= MAX_PAGE) {
+//                lineNo = 1;
+//                poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getDesc()+"2", 
+//                        lineNo, headDetailMapList, dataDetailList);
+//                if (null != pageInfo && pageInfo.getList().size() > 0) {
+//                    lineNo += pageInfo.getList().size();
+//                }
+//            }
 			
 			poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PACK_OUTSTOCK.getDesc(), 
 					lineNo, headDetailMapList, dataDetailList);
