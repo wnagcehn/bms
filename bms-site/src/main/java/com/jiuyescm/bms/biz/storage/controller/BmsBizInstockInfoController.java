@@ -74,6 +74,9 @@ import com.jiuyescm.framework.lock.Lock;
 import com.jiuyescm.framework.lock.LockCallback;
 import com.jiuyescm.framework.lock.LockCantObtainException;
 import com.jiuyescm.framework.lock.LockInsideExecutedException;
+import com.jiuyescm.oms.report.ReportParamsVo;
+import com.jiuyescm.oms.report.po.entity.OmsPoitemReportEntity;
+import com.jiuyescm.oms.report.po.service.IOmsPoItemsReportService;
 
 /**
  * ..Controller
@@ -105,6 +108,8 @@ public class BmsBizInstockInfoController {
 	private SequenceService sequenceService;
 	@Autowired
 	private IBmsCalcuTaskService bmsCalcuTaskService;
+    @Autowired
+    private IOmsPoItemsReportService  omsPoItemsReportService;
 
 	private static final String FEE_1 = "wh_instock_work";
 	private static final String FEE_2 = "wh_b2c_handwork";
@@ -988,4 +993,41 @@ public class BmsBizInstockInfoController {
 			}
 		}
 	}
+	
+	
+	
+	   /**
+     * 入库明细分页查询
+     * <功能描述>
+     * 
+     * @author zhofeng
+     * @date 2019年7月22日 上午11:51:14
+     *
+     * @param page
+     * @param param
+     */
+    @DataProvider
+    public void queryDetail(Page<OmsPoitemReportEntity> page, Map<String, String> param) {
+        if (param == null) {
+            param = new HashMap<String, String>();
+        }
+        PageInfo<OmsPoitemReportEntity> pageInfo = null;
+        
+        ReportParamsVo vo = new ReportParamsVo();
+        vo.setPageNo(page.getPageNo());
+        vo.setPageSize(page.getPageSize());
+        vo.setOrderNos(param.get("poId")==null?null:param.get("poId").toString());
+        
+        try {
+            pageInfo = omsPoItemsReportService.queryPoItems(vo, param);
+            if (pageInfo != null) {
+                page.setEntities(pageInfo.getList());
+                page.setEntityCount((int) pageInfo.getTotal());
+            }
+        } catch (Exception e) {
+            logger.error("oms明细接口查询异常：", e);
+            throw new BizException("oms明细接口查询异常");
+        }  
+    }
+    
 }
