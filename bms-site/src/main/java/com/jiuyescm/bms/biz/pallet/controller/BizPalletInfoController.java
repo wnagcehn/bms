@@ -1005,8 +1005,8 @@ public class BizPalletInfoController {
         vo.setCustomerIds(param.get("customerId")==null?null:param.get("customerId").toString());
         vo.setTempratureType(param.get("tempratureType")==null?null:param.get("tempratureType").toString());
         try {
-            vo.setStorageDate(param.get("storageDate")==null?null:sdf.parse(sdf.format(param.get("storageDate"))));
-        } catch (ParseException pe) {
+            vo.setStorageDate(param.get("storageDate")==null?null:sdf.format(param.get("storageDate")));
+        } catch (Exception pe) {
             logger.error("日期转换异常：", pe);
             throw new BizException("日期转换异常!");
         }
