@@ -495,6 +495,19 @@
 		    </exclusions>
 		</dependency>
 		
+		<dependency>
+			<groupId>com.jiuyescm.oms</groupId>
+			<artifactId>oms-entity</artifactId>
+			<version>2.8.1.1-SNAPSHOT</version>
+		</dependency>
+		
+		
+		<dependency>
+			<groupId>com.jiuyescm.oms</groupId>
+			<artifactId>oms-api</artifactId>
+			<version>2.8.1.1-SNAPSHOT</version>
+		</dependency>
+		
 	</dependencies>
 	<packaging>war</packaging>
 	<build>

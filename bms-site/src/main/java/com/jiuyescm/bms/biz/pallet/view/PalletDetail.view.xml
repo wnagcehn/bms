@@ -72,7 +72,7 @@
   <View>
     <ClientEvent name="onReady">var storageDate = GetQueryString(&quot;curTime&quot;);&#xD;
 var warehouseNo = GetQueryString(&quot;warehouseCode&quot;);&#xD;
-var productId = GetQueryString(&quot;customerId&quot;);&#xD;
+var customerId = GetQueryString(&quot;customerId&quot;);&#xD;
 var tempratureType = GetQueryString(&quot;temperatureTypeCode&quot;);&#xD;
 &#xD;
 if(storageDate == undefined || storageDate == null){&#xD;
@@ -82,7 +82,7 @@ if(storageDate == undefined || storageDate == null){&#xD;
 var data = view.get(&quot;#dsPalletDetaillEntityQuery.data&quot;).current;&#xD;
 data.set(&quot;storageDate&quot;,storageDate);&#xD;
 data.set(&quot;warehouseNo&quot;,warehouseNo);&#xD;
-data.set(&quot;productId&quot;,productId);&#xD;
+data.set(&quot;customerId&quot;,customerId);&#xD;
 data.set(&quot;tempratureType&quot;,tempratureType);&#xD;
 &#xD;
 var dsPalletDetaillEntity= view.get(&quot;#dsPalletDetaillEntity&quot;);&#xD;
@@ -108,8 +108,9 @@ function GetQueryString(name){&#xD;
     <DataSet id="dsPalletDetaillEntity">
       <Property name="dataType">[dtPalletDetaillEntity]</Property>
       <Property name="readOnly">false</Property>
-      <Property name="loadMode">lazy</Property>
+      <Property name="loadMode">manual</Property>
       <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bizPalletInfoController#queryDetail</Property>
     </DataSet>
     <DataSet id="dsPalletDetaillEntityQuery">
       <ClientEvent name="onCreate">view.get(&quot;#dsPalletDetaillEntityQuery&quot;).getData().insert();</ClientEvent>
