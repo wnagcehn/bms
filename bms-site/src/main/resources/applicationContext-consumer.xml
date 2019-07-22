@@ -132,4 +132,6 @@
 
 		<!-- 托数明细 -->
 		<dubbo:reference id="omsReportStorageService" interface="com.jiuyescm.oms.report.storage.service.IOmsReportStorageService" version="1.0.0" registry="bms"/>
+		<!-- 入库明细 -->
+		<dubbo:reference id="omsPoItemsReportService" interface="com.jiuyescm.oms.report.po.service.IOmsPoItemsReportService" version="1.0.0" registry="bms"/>
 </beans> 
