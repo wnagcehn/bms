@@ -8,45 +8,45 @@
       <PropertyDef name="id">
         <Property name="label">id</Property>
       </PropertyDef>
-      <PropertyDef name="orderNo">
+      <PropertyDef name="orderno">
         <Property name="label">出库单号</Property>
       </PropertyDef>
-      <PropertyDef name="productId">
+      <PropertyDef name="productid">
         <Property name="label">商品ID</Property>
       </PropertyDef>
-      <PropertyDef name="productName">
+      <PropertyDef name="productname">
         <Property name="label">商品名称</Property>
       </PropertyDef>
-      <PropertyDef name="tempratureType">
+      <PropertyDef name="tempraturetype">
         <Property name="label">温度类型</Property>
         <Property name="mapping">
           <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTemperatureTypeList&quot;).getResult()}</Property>
         </Property>
       </PropertyDef>
-      <PropertyDef name="stockPlaceCode">
-        <Property name="label">库存类型</Property>
+      <PropertyDef name="stockid">
+        <Property name="label">库存类型编码</Property>
       </PropertyDef>
-      <PropertyDef name="stockPlaceText">
-        <Property name="label">库存类型</Property>
+      <PropertyDef name="stockplacename">
+        <Property name="label">库存类型名称</Property>
       </PropertyDef>
       <PropertyDef name="qty">
-        <Property name="label">数量</Property>
-        <Property name="dataType">BigDecimal</Property>
-      </PropertyDef>
-      <PropertyDef name="realQty">
         <Property name="label">出库数量</Property>
         <Property name="dataType">BigDecimal</Property>
       </PropertyDef>
-      <PropertyDef name="boxNum">
+      <PropertyDef name="realqty">
+        <Property name="label">实际出库数量</Property>
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="boxnum">
         <Property name="label">出库箱数</Property>
         <Property name="dataType">int</Property>
       </PropertyDef>
-      <PropertyDef name="grossWeight">
+      <PropertyDef name="weightTemp">
         <Property></Property>
         <Property name="label">单品毛重</Property>
         <Property name="dataType">BigDecimal</Property>
       </PropertyDef>
-      <PropertyDef name="itemWeight">
+      <PropertyDef name="itemweight">
         <Property></Property>
         <Property name="label">总重量</Property>
         <Property name="dataType">BigDecimal</Property>
@@ -112,49 +112,59 @@ function GetQueryString(name){&#xD;
         <Property name="visible">false</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">orderNo</Property>
+        <Property name="property">orderno</Property>
         <Property name="width">180</Property>
-        <Property name="name">orderNo</Property>
+        <Property name="name">orderno</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">productId</Property>
+        <Property name="property">productid</Property>
         <Property name="width">120</Property>
-        <Property name="name">productId</Property>
+        <Property name="name">productid</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">productName</Property>
+        <Property name="property">productname</Property>
         <Property name="width">150</Property>
-        <Property name="name">productName</Property>
+        <Property name="name">productname</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">tempratureType</Property>
+        <Property name="property">tempraturetype</Property>
         <Property name="width">100</Property>
-        <Property name="name">tempratureType</Property>
+        <Property name="name">tempraturetype</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">stockPlaceText</Property>
+        <Property name="property">stockplacename</Property>
         <Property name="width">100</Property>
-        <Property name="name">stockPlaceText</Property>
+        <Property name="name">stockplacename</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">realQty</Property>
+        <Property name="property">realqty</Property>
         <Property name="width">120</Property>
-        <Property name="name">realQty</Property>
+        <Property name="name">realqty</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">boxNum</Property>
+        <Property name="property">boxnum</Property>
         <Property name="width">100</Property>
-        <Property name="name">boxNum</Property>
+        <Property name="name">boxnum</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">grossWeight</Property>
+        <Property name="property">weightTemp</Property>
         <Property name="width">100</Property>
-        <Property name="name">grossWeight</Property>
+        <Property name="name">weightTemp</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">itemWeight</Property>
+        <Property name="property">itemweight</Property>
         <Property name="width">100</Property>
-        <Property name="name">itemWeight</Property>
+        <Property name="name">itemweight</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">qty</Property>
+        <Property name="width">100</Property>
+        <Property name="name">qty</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">stockid</Property>
+        <Property name="width">120</Property>
+        <Property name="name">stockid</Property>
       </DataColumn>
     </DataGrid>
   </View>
