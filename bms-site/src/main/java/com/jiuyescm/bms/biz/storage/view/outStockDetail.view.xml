@@ -4,7 +4,7 @@
   <Context/>
   <Model>
     <DataType name="dtOutstockDetaillEntity">
-      <Property name="creationType">com.jiuyescm.bms.bill.customer.BillCustomerDetailEntity</Property>
+      <Property name="creationType">com.jiuyescm.oms.report.orderinfo.entity.OmsOrderinfoItemEntity</Property>
       <PropertyDef name="id">
         <Property name="label">id</Property>
       </PropertyDef>
@@ -90,8 +90,9 @@ function GetQueryString(name){&#xD;
     <DataSet id="dsOutstockDetaillEntity">
       <Property name="dataType">[dtOutstockDetaillEntity]</Property>
       <Property name="readOnly">false</Property>
-      <Property name="loadMode">lazy</Property>
+      <Property name="loadMode">manual</Property>
       <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bizOutstockDetailController#queryOrderinfoItems</Property>
     </DataSet>
     <DataSet id="dsOutstockDetaillEntityQuery">
       <ClientEvent name="onCreate">view.get(&quot;#dsOutstockDetaillEntityQuery&quot;).getData().insert();</ClientEvent>
