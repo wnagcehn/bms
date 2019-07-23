@@ -4,6 +4,7 @@
   <Context/>
   <Model>
     <DataType name="dtPalletDetaillEntity">
+      <Property name="creationType">com.jiuyescm.oms.wm.storage.entity.OmsStorageEntity</Property>
       <PropertyDef name="id">
         <Property name="label">id</Property>
       </PropertyDef>
@@ -14,13 +15,13 @@
       <PropertyDef name="productId">
         <Property name="label">商品ID</Property>
       </PropertyDef>
-      <PropertyDef name="productName">
+      <PropertyDef name="productname">
         <Property name="label">商品名称</Property>
       </PropertyDef>
       <PropertyDef name="warehouseNo">
         <Property name="label">仓库</Property>
       </PropertyDef>
-      <PropertyDef name="warehouseName">
+      <PropertyDef name="warehousename">
         <Property name="label">仓库</Property>
       </PropertyDef>
       <PropertyDef name="productDate">
@@ -140,14 +141,14 @@ function GetQueryString(name){&#xD;
         <Property name="name">productId</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">productName</Property>
+        <Property name="property">productname</Property>
         <Property name="width">150</Property>
-        <Property name="name">productName</Property>
+        <Property name="name">productname</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">warehouseName</Property>
+        <Property name="property">warehousename</Property>
         <Property name="width">100</Property>
-        <Property name="name">warehouseName</Property>
+        <Property name="name">warehousename</Property>
       </DataColumn>
       <DataColumn>
         <Property name="property">productDate</Property>

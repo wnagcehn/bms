@@ -72,6 +72,9 @@ public class DispatchBillExportController extends BaseController{
 	
 	@Resource
 	private JmsTemplate jmsQueueTemplate;
+	
+	private static final Integer MAX_LINE = 10000;
+	
 	/**
 	 * 导出
 	 */
@@ -216,6 +219,8 @@ public class DispatchBillExportController extends BaseController{
 		Map<String, String> transportTypeMap = getEnumList("TRANSPORT_TYPE");
 		int pageNo = 1;
 		int lineNo = 1;
+		int lineNo2 = 1;
+		int totalLine = 0;
 		boolean doLoop = true;
 		while (doLoop) {			
 			PageInfo<BizDispatchBillVo> pageInfo = 
@@ -234,11 +239,23 @@ public class DispatchBillExportController extends BaseController{
 			List<Map<String, Object>> headDetailMapList = getBizHead(); 
 			List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),temMap,b2bMap,orderStatusMap,serviceMap,transportTypeMap);
 			
-			poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_REC_DIS.getDesc(), 
-					lineNo, headDetailMapList, dataDetailList);
-			if (null != pageInfo && pageInfo.getList().size() > 0) {
-				lineNo += pageInfo.getList().size();
-			}
+//			int i = (totalLine + dataDetailList.size())/MAX_LINE + 1;
+			if (totalLine + dataDetailList.size() > MAX_LINE) {
+                poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_REC_DIS.getDesc()+"2", 
+                        lineNo2, headDetailMapList, dataDetailList);
+                if (null != pageInfo && pageInfo.getList().size() > 0) {
+                    lineNo2 += pageInfo.getList().size();
+                    totalLine += pageInfo.getList().size();
+                }
+            }else {
+                poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_REC_DIS.getDesc(), 
+                        lineNo, headDetailMapList, dataDetailList);
+                if (null != pageInfo && pageInfo.getList().size() > 0) {
+                    lineNo += pageInfo.getList().size();
+                    totalLine += pageInfo.getList().size(); 
+                }
+            }
+	
 		}
 	}
 	
