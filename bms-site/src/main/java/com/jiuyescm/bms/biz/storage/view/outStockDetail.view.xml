@@ -27,7 +27,7 @@
         <Property name="label">库存类型编码</Property>
       </PropertyDef>
       <PropertyDef name="stockplacename">
-        <Property name="label">库存类型名称</Property>
+        <Property name="label">库存类型</Property>
       </PropertyDef>
       <PropertyDef name="qty">
         <Property name="label">出库数量</Property>
@@ -107,10 +107,6 @@ function GetQueryString(name){&#xD;
       <Property name="showFooter">false</Property>
       <IndicatorColumn/>
       <RowNumColumn/>
-      <DataColumn name="id">
-        <Property name="property">id</Property>
-        <Property name="visible">false</Property>
-      </DataColumn>
       <DataColumn>
         <Property name="property">orderno</Property>
         <Property name="width">180</Property>
@@ -137,9 +133,9 @@ function GetQueryString(name){&#xD;
         <Property name="name">stockplacename</Property>
       </DataColumn>
       <DataColumn>
-        <Property name="property">realqty</Property>
-        <Property name="width">120</Property>
-        <Property name="name">realqty</Property>
+        <Property name="property">qty</Property>
+        <Property name="width">100</Property>
+        <Property name="name">qty</Property>
       </DataColumn>
       <DataColumn>
         <Property name="property">boxnum</Property>
@@ -155,16 +151,6 @@ function GetQueryString(name){&#xD;
         <Property name="property">itemweight</Property>
         <Property name="width">100</Property>
         <Property name="name">itemweight</Property>
-      </DataColumn>
-      <DataColumn>
-        <Property name="property">qty</Property>
-        <Property name="width">100</Property>
-        <Property name="name">qty</Property>
-      </DataColumn>
-      <DataColumn>
-        <Property name="property">stockid</Property>
-        <Property name="width">120</Property>
-        <Property name="name">stockid</Property>
       </DataColumn>
     </DataGrid>
   </View>
