@@ -947,4 +947,8 @@
     <select id="getWayBillNo" parameterType="java.util.Map" resultType="String">
     	SELECT waybill_no from biz_dispatch_bill where 1=1 and del_flag='0' and (waybill_no=#{waybillNo} or zexpressnum=#{waybillNo}) limit 1
     </select>
+    
+    <select id="queryOne" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+    	select * from biz_outstock_packmaterial where outstock_no=#{payNo} and del_flag='0' limit 1   
+    </select>
 </mapper>
