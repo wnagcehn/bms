@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
@@ -29,6 +30,8 @@ import com.jiuyescm.bms.biz.storage.vo.PubMaterialVo;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
+import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
+import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
 import com.jiuyescm.utils.JsonUtils;
 
 @Service("addFeeService")
@@ -44,6 +47,11 @@ public class AddFeeServiceImpl implements IAddFeeService {
     private ISnowflakeSequenceService snowflakeSequenceService;
     @Autowired
     private ISystemCodeRepository systemCodeRepository;  
+    @Autowired 
+    private IPubMaterialInfoService pubMaterialInfoService;
+    
+    private Map<String,PubMaterialInfoVo> materialMap = null;
+
         
     @Override
     public Map<String, String> save(List<BizAddFeeVo> listVo) {
@@ -90,6 +98,7 @@ public class AddFeeServiceImpl implements IAddFeeService {
         HashSet<String> payNoSet = new HashSet<>();
         //杂项销售出库
         List<BizOutstockPackmaterialEntity> materialList=new ArrayList<>();
+        materialMap=queryAllMaterial();
         // 校验
         for (BizAddFeeEntity bizAddFeeEntity : list) {
             String payNo = bizAddFeeEntity.getPayNo();
@@ -159,51 +168,68 @@ public class AddFeeServiceImpl implements IAddFeeService {
                 if("100010".equals(bizAddFeeEntity.getFirstSubject()) && "wh_consumablesuse".equals(bizAddFeeEntity.getFeesType())){
                     // 校验payNo是否存在
                     param.put("payNo", payNo);
-                    BizAddFeeEntity checkEntity = bizAddFeeRepository.queryPayNo(param);
+                    BizOutstockPackmaterialEntity checkEntity = bizOutstockPackmaterialRepository.queryOne(param);
                     if (null == checkEntity) {
                         if(bizAddFeeEntity.getList()==null || bizAddFeeEntity.getList().size()<=0){
                             resultMap.put(payNo, "一级类型为“杂项销售出库”，二级类型为“耗材使用”的增值单 耗材明细必传");
                             logger.info("一级类型为“杂项销售出库”，二级类型为“耗材使用”的增值单 耗材明细必传" + payNo);
                             continue;
-                        }              
+                        }
+                        boolean  isCheck=false;
                         for(PubMaterialEntity vo:bizAddFeeEntity.getList()){
                             if(StringUtils.isEmpty(vo.getMaterialCode())){
-                                resultMap.put(payNo, "杂项销售出库，耗材编码为空");
+                                resultMap.put(payNo, "杂项销售出库，耗材条码为空");
                                 logger.info("杂项销售出库，耗材编码为空" + payNo);
+                                isCheck=true;
                                 break;
+                            }else{
+                                if(!materialMap.containsKey(vo.getMaterialCode())){
+                                    resultMap.put(payNo, "杂项销售出库，耗材条码【"+vo.getMaterialCode()+"】不存在");
+                                    logger.info("杂项销售出库，耗材条码【"+vo.getMaterialCode()+"】不存在" + payNo);
+                                    isCheck=true;
+                                    break;
+                                }
                             }
                             if(StringUtils.isEmpty(vo.getMaterialName())){
                                 resultMap.put(payNo, "杂项销售出库，耗材名称为空");
                                 logger.info("杂项销售出库，耗材名称为空" + payNo);
+                                isCheck=true;
                                 break;
                             }
+                            
                             if (null == vo.getNum()) {
                                 logger.info("杂项销售出库，数量为空" + payNo);
                                 resultMap.put(payNo, "杂项销售出库，数量为空");
+                                isCheck=true;
                                 break;
                             }
-                            BizOutstockPackmaterialEntity entity=new BizOutstockPackmaterialEntity();
-                            entity.setOutstockNo(payNo);
-                            entity.setCustomerId(bizAddFeeEntity.getCustomerid());
-                            entity.setCustomerName(bizAddFeeEntity.getCustomerName());
-                            entity.setWarehouseCode(bizAddFeeEntity.getWarehouseCode());
-                            entity.setWarehouseName(bizAddFeeEntity.getWarehouseName());
-                            entity.setConsumerMaterialCode(vo.getMaterialCode());
-                            entity.setConsumerMaterialName(vo.getMaterialName());
-                            entity.setNum(vo.getNum());
-                            entity.setAdjustNum(vo.getNum());
-                            entity.setCreateTime(bizAddFeeEntity.getCreateTime());
-                            entity.setWriteTime(bizAddFeeEntity.getWriteTime());
-                            entity.setSource("seller");
-                            entity.setDelFlag("0");
-                            entity.setIsCalculated("0");
-                            materialList.add(entity);
+              
                         }
+                        if(!isCheck){
+                            for(PubMaterialEntity vo:bizAddFeeEntity.getList()){
+                                BizOutstockPackmaterialEntity entity=new BizOutstockPackmaterialEntity();
+                                entity.setOutstockNo(payNo);
+                                entity.setCustomerId(bizAddFeeEntity.getCustomerid());
+                                entity.setCustomerName(bizAddFeeEntity.getCustomerName());
+                                entity.setWarehouseCode(bizAddFeeEntity.getWarehouseCode());
+                                entity.setWarehouseName(bizAddFeeEntity.getWarehouseName());
+                                entity.setConsumerMaterialCode(vo.getMaterialCode());
+                                entity.setConsumerMaterialName(vo.getMaterialName());
+                                entity.setNum(vo.getNum());
+                                entity.setAdjustNum(vo.getNum());
+                                entity.setCreateTime(bizAddFeeEntity.getCreateTime());
+                                entity.setWriteTime(JAppContext.currentTimestamp());
+                                entity.setSource("seller");
+                                entity.setDelFlag("0");
+                                entity.setIsCalculated("0");
+                                materialList.add(entity);   
+                                resultMap.put(payNo, "SUCCESS");
+                            }
+                        }                       
                     }else {
                         logger.info("增值服务单，已存在" + payNo);
-                    }
-                    resultMap.put(payNo, "SUCCESS");
-                    
+                        resultMap.put(payNo, "SUCCESS");
+                    }                
                 }else{
                     if (StringUtils.isEmpty(bizAddFeeEntity.getFeesUnit())) {
                         resultMap.put(payNo, "增值服务单，费用单位为空");
@@ -307,5 +333,21 @@ public class AddFeeServiceImpl implements IAddFeeService {
             codeList.add(systemCodeEntity.getCode());
         }
         return codeList;
+    }
+    
+    /**
+     * 查询耗材编码-耗材映射
+     * @return
+     */
+    public Map<String,PubMaterialInfoVo> queryAllMaterial(){
+        Map<String,Object> condition=Maps.newHashMap();
+        List<PubMaterialInfoVo> tmscodels = pubMaterialInfoService.queryList(condition);
+        Map<String,PubMaterialInfoVo> map=Maps.newLinkedHashMap();
+        for(PubMaterialInfoVo materialVo:tmscodels){
+            if(!StringUtils.isBlank(materialVo.getBarcode())){
+                map.put(materialVo.getBarcode().trim(),materialVo);
+            }
+        }
+        return map;
     }
 }
