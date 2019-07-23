@@ -205,4 +205,6 @@ public interface IBizOutstockPackmaterialRepository {
     
     List<FeesReceiveMaterial> queryMaterialSellData(
             Map<String, Object> condition);
+    
+    BizOutstockPackmaterialEntity queryOne(Map<String,Object> condition);
 }
