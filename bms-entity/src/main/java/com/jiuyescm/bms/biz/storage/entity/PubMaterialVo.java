@@ -4,14 +4,20 @@
  */
 package com.jiuyescm.bms.biz.storage.entity;
 
+import com.jiuyescm.cfm.domain.IEntity;
+
 
 /**
  * 
  * @author stevenl
  * 
  */
-public class PubMaterialVo{
+public class PubMaterialVo implements IEntity{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1200739260184460002L;
     //耗材条码
     private String materialNo;
     //耗材编码
