@@ -20,11 +20,12 @@ import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.repository.ISystemCodeRepository;
 import com.jiuyescm.bms.biz.storage.entity.BizAddFeeEntity;
 import com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity;
-import com.jiuyescm.bms.biz.storage.entity.PubMaterialVo;
+import com.jiuyescm.bms.biz.storage.entity.PubMaterialEntity;
 import com.jiuyescm.bms.biz.storage.repository.IBizAddFeeRepository;
 import com.jiuyescm.bms.biz.storage.repository.IBizOutstockPackmaterialRepository;
 import com.jiuyescm.bms.biz.storage.service.IAddFeeService;
 import com.jiuyescm.bms.biz.storage.vo.BizAddFeeVo;
+import com.jiuyescm.bms.biz.storage.vo.PubMaterialVo;
 import com.jiuyescm.bms.fees.storage.entity.FeesReceiveStorageEntity;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.framework.sequence.api.ISnowflakeSequenceService;
@@ -61,6 +62,18 @@ public class AddFeeServiceImpl implements IAddFeeService {
                 logger.error("转换失败", ex);
 
             }
+            List<PubMaterialEntity> entitylist=new ArrayList<>();
+            for(PubMaterialVo materialVo:vo.getList()){
+                PubMaterialEntity materialEntity=new PubMaterialEntity();
+                try {
+                    PropertyUtils.copyProperties(materialEntity, materialVo);
+                } catch (Exception ex) {                  
+                    logger.error("明细转换失败", ex);
+                }
+                entitylist.add(materialEntity);
+            }
+            paramEntity.setList(entitylist);
+            
             list.add(paramEntity);
         }
         
@@ -152,8 +165,8 @@ public class AddFeeServiceImpl implements IAddFeeService {
                             resultMap.put(payNo, "一级类型为“杂项销售出库”，二级类型为“耗材使用”的增值单 耗材明细必传");
                             logger.info("一级类型为“杂项销售出库”，二级类型为“耗材使用”的增值单 耗材明细必传" + payNo);
                             continue;
-                        }                   
-                        for(PubMaterialVo vo:bizAddFeeEntity.getList()){
+                        }              
+                        for(PubMaterialEntity vo:bizAddFeeEntity.getList()){
                             if(StringUtils.isEmpty(vo.getMaterialCode())){
                                 resultMap.put(payNo, "杂项销售出库，耗材编码为空");
                                 logger.info("杂项销售出库，耗材编码为空" + payNo);
