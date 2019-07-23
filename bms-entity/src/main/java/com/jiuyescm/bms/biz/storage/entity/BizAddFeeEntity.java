@@ -89,7 +89,7 @@ public class BizAddFeeEntity implements IEntity {
     private String firstSubjectName;
     
     //耗材明细
-    private List<PubMaterialVo> list;
+    private List<PubMaterialEntity> list;
 
     public String getPayNo() {
         return payNo;
@@ -535,11 +535,11 @@ public class BizAddFeeEntity implements IEntity {
         this.createDate = createDate;
     }
 
-    public List<PubMaterialVo> getList() {
+    public List<PubMaterialEntity> getList() {
         return list;
     }
 
-    public void setList(List<PubMaterialVo> list) {
+    public void setList(List<PubMaterialEntity> list) {
         this.list = list;
     }
     

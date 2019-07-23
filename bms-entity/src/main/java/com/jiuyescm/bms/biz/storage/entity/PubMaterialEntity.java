@@ -12,7 +12,7 @@ import com.jiuyescm.cfm.domain.IEntity;
  * @author stevenl
  * 
  */
-public class PubMaterialVo implements IEntity{
+public class PubMaterialEntity implements IEntity{
 
     /**
      * 
