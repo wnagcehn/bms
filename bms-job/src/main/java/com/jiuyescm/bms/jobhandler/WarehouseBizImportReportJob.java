@@ -113,9 +113,11 @@ public class WarehouseBizImportReportJob extends IJobHandler{
 			}
 		}
 		//4.删除无效数据
-		Map<String, Object> deleteCondition = new HashMap<String, Object>();
-		deleteCondition.put("ids", deleteIds);
-		reportWarehouseBizImportService.deletetReport(deleteCondition);
+		if (deleteIds.size() > 0) {
+		    Map<String, Object> deleteCondition = new HashMap<String, Object>();
+	        deleteCondition.put("ids", deleteIds);
+		    reportWarehouseBizImportService.deletetReport(deleteCondition);
+        }
     }
 
     /*
