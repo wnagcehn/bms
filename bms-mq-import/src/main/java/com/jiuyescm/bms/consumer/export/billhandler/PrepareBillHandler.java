@@ -2234,19 +2234,18 @@ public class PrepareBillHandler {
                             matchMap.get(marterialType + "_unitprice") 
                             + (materialEntity.getUnitPrice() == null ? ""
                             : ","+Double.valueOf(materialEntity.getUnitPrice())));
-                    
                     if (materialEntity.getProductNo().contains("GB")) {
                         matchMap.put(
                                 marterialType + "_count",
                                 matchMap.get(marterialType + "_count")
                                          + (materialEntity.getWeight() == null ? ""
                                         : ","+ Double.valueOf(materialEntity.getWeight())));
-                    }  else {
+                    } else {
                         matchMap.put(
                                 marterialType + "_count",
-                                matchMap.get(marterialType + "_count") 
+                                matchMap.get(marterialType + "_count")
                                         + (materialEntity.getQuantity() == null ? ""
-                                        :","+ Double.valueOf(materialEntity.getQuantity())));
+                                        : ","+Double.valueOf(materialEntity.getQuantity())));
                     }
                     matchMap.put(marterialType + "_cost",
                             matchMap.get(marterialType + "_cost")
