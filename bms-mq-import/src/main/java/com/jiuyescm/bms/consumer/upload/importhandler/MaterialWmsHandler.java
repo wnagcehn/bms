@@ -111,7 +111,6 @@ public class MaterialWmsHandler {
     //WMS模板标识
     private boolean isWMS = true;
     
-    //抬头校验标识
     private boolean titleCheck = true;
     
     //----------初始化基础数据---------
@@ -172,8 +171,8 @@ public class MaterialWmsHandler {
                     //模板校验
                     if (!columns.contains("冰袋名称")) {
                         isWMS = false;
-                        logger.info("任务ID【{}】 -> 模板错误，请使用WMS模板!",taskId);
-                        BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 99,FileAsynTaskStatusEnum.FAIL.getCode(), null, JAppContext.currentTimestamp(), null, null, "模板错误，请使用WMS模板!");
+                        logger.info("任务ID【{}】 -> 模板错误，请使用系统模板!",taskId);
+                        BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 99,FileAsynTaskStatusEnum.FAIL.getCode(), null, JAppContext.currentTimestamp(), null, null, "模板错误，请使用系统模板!");
                         bmsFileAsynTaskService.update(updateEntity);
                         return;
                     }
@@ -254,7 +253,7 @@ public class MaterialWmsHandler {
                 public void error(Exception ex) {
                     if (!isWMS || !titleCheck) {
                         return;
-                    } 
+                    }
                 }
             });
             

@@ -166,8 +166,8 @@ public class MaterialHandler {
                     //模板校验
                     if (columns.contains("冰袋名称")) {
                         isSystem = false;
-                        logger.info("任务ID【{}】 -> 模板错误，请使用系统模板!",taskId);
-                        BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 99,FileAsynTaskStatusEnum.FAIL.getCode(), null, JAppContext.currentTimestamp(), null, null, "模板错误，请使用系统模板!");
+                        logger.info("任务ID【{}】 -> 模板错误，请使用WMS模板!",taskId);
+                        BmsFileAsynTaskVo updateEntity = new BmsFileAsynTaskVo(taskEntity.getTaskId(), 99,FileAsynTaskStatusEnum.FAIL.getCode(), null, JAppContext.currentTimestamp(), null, null, "模板错误，请使用WMS模板!");
                         bmsFileAsynTaskService.update(updateEntity);
                         return;
                     }
@@ -205,6 +205,7 @@ public class MaterialHandler {
                         }else{
                             titleCheck = false;
                             bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.FAIL.getCode(), "表格列名不对,存在重复列名，请检查");
+                            titleCheck = false;
                             return;
                         }
                     }
