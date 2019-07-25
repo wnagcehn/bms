@@ -86,6 +86,9 @@ import com.jiuyescm.mdm.customer.api.ICustomerService;
 import com.jiuyescm.mdm.customer.vo.CustomerVo;
 import com.jiuyescm.mdm.warehouse.api.IWarehouseService;
 import com.jiuyescm.mdm.warehouse.vo.WarehouseVo;
+import com.jiuyescm.oms.report.ReportParamsVo;
+import com.jiuyescm.oms.report.storage.service.IOmsReportStorageService;
+import com.jiuyescm.oms.wm.storage.entity.OmsStorageEntity;
 
 /**
  * ..Controller
@@ -123,6 +126,8 @@ public class BizPalletInfoController {
 	private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired 
 	private IBmsGroupSubjectService bmsGroupSubjectService;
+	@Autowired
+	private IOmsReportStorageService omsReportStorageService;
 
 	String sessionId=JAppContext.currentUserID()+"_import_PalletStorage";
 	final String nameSpace="com.jiuyescm.bms.biz.pallet.controller.BizPalletInfoController";
@@ -974,5 +979,48 @@ public class BizPalletInfoController {
 		}
 		return mapValue;
 	}
+	
+	/**
+	 * 托数明细分页查询
+	 * <功能描述>
+	 * 
+	 * @author wangchen
+	 * @date 2019年7月22日 上午11:51:14
+	 *
+	 * @param page
+	 * @param param
+	 */
+    @DataProvider
+    public void queryDetail(Page<OmsStorageEntity> page, Map<String, Object> param) {
+        if (param == null) {
+            param = new HashMap<String, Object>();
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        PageInfo<OmsStorageEntity> pageInfo = null;
+        
+        ReportParamsVo vo = new ReportParamsVo();
+        vo.setPageNo(page.getPageNo());
+        vo.setPageSize(page.getPageSize());
+        vo.setWarehouses(param.get("warehouseNo")==null?null:param.get("warehouseNo").toString());
+        vo.setCustomerIds(param.get("customerId")==null?null:param.get("customerId").toString());
+        vo.setTempratureType(param.get("tempratureType")==null?null:param.get("tempratureType").toString());
+        try {
+            vo.setStorageDate(param.get("storageDate")==null?null:sdf.format(param.get("storageDate")));
+        } catch (Exception pe) {
+            logger.error("日期转换异常：", pe);
+            throw new BizException("日期转换异常!");
+        }
+          
+        try {
+            pageInfo = omsReportStorageService.queryStorageItemsReport(vo, param);
+            if (pageInfo != null) {
+                page.setEntities(pageInfo.getList());
+                page.setEntityCount((int) pageInfo.getTotal());
+            }
+        } catch (Exception e) {
+            logger.error("oms明细接口查询异常：", e);
+            throw new BizException("oms明细接口查询异常");
+        }  
+    }
 	
 }

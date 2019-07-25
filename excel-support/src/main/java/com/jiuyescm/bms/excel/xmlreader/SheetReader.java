@@ -88,8 +88,7 @@ public class SheetReader extends DefaultHandler {
 			Map.Entry<String, DataColumn> entry = columnIterator.next();
 			if(cellMap.containsKey(entry.getKey())){
 				row.addColumn(cellMap.get(entry.getKey()));
-				if (null != cellMap.get(entry.getKey()).getColValue()) {
-				    totalRow += 1;
+				if (null != cellMap.get(entry.getKey()).getColValue()) {			    
                     isCallBack = true;
                 }
 			}
@@ -99,6 +98,7 @@ public class SheetReader extends DefaultHandler {
 			}
 		}
 		if (isCallBack) {
+		    totalRow += 1;
 		    callback.read(row); 
         }
 	}

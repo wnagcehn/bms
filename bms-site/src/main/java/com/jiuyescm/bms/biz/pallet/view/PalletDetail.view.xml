@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtPalletDetaillEntity">
+      <Property name="creationType">com.jiuyescm.oms.wm.storage.entity.OmsStorageEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="storageDate">
+        <Property name="label">库存日期</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="productId">
+        <Property name="label">商品ID</Property>
+      </PropertyDef>
+      <PropertyDef name="productname">
+        <Property name="label">商品名称</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseNo">
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="warehousename">
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="productDate">
+        <Property name="label">生产日期</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="aqty">
+        <Property name="label">库存件数</Property>
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="factorPallet">
+        <Property name="label">第三级箱规</Property>
+        <Property name="dataType">Double</Property>
+      </PropertyDef>
+      <PropertyDef name="boxLength">
+        <Property name="label">箱长</Property>
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="boxWidth">
+        <Property name="label">箱宽</Property>
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="boxHeight">
+        <Property></Property>
+        <Property name="label">箱高</Property>
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="pns">
+        <Property></Property>
+        <Property name="label">新SKU</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPalletDetaillEntityQuery">
+      <PropertyDef name="storageDate">
+        <Property name="label">库存日期</Property>
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="productId">
+        <Property name="label">商品id</Property>
+      </PropertyDef>
+      <PropertyDef name="warehouseNo">
+        <Property name="label">仓库</Property>
+      </PropertyDef>
+      <PropertyDef name="tempratureType">
+        <Property name="label">温度类型</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">var storageDate = GetQueryString(&quot;curTime&quot;);&#xD;
+var warehouseNo = GetQueryString(&quot;warehouseCode&quot;);&#xD;
+var customerId = GetQueryString(&quot;customerId&quot;);&#xD;
+var tempratureType = GetQueryString(&quot;temperatureTypeCode&quot;);&#xD;
+&#xD;
+if(storageDate == undefined || storageDate == null){&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var data = view.get(&quot;#dsPalletDetaillEntityQuery.data&quot;).current;&#xD;
+data.set(&quot;storageDate&quot;,storageDate);&#xD;
+data.set(&quot;warehouseNo&quot;,warehouseNo);&#xD;
+data.set(&quot;customerId&quot;,customerId);&#xD;
+data.set(&quot;tempratureType&quot;,tempratureType);&#xD;
+&#xD;
+var dsPalletDetaillEntity= view.get(&quot;#dsPalletDetaillEntity&quot;);&#xD;
+with (dsPalletDetaillEntity) {&#xD;
+	dsPalletDetaillEntity.clear();&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+} &#xD;
+&#xD;
+&#xD;
+function GetQueryString(name){&#xD;
+    var reg = new RegExp(&quot;(^|&amp;)&quot; + name + &quot;=([^&amp;]*)(&amp;|$)&quot;); &#xD;
+    var r = window.location.search.substr(1).match(reg);&#xD;
+    if(r!=null)return  unescape(r[2]); return null;&#xD;
+}&#xD;
+</ClientEvent>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsPalletDetaillEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+    </ToolBar>
+    <DataSet id="dsPalletDetaillEntity">
+      <Property name="dataType">[dtPalletDetaillEntity]</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bizPalletInfoController#queryDetail</Property>
+    </DataSet>
+    <DataSet id="dsPalletDetaillEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsPalletDetaillEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtPalletDetaillEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <DataGrid>
+      <Property name="dataSet">dsPalletDetaillEntity</Property>
+      <Property name="stretchColumnsMode">auto</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="showFooter">false</Property>
+      <IndicatorColumn/>
+      <RowNumColumn/>
+      <DataColumn name="id">
+        <Property name="property">id</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">storageDate</Property>
+        <Property name="width">160</Property>
+        <Property name="name">storageDate</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">productId</Property>
+        <Property name="width">120</Property>
+        <Property name="name">productId</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">productname</Property>
+        <Property name="width">150</Property>
+        <Property name="name">productname</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">warehousename</Property>
+        <Property name="width">100</Property>
+        <Property name="name">warehousename</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">productDate</Property>
+        <Property name="width">100</Property>
+        <Property name="name">productDate</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">aqty</Property>
+        <Property name="width">120</Property>
+        <Property name="name">aqty</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">factorPallet</Property>
+        <Property name="width">100</Property>
+        <Property name="name">factorPallet</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">boxLength</Property>
+        <Property name="width">100</Property>
+        <Property name="name">boxLength</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">boxWidth</Property>
+        <Property name="width">100</Property>
+        <Property name="name">boxWidth</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">boxHeight</Property>
+        <Property name="width">100</Property>
+        <Property name="name">boxHeight</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">pns</Property>
+        <Property name="width">100</Property>
+        <Property name="name">pns</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

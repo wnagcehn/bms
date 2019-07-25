@@ -20,4 +20,8 @@ public interface IBizOutstockPackmaterialService {
     public void updateBatch(List<BizOutstockPackmaterialEntity> list);
 
 	public List<BizOutstockPackmaterialEntity> queryCost(Map<String, Object> map);
+	
+	//作废同时存在导入和系统中的导入耗材
+    public void updateImportMaterial(Map<String,Object> condition);
+
 }

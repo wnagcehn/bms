@@ -332,4 +332,10 @@ public class BizOutstockPackmaterialServiceImpl implements IBizOutstockPackmater
         return repository.getWayBillNo(condition);
     }
 
+    @Override
+    public List<FeesReceiveMaterial> queryMaterialSellData(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return repository.queryMaterialSellData(condition);
+    }
+
 }

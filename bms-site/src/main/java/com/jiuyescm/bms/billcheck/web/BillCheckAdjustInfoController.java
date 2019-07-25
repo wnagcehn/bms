@@ -64,7 +64,7 @@ public class BillCheckAdjustInfoController {
                 }
 
                 //更新账单跟踪
-                updateBillcheckInfo(adjustVo);
+                updateBillcheckInfo(adjustVo, "修改");
                 return "更新回款调整成功";
             } 
             return "数据库操作成功";
@@ -75,7 +75,10 @@ public class BillCheckAdjustInfoController {
         
     }
     
-    private void updateBillcheckInfo(BillCheckAdjustInfoVo adjustVo) {
+    /*
+     * 更新主账单金额和状态，写入日志表
+     */
+    private void updateBillcheckInfo(BillCheckAdjustInfoVo adjustVo, String status) {
         
         // 统计金额判断状态
         try {
@@ -147,11 +150,7 @@ public class BillCheckAdjustInfoController {
                     BillCheckLogVo billCheckLogVo = new BillCheckLogVo();
                     billCheckLogVo.setBillCheckId(checkVo.getId());
                     billCheckLogVo.setBillStatusCode(checkVo.getBillStatus());
-                    if ("0".equals(adjustVo.getDelFlag())) {
-                        billCheckLogVo.setOperateDesc("回款调整修改");
-                    }else {
-                        billCheckLogVo.setOperateDesc("回款调整删除");
-                    }      
+                    billCheckLogVo.setOperateDesc("回款调整" + status);      
                     billCheckLogVo.setLogType(0);
                     billCheckLogVo.setCreator(ContextHolder.getLoginUser().getCname());
                     billCheckLogVo.setCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -184,12 +183,46 @@ public class BillCheckAdjustInfoController {
             }
             
             //更新账单跟踪
-            updateBillcheckInfo(adjustVo);
+            updateBillcheckInfo(adjustVo, "删除");
             return "删除回款调整成功";
         } catch (Exception e) {
             logger.error("数据库操作失败",e);
             return "数据库操作失败";
         }
+    }
+    
+    /*
+     * 删除回款调整
+     */
+    @DataResolver
+    public String save(BillCheckAdjustInfoVo adjustVo) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("billCheckId", adjustVo.getBillCheckId());
+        List<BillCheckAdjustInfoVo> adjustlist = billCheckInfoService.queryAdjust(param);
+        
+        // 回款调整只能存在一条
+        if (adjustlist.size() > 0) {
+            return "该账单已存在回款调整记录，不可重复调整！";
+        }
+        
+        try {
+            adjustVo.setDelFlag("0");
+            adjustVo.setCreateTime(new Timestamp(System.currentTimeMillis()));
+            adjustVo.setCreator(ContextHolder.getLoginUser().getCname());
+            adjustVo.setCreatorId(ContextHolder.getLoginUserName());
+            int result = billCheckInfoService.saveAjust(adjustVo);
+            if(result<=0){
+                return "新增回款调整失败";
+            }
+            
+            //更新账单跟踪
+            updateBillcheckInfo(adjustVo, "新增");
+            return "新增回款调整成功";     
+        } catch (Exception e) {
+            logger.error("数据库操作失败",e);
+            return "数据库操作失败";
+        }
+
     }
     
 }

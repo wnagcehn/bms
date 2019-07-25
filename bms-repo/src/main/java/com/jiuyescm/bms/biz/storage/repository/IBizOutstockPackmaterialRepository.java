@@ -202,4 +202,9 @@ public interface IBizOutstockPackmaterialRepository {
      * @return
      */
     String getWayBillNo(Map<String,Object> condition);
+    
+    List<FeesReceiveMaterial> queryMaterialSellData(
+            Map<String, Object> condition);
+    
+    BizOutstockPackmaterialEntity queryOne(Map<String,Object> condition);
 }

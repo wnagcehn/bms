@@ -71,10 +71,12 @@ public class CrmBillCheckReceiptJob extends IJobHandler {
             for(BillCheckReceiptEntity entity:list){
                 if ("0".equals(entity.getDelFlag())) {
                     //新增/修改
+                    XxlJobLogger.log("开始调用新增/修改接口");
                     billCheckInfoService.saveReceiptToCrm(entity);
                 }else {
                     //删除
-                    
+                    XxlJobLogger.log("开始调用删除接口");
+                    billCheckInfoService.deleteReceiptToCrm(entity);
                 }
             }
         } catch (Exception e) {

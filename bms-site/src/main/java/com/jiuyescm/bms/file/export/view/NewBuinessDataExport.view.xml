@@ -652,12 +652,6 @@ action.set(&quot;parameter&quot;,data).execute(function(result)&#xD;
             <Property name="labelWidth">100</Property>
             <Editor/>
           </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">isDiscount</Property>
-            <Property name="property">isDiscount</Property>
-            <Property name="labelWidth">100</Property>
-            <Editor/>
-          </AutoFormElement>
         </AutoForm>
       </Children>
       <Tools/>

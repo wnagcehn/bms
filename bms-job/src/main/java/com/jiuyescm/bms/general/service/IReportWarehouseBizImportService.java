@@ -61,4 +61,88 @@ public interface IReportWarehouseBizImportService {
     
     List<ReportWarehouseBizImportEntity> queryImport(Map<String, Object> param);
 
+    /**
+     * 查出所有理论导入商家
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月15日 下午6:41:13
+     *
+     * @param param
+     * @return
+     */
+    List<ReportWarehouseBizImportEntity> queryCusByTheory(Map<String, Object> param);
+
+    /**
+     * 通过商家查询是否全部使用新方案
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月15日 下午7:05:20
+     *
+     * @param param
+     * @return
+     */
+    List<String> queryIsNewPlanByCustomer(Map<String, Object> param);
+
+    /**
+     * 新方案写入
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月15日 下午7:30:18
+     *
+     * @param list
+     * @return
+     */
+    int upsertPackMaterialByNewPlan(ReportWarehouseBizImportEntity entity);
+
+    /**
+     * 查看商家是否是免导入商家
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月15日 下午8:35:11
+     *
+     * @param entity
+     * @return
+     */
+    ReportWarehouseCustomerEntity queryCusImportType(ReportWarehouseBizImportEntity entity);
+
+    /**
+     * 作废免导入的
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月15日 下午8:43:45
+     *
+     * @param entity
+     * @return
+     */
+    int deleteMaterialReport(ReportWarehouseBizImportEntity entity);
+
+    /**
+     * 查询是否导入了耗材
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月16日 上午9:52:38
+     *
+     * @param entity
+     * @return
+     */
+    List<String> queryIsImportMaterial(Map<String, Object> condition);
+
+    /**
+     * 作废-->实际导入后手动作废的
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月17日 下午5:04:32
+     *
+     * @param entity
+     * @return
+     */
+    int deleteActualMaterial(ReportWarehouseBizImportEntity entity);
+
 }

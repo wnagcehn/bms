@@ -682,6 +682,18 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
           <Property name="width">90</Property>
         </DataColumn>
         <DataColumn name="instockNo">
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate({&#xD;
+	tagName: &quot;A&quot;,&#xD;
+	href: &quot;#&quot;,&#xD;
+	content:arg.data.get(&quot;instockNo&quot;)+&quot;&quot;,&#xD;
+	onclick:function(){&#xD;
+		var data = view.get(&quot;#dsBmsBizInstockInfoEntity.data&quot;).current;&#xD;
+		var param=&quot;?instockNo=&quot;+data.get(&quot;instockNo&quot;);&#xD;
+		window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.biz.storage.view.InStockDetail.d&quot;+param, &quot;入库明细&quot;, &quot;&quot;, true);&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
           <Property name="property">instockNo</Property>
           <Property name="width">110</Property>
         </DataColumn>

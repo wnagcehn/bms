@@ -194,7 +194,11 @@ public class PrepareBillHandler {
         
         //运行折扣（进度从折扣后的开始累加）
         if ((Boolean)condition.get("isDiscount")) {
-            process += entity.getProgress();
+            if(StringUtils.isNotBlank(entity.getRemark()) && entity.getRemark().contains("未查询到折扣报价")){
+                process += 30;
+            }else{
+                process += entity.getProgress();
+            }
         }
         //不运行折扣（直接从30开始累加）
         else {
@@ -1108,17 +1112,25 @@ public class PrepareBillHandler {
 
                 dataList.addAll(packMaterialList.getList());
             }
-
-            if (dataList.size() == 0) {
-                continue;
-            }
-
-            //组装数据
-            loadData(dataPackMaterialList, dataList, materialInfoList);
             
-            poiUtil.exportExcelFilePath(poiUtil, xssfWorkbook,
-                    entity.getWarehouseName() + "耗材使用费",
-                    headPackMaterialMapList, dataPackMaterialList);    
+            
+            //组装数据(耗材使用费)
+            if (dataList.size() >0) {
+                loadData(dataPackMaterialList, dataList, materialInfoList);
+            }
+            
+            //杂项销售单
+            List<FeesReceiveMaterial> materialSellerList=bizOutstockPackmaterialServiceImpl.queryMaterialSellData(condition);
+            if(materialSellerList.size()>0){
+                loadSellerData(dataPackMaterialList, materialSellerList, materialInfoList);
+            }
+            
+            if(dataList.size() >0 || materialSellerList.size()>0){
+                poiUtil.exportExcelFilePath(poiUtil, xssfWorkbook,
+                        entity.getWarehouseName() + "耗材使用费",
+                        headPackMaterialMapList, dataPackMaterialList);    
+            }
+          
         }
     }
     
@@ -1178,7 +1190,22 @@ public class PrepareBillHandler {
                 poiUtil.exportExcel2FilePath(poiUtil, xssfWorkbook,"耗材使用费", lineNo, headPackMaterialMapList, dataPackMaterialList);
                 lineNo += dataPackMaterialList.size();
             }   
-        }   
+        } 
+        
+        //杂项销售单
+        List<Map<String, Object>> dataPackMaterialList = new ArrayList<Map<String, Object>>();
+
+        List<FeesReceiveMaterial> materialSellerList=bizOutstockPackmaterialServiceImpl.queryMaterialSellData(condition);
+        if(materialSellerList.size()>0){
+            //组装数据
+            loadSellerData(dataPackMaterialList, materialSellerList, materialInfoList);
+
+            if (CollectionUtils.isNotEmpty(headPackMaterialMapList) && CollectionUtils.isNotEmpty(dataPackMaterialList)) {
+                poiUtil.exportExcel2FilePath(poiUtil, xssfWorkbook,"耗材使用费", lineNo, headPackMaterialMapList, dataPackMaterialList);
+                lineNo += dataPackMaterialList.size();
+            }   
+        }
+        
     }
     
     /**
@@ -2207,19 +2234,18 @@ public class PrepareBillHandler {
                             matchMap.get(marterialType + "_unitprice") 
                             + (materialEntity.getUnitPrice() == null ? ""
                             : ","+Double.valueOf(materialEntity.getUnitPrice())));
-                    
                     if (materialEntity.getProductNo().contains("GB")) {
                         matchMap.put(
                                 marterialType + "_count",
                                 matchMap.get(marterialType + "_count")
-                                        +( materialEntity.getWeight() == null ? ""
-                                        : ","+Double.valueOf(materialEntity.getWeight())));
+                                         + (materialEntity.getWeight() == null ? ""
+                                        : ","+ Double.valueOf(materialEntity.getWeight())));
                     } else {
                         matchMap.put(
                                 marterialType + "_count",
-                                matchMap.get(marterialType + "_count") 
+                                matchMap.get(marterialType + "_count")
                                         + (materialEntity.getQuantity() == null ? ""
-                                        :","+ Double.valueOf(materialEntity.getQuantity())));
+                                        : ","+Double.valueOf(materialEntity.getQuantity())));
                     }
                     matchMap.put(marterialType + "_cost",
                             matchMap.get(marterialType + "_cost")
@@ -2289,41 +2315,176 @@ public class PrepareBillHandler {
                 dataItem.put("packPlanName", materialEntity.getPackPlanName());
                 dataItem.put("packPlanCost", materialEntity.getPackPlanCost());
 
-                //只走标准包装方案，无多余耗材的情况
-                if (StringUtils.isNotBlank(materialEntity.getProductNo())) {
-                    String marterialType = getMaterialType(materialInfoList,
-                            materialEntity.getProductNo()==null?"":materialEntity.getProductNo());
-                    dataItem.put(marterialType + "_name",
-                            materialEntity.getProductName()==null?"":materialEntity.getProductName());
-                    dataItem.put(marterialType + "_code",
-                            materialEntity.getProductNo()==null?"":materialEntity.getProductNo());
-                    dataItem.put(marterialType + "_type",
-                            materialEntity.getSpecDesc()==null?"":materialEntity.getSpecDesc());
-                    if (materialEntity.getProductNo().contains("GB")) {
-                        dataItem.put(marterialType + "_count", materialEntity
-                                .getWeight() == null ? "" : Double.valueOf(materialEntity
-                                .getWeight()));
-                    } else {
-                        dataItem.put(marterialType + "_count", materialEntity
-                                .getQuantity() == null ? "" : Double.valueOf(materialEntity
-                                .getQuantity()));
+                //包材组编号或标准包装方案编号不为空，则不显示状态5耗材
+                //包材方案编号或包材组编号均为空时，显示状态5耗材
+                if((StringUtils.isNotBlank(materialEntity.getPackPlanNo()) || StringUtils.isNotBlank(materialEntity.getPackGroupNo())) 
+                        && "5".equals(materialEntity.getIsCalculated())){
+
+                }else{            
+                    //只走标准包装方案，无多余耗材的情况
+                    if (StringUtils.isNotBlank(materialEntity.getProductNo())) {
+                        //有多余耗材的情况
+                        String marterialType = getMaterialType(materialInfoList,
+                                materialEntity.getProductNo()==null?"":materialEntity.getProductNo());
+                        dataItem.put(marterialType + "_name",
+                                materialEntity.getProductName()==null?"":materialEntity.getProductName());
+                        dataItem.put(marterialType + "_code",
+                                materialEntity.getProductNo()==null?"":materialEntity.getProductNo());
+                        dataItem.put(marterialType + "_type",
+                                materialEntity.getSpecDesc()==null?"":materialEntity.getSpecDesc());
+                        if (materialEntity.getProductNo().contains("GB")) {
+                            dataItem.put(marterialType + "_count", materialEntity
+                                    .getWeight() == null ? "" : Double.valueOf(materialEntity
+                                    .getWeight()));
+                        } else {
+                            dataItem.put(marterialType + "_count", materialEntity
+                                    .getQuantity() == null ? "" : Double.valueOf(materialEntity
+                                    .getQuantity()));
+                        }
+                        dataItem.put(marterialType + "_unitprice", materialEntity
+                                .getUnitPrice() == null ? "" : Double.valueOf(materialEntity
+                                .getUnitPrice()));
+                        dataItem.put(marterialType + "_cost", materialEntity
+                                .getCost() == null ? "" :Double.valueOf(materialEntity.getCost()));
+                        // 第一次加上包材的金额
+                        dataItem.put("totalCost", materialEntity.getCost()
+                                + (materialEntity.getPackPlanCost() == null ? 0d : materialEntity.getPackPlanCost()));
+                    }else {
+                        dataItem.put("totalCost", materialEntity.getPackPlanCost());// 包材金额
                     }
-                    dataItem.put(marterialType + "_unitprice", materialEntity
-                            .getUnitPrice() == null ? "" : Double.valueOf(materialEntity
-                            .getUnitPrice()));
-                    dataItem.put(marterialType + "_cost", materialEntity
-                            .getCost() == null ? "" :Double.valueOf(materialEntity.getCost()));
-                    // 第一次加上包材的金额
-                    dataItem.put("totalCost", materialEntity.getCost()
-                            + (materialEntity.getPackPlanCost() == null ? 0d : materialEntity.getPackPlanCost()));
-                }else {
-                    dataItem.put("totalCost", materialEntity.getPackPlanCost());// 包材金额
-                }                   
+                }
                 dataPackMaterialList.add(dataItem);
             }
-
+                
         }
     }
+    
+    
+    /*
+     * 组装耗材的数据
+     */
+    private void loadSellerData(List<Map<String, Object>> dataPackMaterialList, List<FeesReceiveMaterial> dataList,
+            List<PubMaterialInfoVo> materialInfoList) {
+        for (FeesReceiveMaterial materialEntity : dataList) {
+            boolean flag = false;
+            Map<String, Object> matchMap = null;
+            for (Map<String, Object> map : dataPackMaterialList) {
+                if (map.get("outstockNo").equals(materialEntity.getOutstockNo())) {
+                    flag = true;
+                    matchMap = map;
+                    break;
+                }
+            }
+            if (flag) {
+                // 检查耗材类型
+                String marterialType = getMaterialType(materialInfoList,
+                        materialEntity.getProductNo());
+                if (matchMap.containsKey(marterialType + "_name")) {
+                    matchMap.put(marterialType + "_name",
+                            matchMap.get(marterialType + "_name") 
+                                    + (materialEntity.getProductName() == null ? ""
+                                    : ","+materialEntity.getProductName()));
+                    
+                    matchMap.put(marterialType + "_code",
+                            matchMap.get(marterialType + "_code") 
+                            + (materialEntity.getProductNo() == null ? ""
+                            : ","+materialEntity.getProductNo()));
+                    matchMap.put(marterialType + "_unitprice",
+                            matchMap.get(marterialType + "_unitprice") 
+                            + (materialEntity.getUnitPrice() == null ? ""
+                            : ","+Double.valueOf(materialEntity.getUnitPrice())));
+                    if (materialEntity.getProductNo().contains("GB")) {
+                        matchMap.put(
+                                marterialType + "_count",
+                                matchMap.get(marterialType + "_count")
+                                        + (materialEntity.getWeight() == null ? ""
+                                        :","+ Double.valueOf(materialEntity.getWeight())));
+                    } else {
+                        matchMap.put(
+                                marterialType + "_count",
+                                matchMap.get(marterialType + "_count")
+                                        + (materialEntity.getQuantity() == null ? ""
+                                        :","+ Double.valueOf(materialEntity.getQuantity())));
+                    }
+                    matchMap.put(marterialType + "_cost",
+                            matchMap.get(marterialType + "_cost")
+                                    +( materialEntity.getCost() == null ? ""
+                                    :","+ Double.valueOf(materialEntity.getCost())));
+                    double totleCost = matchMap.get("totalCost") == null ? 0d
+                            : Double.parseDouble(matchMap.get("totalCost")
+                                    .toString());
+                    totleCost += materialEntity.getCost() == null ? 0d
+                            : Double.valueOf(materialEntity.getCost());
+                    matchMap.put("totalCost", totleCost);// 金额
+                } else {
+                    matchMap.put(marterialType + "_name",
+                            materialEntity.getProductName() == null ? ""
+                                    : materialEntity.getProductName());
+                    if (StringUtils.isNotBlank(materialEntity.getProductNo())) {
+                        if (materialEntity.getProductNo().contains("GB")) {
+                            matchMap.put(marterialType + "_count",
+                                    materialEntity.getWeight() == null ? ""
+                                            : Double.valueOf(materialEntity.getWeight()));
+                        } else {
+                            matchMap.put(marterialType + "_count",
+                                    materialEntity.getQuantity() == null ? ""
+                                            : Double.valueOf(materialEntity.getQuantity()));
+                        }
+                    }   
+                    matchMap.put(marterialType + "_code",
+                            materialEntity.getProductNo() == null?"":materialEntity.getProductNo());
+                    matchMap.put(marterialType + "_unitprice",
+                            materialEntity.getUnitPrice() == null ? ""
+                                    : Double.valueOf(materialEntity.getUnitPrice()));
+                    matchMap.put(marterialType + "_cost", materialEntity
+                            .getCost() == null ? "" : Double.valueOf(materialEntity.getCost()));
+                    double totleCost = matchMap.get("totalCost") == null ? 0d
+                            : Double.parseDouble(matchMap.get("totalCost")
+                                    .toString());
+                    totleCost += materialEntity.getCost() == null ? 0d
+                            : materialEntity.getCost();
+                    matchMap.put("totalCost", totleCost);// 金额
+                }
+            } else {
+                Map<String, Object> dataItem = new HashMap<String, Object>();
+                dataItem.put("warehouseName",
+                        materialEntity.getWarehouseName());
+                dataItem.put("customerName",
+                        materialEntity.getCustomerName());
+                dataItem.put("outstockNo", materialEntity.getOutstockNo());
+                dataItem.put("createTime", materialEntity.getCreateTime()); 
+
+         
+                //有多余耗材的情况
+                String marterialType = getMaterialType(materialInfoList,
+                        materialEntity.getProductNo()==null?"":materialEntity.getProductNo());
+                dataItem.put(marterialType + "_name",
+                        materialEntity.getProductName()==null?"":materialEntity.getProductName());
+                dataItem.put(marterialType + "_code",
+                        materialEntity.getProductNo()==null?"":materialEntity.getProductNo());
+                if (materialEntity.getProductNo().contains("GB")) {
+                    dataItem.put(marterialType + "_count", materialEntity
+                            .getWeight() == null ? "" : Double.valueOf(materialEntity
+                            .getWeight()));
+                } else {
+                    dataItem.put(marterialType + "_count", materialEntity
+                            .getQuantity() == null ? "" : Double.valueOf(materialEntity
+                            .getQuantity()));
+                }
+                dataItem.put(marterialType + "_unitprice", materialEntity
+                        .getUnitPrice() == null ? "" : Double.valueOf(materialEntity
+                        .getUnitPrice()));
+                dataItem.put(marterialType + "_cost", materialEntity
+                        .getCost() == null ? "" :Double.valueOf(materialEntity.getCost()));
+                // 第一次加上包材的金额
+                dataItem.put("totalCost", materialEntity.getCost()
+                        + (materialEntity.getPackPlanCost() == null ? 0d : materialEntity.getPackPlanCost()));
+                dataPackMaterialList.add(dataItem);
+            }
+                
+        }
+    }
+    
     
     /**
      * 干线费用

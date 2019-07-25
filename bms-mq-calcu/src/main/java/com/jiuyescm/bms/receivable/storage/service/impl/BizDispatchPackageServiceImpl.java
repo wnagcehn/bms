@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.receivable.storage.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,14 @@ public class BizDispatchPackageServiceImpl extends MyBatisDao<BizDispatchPackage
 			logger.error("【标准耗材使用费任务】批量更新主表异常"+ex.getMessage());
 		}
 	}
-	
+    @Override
+    public BizDispatchPackageEntity queryOne(String wayBillNo) {
+        // TODO Auto-generated method stub
+        Map<String,Object> map=new HashMap<>();
+        map.put("wayBillNo", wayBillNo);
+        BizDispatchPackageEntity entity = (BizDispatchPackageEntity) this.selectOne("com.jiuyescm.bms.receivable.storage.mapper.BizDispatchPackageMapper.queryOne", map);
+        return entity;
+    }
+
 	
 }

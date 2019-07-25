@@ -31,6 +31,7 @@
 	    <result column="cost_calculate_time" property="costCalculateTime" jdbcType="TIMESTAMP" />
 	    <result column="cost_is_calculated" property="costIsCalculated" jdbcType="VARCHAR" />
 	    <result column="cost_fees_no" property="costFeesNo" jdbcType="VARCHAR" />
+	    <result column="material_type" property="materialType" jdbcType="VARCHAR" />  
     </resultMap>
   
     <select id="querybizOutstockMeterial" parameterType="java.util.Map" resultMap="bizOutstockMeterialMap">
@@ -38,9 +39,10 @@
         a.id, a.wms_id, a.outstock_no, a.waybill_no, a.customer_id, a.customer_name, a.consumer_material_code, 
         a.consumer_material_name, IFNULL(a.num,0) as num, IFNULL(a.adjust_num,0) as adjust_num, a.fees_no, a.dbname, b.is_calculated, 
         a.creator, a.create_time, a.last_modifier, a.last_modify_time, a.del_flag,a.warehouse_code,a.warehouse_name,IFNULL(a.weight,0) as weight,a.spec_desc, a.extattr1, a.extattr2, a.extattr3, a.extattr4, a.extattr5,
-        a.cost_calculate_time,a.cost_is_calculated,a.cost_fees_no
+        a.cost_calculate_time,a.cost_is_calculated,a.cost_fees_no,c.material_type
         from biz_outstock_packmaterial a
-        INNER JOIN fees_receive_storage b on a.fees_no=b.fees_no  
+        INNER JOIN fees_receive_storage b on a.fees_no=b.fees_no
+        LEFT JOIN  pub_material_info c on a.consumer_material_code=c.material_code  
         where a.del_flag = '0' and b.del_flag='0'
 		<if test="(customerId != null and customerId !='')" >
 			and a.customer_id = #{customerId,jdbcType=VARCHAR}
@@ -100,4 +102,17 @@
 		</set>
         where id=#{id}
     </update>
+    
+    <delete id="updateImportMaterial" parameterType="java.util.Map">
+    	
+		delete from biz_outstock_packmaterial  where waybill_no IN
+		(
+			 select a.waybill_no from
+			 (select waybill_no from  biz_outstock_packmaterial 
+				where  customer_id=#{customerId} and create_time>=#{beginTime} and <![CDATA[create_time< #{endTime}]]> and del_flag='0' and source in ('import','system') 
+				GROUP BY waybill_no
+				having  FIND_IN_SET('import',GROUP_CONCAT(source))>0 and  FIND_IN_SET('system',GROUP_CONCAT(source))>0) a
+		) and source='import' and del_flag='0'
+    </delete>
+    
 </mapper>

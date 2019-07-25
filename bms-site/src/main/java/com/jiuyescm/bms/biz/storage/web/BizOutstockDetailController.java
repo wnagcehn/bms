@@ -30,6 +30,9 @@ import com.jiuyescm.bms.fees.IFeesReceiverDeliverService;
 import com.jiuyescm.bms.fees.entity.FeesReceiveDeliverEntity;
 import com.jiuyescm.bms.fees.entity.FeesReceiveDeliverQueryEntity;
 import com.jiuyescm.cfm.common.JAppContext;
+import com.jiuyescm.oms.biz.orderinfo.entity.OmsorderinfoitemEntity;
+import com.jiuyescm.oms.report.ReportParamsVo;
+import com.jiuyescm.oms.report.odo.service.IOmsOrderinfoReportService;
 
 /**
  * 
@@ -49,6 +52,9 @@ public class BizOutstockDetailController {
 	
 	@Autowired
 	private IFeesReceiverDeliverService deliverService;
+	
+	@Autowired
+	private IOmsOrderinfoReportService omsOrderinfoReportService;
 	
 	@DataProvider
 	public BizOutstockDetailEntity findById(Long id) throws Exception {
@@ -131,5 +137,33 @@ public class BizOutstockDetailController {
 		
 		return result;
 	}
+	
+	/**
+	 * 
+	 * <功能描述> 根据单号查找出库单明细
+	 * 
+	 * @author zyz
+	 * @date 2019年7月22日 下午3:13:17
+	 *
+	 * @param page
+	 * @param param
+	 */
+	@DataProvider
+	public void queryOrderinfoItems(Page<OmsorderinfoitemEntity> page, Map<String,Object>param){
+	    logger.info(new StringBuilder("出库单明细查询-参数 param(orderNo):").append(param.get("orderNo")));
+	    ReportParamsVo reportVo =parseReportVo(param.get("orderNo").toString());
+	    PageInfo<OmsorderinfoitemEntity> pageinfo = omsOrderinfoReportService.queryOrderinfoItems(reportVo);
+	    if(pageinfo!=null){
+	        page.setEntities(pageinfo.getList());
+	        page.setEntityCount((int) pageinfo.getTotal());
+	    }
+	}
+
+	private ReportParamsVo parseReportVo(String outstockNo) {
+        //分装请求参数
+	    ReportParamsVo vo=new ReportParamsVo();
+	    vo.setOrderNos(outstockNo);
+        return vo;
+    }
 	
 }
