@@ -70,18 +70,20 @@ public class AddFeeServiceImpl implements IAddFeeService {
                 logger.error("转换失败", ex);
 
             }
-            List<PubMaterialEntity> entitylist=new ArrayList<>();
-            for(PubMaterialVo materialVo:vo.getList()){
-                PubMaterialEntity materialEntity=new PubMaterialEntity();
-                try {
-                    PropertyUtils.copyProperties(materialEntity, materialVo);
-                } catch (Exception ex) {                  
-                    logger.error("明细转换失败", ex);
+            if(vo.getList()!=null && vo.getList().size()>0){
+                List<PubMaterialEntity> entitylist=new ArrayList<>();
+                for(PubMaterialVo materialVo:vo.getList()){
+                    PubMaterialEntity materialEntity=new PubMaterialEntity();
+                    try {
+                        PropertyUtils.copyProperties(materialEntity, materialVo);
+                    } catch (Exception ex) {                  
+                        logger.error("明细转换失败", ex);
+                    }
+                    entitylist.add(materialEntity);
                 }
-                entitylist.add(materialEntity);
+                paramEntity.setList(entitylist);
             }
-            paramEntity.setList(entitylist);
-            
+
             list.add(paramEntity);
         }
         
