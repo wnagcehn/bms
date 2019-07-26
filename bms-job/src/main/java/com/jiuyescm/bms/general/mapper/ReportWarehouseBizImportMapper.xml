@@ -100,7 +100,7 @@
 			WHERE del_flag = '0'
 			AND create_time <![CDATA[>=]]> #{startTime} AND create_time <![CDATA[<]]> #{endTime}
 			AND b2b_flag = '0' 
-			UNION ALL
+			UNION
 			select warehouse_code, customer_id, create_month as import_date,'THEORY' as import_type, 'MATERIAL' as biz_type
 			from report_warehouse_customer 
 			where 1=1 
