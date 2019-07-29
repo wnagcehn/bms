@@ -3,8 +3,6 @@ package com.jiuyescm.bms.excel.opc;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.xml.sax.InputSource;
-
 import com.google.common.collect.Maps;
 
 public class OpcSheet {
@@ -20,7 +18,7 @@ public class OpcSheet {
 	private Map<String, String> headColumn = new HashMap<String, String>(); 
 	
 	private Map<Integer, String> colValueMap = new HashMap<Integer, String>();
-	private Map<String, Integer> colkeyMap = new HashMap<String, Integer>();
+	//private Map<String, Integer> colkeyMap = new HashMap<String, Integer>();
 	
 	public Map<String, String> getHeadColumn(){
 		return headColumn;

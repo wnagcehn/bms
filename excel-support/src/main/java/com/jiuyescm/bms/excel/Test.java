@@ -1,8 +1,9 @@
 package com.jiuyescm.bms.excel;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
+/*import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import com.jiuyescm.bms.excel.callback.SheetReadCallBack;
@@ -10,13 +11,13 @@ import com.jiuyescm.bms.excel.data.DataColumn;
 import com.jiuyescm.bms.excel.data.DataRow;
 import com.jiuyescm.bms.excel.data.Sheet;
 import com.jiuyescm.bms.excel.data.XlsxWorkBook;
-
+*/
 public class Test {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		
 		//System.out.println("123");
-		test2();	
+		//test2();	
 		/*while(true){
 			
 		}*/
@@ -24,7 +25,7 @@ public class Test {
 		
 	}
 	
-    public static void test2() throws FileNotFoundException {
+    /*public static void test2() throws FileNotFoundException {
         try{
         	final List<DataRow> list =new ArrayList<DataRow>();
         	
@@ -73,13 +74,13 @@ public class Test {
                 System.out.println("总行数："+sheet.getRowCount());
             }
     		book.close();
-    		/*while(true){
+    		while(true){
     			Thread.sleep(1000);
-    		}*/
+    		}
         }catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 	
 }
