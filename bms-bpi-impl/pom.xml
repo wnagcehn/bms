@@ -17,7 +17,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<dependency>
     		<groupId>com.jiuyescm.crm</groupId>
     		<artifactId>crm-open-api</artifactId>
-    		<version>1.4.3</version>
+    		<version>1.5.0-SNAPSHOT</version>
+    		<classifier>jdk17</classifier>
     		<exclusions>
 				<exclusion>
 					<groupId>com.jiuyescm.scm</groupId>
@@ -57,14 +58,27 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		</dependency>
 		
 		<dependency>
-			<groupId>com.jiuyescm.mdm</groupId>
-			<artifactId>mdm-warehouse-api</artifactId>
-			<version>${mdm.version}</version>
+		  <groupId>com.jiuyescm.mdm</groupId>
+		  <artifactId>mdm-customer-api</artifactId>
+		  <version>${mdm.version}</version>
 		</dependency>
+		
 		<dependency>
-			<groupId>com.jiuyescm.mdm</groupId>
-			<artifactId>mdm-customer-api</artifactId>
-			<version>${mdm.version}</version>
+		  <groupId>com.jiuyescm.mdm</groupId>
+  		  <artifactId>mdm-warehouse-api</artifactId>
+		  <version>${mdm.version}</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.mdm</groupId>
+  		  <artifactId>mdm-carrier-api</artifactId>
+		  <version>${mdm.version}</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.mdm</groupId>
+  		  <artifactId>mdm-deliver-api</artifactId>
+		  <version>${mdm.version}</version>
 		</dependency>
 		
 		<dependency>
@@ -73,10 +87,17 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		  <version>${redis-client.version}</version>
 		</dependency>
 		
+		
 		<dependency>
 			<groupId>com.jiuyescm.framework</groupId>
 			<artifactId>distributed-sequence-api</artifactId>
 			<version>1.2.0-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.jiuyescm.framework</groupId>
+		  <artifactId>distributed-lock</artifactId>
+		  <version>1.2.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	

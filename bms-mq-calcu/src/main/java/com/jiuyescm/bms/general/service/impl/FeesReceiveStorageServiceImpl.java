@@ -102,5 +102,12 @@ public class FeesReceiveStorageServiceImpl extends MyBatisDao implements IFeesRe
         this.updateBatch("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.updateFee", entity);
 
     }
+    
+    @Override
+    public void updateImportFee(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        this.delete("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.updateImportFee", condition);
+    }
+
 
 }

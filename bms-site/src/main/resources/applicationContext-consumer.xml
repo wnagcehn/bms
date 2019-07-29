@@ -130,4 +130,11 @@
 		<!-- 结算进度 -->
 		<dubbo:reference id="billCustomerDetailService" interface="com.jiuyescm.bms.bill.customer.service.IBillCustomerDetailService" version="1.0.0" registry="bms"/>
 
+		<!-- 托数明细 -->
+		<dubbo:reference id="omsReportStorageService" interface="com.jiuyescm.oms.report.storage.service.IOmsReportStorageService" version="1.0.0" registry="bms"/>
+		<!-- 出库单明细 -->
+		<dubbo:reference id="omsOrderinfoReportService" interface="com.jiuyescm.oms.report.odo.service.IOmsOrderinfoReportService" version="1.0.0" registry="bms"/>
+		<!-- 入库单明细 -->
+		<dubbo:reference id="omsPoItemsReportService" version="1.0.0" interface="com.jiuyescm.oms.report.po.service.IOmsPoItemsReportService" registry="bms"/>
+		
 </beans> 

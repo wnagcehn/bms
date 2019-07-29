@@ -2,7 +2,7 @@ package com.jiuyescm.bms.base.dict.api;
 
 import java.util.Map;
 
-import com.jiuyescm.mdm.customer.vo.PubMaterialInfoVo;
+import com.jiuyescm.bms.base.dict.vo.PubMaterialVo;
 
 
 public interface IMaterialDictService {
@@ -38,13 +38,13 @@ public interface IMaterialDictService {
 	 * @param code
 	 * @return
 	 */
-	PubMaterialInfoVo getMaterialByCode(String code);
+	PubMaterialVo getMaterialByCode(String code);
 	
 	/**
 	 * 根据仓库名称查询仓库信息
 	 * @param name
 	 * @return
 	 */
-	PubMaterialInfoVo getMaterialByName(String name);
+	PubMaterialVo getMaterialByName(String name);
 	
 }

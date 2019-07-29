@@ -77,5 +77,40 @@ public class ReportWarehouseBizImportServiceImpl  extends MyBatisDao implements 
 		return selectList("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.queryImport", param);
 	}
 
+	@Override
+    public List<ReportWarehouseBizImportEntity> queryCusByTheory(Map<String, Object> param) {
+        return selectList("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.queryCusByTheory", param);
+    }
+	
+	@Override
+    public List<String> queryIsNewPlanByCustomer(Map<String, Object> param) {
+        return selectList("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.queryIsNewPlanByCustomer", param);
+    }
+	
+    @Override
+    public int upsertPackMaterialByNewPlan(ReportWarehouseBizImportEntity entity) {
+        return insert("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.upsertPackMaterialByNewPlan", entity);
+    }
+    
+    @Override
+    public ReportWarehouseCustomerEntity queryCusImportType(ReportWarehouseBizImportEntity entity) {
+        List<ReportWarehouseCustomerEntity> list = selectList("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.queryCusImportType", entity);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+    
+    @Override
+    public int deleteMaterialReport(ReportWarehouseBizImportEntity entity) {
+        return update("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.deleteMaterialReport", entity);
+    }
+    
+    @Override
+    public List<String> queryIsImportMaterial(Map<String, Object> condition) {
+        return selectList("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.queryIsImportMaterial", condition);
+    }
+    
+    @Override
+    public int deleteActualMaterial(ReportWarehouseBizImportEntity entity) {
+        return update("com.jiuyescm.bms.general.mapper.ReportWarehouseBizImportMapper.deleteActualMaterial", entity);
+    }
 	
 }

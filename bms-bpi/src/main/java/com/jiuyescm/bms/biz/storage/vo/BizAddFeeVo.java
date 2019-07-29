@@ -5,6 +5,7 @@
 package com.jiuyescm.bms.biz.storage.vo;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.jiuyescm.cfm.domain.IEntity;
 
@@ -83,7 +84,9 @@ public class BizAddFeeVo implements IEntity {
     // 一口价金额
     private Double fixedAmount;
     private String firstSubject;
-    private String firstSubjectName;
+    private String firstSubjectName;    
+    //耗材明细
+    private List<PubMaterialVo> list;
 
     public String getPayNo() {
         return payNo;
@@ -521,6 +524,14 @@ public class BizAddFeeVo implements IEntity {
         this.totalNum = totalNum;
     }
     
+    public List<PubMaterialVo> getList() {
+        return list;
+    }
+
+    public void setList(List<PubMaterialVo> list) {
+        this.list = list;
+    }
+
     @Override
     public String toString() {
         return "BizAddFeeVo [id=" + id + ", wmsId=" + wmsId + ", operationTime=" + operationTime + ", warehouseCode="

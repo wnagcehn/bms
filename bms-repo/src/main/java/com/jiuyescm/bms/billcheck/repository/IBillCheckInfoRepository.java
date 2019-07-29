@@ -232,4 +232,16 @@ public interface IBillCheckInfoRepository {
      * @return
      */
     int updateAdjustInfo(BillCheckAdjustInfoEntity entity);
+
+    /**
+     * 新增回款调整
+     * <功能描述>
+     * 
+     * @author wangchen870
+     * @date 2019年7月12日 上午10:12:39
+     *
+     * @param entity
+     * @return
+     */
+    int saveAjust(BillCheckAdjustInfoEntity entity);
 }

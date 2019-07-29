@@ -139,7 +139,7 @@ public class BizOutstockPackmaterialCancelServiceImpl implements IBizOutstockPac
     public void updateBatchStatusAndDelMaterial(List<BizOutstockPackmaterialCancelEntity> cancelList, List<BizOutstockPackmaterialEntity> materialList){
         try {
             //业务表作废
-            bizOutstockPackmaterialRepository.deleteOrRevertMaterialStatus(materialList);
+            //bizOutstockPackmaterialRepository.deleteOrRevertMaterialStatus(materialList);
             //Cancel表状态修改
             bizOutstockPackmaterialCancelRepository.updateBatchStatus(cancelList);
             //费用表作废

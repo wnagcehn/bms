@@ -2376,6 +2376,13 @@ if(entity!=null){&#xD;
                     <Property name="itemCodes">pages,pageSize</Property>
                   </DataPilot>
                   <ToolBarButton>
+                    <ClientEvent name="onClick">var datas = view.get(&quot;#dsBillCheckAdjustInfo.data&quot;);&#xD;
+datas.insert();&#xD;
+view.get(&quot;#dialogAdjustSave&quot;).show();</ClientEvent>
+                    <Property name="caption">新增</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
+                  </ToolBarButton>
+                  <ToolBarButton>
                     <ClientEvent name="onClick">var data=view.get(&quot;#dsBillCheckAdjustInfo.data&quot;);&#xD;
 if(data.current){&#xD;
 	view.get(&quot;#dialogAdjustEdit&quot;).show();&#xD;
@@ -2539,6 +2546,101 @@ with (view.get(&quot;#dsBillCheckAdjustInfo&quot;)){&#xD;
                   </Children>
                   <Tools/>
                 </Dialog>
+                <Dialog id="dialogAdjustSave">
+                  <ClientEvent name="onClose">view.id(&quot;dsBillCheckAdjustInfo&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+                  <Property name="height">280</Property>
+                  <Property name="width">350</Property>
+                  <Buttons>
+                    <Button>
+                      <ClientEvent name="onClick">var entity=view.get(&quot;#dsBillCheckAdjustInfo.data&quot;).current;&#xD;
+var data=view.get(&quot;#dsBillCheckInfo.data&quot;).current;&#xD;
+entity.set(&quot;billCheckId&quot;, data.get(&quot;id&quot;));&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;adjustDate&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;调整日期必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(isNullOrEmpty(entity.get(&quot;adjustAmount&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;调整金额必填!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+view.id(&quot;saveAdjustAction&quot;).execute(function(result){&#xD;
+	var dataList=view.get(&quot;#dsBillCheckInfo.data&quot;);&#xD;
+	dorado.MessageBox.alert(result);&#xD;
+	var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+	var tmpFormCondition=view.get(&quot;#formCondition&quot;);			&#xD;
+	tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+	&#xD;
+	view.id(&quot;adjustId&quot;).set(&quot;text&quot;,entity.get(&quot;billCheckId&quot;));&#xD;
+	view.id(&quot;dialogAdjustSave&quot;).hide();&#xD;
+});&#xD;
+&#xD;
+with (view.get(&quot;#dsBillCheckAdjustInfo&quot;)){&#xD;
+	//定义查询条件json结构&#xD;
+	var queryJson={&#xD;
+		billCheckId:data.get(&quot;id&quot;),&#xD;
+	};&#xD;
+	set(&quot;parameter&quot;, queryJson);&#xD;
+	flushAsync();	&#xD;
+}</ClientEvent>
+                      <Property name="caption">保存</Property>
+                    </Button>
+                    <Button>
+                      <ClientEvent name="onClick">	dorado.MessageBox.confirm(&quot;是否确定取消此操作？&quot;,&#xD;
+                        function(){&#xD;
+                            view.id(&quot;dsBillCheckAdjustInfo&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                            view.id(&quot;dialogAdjustSave&quot;).hide();&#xD;
+                        }&#xD;
+                    );</ClientEvent>
+                      <Property name="caption">取消</Property>
+                    </Button>
+                  </Buttons>
+                  <Children>
+                    <AutoForm>
+                      <Property name="dataSet">dsBillCheckAdjustInfo</Property>
+                      <Property name="editorWidth">200</Property>
+                      <Property name="labelWidth">80</Property>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">adjustDate</Property>
+                        <Property name="property">adjustDate</Property>
+                        <Property name="readOnly">false</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2">
+                        <Property name="name">adjustAmount</Property>
+                        <Property name="property">adjustAmount</Property>
+                        <Property name="readOnly">false</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement layoutConstraint="colSpan:2;rowSpan:15">
+                        <Property name="name">remark</Property>
+                        <Property name="property">remark</Property>
+                        <Property name="editorType">TextArea</Property>
+                        <Property name="width">320</Property>
+                        <Property name="height">120</Property>
+                        <Property name="readOnly">false</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement>
+                        <Property name="name">id</Property>
+                        <Property name="property">id</Property>
+                        <Property name="visible">false</Property>
+                        <Property name="hideMode">display</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement>
+                        <Property name="hideMode">display</Property>
+                        <Property name="name">billCheckId</Property>
+                        <Property name="property">billCheckId</Property>
+                        <Property name="visible">false</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                    </AutoForm>
+                  </Children>
+                  <Tools/>
+                </Dialog>
                 <UpdateAction id="updateAdjustAction">
                   <Property name="dataResolver">billCheckAdjustInfoController#update</Property>
                   <UpdateItem>
@@ -2553,6 +2655,15 @@ with (view.get(&quot;#dsBillCheckAdjustInfo&quot;)){&#xD;
                   <UpdateItem>
                     <Property name="dataSet">dsBillCheckAdjustInfo</Property>
                     <Property name="dataPath">[#current]</Property>
+                  </UpdateItem>
+                </UpdateAction>
+                <UpdateAction id="saveAdjustAction">
+                  <Property name="dataResolver">billCheckAdjustInfoController#save</Property>
+                  <UpdateItem>
+                    <Property name="dataSet">dsBillCheckAdjustInfo</Property>
+                    <Property name="autoResetEntityState">true</Property>
+                    <Property name="dataPath">[#current]</Property>
+                    <Property name="refreshMode">value</Property>
                   </UpdateItem>
                 </UpdateAction>
               </Container>

@@ -109,7 +109,7 @@ public class MaterialHandler {
     //系统模板标识
     private boolean isSystem = true;
     
-    //检查抬头标识
+    //抬头校验标识
     private boolean titleCheck = true;
     
     //----------初始化基础数据
@@ -203,6 +203,7 @@ public class MaterialHandler {
                         if(!mMap.contains(codeName)){
                             mMap.add(codeName);
                         }else{
+                            titleCheck = false;
                             bmsMaterialImportTaskCommon.setTaskStatus(taskId, 99, FileAsynTaskStatusEnum.FAIL.getCode(), "表格列名不对,存在重复列名，请检查");
                             titleCheck = false;
                             return;

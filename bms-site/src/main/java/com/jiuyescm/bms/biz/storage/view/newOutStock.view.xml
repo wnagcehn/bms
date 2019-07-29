@@ -812,6 +812,18 @@ view.get(&quot;#panelCustomer1&quot;).show();&#xD;
           <Property name="width">115</Property>
         </DataColumn>
         <DataColumn>
+          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+jQuery(arg.dom).xCreate({&#xD;
+	tagName: &quot;A&quot;,&#xD;
+	href: &quot;#&quot;,&#xD;
+	content:arg.data.get(&quot;outstockNo&quot;)+&quot;&quot;,&#xD;
+	onclick:function(){&#xD;
+		var data = view.get(&quot;#dsQuotaList.data&quot;).current;&#xD;
+		var param=&quot;?orderNo=&quot;+data.get(&quot;outstockNo&quot;);&#xD;
+		window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.biz.storage.view.outStockDetail.d&quot;+param, &quot;出库明细&quot;, &quot;&quot;, true);&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
           <Property name="property">outstockNo</Property>
           <Property name="name">outstockNo</Property>
           <Property name="width">118</Property>

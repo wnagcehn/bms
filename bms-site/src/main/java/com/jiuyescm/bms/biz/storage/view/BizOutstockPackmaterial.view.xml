@@ -131,20 +131,24 @@
         <Property name="label">成本备注</Property>
       </PropertyDef>
       <PropertyDef name="unitPrice">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="rowExcelNo">
         <Property name="dataType">int</Property>
       </PropertyDef>
       <PropertyDef name="rowExcelName">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="materialType">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="zexpressnum">
-        <Property/>
+        <Property></Property>
         <Property name="label">转寄后运单号</Property>
+      </PropertyDef>
+      <PropertyDef name="source">
+        <Property/>
+        <Property name="label">数据来源</Property>
       </PropertyDef>
     </DataType>
     <DataType name="dtCondition">
@@ -1161,6 +1165,9 @@ view.get(&quot;#updateAction&quot;).execute(&#xD;
           <DataColumn>
             <Property name="property">customerName</Property>
             <Property name="name">customerName</Property>
+          </DataColumn>
+          <DataColumn name="source">
+            <Property name="property">source</Property>
           </DataColumn>
           <DataColumn name="consumerMaterialCode">
             <Property name="property">consumerMaterialCode</Property>

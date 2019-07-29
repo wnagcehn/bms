@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtInStockDetaillEntity">
+      <Property name="creationType">com.jiuyescm.oms.report.po.entity.OmsPoitemReportEntity</Property>
+      <PropertyDef name="id">
+        <Property name="label">id</Property>
+      </PropertyDef>
+      <PropertyDef name="poId">
+        <Property name="label">入库单号</Property>
+      </PropertyDef>
+      <PropertyDef name="productId">
+        <Property name="label">商品ID</Property>
+      </PropertyDef>
+      <PropertyDef name="productName">
+        <Property name="label">商品名称</Property>
+      </PropertyDef>
+      <PropertyDef name="tempratureType">
+        <Property name="label">温度类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${dorado.getDataProvider(&quot;selFromTablePR#getTemperatureTypeList&quot;).getResult()}</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="stockId">
+        <Property name="label">库存类型</Property>
+      </PropertyDef>
+      <PropertyDef name="stockplacename">
+        <Property name="label">库存类型</Property>
+      </PropertyDef>
+      <PropertyDef name="qty">
+        <Property name="label">数量</Property>
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="realQty">
+        <Property name="label">入库数量</Property>
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="realBoxQty">
+        <Property name="label">入库箱数</Property>
+        <Property name="dataType">int</Property>
+      </PropertyDef>
+      <PropertyDef name="grossWeight">
+        <Property></Property>
+        <Property name="label">单品毛重</Property>
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+      <PropertyDef name="itemWeight">
+        <Property></Property>
+        <Property name="label">总重量</Property>
+        <Property name="dataType">BigDecimal</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtInStockDetaillEntityQuery">
+      <PropertyDef name="poId">
+        <Property name="label">入库单号</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">var poId = GetQueryString(&quot;instockNo&quot;);&#xD;
+&#xD;
+if(poId == undefined || poId == null){&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var data = view.get(&quot;#dsInStockDetaillEntityQuery.data&quot;).current;&#xD;
+data.set(&quot;poId&quot;,poId);&#xD;
+&#xD;
+var dsInStockDetaillEntity= view.get(&quot;#dsInStockDetaillEntity&quot;);&#xD;
+with (dsInStockDetaillEntity) {&#xD;
+	dsInStockDetaillEntity.clear();&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flush();&#xD;
+} &#xD;
+&#xD;
+&#xD;
+function GetQueryString(name){&#xD;
+    var reg = new RegExp(&quot;(^|&amp;)&quot; + name + &quot;=([^&amp;]*)(&amp;|$)&quot;); &#xD;
+    var r = window.location.search.substr(1).match(reg);&#xD;
+    if(r!=null)return  unescape(r[2]); return null;&#xD;
+}</ClientEvent>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dsInStockDetaillEntity</Property>
+        <Property name="itemCodes">pages,pageSize</Property>
+      </DataPilot>
+    </ToolBar>
+    <DataSet id="dsInStockDetaillEntity">
+      <Property name="dataType">[dtInStockDetaillEntity]</Property>
+      <Property name="readOnly">false</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">bmsBizInstockInfoController#queryDetail</Property>
+    </DataSet>
+    <DataSet id="dsInStockDetaillEntityQuery">
+      <ClientEvent name="onCreate">view.get(&quot;#dsInStockDetaillEntityQuery&quot;).getData().insert();</ClientEvent>
+      <Property name="dataType">[dtInStockDetaillEntityQuery]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <DataGrid>
+      <Property name="dataSet">dsInStockDetaillEntity</Property>
+      <Property name="stretchColumnsMode">auto</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="showFooter">false</Property>
+      <IndicatorColumn/>
+      <RowNumColumn/>
+      <DataColumn name="id">
+        <Property name="property">id</Property>
+        <Property name="visible">false</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">poId</Property>
+        <Property name="width">180</Property>
+        <Property name="name">poId</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">productId</Property>
+        <Property name="width">120</Property>
+        <Property name="name">productId</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">productName</Property>
+        <Property name="width">150</Property>
+        <Property name="name">productName</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">tempratureType</Property>
+        <Property name="width">100</Property>
+        <Property name="name">tempratureType</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">stockplacename</Property>
+        <Property name="width">100</Property>
+        <Property name="name">stockplacename</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">realQty</Property>
+        <Property name="width">120</Property>
+        <Property name="name">realQty</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">realBoxQty</Property>
+        <Property name="width">100</Property>
+        <Property name="name">realBoxQty</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">grossWeight</Property>
+        <Property name="width">100</Property>
+        <Property name="name">grossWeight</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">itemWeight</Property>
+        <Property name="width">100</Property>
+        <Property name="name">itemWeight</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

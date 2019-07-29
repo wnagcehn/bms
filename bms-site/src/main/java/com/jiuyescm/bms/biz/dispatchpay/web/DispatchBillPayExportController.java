@@ -83,6 +83,7 @@ public class DispatchBillPayExportController extends BaseController{
 	@Resource
 	private JmsTemplate jmsQueueTemplate;
 
+	private static final Integer MAX_LINE = 20;
 	
 	/**
 	 * 导出
@@ -232,6 +233,8 @@ public class DispatchBillPayExportController extends BaseController{
 		Map<String, String> diffMap = DateUtil.getSplitTime(startTime, endTime, 4);
 		List<Map<String, Object>> headDetailMapList = getBizHead(); 
 		int lineNo = 1;
+		int lineNo2 = 1;
+		int totalLine = 1;
 		for (Map.Entry<String, String> entry : diffMap.entrySet()) { 
 			logger.info("startTime:["+entry.getKey()+"] endTime["+entry.getValue()+"]");
 			myparam.put("createTime", entry.getKey());
@@ -254,10 +257,23 @@ public class DispatchBillPayExportController extends BaseController{
 				
 				List<Map<String, Object>> dataDetailList = getBizHeadItem(pageInfo.getList(),serviceMap);
 				logger.info("lineNo:"+lineNo);
-				poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc(), lineNo, headDetailMapList, dataDetailList);
-				if(dataDetailList !=null){
-					lineNo += dataDetailList.size();
-				}
+				
+				if (totalLine + dataDetailList.size() > MAX_LINE) {
+	                poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc()+"2", 
+	                        lineNo2, headDetailMapList, dataDetailList);
+	                if (dataDetailList !=null) {
+	                    lineNo2 += pageInfo.getList().size();
+	                    totalLine += pageInfo.getList().size(); 
+	                }
+	            }else {
+	                poiUtil.exportExcel2FilePath(poiUtil, workbook, FileTaskTypeEnum.BIZ_PAY_DIS.getDesc(), 
+	                        lineNo, headDetailMapList, dataDetailList);
+	                if (dataDetailList !=null) {
+	                    lineNo += pageInfo.getList().size();
+	                    totalLine += pageInfo.getList().size(); 
+	                }
+	            }
+
 			}
 		}
 				
@@ -794,6 +810,7 @@ public class DispatchBillPayExportController extends BaseController{
 		map.put("createTime", "出库日期");
 		map.put("warehouseName", "仓库");
 		map.put("customerName", "商家");
+		map.put("source", "数据来源");
 		map.put("outstockNo", "出库单号");
 		map.put("waybillNo", "运单号");
 		

@@ -28,7 +28,7 @@ public class Test {
         try{
         	final List<DataRow> list =new ArrayList<DataRow>();
         	
-        	String path = "E:/1.xlsx";
+        	String path = "E:/1.xls";
     		File file = new File(path);
             FileInputStream inputStream = new FileInputStream(file);
     		

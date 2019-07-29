@@ -86,6 +86,12 @@
 	    a.consumer_material_name, a.warehouse_code, a.warehouse_name, a.num, a.adjust_num, a.fees_no, a.dbname, 
 	    b.is_calculated, a.creator, a.create_time, a.last_modifier, a.last_modify_time,a.write_time,a.calculate_time, a.del_flag, b.calcu_msg as remark,a.weight,
 	    a.spec_desc, a.extattr1,a.extattr2, a.extattr3, a.extattr4, a.extattr5,a.cost_fees_no,a.cost_calculate_time,a.cost_is_calculated,a.cost_remark,c.zexpressnum
+	    ,	    
+	    CASE a.source
+		WHEN 'system' THEN '系统'
+		WHEN 'import' THEN '导入'
+		WHEN 'seller' THEN '销售'
+		END as source    
         from  biz_outstock_packmaterial a
         left join fees_receive_storage b on a.fees_no=b.fees_no and b.del_flag='0'
         LEFT JOIN biz_dispatch_bill c on a.waybill_no=c.waybill_no and c.del_flag='0'
@@ -158,7 +164,7 @@
     </update>
     
     <insert id="save" parameterType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
-        insert into biz_outstock_packmaterial(wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr4)
+        insert into biz_outstock_packmaterial(wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr4,source)
         values (
 			#{wmsId,jdbcType=VARCHAR}, 
 			#{outstockNo,jdbcType=VARCHAR}, 
@@ -184,13 +190,14 @@
 			#{writeTime,jdbcType=TIMESTAMP}, 
 			#{weight,jdbcType=DOUBLE},
 		    #{specDesc,jdbcType=VARCHAR},
-		    #{extattr4,jdbcType=VARCHAR}
+		    #{extattr4,jdbcType=VARCHAR},
+		    #{source,jdbcType=VARCHAR}
         )
     </insert>
     
     <insert id="saveDataFromTemp" parameterType="java.util.Map">
-    	insert into biz_outstock_packmaterial (wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr5)
-    	select wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr5
+    	insert into biz_outstock_packmaterial (wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr5,source)
+    	select wms_id, outstock_no, waybill_no, customer_id, customer_name, consumer_material_code, consumer_material_name, warehouse_code, warehouse_name, num, adjust_num, fees_no, dbname, is_calculated, remark, creator, create_time, last_modifier, last_modify_time, del_flag, calculate_time, write_time, weight,spec_desc,extattr5,'import'
     	from biz_outstock_packmaterial_temp where batchNum=#{batchNum}                             
     </insert>
     <select id="checkDataExist" parameterType="java.util.Map" resultType="Integer">
@@ -523,7 +530,12 @@
     <select id="queryOriginMaterialFromBizData" parameterType="Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
     	select consumer_material_code,consumer_material_name, 
     	waybill_no, num, weight, warehouse_name, customer_name,
-    	create_time, outstock_no
+    	create_time, outstock_no,
+    	CASE source
+		WHEN 'system' THEN '系统'
+		WHEN 'import' THEN '导入'
+		WHEN 'seller' THEN '销售'
+		END as source    
     	from biz_outstock_packmaterial where 1=1 and <![CDATA[create_time>=#{startTime}]]>
     	and <![CDATA[create_time<#{endTime}]]> and extattr5 = 'origin'
     	<if test="customerId !=null and customerId !='' ">
@@ -585,7 +597,8 @@
 		d.pack_plan_no as packPlanNo,
 		d.pack_group_no as packGroupNo,
 		d.pack_plan_name as packPlanName,
-		e.cost as packPlanCost
+		e.cost as packPlanCost,
+		c.is_calculated as isCalculated
 		from  biz_dispatch_bill a 
 		LEFT JOIN biz_outstock_packmaterial b on a.waybill_no = b.waybill_no and b.del_flag='0'
 		LEFT JOIN fees_receive_storage c on  b.fees_no =c.fees_no and b.consumer_material_code=c.product_no and c.del_flag='0'
@@ -609,6 +622,40 @@
 		 	order by a.customerid
 	  	</if>
     </select>
+    
+    <select id="queryMaterialSellData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.fees.storage.vo.FeesReceiveMaterial">
+        select  
+		a.warehouse_name, 
+		a.customer_name, 
+		a.outstock_no,
+		a.create_time,
+		a.consumer_material_code as productNo, 
+		a.consumer_material_name as product_name, 
+		b.quantity,
+		b.weight,
+		IFNULL(b.cost,0) as cost,
+		b.unit_price as unitPrice,
+		b.is_calculated as isCalculated
+		from biz_outstock_packmaterial a
+		LEFT JOIN fees_receive_storage b on  a.fees_no =b.fees_no and b.del_flag='0'
+		where a.create_time>=#{startTime} 
+		and <![CDATA[a.create_time<#{endTime}]]> 
+		and a.del_flag='0' and  a.source='seller'
+    	<if test="warehouseCode!=null and warehouseCode!=''">
+    		and a.warehouse_code=#{warehouseCode}
+    	</if>
+		<if test="(customerId != null and customerId !='')" >
+			and a.customer_id=#{customerId}
+		</if>
+	  	<if test="(customerIds != null and customerIds !='')" >
+	  		and a.customer_id in
+		 	<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+		 		#{item}
+		 	</foreach>
+		 	order by a.customer_id
+	  	</if>   
+    </select>
+      
     
     <select id="queryAllWarehouseFromBizData" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
     	select warehouse_code,warehouse_name 
@@ -866,7 +913,7 @@
     	UPDATE fees_receive_storage a
     	INNER JOIN biz_outstock_packmaterial b on a.fees_no = b.fees_no and b.del_flag != '1' and b.del_flag != '2'
 		LEFT JOIN pub_material_info c on b.consumer_material_code=c.material_code and c.del_flag='0'
-		SET a.del_flag='1'
+		SET a.is_calculated='5',a.calcu_msg='使用标准包装方案的运单，套餐内耗材不再参与计算'
 		WHERE 1=1 
 		and c.material_type = #{materialType}
 		and b.waybill_no = #{waybillNo}
@@ -899,5 +946,9 @@
     
     <select id="getWayBillNo" parameterType="java.util.Map" resultType="String">
     	SELECT waybill_no from biz_dispatch_bill where 1=1 and del_flag='0' and (waybill_no=#{waybillNo} or zexpressnum=#{waybillNo}) limit 1
+    </select>
+    
+    <select id="queryOne" parameterType="java.util.Map" resultType="com.jiuyescm.bms.biz.storage.entity.BizOutstockPackmaterialEntity">
+    	select * from biz_outstock_packmaterial where outstock_no=#{payNo} and del_flag='0' limit 1   
     </select>
 </mapper>

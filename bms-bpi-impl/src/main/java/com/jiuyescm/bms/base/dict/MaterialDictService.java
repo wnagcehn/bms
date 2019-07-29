@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jiuyescm.bms.base.dict.api.IMaterialDictService;
+import com.jiuyescm.bms.base.dict.vo.PubMaterialVo;
 import com.jiuyescm.constants.RedisCache;
 import com.jiuyescm.framework.redis.callback.GetDataCallBack;
 import com.jiuyescm.framework.redis.client.IRedisClient;
@@ -51,7 +52,7 @@ public class MaterialDictService implements IMaterialDictService {
 	@Override
 	public String getMaterialNameByCode(final String code) {
 		
-		PubMaterialInfoVo result = getMaterialByCode(code);
+		PubMaterialVo result = getMaterialByCode(code);
 		if(result == null){
 			return null;
 		}
@@ -63,7 +64,7 @@ public class MaterialDictService implements IMaterialDictService {
 
 	@Override
 	public String getMaterialCodeByName(final String name) {
-		PubMaterialInfoVo result = getMaterialByName(name);
+		PubMaterialVo result = getMaterialByName(name);
 		if(result != null){
 			return result.getBarcode(); 
 		}
@@ -73,8 +74,8 @@ public class MaterialDictService implements IMaterialDictService {
 	}
 
 	@Override
-	public PubMaterialInfoVo getMaterialByCode(final String code) {
-		PubMaterialInfoVo result = redisClient.get(code, RedisCache.MATERIALCODE_SPACE,PubMaterialInfoVo.class, new GetDataCallBack<PubMaterialInfoVo>(){
+	public PubMaterialVo getMaterialByCode(final String code) {
+	    PubMaterialVo result = redisClient.get(code, RedisCache.MATERIALCODE_SPACE,PubMaterialVo.class, new GetDataCallBack<PubMaterialVo>(){
 
 			@Override
 			public int getExpiredTime() {
@@ -82,7 +83,7 @@ public class MaterialDictService implements IMaterialDictService {
 			}
 
 			@Override
-			public PubMaterialInfoVo invoke() {
+			public PubMaterialVo invoke() {
 				Map<String, Object> condition = new HashMap<>();
 				condition.put("delFlag", "0");
 				condition.put("barcode", code);
@@ -90,15 +91,15 @@ public class MaterialDictService implements IMaterialDictService {
 				if(list == null || list.size()==0){
 					return null;
 				}
-				return list.get(0);
+				return getPubMaterialVo(list.get(0));
 			}
 		});
 		return result;
 	}
 
 	@Override
-	public PubMaterialInfoVo getMaterialByName(final String name) {
-		PubMaterialInfoVo result = redisClient.get(name, RedisCache.MATERIALNAME_SPACE,PubMaterialInfoVo.class, new GetDataCallBack<PubMaterialInfoVo>(){
+	public PubMaterialVo getMaterialByName(final String name) {
+	    PubMaterialVo result = redisClient.get(name, RedisCache.MATERIALNAME_SPACE,PubMaterialVo.class, new GetDataCallBack<PubMaterialVo>(){
 
 			@Override
 			public int getExpiredTime() {
@@ -106,7 +107,7 @@ public class MaterialDictService implements IMaterialDictService {
 			}
 
 			@Override
-			public PubMaterialInfoVo invoke() {
+			public PubMaterialVo invoke() {
 				Map<String, Object> condition = new HashMap<>();
 				condition.put("delFlag", "0");
 				condition.put("materialName", name);
@@ -114,10 +115,20 @@ public class MaterialDictService implements IMaterialDictService {
 				if(list == null || list.size()==0){
 					return null;
 				}
-				return list.get(0);
+				
+				return getPubMaterialVo(list.get(0));
 			}
 		});
 		return result;
+	}
+	
+	private PubMaterialVo getPubMaterialVo(PubMaterialInfoVo tempVo){
+	    PubMaterialVo vo = new PubMaterialVo();
+	    vo.setBarcode(tempVo.getBarcode());
+	    vo.setMaterialName(tempVo.getMaterialName());
+	    vo.setMaterialNo(tempVo.getMaterialNo());
+	    vo.setMaterialType(tempVo.getMaterialType());
+	    return vo;
 	}
 
 }

@@ -4,7 +4,7 @@
     <resultMap id="baseResultMap" type="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity" >
         <id column="id" property="id" jdbcType="BIGINT" />
 	    <result column="id" property="id" jdbcType="BIGINT" />
-	    <result column="import_date" property="importDate" jdbcType="DATE" />
+	    <result column="import_date" property="importDate" jdbcType="VARCHAR" />
 	    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
 	    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
 	    <result column="import_type" property="importType" jdbcType="VARCHAR" />
@@ -100,12 +100,14 @@
 			WHERE del_flag = '0'
 			AND create_time <![CDATA[>=]]> #{startTime} AND create_time <![CDATA[<]]> #{endTime}
 			AND b2b_flag = '0' 
-		UNION ALL
-		SELECT distinct a.warehouse_code,a.customer_id,DATE_FORMAT(a.create_time, '%Y-%m') as import_date,'ACTUAL' as import_type, 'MATERIAL' as biz_type
-		FROM biz_outstock_packmaterial a 
-		left join biz_outstock_master b on a.waybill_no = b.waybill_no
-		where a.del_flag = 0 AND b.b2b_flag = '0'
-		AND a.create_time <![CDATA[>=]]> #{startTime} AND a.create_time <![CDATA[<]]> #{endTime} ) a
+			UNION
+			select warehouse_code, customer_id, create_month as import_date,'THEORY' as import_type, 'MATERIAL' as biz_type
+			from report_warehouse_customer 
+			where 1=1 
+			and del_flag='0' 
+			and import_type='1' 
+			and create_month in(DATE_FORMAT(#{startTime}, '%Y-%m'), DATE_FORMAT(#{endTime}, '%Y-%m')) 
+		) a
         on DUPLICATE KEY update
         create_time=CURRENT_TIMESTAMP , del_flag=#{delFlag};
     </insert>
@@ -125,8 +127,14 @@
     </update>
     
     <select id="queryWareList" parameterType="java.util.Map" resultMap="baseMap">
-    	select id, create_month, warehouse_code, warehouse_name, customer_id, customer_name, biz_type,import_type, remark, creator, create_time, last_modifier, last_modify_time,del_flag
-    	from report_warehouse_customer where 1=1 and del_flag='0' and import_type='0' and create_month=DATE_FORMAT(#{startTime}, '%Y-%m')
+    	select id, create_month, warehouse_code, warehouse_name,
+    	customer_id, customer_name, biz_type,import_type, remark, 
+    	creator, create_time, last_modifier, last_modify_time,del_flag
+    	from report_warehouse_customer 
+    	where 1=1 and del_flag='0' 
+    	and import_type='0' 
+    	and create_month=DATE_FORMAT(#{startTime}, '%Y-%m')
+    	and biz_type = #{bizType}
     </select>
     
     <update id="updateReport" parameterType="com.jiuyescm.bms.base.reportWarehouse.ReportWarehouseCustomerEntity">
@@ -141,29 +149,114 @@
     	INSERT into report_warehouse_biz_import 
     	       (import_date,warehouse_code,biz_type,import_type,customer_id,create_time,del_flag)
 		select create_month,warehouse_code,biz_type,'THEORY',customer_id,CURRENT_TIMESTAMP,0
-		from report_warehouse_customer where 1=1 and del_flag='0' and import_type='1' and create_month=DATE_FORMAT(#{startTime}, '%Y-%m')
+		from report_warehouse_customer 
+		where 1=1 and del_flag='0' 
+		and import_type='1' 
+		and create_month=DATE_FORMAT(#{startTime}, '%Y-%m')
+		and biz_type = #{bizType}
 		on DUPLICATE KEY update
         create_time=CURRENT_TIMESTAMP;	
     </insert>
     
-        <update id="deletetReport" parameterType="java.util.Map">
-update report_warehouse_biz_import set del_flag='1' where import_type = "ACTUAL"
+    <update id="deletetReport" parameterType="java.util.Map">
+		update report_warehouse_biz_import set del_flag='1' where import_type = "ACTUAL"
 		<if test="ids != null and ids != '' and ids.size>0">
-		and id in
-		<foreach collection="ids" index="index" item="item" open="("
-				 separator="," close=")">
-			 #{item}
-		</foreach>
+			and id in
+			<foreach collection="ids" index="index" item="item" open="("
+					 separator="," close=")">
+				 #{item}
+			</foreach>
 		</if>
     </update>
     
-        <select id="queryImport" resultType="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity">
+    <select id="queryImport" resultType="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity">
     	select id, import_date as importDateStr, warehouse_code as warehouseCode, biz_type as bizType, import_type as importType, customer_id as customerId
         from report_warehouse_biz_import
 		where del_flag='0' and create_time  <![CDATA[>=]]> #{startTime}
 		<if test="importType!=null and importType !=''">
 			and import_type=#{importType}
 		</if>
+		and biz_type=#{bizType}
     </select>
+    
+    <select id="queryCusByTheory" parameterType="java.util.Map" resultType="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity">
+    	select id,import_date as importDate,warehouse_code as warehouseCode,
+    	biz_type as bizType,import_type as importType,customer_id as customerId,
+    	create_time as createTime
+		from report_warehouse_biz_import
+		WHERE del_flag='0'
+		and import_type='THEORY'
+		and biz_type='MATERIAL'
+		and import_date in (DATE_FORMAT(#{startTime}, '%Y-%m'), DATE_FORMAT(#{endTime}, '%Y-%m'))
+    </select>
+    
+    <select id="queryIsNewPlanByCustomer" parameterType="java.util.Map" resultType="java.lang.String">
+    	select DISTINCT is_new_plan from biz_dispatch_bill
+		WHERE del_flag='0'
+		and create_time <![CDATA[>=]]> #{startTime}
+		and create_time <![CDATA[<]]> #{endTime}
+		and customerid=#{customerId}
+		and warehouse_code=#{warehouseCode}
+    </select>
+    
+    <insert id="upsertPackMaterialByNewPlan" parameterType="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity" >
+        insert into report_warehouse_biz_import(import_date,warehouse_code,biz_type,import_type,customer_id,create_time,del_flag)
+    	values 
+  		(
+		  #{importDate,jdbcType=DATE},
+		  #{warehouseCode,jdbcType=VARCHAR},
+		  #{bizType,jdbcType=VARCHAR},
+		  #{importType,jdbcType=VARCHAR},
+		  #{customerId,jdbcType=VARCHAR},
+		  #{createTime,jdbcType=TIMESTAMP},
+		  #{delFlag,jdbcType=VARCHAR}
+		 )
+  		ON DUPLICATE KEY UPDATE 
+  		create_time=CURRENT_TIMESTAMP, del_flag=#{delFlag}
+    </insert>
+    
+    <select id="queryCusImportType" parameterType="java.util.Map" resultType="com.jiuyescm.bms.base.reportWarehouse.ReportWarehouseCustomerEntity">
+    	select id,import_type
+		from report_warehouse_customer
+		where 1=1
+		and del_flag='0'
+		and customer_id=#{customerId}
+		and warehouse_code=#{warehouseCode}
+		and create_month=#{importDate}
+		and biz_type='MATERIAL'
+		and import_type='0'
+    </select>
+    
+    <update id="deleteMaterialReport" parameterType="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity">
+    	update report_warehouse_biz_import set del_flag='1'
+		where 1=1 
+		and del_flag='0' 
+		and import_date=#{importDate} 
+		and customer_id=#{customerId} 
+		and biz_type='MATERIAL'
+		and warehouse_code=#{warehouseCode}
+    </update>
+    
+    <select id="queryIsImportMaterial" parameterType="java.util.Map" resultType="java.lang.String">
+    	select waybill_no
+		FROM biz_outstock_packmaterial
+		WHERE customer_id = #{customerId}
+		and warehouse_code = #{warehouseCode}
+		and create_time <![CDATA[>=]]> #{startTime}
+		and create_time <![CDATA[<]]> #{endTime}
+		and del_flag in ('0','2','3')
+		and source = 'import'
+    </select>
+    
+    <update id="deleteActualMaterial" parameterType="com.jiuyescm.bms.general.entity.ReportWarehouseBizImportEntity">
+    	update report_warehouse_biz_import set del_flag='1'
+		where 1=1 
+		and del_flag='0' 
+		and import_date=#{importDate} 
+		and customer_id=#{customerId} 
+		and biz_type='MATERIAL'
+		and import_type='ACTUAL'
+		and warehouse_code=#{warehouseCode}
+    </update>
     
 </mapper>

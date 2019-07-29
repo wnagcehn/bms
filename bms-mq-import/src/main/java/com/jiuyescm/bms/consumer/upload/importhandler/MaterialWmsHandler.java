@@ -111,7 +111,6 @@ public class MaterialWmsHandler {
     //WMS模板标识
     private boolean isWMS = true;
     
-    //检查抬头标识
     private boolean titleCheck = true;
     
     //----------初始化基础数据---------

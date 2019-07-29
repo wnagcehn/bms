@@ -97,6 +97,9 @@ public class BizOutstockPackmaterialEntity implements IEntity {
 	private String materialType;
 	// 转寄后运单号
     private String zexpressnum;
+    
+    //数据来源
+    private String source;
 	
 	public String getUnitPrice() {
 		return unitPrice;
@@ -427,6 +430,14 @@ public class BizOutstockPackmaterialEntity implements IEntity {
 
     public void setZexpressnum(String zexpressnum) {
         this.zexpressnum = zexpressnum;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
     
     
