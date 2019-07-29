@@ -4,14 +4,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<parent>
 		<groupId>com.jiuyescm.bms</groupId>
 		<artifactId>bms</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.4.14-SNAPSHOT</version>
 	</parent>
 	<artifactId>bms-bpi-impl</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-entity</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
@@ -30,17 +30,17 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-repo</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-bpi</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		 <dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-core</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
@@ -54,7 +54,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.42</version>
 		</dependency>
 		
 		<dependency>
@@ -101,16 +100,4 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		</dependency>
 	</dependencies>
 	
-	<!-- 添加部署插件，生效设置为false -->
-	 <build>
-	 	<plugins>
-	  		<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-deploy-plugin</artifactId>
-			    <configuration>
-			        <skip>false</skip><!-- 发布设置为false -->
-			    </configuration>
-			</plugin>
-	  	 </plugins>
-	  </build>
 </project>

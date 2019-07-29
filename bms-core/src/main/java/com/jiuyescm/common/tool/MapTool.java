@@ -6,6 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
+
 import com.jiuyescm.common.utils.MD5Util;
 
 public class MapTool {
@@ -23,6 +28,55 @@ public class MapTool {
 			public int compare(Entry<String, String> o1, Entry<String, String> o2) {
 				return o1.getKey().compareTo(o2.getKey());
 			}
+
+            @Override
+            public Comparator<Entry<String, String>> reversed() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public Comparator<Entry<String, String>> thenComparing(Comparator<? super Entry<String, String>> other) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public <U> Comparator<Entry<String, String>> thenComparing(
+                    Function<? super Entry<String, String>, ? extends U> keyExtractor,
+                    Comparator<? super U> keyComparator) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public <U extends Comparable<? super U>> Comparator<Entry<String, String>> thenComparing(
+                    Function<? super Entry<String, String>, ? extends U> keyExtractor) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public Comparator<Entry<String, String>> thenComparingInt(
+                    ToIntFunction<? super Entry<String, String>> keyExtractor) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public Comparator<Entry<String, String>> thenComparingLong(
+                    ToLongFunction<? super Entry<String, String>> keyExtractor) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public Comparator<Entry<String, String>> thenComparingDouble(
+                    ToDoubleFunction<? super Entry<String, String>> keyExtractor) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+            
         });
         
         String ret = "";

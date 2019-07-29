@@ -4,11 +4,11 @@
 	<parent>  
 		<groupId>com.jiuyescm.framework</groupId>
 		<artifactId>jiuyescm-parent</artifactId>
-		<version>1.1.6</version>
+		<version>2.0.1</version>
 	</parent>
 	<groupId>com.jiuyescm.bms</groupId>
 	<artifactId>bms</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.4.14-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>bms-entity</module>
@@ -25,8 +25,6 @@
 		<module>bms-mq-import</module>
 		<module>bms-mq-correct</module>
 		<module>bms-mq-calcu</module>
-		<module>bms-base-api</module>
-		<module>bms-base-service</module>
 		<module>bms-mq-billimport</module>
 		<module>excel-support</module>
 		<module>drools-support</module>

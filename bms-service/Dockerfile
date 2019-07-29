@@ -1,4 +1,4 @@
-FROM harbor.sh-jiuye.com.cn/library/jre:7
+FROM harbor.sh-jiuye.com.cn/library/openjdk:8-jre
 MAINTAINER ningyu@jiuyescm.com
 
 ADD target/*.zip /tmp/bms.zip

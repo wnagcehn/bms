@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.jiuyescm.bms</groupId>
 		<artifactId>bms</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.4.14-SNAPSHOT</version>
 	</parent>
 	<artifactId>bms-site</artifactId>
 	<dependencies>
@@ -135,11 +135,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.javassist</groupId> -->
-<!-- 			<artifactId>javassist</artifactId> -->
-<!-- 			<version>3.15.0-GA</version> -->
-<!-- 		</dependency> -->
+		
 		<dependency>
 			<groupId>com.bstek.bdf2</groupId>
 			<artifactId>bdf2-export</artifactId>
@@ -285,50 +281,37 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- <dependency>
-			<groupId>com.jiuyescm.bms</groupId>
-			<artifactId>bms-base-api</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.jiuyescm.bms</groupId>
-			<artifactId>bms-base-service</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency> -->
+		
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-api</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-api-impl</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-bpi</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>com.jiuyescm.bms</groupId>
-			<artifactId>bms-bpi-impl</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency> -->
+		
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-entity</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-core</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-repo</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
