@@ -119,7 +119,7 @@ public class ZipHelper {
 			out.close();
 		}
 		zip.close();
-		System.out.println("******************解压完毕********************");
+		logger.info("******************解压完毕********************");
 		return;
 	}
 	
