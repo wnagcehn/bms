@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.jiuyescm.bms</groupId>
 		<artifactId>bms</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.4.14-SNAPSHOT</version>
 	</parent>
 	<artifactId>bms-job</artifactId>
 
@@ -13,25 +13,25 @@
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-bpi</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-core</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-repo</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>drools-support</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -157,7 +157,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>3.2.4.RELEASE</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -257,6 +256,15 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			
 		</plugins>
 	</build>
 </project>

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.jiuyescm.bms</groupId>
 		<artifactId>bms</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.4.14-SNAPSHOT</version>
 	</parent>
 	<artifactId>bms-mq-import</artifactId>
 	<name>bms-mq-import</name>
@@ -221,32 +221,32 @@
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-core</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-repo</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-api</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-api-impl</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-bpi</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>excel-support</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<!-- TMS -->
@@ -296,7 +296,7 @@
 		<dependency>
 		  <groupId>com.jiuyescm.framework</groupId>
 		  <artifactId>fastdfs-client</artifactId>
-		  <version>1.0.0-SNAPSHOT</version>
+		  <version>${fastdfs-client.version}</version>
 		</dependency>
 		
 	</dependencies>

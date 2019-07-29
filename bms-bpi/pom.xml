@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.jiuyescm.bms</groupId>
     <artifactId>bms</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.4.14-SNAPSHOT</version>
   </parent>
   <artifactId>bms-bpi</artifactId>
     <dependencies>
@@ -16,32 +16,8 @@
         <dependency>
             <groupId>com.jiuyescm.bms</groupId>
             <artifactId>bms-entity</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
-        
-        <!-- <dependency>
-		  <groupId>com.jiuyescm.mdm</groupId>
-		  <artifactId>mdm-customer-api</artifactId>
-		  <version>${mdm.version}</version>
-		</dependency>
-		
-		<dependency>
-		  <groupId>com.jiuyescm.mdm</groupId>
-  		  <artifactId>mdm-warehouse-api</artifactId>
-		  <version>${mdm.version}</version>
-		</dependency>
-		
-		<dependency>
-		  <groupId>com.jiuyescm.mdm</groupId>
-  		  <artifactId>mdm-carrier-api</artifactId>
-		  <version>${mdm.version}</version>
-		</dependency>
-		
-		<dependency>
-		  <groupId>com.jiuyescm.mdm</groupId>
-  		  <artifactId>mdm-deliver-api</artifactId>
-		  <version>${mdm.version}</version>
-		</dependency> -->
 	
 		<dependency>
 			<groupId>com.jiuyescm.contract</groupId>
@@ -60,16 +36,4 @@
 		</dependency>
     </dependencies>
     
-    <!-- 添加部署插件，生效设置为false -->
-	 <build>
-	 	<plugins>
-	  		<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-deploy-plugin</artifactId>
-			    <configuration>
-			        <skip>false</skip><!-- 发布设置为false -->
-			    </configuration>
-			</plugin>
-	  	 </plugins>
-	  </build>
 </project>

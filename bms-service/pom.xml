@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.jiuyescm.bms</groupId>
 		<artifactId>bms</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.4.14-SNAPSHOT</version>
 	</parent>
 	<artifactId>bms-service</artifactId>
 	<dependencies>
@@ -32,25 +32,24 @@
 		<dependency>
 			<groupId>com.bstek.bdf2</groupId>
 			<artifactId>bdf2-orm-hibernate3</artifactId>
-			<version>2.0.7</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-bpi-impl</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-api-impl</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>drools-support</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
@@ -77,13 +76,11 @@
 		<dependency>
 		    <groupId>net.sourceforge.jtds</groupId>
 		    <artifactId>jtds</artifactId>
-		    <version>1.3.1</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>3.2.4.RELEASE</version>
 			<scope>provided</scope>
 		</dependency>
 		
@@ -154,6 +151,15 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			
 		</plugins>
 		
 		

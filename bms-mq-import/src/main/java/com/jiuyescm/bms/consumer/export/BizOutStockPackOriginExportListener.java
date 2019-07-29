@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 import javax.annotation.Resource;
 import javax.jms.JMSException;
@@ -36,7 +40,6 @@ import com.jiuyescm.bms.biz.storage.service.IBizOutstockPackmaterialService;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.enumtype.FileTaskStateEnum;
 import com.jiuyescm.bms.common.enumtype.FileTaskTypeEnum;
-import com.jiuyescm.common.utils.DateUtil;
 import com.jiuyescm.common.utils.excel.POISXSSUtil;
 import com.jiuyescm.exception.BizException;
 import com.jiuyescm.mdm.customer.api.IPubMaterialInfoService;
@@ -323,6 +326,50 @@ public class BizOutStockPackOriginExportListener implements MessageListener{
 					return 0;
 				}
 			}
+
+            @Override
+            public Comparator<String> reversed() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public Comparator<String> thenComparing(Comparator<? super String> other) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public <U> Comparator<String> thenComparing(Function<? super String, ? extends U> keyExtractor,
+                    Comparator<? super U> keyComparator) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public <U extends Comparable<? super U>> Comparator<String> thenComparing(
+                    Function<? super String, ? extends U> keyExtractor) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public Comparator<String> thenComparingInt(ToIntFunction<? super String> keyExtractor) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public Comparator<String> thenComparingLong(ToLongFunction<? super String> keyExtractor) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public Comparator<String> thenComparingDouble(ToDoubleFunction<? super String> keyExtractor) {
+                // TODO Auto-generated method stub
+                return null;
+            }
 		});
 
 		// 遍历输出

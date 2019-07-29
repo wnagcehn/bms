@@ -1,4 +1,4 @@
-FROM harbor.sh-jiuye.com.cn/library/tomcat:7
+FROM harbor.sh-jiuye.com.cn/library/tomcat:7.0.67-jre8
 MAINTAINER litao@jiuyescm.com
 
 ENV JAVA_OPTS="-Dhttps.protocols=TLSv1.1,TLSv1.2 -Djava.net.preferIPv4Stack=true \

@@ -3,14 +3,15 @@
   <parent>
     <groupId>com.jiuyescm.bms</groupId>
     <artifactId>bms</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.4.14-SNAPSHOT</version>
   </parent>
   <artifactId>bms-entity</artifactId>
-  <dependencies>
-  				<dependency>
+  	<dependencies>
+  	
+  		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>excel-support</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
   		<dependency>
   			<groupId>com.jiuyescm.scm</groupId>
@@ -70,16 +71,5 @@
 			<version>2.1.0</version>
 		</dependency>
   </dependencies>
-  <!-- 添加部署插件，生效设置为false -->
-  <build>
-  	<plugins>
-  		<plugin>
-		    <groupId>org.apache.maven.plugins</groupId>
-		    <artifactId>maven-deploy-plugin</artifactId>
-		    <configuration>
-		        <skip>false</skip><!-- 发布设置为false -->
-		    </configuration>
-		</plugin>
-  	</plugins>
-  </build>
+  
 </project>

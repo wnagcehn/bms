@@ -7,6 +7,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -75,6 +79,55 @@ public class ExcelAnnotionUtil {
                     }
                     return -1;
                 }
+
+                @Override
+                public Comparator<Map<String, Object>> reversed() {
+                    // TODO Auto-generated method stub
+                    return null;
+                }
+
+                @Override
+                public Comparator<Map<String, Object>> thenComparing(Comparator<? super Map<String, Object>> other) {
+                    // TODO Auto-generated method stub
+                    return null;
+                }
+
+                @Override
+                public <U> Comparator<Map<String, Object>> thenComparing(
+                        Function<? super Map<String, Object>, ? extends U> keyExtractor,
+                        Comparator<? super U> keyComparator) {
+                    // TODO Auto-generated method stub
+                    return null;
+                }
+
+                @Override
+                public <U extends Comparable<? super U>> Comparator<Map<String, Object>> thenComparing(
+                        Function<? super Map<String, Object>, ? extends U> keyExtractor) {
+                    // TODO Auto-generated method stub
+                    return null;
+                }
+
+                @Override
+                public Comparator<Map<String, Object>> thenComparingInt(
+                        ToIntFunction<? super Map<String, Object>> keyExtractor) {
+                    // TODO Auto-generated method stub
+                    return null;
+                }
+
+                @Override
+                public Comparator<Map<String, Object>> thenComparingLong(
+                        ToLongFunction<? super Map<String, Object>> keyExtractor) {
+                    // TODO Auto-generated method stub
+                    return null;
+                }
+
+                @Override
+                public Comparator<Map<String, Object>> thenComparingDouble(
+                        ToDoubleFunction<? super Map<String, Object>> keyExtractor) {
+                    // TODO Auto-generated method stub
+                    return null;
+                }
+                
             });
         }
 		return headInfoList;

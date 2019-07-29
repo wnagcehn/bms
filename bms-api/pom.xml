@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.jiuyescm.bms</groupId>
 		<artifactId>bms</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.4.14-SNAPSHOT</version>
 	</parent>
 	<artifactId>bms-api</artifactId>
 	<dependencies>
@@ -13,38 +13,13 @@
 			<groupId>com.github.pagehelper</groupId>
 			<artifactId>pagehelper</artifactId>
 		</dependency>
-		<!-- Dorado -->
+		
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-entity</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>com.jiuyescm.inv</groupId>
-			<artifactId>inv-entity</artifactId>
-			<version>${inv.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.jiuyescm</groupId>
-					<artifactId>scm-core</artifactId>
-				</exclusion>
-				<exclusion>
-				    <groupId>org.slf4j</groupId>
-				    <artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-			</exclusions>
-	</dependency> -->
+		
 	</dependencies>
-	<!-- 添加部署插件，生效设置为false -->
-	 <build>
-	 	<plugins>
-	  		<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-deploy-plugin</artifactId>
-			    <configuration>
-			        <skip>false</skip><!-- 发布设置为false -->
-			    </configuration>
-			</plugin>
-	  	 </plugins>
-	  </build>
+	
 </project>
