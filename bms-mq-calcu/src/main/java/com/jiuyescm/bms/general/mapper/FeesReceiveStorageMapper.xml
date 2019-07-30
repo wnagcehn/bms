@@ -334,18 +334,15 @@
     
     
     <select id="queryImportFee" parameterType="java.util.Map" resultType="String">
-    	 select d.fees_no from
-	     (
-				select a.fees_no from biz_outstock_packmaterial a
-				INNER JOIN
-				(
-					select waybill_no from  biz_outstock_packmaterial 
-					where customer_id=#{customerId}  and del_flag='0' and source in ('import','system') and create_time>=#{beginTime} and <![CDATA[create_time< #{endTime}]]>
-					GROUP BY waybill_no
-					having FIND_IN_SET('import',GROUP_CONCAT(source))>0 and FIND_IN_SET('system',GROUP_CONCAT(source))>0
-				) b on a.waybill_no=b.waybill_no
-				where a.source='import' and a.del_flag='0'
-		 ) d
+		select a.fees_no from biz_outstock_packmaterial a
+		INNER JOIN
+		(
+			select waybill_no from  biz_outstock_packmaterial 
+			where customer_id=#{customerId}  and del_flag='0' and source in ('import','system') and create_time>=#{beginTime} and <![CDATA[create_time< #{endTime}]]>
+			GROUP BY waybill_no
+			having FIND_IN_SET('import',GROUP_CONCAT(source))>0 and FIND_IN_SET('system',GROUP_CONCAT(source))>0
+		) b on a.waybill_no=b.waybill_no
+		where a.source='import' and a.del_flag='0'
     </select>
     
      <delete id="updateImportFee" parameterType="java.util.Map">
