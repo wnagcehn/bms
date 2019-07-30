@@ -104,16 +104,20 @@
         where id=#{id}
     </update>
     
+    <select id="queryImportMaterial" parameterType="java.util.Map" resultType="String">
+    	select a.waybill_no from
+	    (select waybill_no from  biz_outstock_packmaterial 
+		where  customer_id=#{customerId} and create_time>=#{beginTime} and <![CDATA[create_time< #{endTime}]]> and del_flag='0' and source in ('import','system') 
+		GROUP BY waybill_no
+		having  FIND_IN_SET('import',GROUP_CONCAT(source))>0 and  FIND_IN_SET('system',GROUP_CONCAT(source))>0) a
+    
+    </select>
+    
     <delete id="updateImportMaterial" parameterType="java.util.Map">
-    	
-		delete from biz_outstock_packmaterial  where waybill_no IN
-		(
-			 select a.waybill_no from
-			 (select waybill_no from  biz_outstock_packmaterial 
-				where  customer_id=#{customerId} and create_time>=#{beginTime} and <![CDATA[create_time< #{endTime}]]> and del_flag='0' and source in ('import','system') 
-				GROUP BY waybill_no
-				having  FIND_IN_SET('import',GROUP_CONCAT(source))>0 and  FIND_IN_SET('system',GROUP_CONCAT(source))>0) a
-		) and source='import' and del_flag='0'
+		delete from biz_outstock_packmaterial  where source='import' and del_flag='0' and waybill_no IN
+		<foreach collection="waybillNos" index="index" item="item" open="(" separator="," close=")">
+			 		#{item}
+		</foreach>
     </delete>
     
 </mapper>
