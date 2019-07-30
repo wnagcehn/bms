@@ -565,13 +565,20 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     private void handMaterail(Map<String, Object> map){
+	    logger.info("taskId={} 作废耗材参数{}",taskVo.getTaskId(),map);
         StopWatch sw = new StopWatch();
         sw.start();
-        feesReceiveStorageService.updateImportFee(map);
+        List<String> feeNos=feesReceiveStorageService.queryImportFee(map);
+        if(feeNos.size()>0){
+            feesReceiveStorageService.updateImportFee(feeNos);
+        }
         sw.stop();
         logger.info("taskId={} 作废导入费用 耗时【{}】",taskVo.getTaskId(),sw.getLastTaskTimeMillis());
         sw.start();
-        bizOutstockPackmaterialService.updateImportMaterial(map);
+        List<String> waybillNos=bizOutstockPackmaterialService.queryImportMaterial(map);
+        if(waybillNos.size()>0){
+            bizOutstockPackmaterialService.updateImportMaterial(waybillNos);
+        }
         sw.stop();
         logger.info("taskId={} 作废导入耗材 耗时【{}】",taskVo.getTaskId(),sw.getLastTaskTimeMillis());      
     }

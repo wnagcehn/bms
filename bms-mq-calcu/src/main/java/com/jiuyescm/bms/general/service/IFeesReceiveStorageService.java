@@ -47,6 +47,8 @@ public interface IFeesReceiveStorageService {
 	public void updateOne(FeesReceiveStorageEntity entity);
 	
 	//作废导入耗材对应的费用
-    public void updateImportFee(Map<String, Object> condition);
+    public List<String> queryImportFee(Map<String, Object> condition);
+	//作废导入耗材对应的费用
+    public void updateImportFee(List<String> feeNos);
 
 }
