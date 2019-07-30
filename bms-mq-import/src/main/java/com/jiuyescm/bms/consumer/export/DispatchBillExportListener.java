@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.bstek.dorado.annotation.DataProvider;
 import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
@@ -688,7 +687,6 @@ public class DispatchBillExportListener implements MessageListener{
 	 * 温度类型
 	 * @return
 	 */
-	@DataProvider
 	public Map<String, String> getTemperatureTypeList(){
 		List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList("TEMPERATURE_TYPE");
 		Map<String, String> map =new LinkedHashMap<String,String>();
@@ -704,7 +702,6 @@ public class DispatchBillExportListener implements MessageListener{
 	 * B2B标识
 	 * @return
 	 */
-	@DataProvider
 	public Map<String,String> getIstB(){
 		Map<String, String> mapValue = new LinkedHashMap<String, String>();
 		mapValue.put("1", "B2B");
@@ -716,7 +713,6 @@ public class DispatchBillExportListener implements MessageListener{
 	 * B2B标识
 	 * @return
 	 */
-	@DataProvider
 	public Map<String,String> getOrderStatus(){	
 		return OrderStatus.getMap();
 	}

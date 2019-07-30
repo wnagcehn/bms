@@ -45,7 +45,6 @@ import org.springframework.util.StopWatch;
 
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.fastjson.JSON;
-import com.bstek.dorado.annotation.DataProvider;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
@@ -2059,7 +2058,6 @@ public class PrepareBillHandler {
      * 温度类型
      * @return
      */
-    @DataProvider
     public Map<String, String> getEnumList(String type){
         List<SystemCodeEntity> systemCodeList = systemCodeService.findEnumList(type);
         Map<String, String> map =new LinkedHashMap<String,String>();
