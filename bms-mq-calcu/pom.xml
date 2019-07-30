@@ -13,14 +13,8 @@
 
 
 	<dependencies>
-		
-		<dependency>
-			<groupId>com.jiuyescm.bms</groupId>
-			<artifactId>bms-bpi</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
-		
-		<dependency>
+	
+	<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 		</dependency>
@@ -54,7 +48,10 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
@@ -63,6 +60,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 		</dependency>
+		<!-- Spring security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
@@ -85,7 +83,7 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 		</dependency>
-
+		<!-- Mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
@@ -94,20 +92,125 @@
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
 		</dependency>
-
+		<!-- Pagination -->
 		<dependency>
 			<groupId>com.github.pagehelper</groupId>
 			<artifactId>pagehelper</artifactId>
 		</dependency>
-		
+		<!-- Dorado -->
+		<dependency>
+			<groupId>com.bstek.dorado</groupId>
+			<artifactId>dorado-uploader</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-jcl</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-jdk14</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.dorado</groupId>
+			<artifactId>dorado-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>javassist</artifactId>
+					<groupId>javassist</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-orm-hibernate3</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>javassist</artifactId>
+					<groupId>org.javassist</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-export</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>ant-launcher</artifactId>
+					<groupId>org.apache.ant</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>ant</artifactId>
+					<groupId>org.apache.ant</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>stax-api</artifactId>
+					<groupId>stax</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-uploader</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.bstek.bdf2</groupId>
+			<artifactId>bdf2-jasperreports</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>asm-analysis</artifactId>
+					<groupId>asm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>asm-tree</artifactId>
+					<groupId>asm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>asm-commons</artifactId>
+					<groupId>asm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>asm-util</artifactId>
+					<groupId>asm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcmail-jdk14</artifactId>
+					<groupId>org.bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcprov-jdk14</artifactId>
+					<groupId>org.bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bctsp-jdk14</artifactId>
+					<groupId>org.bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>castor</artifactId>
+					<groupId>org.codehaus.castor</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jcommon</artifactId>
+					<groupId>jfree</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jdtcore</artifactId>
+					<groupId>eclipse</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jfreechart</artifactId>
+					<groupId>jfree</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<dependency>
@@ -123,7 +226,7 @@
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 		</dependency>
-
+		<!-- Dubbo -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>dubbo</artifactId>
@@ -138,7 +241,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
+		<!-- Zookeeper -->
 		<dependency>
 			<groupId>com.github.sgroschupf</groupId>
 			<artifactId>zkclient</artifactId>
@@ -194,19 +297,6 @@
 			<groupId>com.baidu.disconf</groupId>
 			<artifactId>disconf-client</artifactId>
 		</dependency>
-		
-		<dependency>
-			<groupId>com.jiuyescm.framework</groupId>
-			<artifactId>datasource-multiple</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.jiuyescm.scm</groupId>
-  					<artifactId>scm-beans</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		
 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
@@ -230,12 +320,16 @@
 			<artifactId>jasperdata</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		
+		<dependency>
+			<groupId>com.jiuyescm.bms</groupId>
+			<artifactId>bms-bpi</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>com.jiuyescm.bms</groupId>
 			<artifactId>bms-core</artifactId>

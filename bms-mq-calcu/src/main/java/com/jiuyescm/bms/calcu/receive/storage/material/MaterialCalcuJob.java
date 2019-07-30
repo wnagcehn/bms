@@ -309,12 +309,13 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 			return true;
 		}
 		
-		//标准包装方案对应的耗材不计费
-      /*  if(handPackage(entity,fee)==true){
-            return true;
-        }*/
+		//标准包装方案对应的耗材不计费(耗材销售单不走此处逻辑)		
+		if("seller".equals(entity.getSource())){
+		    return false;
+		}else{
+		    return handPackage(entity,fee);     
+		}
 
-		return handPackage(entity,fee);		
 	}
 	
 	@Override
