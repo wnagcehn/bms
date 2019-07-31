@@ -635,76 +635,54 @@ public class BillCheckInfoController{
 	 * @return
 	 */
 	@DataResolver
-	public String finishBill(){		
-		Map<String, Object> param=new HashMap<String, Object>();
-		List<String> userIds=new ArrayList<String>();
-		BmsGroupUserVo groupUser=bmsGroupUserService.queryEntityByUserId(JAppContext.currentUserID());
-		if(groupUser!=null){//加入權限組
-			//判断是否是管理员
-			if(!"0".equals(groupUser.getAdministrator())){//非管理员
-				userIds=bmsGroupUserService.queryContainUserIds(groupUser);
-				StringBuffer user=new StringBuffer();
-				for(int i=0;i<userIds.size();i++){
-					if(i==userIds.size()-1){
-						user.append(userIds.get(i));
-					}else{
-						user.append(userIds.get(i)+"|");
-					}
+	public String finishBill(List<BillCheckInfoVo> list){		
+		
+	    String result="";
+	    
+		for(BillCheckInfoVo vo:list){
+			//1.状态必须为“待收款” 允许一键收款(确认金额+调整金额=收款金额) 开票未回款金额也变成0
+			if(CheckBillStatusEnum.TB_RECEIPT.getCode().equals(vo.getBillStatus())){
+				//确认金额+调整金额
+				BigDecimal totalAmount=new BigDecimal(0);
+				if(vo.getConfirmAmount()!=null){
+					totalAmount=vo.getConfirmAmount();
 				}
-				param.put("userIds", userIds);
-			}
-			PageInfo<BillCheckInfoVo> pageInfo = billCheckInfoService.query(param, 0, Integer.MAX_VALUE);
-			try {
-				if(pageInfo!=null && pageInfo.getList().size()>0){
-					List<BillCheckInfoVo> list=pageInfo.getList();
-					for(BillCheckInfoVo vo:list){
-						
-						
-						//1.状态必须为“待收款” 允许一键收款(确认金额+调整金额=收款金额) 开票未回款金额也变成0
-						if(CheckBillStatusEnum.TB_RECEIPT.getCode().equals(vo.getBillStatus())){
-							//确认金额+调整金额
-							BigDecimal totalAmount=new BigDecimal(0);
-							if(vo.getConfirmAmount()!=null){
-								totalAmount=vo.getConfirmAmount();
-							}
-							param.clear();
-							param.put("billCheckId", vo.getId());
-							List<BillCheckAdjustInfoVo> adjustList = billCheckInfoService.queryAdjust(param);
-							if(adjustList.size()>0){
-								BillCheckAdjustInfoVo entity=adjustList.get(0);
-								if(entity.getAdjustAmount()!=null){
-									totalAmount=totalAmount.add(entity.getAdjustAmount());
-								}				
-							}
-							
-							//收款金额
-							BigDecimal receiptAmount=new BigDecimal(0);
-							if(vo.getReceiptAmount()!=null){
-								receiptAmount=vo.getReceiptAmount();
-							}
-							
-							if(totalAmount.compareTo(receiptAmount)==0){
-								//账单状态修改
-								vo.setInvoiceUnReceiptAmount(BigDecimal.ZERO);
-								vo.setBillStatus(CheckBillStatusEnum.RECEIPTED.getCode());
-								vo.setLastModifier(JAppContext.currentUserName());
-								vo.setLastModifierId(JAppContext.currentUserID());
-								vo.setLastModifyTime(JAppContext.currentTimestamp());
-								billCheckInfoService.update(vo);
-							}
-			
-						}
-					}
+				Map<String,Object> param=new HashMap<>();
+				param.put("billCheckId", vo.getId());
+				List<BillCheckAdjustInfoVo> adjustList = billCheckInfoService.queryAdjust(param);
+				if(adjustList.size()>0){
+					BillCheckAdjustInfoVo entity=adjustList.get(0);
+					if(entity.getAdjustAmount()!=null){
+						totalAmount=totalAmount.add(entity.getAdjustAmount());
+					}				
 				}
-				return "操作成功";
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return "操作失败";
+				
+				//收款金额
+				BigDecimal receiptAmount=new BigDecimal(0);
+				if(vo.getReceiptAmount()!=null){
+					receiptAmount=vo.getReceiptAmount();
+				}
+				
+				if(totalAmount.compareTo(receiptAmount)==0){
+					//账单状态修改
+					vo.setInvoiceUnReceiptAmount(BigDecimal.ZERO);
+					vo.setBillStatus(CheckBillStatusEnum.RECEIPTED.getCode());
+					vo.setLastModifier(JAppContext.currentUserName());
+					vo.setLastModifierId(JAppContext.currentUserID());
+					vo.setLastModifyTime(JAppContext.currentTimestamp());
+					billCheckInfoService.update(vo);
+				}else{
+	                result+=vo.getBillName()+",";
+				}
+			}else{
+			    result+=vo.getBillName()+",";
 			}
 		}
-		
-		return "操作失败";
+	
+		if(StringUtils.isNotBlank(result)){
+		    result+="账单收款失败：账单状态必须为“待收款”且确认金额+调整金额=收款金额";
+		}
+		return result;
 	}
 	
 	/**

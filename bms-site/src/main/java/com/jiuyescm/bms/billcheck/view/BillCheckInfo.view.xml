@@ -1155,12 +1155,31 @@ if(data.current){&#xD;
         <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
       </ToolBarButton>
       <ToolBarButton id="btnReceipt">
-        <ClientEvent name="onClick">view.get(&quot;#finishAction&quot;).execute(function(result){&#xD;
-	var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
-	var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
-	tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
-	dorado.MessageBox.alert(result);&#xD;
-});&#xD;
+        <ClientEvent name="onClick">//选中的记录&#xD;
+var selectDatas = view.get(&quot;#dsBillGrid&quot;).get(&quot;selection&quot;);&#xD;
+if(selectDatas.length>0){	&#xD;
+	dorado.MessageBox.confirm(&quot;是否需要一键收款?&quot;,function(){&#xD;
+		view.get(&quot;#finishAction&quot;).execute(function(result){&#xD;
+			var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
+			var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
+			tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
+			if(result!=''){&#xD;
+				dorado.MessageBox.alert(result);&#xD;
+			}else{&#xD;
+			    dorado.MessageBox.alert(&quot;操作成功&quot;);&#xD;
+			}&#xD;
+		});	&#xD;
+	});	&#xD;
+}else {&#xD;
+	dorado.MessageBox.alert(&quot;请至少选择一个账单！&quot;);&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
 </ClientEvent>
         <Property name="caption">一键收款</Property>
         <Property name="icon">url(>skin>common/icons.gif) -100px -120px</Property>
@@ -4147,6 +4166,8 @@ if(arg.selectedValue.get(&quot;remark&quot;) == '已确认'){&#xD;
     </UpdateAction>
     <UpdateAction id="billDownAction"/>
     <UpdateAction id="finishAction">
+      <ClientEvent name="onGetUpdateData">//获得选中提交的数据&#xD;
+arg.data=view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);</ClientEvent>
       <Property name="dataResolver">billCheckInfoController#finishBill</Property>
     </UpdateAction>
     <UpdateAction id="updateBill">
