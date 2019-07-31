@@ -31,7 +31,7 @@ public class MaterailOutReportVo  implements IEntity{
     private Integer platicBox;          //泡沫箱
     private Integer cushioningMaterial; //缓冲材料
     private Integer paperCarton;        //纸箱
-    private Integer dryIce;             //干冰
+    private Double dryIce;             //干冰
     private Integer iceBag;             //冰袋
     private Integer other;              //其他
     private Integer labelPaper;         //标签纸
@@ -245,13 +245,13 @@ public class MaterailOutReportVo  implements IEntity{
     /**
      * 干冰
      */
-    public Integer getDryIce() {
+    public Double getDryIce() {
         return dryIce;
     }
     /**
      * 干冰
      */
-    public void setDryIce(Integer dryIce) {
+    public void setDryIce(Double dryIce) {
         this.dryIce = dryIce;
     }
     
