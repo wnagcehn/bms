@@ -104,9 +104,18 @@ public class FeesReceiveStorageServiceImpl extends MyBatisDao implements IFeesRe
     }
     
     @Override
-    public void updateImportFee(Map<String, Object> condition) {
+    public void updateImportFee(List<String> feeNos) {
         // TODO Auto-generated method stub
+        Map<String,Object> condition=new HashMap<>();
+        condition.put("feesNos", feeNos);
         this.delete("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.updateImportFee", condition);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> queryImportFee(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return selectList("com.jiuyescm.bms.general.entity.FeesReceiveStorageMapper.queryImportFee", condition);
     }
 
 
