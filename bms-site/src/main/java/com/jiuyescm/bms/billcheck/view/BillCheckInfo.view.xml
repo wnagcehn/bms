@@ -1163,7 +1163,9 @@ if(selectDatas.length>0){	&#xD;
 			var tmpDataSet=view.get(&quot;#dsBillCheckInfo&quot;);&#xD;
 			var tmpFormCondition=view.get(&quot;#formCondition&quot;);&#xD;
 			tmpDataSet.set(&quot;parameter&quot;, tmpFormCondition.get(&quot;entity&quot;)).flushAsync();&#xD;
-			if(result!=''){&#xD;
+			if(result!=''){ &#xD;
+			    result=result.substring(0,result.length-1);&#xD;
+				result+=&quot;\n账单收款失败：账单状态必须为“待收款”且确认金额+调整金额=收款金额&quot;;&#xD;
 				dorado.MessageBox.alert(result);&#xD;
 			}else{&#xD;
 			    dorado.MessageBox.alert(&quot;操作成功&quot;);&#xD;
@@ -4167,8 +4169,11 @@ if(arg.selectedValue.get(&quot;remark&quot;) == '已确认'){&#xD;
     <UpdateAction id="billDownAction"/>
     <UpdateAction id="finishAction">
       <ClientEvent name="onGetUpdateData">//获得选中提交的数据&#xD;
-arg.data=view.get(&quot;#dsDataGrid&quot;).get(&quot;selection&quot;);</ClientEvent>
+arg.data=view.get(&quot;#dsBillGrid&quot;).get(&quot;selection&quot;);</ClientEvent>
       <Property name="dataResolver">billCheckInfoController#finishBill</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsBillCheckInfo</Property>
+      </UpdateItem>
     </UpdateAction>
     <UpdateAction id="updateBill">
       <Property name="dataResolver">billCheckInfoController#updateBill</Property>
