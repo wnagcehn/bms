@@ -678,10 +678,6 @@ public class BillCheckInfoController{
 			    result+=vo.getBillName()+",";
 			}
 		}
-	
-		if(StringUtils.isNotBlank(result)){
-		    result+="账单收款失败：账单状态必须为“待收款”且确认金额+调整金额=收款金额";
-		}
 		return result;
 	}
 	
