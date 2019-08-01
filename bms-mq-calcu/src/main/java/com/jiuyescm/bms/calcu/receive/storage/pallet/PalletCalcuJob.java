@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,13 +221,13 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		//如果托数类型是商品托数，如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
 		//**** 以上逻辑可以放在定时任务中
 		double num = 0d;
-		if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())) {
+		if ("product".equals(entity.getBizType()) && (CollectionUtils.isEmpty(cusNames)||!cusNames.contains(entity.getCustomerId()))) {
 		    entity.setChargeSource("system");	
-		}else if ("material".equals(entity.getBizType()) && !materialCusNames.contains(entity.getCustomerId())) {
+		}else if ("material".equals(entity.getBizType())&&(CollectionUtils.isEmpty(materialCusNames)||!materialCusNames.contains(entity.getCustomerId()))) {
             entity.setChargeSource("system");   
-        }else if("instock".equals(entity.getBizType()) && !instockCusNames.contains(entity.getCustomerId())){ 
+        }else if("instock".equals(entity.getBizType())&&(CollectionUtils.isEmpty(instockCusNames)||!instockCusNames.contains(entity.getCustomerId()))) { 
         	entity.setChargeSource("system");  
-	    }else if("outstock".equals(entity.getBizType()) && !outstockCusNames.contains(entity.getCustomerId())){ 
+	    }else if("outstock".equals(entity.getBizType()) &&(CollectionUtils.isEmpty(outstockCusNames)||!outstockCusNames.contains(entity.getCustomerId()))){ 
 	    	entity.setChargeSource("system");  
 		}else{
 		    entity.setChargeSource("import");
