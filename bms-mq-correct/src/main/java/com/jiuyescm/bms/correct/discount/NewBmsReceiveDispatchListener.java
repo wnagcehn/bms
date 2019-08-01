@@ -217,11 +217,10 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
 		        result=result.substring(0,result.length()-1);
 		        entity.setRemark(StringUtils.isBlank(entity.getRemark())?result:entity.getRemark()+","+result);
 	            entity.setProgress(0d);
-		    }else{
-		        entity.setRemark("折扣成功");
-		        entity.setProgress(30d);
-		    }
-		   
+		    }		   
+		}else{
+		    entity.setRemark("折扣成功");
+            entity.setProgress(30d);
 		}
 	}
 	
