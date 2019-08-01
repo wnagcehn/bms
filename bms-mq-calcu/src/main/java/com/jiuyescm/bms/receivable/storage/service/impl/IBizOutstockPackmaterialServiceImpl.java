@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.receivable.storage.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,11 +59,20 @@ public class IBizOutstockPackmaterialServiceImpl extends MyBatisDao implements I
 		return list;
 	}
 	
-	 @Override
-	    public void updateImportMaterial(Map<String, Object> condition) {
-	        // TODO Auto-generated method stub
-	        this.delete("com.jiuyescm.bms.receivable.storage.BizOutstockPackmeterialMapper.updateImportMaterial", condition);      
-	    }
+	@Override
+    public void updateImportMaterial(List<String> waybillNos) {
+        // TODO Auto-generated method stub
+     Map<String,Object> map=new HashMap<String, Object>();
+     map.put("waybillNos", waybillNos);
+      this.delete("com.jiuyescm.bms.receivable.storage.BizOutstockPackmeterialMapper.updateImportMaterial", map);      
+    }
+
+    @Override
+    public List<String> queryImportMaterial(Map<String, Object> condition) {
+        // TODO Auto-generated method stub
+        return this.selectList("com.jiuyescm.bms.receivable.storage.BizOutstockPackmeterialMapper.queryImportMaterial", condition);
+    }
+
 
 	
 }

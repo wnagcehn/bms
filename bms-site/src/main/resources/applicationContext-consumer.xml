@@ -12,7 +12,7 @@
 		<dubbo:registry protocol="zookeeper" address="${legacy.dubbo.registry}" id = "iaccount"/>
 		<dubbo:registry protocol="zookeeper" address="${dubbo.registry}" id = "message"/>
 	
-		<dubbo:consumer version="1.0.0" timeout="1200000" retries="0" cluster="failfast" />
+		<dubbo:consumer version="1.0.0" timeout="1200000" retries="0" cluster="failfast" check="false" />
 		
 		<dubbo:reference interface="com.jiuyescm.mdm.warehouse.api.IWarehouseService"
 				version="1.0.0" id="warehouseService" timeout="1200000" check="false"/>

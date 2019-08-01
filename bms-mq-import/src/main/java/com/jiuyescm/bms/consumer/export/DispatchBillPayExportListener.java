@@ -2,7 +2,6 @@ package com.jiuyescm.bms.consumer.export;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,9 +29,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiuyescm.bms.base.dictionary.entity.SystemCodeEntity;
 import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
-import com.jiuyescm.bms.base.servicetype.entity.PubCarrierServicetypeEntity;
 import com.jiuyescm.bms.base.servicetype.service.ICarrierProductService;
-import com.jiuyescm.bms.base.servicetype.vo.CarrierProductVo;
 import com.jiuyescm.bms.biz.dispatch.entity.BizDispatchBillPayEntity;
 import com.jiuyescm.bms.biz.dispatch.service.IBizDispatchBillPayService;
 import com.jiuyescm.bms.common.constants.FileConstant;

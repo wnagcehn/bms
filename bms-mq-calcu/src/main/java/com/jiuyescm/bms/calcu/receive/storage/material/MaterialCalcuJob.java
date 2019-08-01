@@ -309,12 +309,13 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 			return true;
 		}
 		
-		//标准包装方案对应的耗材不计费
-      /*  if(handPackage(entity,fee)==true){
-            return true;
-        }*/
+		//标准包装方案对应的耗材不计费(耗材销售单不走此处逻辑)		
+		if("seller".equals(entity.getSource())){
+		    return false;
+		}else{
+		    return handPackage(entity,fee);     
+		}
 
-		return handPackage(entity,fee);		
 	}
 	
 	@Override
@@ -564,13 +565,20 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     private void handMaterail(Map<String, Object> map){
+	    logger.info("taskId={} 作废耗材参数{}",taskVo.getTaskId(),map);
         StopWatch sw = new StopWatch();
         sw.start();
-        feesReceiveStorageService.updateImportFee(map);
+        List<String> feeNos=feesReceiveStorageService.queryImportFee(map);
+        if(feeNos.size()>0){
+            feesReceiveStorageService.updateImportFee(feeNos);
+        }
         sw.stop();
         logger.info("taskId={} 作废导入费用 耗时【{}】",taskVo.getTaskId(),sw.getLastTaskTimeMillis());
         sw.start();
-        bizOutstockPackmaterialService.updateImportMaterial(map);
+        List<String> waybillNos=bizOutstockPackmaterialService.queryImportMaterial(map);
+        if(waybillNos.size()>0){
+            bizOutstockPackmaterialService.updateImportMaterial(waybillNos);
+        }
         sw.stop();
         logger.info("taskId={} 作废导入耗材 耗时【{}】",taskVo.getTaskId(),sw.getLastTaskTimeMillis());      
     }
