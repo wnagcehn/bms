@@ -491,7 +491,7 @@
 	    	and a.customerId=#{customerId} 
 	    	and a.create_time>=#{startTime} and <![CDATA[a.create_time<#{endTime}]]>
 	    	and a.carrier_id=#{carrierId}
-			and b.is_calculated in ('0','99')
+			and b.is_calculated in ('2','99')
 		<if test="(serviceTypeCode != null and serviceTypeCode !='')">
 			and a.service_type_code=#{serviceTypeCode}
 		</if>

@@ -1094,7 +1094,7 @@
         and customer_id=#{customerId} 
     	and create_time>=#{startTime} and <![CDATA[create_time<#{endTime}]]>
     	and subject_code=#{subjectCode}
-		and is_calculated not in ('1','5')
+		and is_calculated in ('99','2')
 		<if test="tempreture_type!=null and tempreture_type!=''">
 			and tempreture_type in ('LD','LC')
 		</if>
