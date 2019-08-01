@@ -3,6 +3,7 @@
  */
 package com.jiuyescm.bms.report.vo;
 
+import com.jiuyescm.bms.excel.annotation.ExcelAnnotation.ExcelField;
 import com.jiuyescm.cfm.domain.IEntity;
 
 /**
@@ -15,36 +16,63 @@ public class MaterailOutReportVo  implements IEntity{
 
     private static final long serialVersionUID = 3929832830250945903L;
     
+    @ExcelField(title = "月份", num = 1)
+    private String  createMonth;    //月份 
     private String customerId;
+    @ExcelField(title = "商家名称", num = 2)
     private String customerName; 
     private String warehouseCode;
+    @ExcelField(title = "仓库", num = 3)
     private String warehouseName;
+    @ExcelField(title = "订单数", num = 4)
     private Integer orderCount;     //订单数
-    
+    @ExcelField(title = "九曳1号泡沫箱", num = 5)
     private Integer platicBoxJY01;  //九曳1号泡沫箱
+    @ExcelField(title = "九曳2号泡沫箱", num = 6)
     private Integer platicBoxJY02;  //九曳2号泡沫箱
+    @ExcelField(title = "九曳3号泡沫箱", num = 7)
     private Integer platicBoxJY03;  //九曳3号泡沫箱
+    @ExcelField(title = "九曳4号泡沫箱", num = 8)
     private Integer platicBoxJY04;  //九曳4号泡沫箱
+    @ExcelField(title = "昆明1号泡沫箱", num = 9)
     private Integer platicBoxKM01;  //昆明1号泡沫箱
+    @ExcelField(title = "水果箱", num = 10)
     private Integer platicBoxKM02;  //水果箱
     
     private Integer platicBox;          //泡沫箱
+    @ExcelField(title = "缓冲材料", num = 11)
     private Integer cushioningMaterial; //缓冲材料
+    @ExcelField(title = "纸箱", num = 12)
     private Integer paperCarton;        //纸箱
+    @ExcelField(title = "干冰", num = 13)
     private Double dryIce;             //干冰
+    @ExcelField(title = "冰袋", num = 14)
     private Integer iceBag;             //冰袋
+    @ExcelField(title = "其他", num = 15)
     private Integer other;              //其他
+    @ExcelField(title = "标签纸", num = 16)
     private Integer labelPaper;         //标签纸
+    @ExcelField(title = "防水袋", num = 17)
     private Integer waterproofBox;      //防水袋
+    @ExcelField(title = "保温袋", num = 18)
     private Integer warnBox;            //保温袋
+    @ExcelField(title = "快递袋", num = 19)
     private Integer expressBox;         //快递袋
+    @ExcelField(title = "好字帖", num = 20)
     private Integer goodCharacter;      //好字帖
+    @ExcelField(title = "胶带", num = 21)
     private Integer adhesiveType;       //胶带
+    @ExcelField(title = "问候卡", num = 22)
     private Integer greetingCard;       //问候卡
+    @ExcelField(title = "面单", num = 23)
     private Integer singlePlane;        //面单
+    @ExcelField(title = "保鲜袋", num = 24)
     private Integer freshBox;           //保鲜袋
+    @ExcelField(title = "卡片", num = 25)
     private Integer card;               //卡片
+    @ExcelField(title = "塑封袋", num = 26)
     private Integer blockingBox;        //塑封袋
+
     
     /**
      * 商家ID
@@ -428,6 +456,14 @@ public class MaterailOutReportVo  implements IEntity{
      */
     public void setBlockingBox(Integer blockingBox) {
         this.blockingBox = blockingBox;
+    }
+
+    public String getCreateMonth() {
+        return createMonth;
+    }
+
+    public void setCreateMonth(String createMonth) {
+        this.createMonth = createMonth;
     }
     
 
