@@ -94,7 +94,8 @@
      	<jms:listener destination="BMS.QUEUE.CALCU.PALLET.PRODUCTSTORAGE" ref="palletProductCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.PALLET.MATERIALSTORAGE" ref="palletMaterialCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.PALLET.DISPOSAL" ref="palletDisposalCalcuListener"/>
-     </jms:listener-container>
+	    <jms:listener destination="BMS.QUEUE.CALCU.PALLET.OUTSTOCKPALLET" ref="palletOutstockCalcuListener"/>
+    </jms:listener-container>
      
      <jms:listener-container task-executor="dispatchExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-6">
 	    <jms:listener destination="BMS.QUEUE.CALCU.WAYBILL.DISPATCH" ref="dispatchCalcuListener"/>
@@ -107,7 +108,6 @@
      <jms:listener-container task-executor="dispatchPackageExecutor" destination-type="queue" container-type="default" prefetch="1" connection-factory="pooledConnectionFactory" acknowledge="auto" concurrency="2-6">
      	<jms:listener destination="BMS.QUEUE.CALCU.PRODUCT.PRODUCTSTORAGE" ref="productItemCalcuListener"/>
 	    <jms:listener destination="BMS.QUEUE.CALCU.MATERIAL.DISPATCHPACKAGE" ref="dispatchPackageCalcuListener"/>    
-     </jms:listener-container>
-     
+     </jms:listener-container>  
 </beans>
  

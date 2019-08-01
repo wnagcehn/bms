@@ -114,7 +114,9 @@ function GetQueryString(name){&#xD;
       <Property name="dataProvider">bizPalletInfoController#queryDetail</Property>
     </DataSet>
     <DataSet id="dsPalletDetaillEntityQuery">
-      <ClientEvent name="onCreate">view.get(&quot;#dsPalletDetaillEntityQuery&quot;).getData().insert();</ClientEvent>
+      <ClientEvent name="onCreate">view.get(&quot;#dsPalletDetaillEntityQuery&quot;).getData().insert();&#xD;
+view.get('#')&#xD;
+</ClientEvent>
       <Property name="dataType">[dtPalletDetaillEntityQuery]</Property>
       <Property name="pageSize">20</Property>
       <Property name="readOnly">false</Property>

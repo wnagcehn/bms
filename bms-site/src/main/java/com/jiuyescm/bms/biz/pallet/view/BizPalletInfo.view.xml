@@ -589,13 +589,19 @@ view.get(&quot;#downloadAction&quot;).set(&quot;parameter&quot;,data).execute();
           <Property name="visible">false</Property>
         </DataColumn>
         <DataColumn name="curTime">
-          <ClientEvent name="onRenderCell">jQuery(arg.dom).empty();&#xD;
+          <ClientEvent name="onRenderCell">if(arg.data.get(&quot;bizType&quot;)==&quot;outstock&quot;){&#xD;
+	jQuery(arg.dom).empty();&#xD;
+	jQuery(arg.dom).xCreate({&#xD;
+	content:dateToString(arg.data.get(&quot;curTime&quot;))+&quot;&quot;&#xD;
+	});&#xD;
+  }else{&#xD;
+jQuery(arg.dom).empty();&#xD;
 jQuery(arg.dom).xCreate({&#xD;
 	tagName: &quot;A&quot;,&#xD;
 	href: &quot;#&quot;,&#xD;
 	content:dateToString(arg.data.get(&quot;curTime&quot;))+&quot;&quot;,&#xD;
 	onclick:function(){&#xD;
-		var data = view.get(&quot;#dsBizPalletInfoEntity.data&quot;).current;&#xD;
+		 var data= view.get(&quot;#dsBizPalletInfoEntity.data&quot;).current;&#xD;
 		var curTime = dateToString(arg.data.get(&quot;curTime&quot;));&#xD;
 		var warehouseCode = data.get(&quot;warehouseCode&quot;);&#xD;
 		var customerId = data.get(&quot;customerId&quot;);&#xD;
@@ -604,6 +610,7 @@ jQuery(arg.dom).xCreate({&#xD;
 		window.top.openUrlInFrameTab(&quot;com.jiuyescm.bms.biz.pallet.view.PalletDetail.d&quot;+param, &quot;托数明细&quot;, &quot;&quot;, true);&#xD;
 	}&#xD;
 });&#xD;
+}&#xD;
 &#xD;
 // 将Date格式转成yyyy-MM-dd的字符串格式&#xD;
 function dateToString(date){ &#xD;
@@ -618,7 +625,8 @@ function dateToString(date){ &#xD;
   }&#xD;
   var dateTime = year + &quot;-&quot; + month + &quot;-&quot; + day;&#xD;
   return dateTime; &#xD;
-}</ClientEvent>
+}&#xD;
+</ClientEvent>
           <Property name="property">curTime</Property>
           <Property name="width">90</Property>
         </DataColumn>

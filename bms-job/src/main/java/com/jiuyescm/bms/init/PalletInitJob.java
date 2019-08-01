@@ -58,6 +58,10 @@ public class PalletInitJob extends IJobHandler {
 	private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired
 	private ISystemCodeService systemCodeService;
+	
+	private List<String> materialCusNames=null;      //使用导入耗材托数的商家
+	private List<String> instockCusNames=null;       //使用导入入库托数的商家
+	private List<String> outstockCusNames=null;       //使用导入出库托数的商家
 
 	List<String> cusNames = null;
 	String[] subjects = null;
@@ -127,9 +131,9 @@ public class PalletInitJob extends IJobHandler {
 			        FeesReceiveStorageEntity fee = initFees(entity);
 					feesList.add(fee);
 					
-					if ("outstock".equals(entity.getBizType())) {
+					/*if ("outstock".equals(entity.getBizType())) {
 						continue;
-					}
+					}*/
 					String creMonth = new SimpleDateFormat("yyyyMM").format(entity.getCreateTime());
 					StringBuilder sb = new StringBuilder(entity.getCustomerId()).append("-").append(fee.getSubjectCode()).append("-").append(creMonth);
 					taskVoMap.put(sb.toString(), sb.toString());
@@ -161,26 +165,29 @@ public class PalletInitJob extends IJobHandler {
 
 	private void initConf() {
 		//subjects = initSubjects();
-
-		Map<String, Object> cond = new HashMap<String, Object>();
-		cond.put("groupCode", "Product_Pallet");
-		cond.put("bizType", "group_customer");
-		BmsGroupVo bmsGroup = bmsGroupService.queryOne(cond);
-		if (bmsGroup != null) {
-			cusNames = new ArrayList<String>();
-			List<BmsGroupCustomerVo> cusList = null;
-			try {
-				cusList = bmsGroupCustomerService.queryAllByGroupId(bmsGroup.getId());
-			} catch (Exception e) {
-				XxlJobLogger.log("查询使用导入商品托数的商家异常:【{0}】", e);
-			}
-			for (BmsGroupCustomerVo vo : cusList) {
-				cusNames.add(vo.getCustomerid());
-			}
-		}
+	   cusNames = ObtainBussiness("Product_Pallet","group_customer");
+	
+		//使用导入耗材托数的商家
+       materialCusNames=ObtainBussiness("Material_Pallet","group_customer");
+		
+       //使用导入入库托数的商家
+       instockCusNames=ObtainBussiness("instock_pallet","group_customer");
+       
+       //使用导入出库托数的商家
+       outstockCusNames=ObtainBussiness("outtock_pallet","group_customer");
+		
 		//不计费商家
-        noCalculateList=bmsGroupCustomerService.queryCustomerByGroupCode("no_calculate_customer");
+       noCalculateList=bmsGroupCustomerService.queryCustomerByGroupCode("no_calculate_customer");
 
+	}
+	
+	
+	private List<String> ObtainBussiness(String groupCode,String bizType){
+		Map<String,Object> map= new HashMap<String, Object>();
+		map.put("groupCode", groupCode);
+		map.put("bizType", bizType);
+		BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
+		return bmsGroup==null?null:bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
 	}
 
 	private FeesReceiveStorageEntity initFees(BizPalletInfoEntity entity) {
@@ -204,20 +211,24 @@ public class PalletInitJob extends IJobHandler {
 		feesEntity.setProductType(""); // 商品类型
 		// 如果商家不在《使用导入商品托数的商家》, 更新计费来源是系统, 同时使用系统托数计费
 		// 如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
+		
 		double num = 0d;
-		if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())) {
-			entity.setChargeSource("system");
-		}else {
+		if ("product".equals(entity.getBizType()) && (CollectionUtils.isEmpty(cusNames)||!cusNames.contains(entity.getCustomerId()))) {
+		    entity.setChargeSource("system");	
+		}else if ("material".equals(entity.getBizType()) && (CollectionUtils.isEmpty(materialCusNames)||!materialCusNames.contains(entity.getCustomerId()))) {
+            entity.setChargeSource("system");   
+        }else if("instock".equals(entity.getBizType()) &&(CollectionUtils.isEmpty(instockCusNames)||!instockCusNames.contains(entity.getCustomerId()))){ 
+        	entity.setChargeSource("system");  
+	    }else if("outstock".equals(entity.getBizType()) && (CollectionUtils.isEmpty(outstockCusNames)||!outstockCusNames.contains(entity.getCustomerId()))){ 
+	    	entity.setChargeSource("system");  
+		}else{
 		    entity.setChargeSource("import");
-        }
-		// 调整托数优先级最高
+		}
+
 		if (DoubleUtil.isBlank(entity.getAdjustPalletNum())) {
-			if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())) {
-				num = entity.getSysPalletNum();
-			} else {
-			    num = entity.getPalletNum();
-			}
-		} else {
+			num="system".equals(entity.getChargeSource())?
+					entity.getSysPalletNum():entity.getPalletNum();			
+		}else {
 			num = entity.getAdjustPalletNum();
 		}
 

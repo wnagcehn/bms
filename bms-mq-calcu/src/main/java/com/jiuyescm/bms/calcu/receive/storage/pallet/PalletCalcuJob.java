@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,16 +71,18 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 	@Autowired private IBizPalletInfoRepository bizPalletInfoService;
 	@Autowired private ContractCalcuService contractCalcuService;
 	@Autowired private CommonService commonService;
-	@Autowired IBmsCalcuTaskService bmsCalcuTaskService;
+	@Autowired private IBmsCalcuTaskService bmsCalcuTaskService;
 	@Autowired private IBmsCalcuService bmsCalcuService;
+	
 
 	
 	private PriceGeneralQuotationEntity quoTemplete = null;
 	private Map<String, Object> errorMap = null;
-	
-	private List<String> cusList=null;
-	private List<String> cusNames = null;
-	private List<String> materialCusNames=null;
+	private List<String> cusList=null;         
+	private List<String> cusNames = null;            //使用导入商品托数的商家
+	private List<String> materialCusNames=null;      //使用导入耗材托数的商家
+	private List<String> instockCusNames=null;       //使用导入入库托数的商家
+	private List<String> outstockCusNames=null;       //使用导入出库托数的商家
 	private List<BizPalletInfoEntity> bizList=null;
 	private List<FeesReceiveStorageEntity> fees=null;
 
@@ -176,32 +179,39 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 	
 	@Override
 	public void initConf() {
-		//《使用导入商品托数的商家》
-		Map<String, Object> cond= new HashMap<String, Object>();
-		cond.put("groupCode", "Product_Pallet");
-		cond.put("bizType", "group_customer");
-		BmsGroupVo bmsGroup=bmsGroupService.queryOne(cond);
-		if(bmsGroup!=null){
-			cusNames = bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
-		}
+		//使用商品导入托数的商家
+       cusNames = ObtainBussiness("Product_Pallet","group_customer");
 		
 		//指定的商家
-		Map<String,Object> map= new HashMap<String, Object>();
-		map.put("groupCode", "customer_unit");
-		map.put("bizType", "group_customer");
-		BmsGroupVo bmsGroup1=bmsGroupService.queryOne(map);
-		if(bmsGroup1!=null){
-			cusList=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup1.getId());
-		}
+       cusList=ObtainBussiness("customer_unit","group_customer");
+  
+		//使用导入耗材托数的商家
+       materialCusNames=ObtainBussiness("Material_Pallet","group_customer");
 		
-		//《使用导入耗材托数的商家》
-		map= new HashMap<String, Object>();
-        map.put("groupCode", "Material_Pallet");
-        map.put("bizType", "group_customer");
-        BmsGroupVo bmsGroup2=bmsGroupService.queryOne(map);
-        if(bmsGroup2!=null){
-            materialCusNames=bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup2.getId());
-        }
+       //使用导入入库托数的商家
+       instockCusNames=ObtainBussiness("instock_pallet","group_customer");
+       
+       //使用导入出库托数的商家
+       outstockCusNames=ObtainBussiness("outtock_pallet","group_customer");
+        
+	}
+	
+	
+	/**
+	 * <功能描述>
+	 * 获取配置过按导入计费的商家信息
+	 * @author 
+	 * @date 2019年7月30日 下午3:30:43
+	 * @param groupCode
+	 * @param bizType
+	 * @return List<String>
+	 */
+	private List<String> ObtainBussiness(String groupCode,String bizType){
+		Map<String,Object> map= new HashMap<String, Object>();
+		map.put("groupCode", groupCode);
+		map.put("bizType", bizType);
+		BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
+		return bmsGroup==null?null:bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
 	}
 
 	@Override
@@ -211,11 +221,15 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		//如果托数类型是商品托数，如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
 		//**** 以上逻辑可以放在定时任务中
 		double num = 0d;
-		if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())) {
+		if ("product".equals(entity.getBizType()) && (CollectionUtils.isEmpty(cusNames)||!cusNames.contains(entity.getCustomerId()))) {
 		    entity.setChargeSource("system");	
-		}else if ("material".equals(entity.getBizType()) && !materialCusNames.contains(entity.getCustomerId())) {
+		}else if ("material".equals(entity.getBizType())&&(CollectionUtils.isEmpty(materialCusNames)||!materialCusNames.contains(entity.getCustomerId()))) {
             entity.setChargeSource("system");   
-        }else {
+        }else if("instock".equals(entity.getBizType())&&(CollectionUtils.isEmpty(instockCusNames)||!instockCusNames.contains(entity.getCustomerId()))) { 
+        	entity.setChargeSource("system");  
+	    }else if("outstock".equals(entity.getBizType()) &&(CollectionUtils.isEmpty(outstockCusNames)||!outstockCusNames.contains(entity.getCustomerId()))){ 
+	    	entity.setChargeSource("system");  
+		}else{
 		    entity.setChargeSource("import");
 		}
 		//调整托数优先级最高
@@ -223,17 +237,11 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		//如果托数类型是商品托数，商家不在《使用导入商品托数的商家》，计费数量用系统托数
 		//托数类型为耗材托数，入库托数等，都使用导入托数
 		if (DoubleUtil.isBlank(entity.getAdjustPalletNum())) {
-			if ("product".equals(entity.getBizType()) && !cusNames.contains(entity.getCustomerId())){
-				num = entity.getSysPalletNum();
-			}else if ("material".equals(entity.getBizType()) && !materialCusNames.contains(entity.getCustomerId())){
-                num = entity.getSysPalletNum();
-            }else {
-			    num = entity.getPalletNum();
-            }
+			num="system".equals(entity.getChargeSource())?
+					entity.getSysPalletNum():entity.getPalletNum();			
 		}else {
 			num = entity.getAdjustPalletNum();
 		}
-		
 		fee.setQuantity(num);		
 		fee.setUnit("PALLETS");
 		fee.setTempretureType(entity.getTemperatureTypeCode());//设置温度类型

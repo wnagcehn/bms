@@ -689,9 +689,9 @@ public class BizPalletInfoController {
 	
 	@Expose
 	public String reCalculate(Map<String, Object> param){
-		if ("outstock".equals(param.get("bizType").toString())) {
+/*		if ("outstock".equals(param.get("bizType").toString())) {
 			return "出库托数不进行重算";
-		}
+		}*/
 		if(bizPalletInfoService.retryCalculate(param) == 0){
 			return "重算异常";
 		}else {
