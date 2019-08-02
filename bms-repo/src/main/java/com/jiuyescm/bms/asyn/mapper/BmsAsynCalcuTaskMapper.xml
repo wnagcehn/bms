@@ -210,12 +210,6 @@
 			end subject_status
 			from bms_asyn_calcu_task 
 			where cre_month = #{creMonth}
-			<if test="(customerIds != null and customerIds!='')">
-				and customer_id in
-				<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
-					#{item}
-			    </foreach>
-			</if>  
 		) t
 		group by t.customer_id,t.customer_name
 		<if test="customerStatus != null and customerStatus !='' and customerStatus != 'ALL' ">
