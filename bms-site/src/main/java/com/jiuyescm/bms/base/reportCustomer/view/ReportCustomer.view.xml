@@ -615,7 +615,6 @@ view.id(&quot;updateAction&quot;).execute(&#xD;
       <ClientEvent name="onHide">var data = this.get(&quot;#viewSelectCustomer.userData&quot;);&#xD;
 if (data != null) {&#xD;
 	var entity = this.get(&quot;#dsEntity&quot;).getData(&quot;#&quot;);&#xD;
-&#xD;
     entity.set({&#xD;
         customerId:data.get(&quot;customerid&quot;),&#xD;
 		customerName:data.get(&quot;customername&quot;)&#xD;
