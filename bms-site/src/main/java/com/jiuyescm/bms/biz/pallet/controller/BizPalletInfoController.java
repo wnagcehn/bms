@@ -201,9 +201,9 @@ public class BizPalletInfoController {
 				throw new BizException("更新失败！");
 			}
 			//如果是出库托数，不往下进行，不更新计算状态
-			if ("outstock".equals(entity.getBizType())) {
+			/*if ("outstock".equals(entity.getBizType())) {
 				return;
-			}
+			}*/
 			
 			BmsCalcuTaskVo calcuTaskVo = new BmsCalcuTaskVo();
 			String subjectCode = "";

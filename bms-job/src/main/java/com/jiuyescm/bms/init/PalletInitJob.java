@@ -260,11 +260,14 @@ public class PalletInitJob extends IJobHandler {
 
 	private void updateAndInsertBatch(List<BizPalletInfoEntity> bizList, List<FeesReceiveStorageEntity> feesList) {
 		StopWatch watch = new StopWatch();
-		if (feesList.size() > 0) {
+		if (bizList.size() > 0) {
 			watch.start("biz");
 			bizPalletInfoService.updatebizPallet(bizList);
 			watch.stop();
 			XxlJobLogger.log("更新业务数据耗时：【{0}】毫秒 更新行数【{1}】", watch.getLastTaskTimeMillis(), bizList.size());
+		}
+		
+		if (feesList.size() > 0) {
 			watch.start("fee");
 			feesReceiveStorageService.InsertBatch(feesList);
 			watch.stop();
