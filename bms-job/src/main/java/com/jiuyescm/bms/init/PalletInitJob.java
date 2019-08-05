@@ -153,6 +153,7 @@ public class PalletInitJob extends IJobHandler {
 				updateAndInsertBatch(bizList, feesList);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0}", e);
 			return;
 		}	
