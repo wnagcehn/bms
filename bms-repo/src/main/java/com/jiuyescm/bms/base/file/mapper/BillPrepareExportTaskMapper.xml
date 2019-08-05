@@ -200,7 +200,7 @@
     </select>
     
     <select id="getChildCustomer" parameterType="String"  resultType="java.util.Map">
-    	select customer_id as customerId,customer_name as customerName from pub_customer where mk_id=#{mkId}
+    	select customer_id as customerId,customer_name as customerName from pub_customer where mk_id=#{mkId} and del_flag='0'
     </select>
     
     <select id="getChildCustomerId" parameterType="String" resultType="String">
