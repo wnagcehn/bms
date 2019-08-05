@@ -123,7 +123,8 @@ public class PalletInitJob extends IJobHandler {
                         feesNos.add(entity.getFeesNo());
                     }
 			        //如果是不计费的商家，则直接更新业务计算状态为4
-	                if(noCalculateList.size()>0 && noCalculateList.contains(entity.getCustomerId())){
+			       
+	                if(!CollectionUtils.isEmpty(noCalculateList) && noCalculateList.contains(entity.getCustomerId())){
 	                    entity.setDelFlag("4");
 	                    continue;
 	                }
@@ -152,6 +153,7 @@ public class PalletInitJob extends IJobHandler {
 				updateAndInsertBatch(bizList, feesList);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			XxlJobLogger.log("【终止异常】,查询业务数据异常,原因: {0}", e);
 			return;
 		}	
