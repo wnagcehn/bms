@@ -102,7 +102,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 		condition.put("creMonth", creMonth);
 		PageInfo<BmsCalcuTaskVo> pageVoInfo = new PageInfo<BmsCalcuTaskVo>();
 		try {
-			PageInfo<BmsAsynCalcuTaskEntity> pageInfo = bmsAsynCalcuTaskRepositoryimpl
+			/*PageInfo<BmsAsynCalcuTaskEntity> pageInfo = bmsAsynCalcuTaskRepositoryimpl
 					.queryMain(condition, pageNo, pageSize);
 			PropertyUtils.copyProperties(pageVoInfo, pageInfo);
 			if (pageInfo != null && pageInfo.getList().size() > 0) {
@@ -126,9 +126,10 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 							break;
 						}
 					}
-				}
-				pageVoInfo.setList(list);
-			}
+				}*/
+			PageInfo<BmsAsynCalcuTaskEntity> pageInfo =new  PageInfo(bmsAsynCalcuTaskRepositoryimpl
+					.queryInfoByCustomerId(condition));
+		
 		} catch (Exception e) {
 			logger.error("查询计算任务异常", e);
 			throw new BizException("查询计算任务异常");
