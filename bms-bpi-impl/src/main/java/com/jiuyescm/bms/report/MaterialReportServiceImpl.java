@@ -7,20 +7,29 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.jiuyescm.bms.report.month.entity.MaterialImportReportEntity;
 import com.jiuyescm.bms.report.month.repository.IMaterialReportRepo;
 import com.jiuyescm.bms.report.service.IMaterialReportService;
+import com.jiuyescm.bms.report.vo.MaterailOutReportVo;
 import com.jiuyescm.bms.report.vo.MaterialImportReportVo;
+import com.jiuyescm.bs.util.HttpPostUtil;
 import com.jiuyescm.common.utils.DateUtil;
+import com.jiuyescm.exception.BizException;
 
 @Service("materialReportService")
 public class MaterialReportServiceImpl implements IMaterialReportService {
 	
-	private static final Logger logger = Logger.getLogger(MaterialReportServiceImpl.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(MaterialReportServiceImpl.class.getName());
 
 	@Autowired IMaterialReportRepo materialReportRepo;
 	
@@ -121,6 +130,40 @@ public class MaterialReportServiceImpl implements IMaterialReportService {
 		return rtnVos;
 		
 	}
+
+    @Override
+    public PageInfo<MaterailOutReportVo> query(Map<String, Object> condition, int pageNo, int pageSize) throws BizException {
+        String url = "http://192.168.17.39:8080/bms_materail/query_list";
+        condition.put("pageNo", pageNo);
+        condition.put("pageSize", pageSize);
+        Integer billYear = Integer.valueOf(condition.get("year").toString());
+        Integer billMonth = Integer.valueOf(condition.get("month").toString());
+        String startDate = DateUtil.getFirstDayOfMonth(billYear, billMonth);
+        String endDate = DateUtil.getFirstDayOfGivenMonth(startDate,1,"yyyy-MM-dd");
+        condition.put("startDate", startDate);
+        condition.put("endDate", endDate);
+        String json = JSON.toJSONString(condition);
+        Map<String,String> headMap=Maps.newHashMap();
+        headMap.put("Authorization", "Basic aml1eWVzY206SnkxMjM0NTY=");
+        try{
+            String jsonString = HttpPostUtil.post(url,json,headMap);
+            JSONObject jb0 = JSONObject.parseObject(jsonString);
+            String code = jb0.getString("code");
+            logger.info("code:{}",code);
+            if(!"SUCCESS".equals(code)){
+                logger.info("message:{}",jb0.getString("message"));
+                throw new BizException(jb0.getString("message"));
+            }
+            JSONObject jb = jb0.getJSONObject("items");
+            PageInfo<MaterailOutReportVo> pageInfo =
+                    (PageInfo<MaterailOutReportVo>) JSON.parseObject(jb.toJSONString(), new TypeReference<PageInfo<MaterailOutReportVo>>(){});
+            return pageInfo;
+        }
+        catch(Exception ex){
+            logger.error("druid rest api 接口异常：",ex);
+            throw new BizException("druid rest api 接口异常："+ex.getMessage());
+        }
+    }
 	
 	
 
