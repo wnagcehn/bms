@@ -70,6 +70,11 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
 	
 	private Integer noDinggouCount;
 	
+	private String finTimeIsNull;
+	
+	private String procTimeIsNull;
+	
+
 	public String getNewid() {
 		return newid;
 	}
@@ -504,5 +509,21 @@ public class BmsAsynCalcuTaskEntity implements IEntity {
     public void setNoDinggouCount(Integer noDinggouCount) {
         this.noDinggouCount = noDinggouCount;
     }
+    
+    public String getFinTimeIsNull() {
+		return finTimeIsNull;
+	}
+
+	public void setFinTimeIsNull(String finTimeIsNull) {
+		this.finTimeIsNull = finTimeIsNull;
+	}
+
+	public String getProcTimeIsNull() {
+		return procTimeIsNull;
+	}
+
+	public void setProcTimeIsNull(String procTimeIsNull) {
+		this.procTimeIsNull = procTimeIsNull;
+	}
 
 }
