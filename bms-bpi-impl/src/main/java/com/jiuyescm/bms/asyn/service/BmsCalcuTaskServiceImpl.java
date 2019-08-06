@@ -109,7 +109,10 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 		try {
 			List<BmsAsynCalcuTaskEntity> master = bmsAsynCalcuTaskRepositoryimpl
 					.queryMainSe(condition, pageNo, pageSize);
-			List<String> masterId = master.stream().map(BmsAsynCalcuTaskEntity::getCustomerId).collect(Collectors.toList());;
+			List<String> masterId = new ArrayList<>();
+			for(String id:masterId){
+				masterId.add(id);
+			}
 			condition.put("customerIds", masterId);
 			PageInfo<BmsAsynCalcuTaskEntity> pageInfo =new  PageInfo(bmsAsynCalcuTaskRepositoryimpl
 					.queryInfoByCustomerIdSe(condition));
