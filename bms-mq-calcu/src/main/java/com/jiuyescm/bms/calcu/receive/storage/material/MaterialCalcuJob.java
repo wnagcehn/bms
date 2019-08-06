@@ -205,6 +205,10 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
                 //如果返回的是合同缺失，则继续BMS计算
                 if("CONTRACT_LIST_NULL".equals(errorMap.get("code"))){
                     calcuForBms(entity,fee);
+                    //报价缺失或者未订购服务的走标准报价
+                    if("4".equals(fee.getIsCalculated()) || "7".equals(fee.getIsCalculated())){
+                        calcuForStand(entity, fee);
+                    }
                 }
             } catch (Exception e) {
                 // TODO: handle exception
@@ -492,7 +496,33 @@ public class MaterialCalcuJob extends BmsContractBase implements ICalcuService<B
 			fee.setIsCalculated(errorMap.get("is_calculated").toString());
 			fee.setCalcuMsg(errorMap.get("msg").toString());
 		}
+		if(errorMap.get("isStandard")!=null){
+            fee.setContractAttr("3");
+		}
 	}
+	
+    @Override
+    public void calcuForStand(BizOutstockPackmaterialEntity entity,FeesReceiveStorageEntity fee){
+        fee.setContractAttr("3");
+        ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
+        contractCalcuService.calcuForStand(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
+        if("succ".equals(errorMap.get("success").toString())){
+            fee.setIsCalculated(CalculateState.Finish.getCode());
+            if(fee.getCost().compareTo(BigDecimal.ZERO) == 1){
+                fee.setCalcuMsg(CalculateState.Finish.getDesc());
+                logger.info("标准报价计算成功，费用【{}】",fee.getCost());
+            }
+            else{
+                logger.info("标准报价计算不成功，费用【{}】",fee.getCost());
+                fee.setCalcuMsg("标准报价单价配置为0或者计费数量/重量为0");
+            }
+        }
+        else{
+            fee.setIsCalculated(errorMap.get("is_calculated").toString());
+            fee.setCalcuMsg(errorMap.get("msg").toString());
+        }
+
+    }
 	
 	@Override
 	public ContractQuoteQueryInfoVo getCtConditon(BizOutstockPackmaterialEntity entity) {

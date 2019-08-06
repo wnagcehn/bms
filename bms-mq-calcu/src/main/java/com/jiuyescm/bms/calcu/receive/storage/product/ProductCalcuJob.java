@@ -141,8 +141,7 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
                 fees.add(fee);
                 if(isNoExe(entity, fee)){
                     continue; //如果不计算费用,后面的逻辑不在执行，只是在最后更新数据库状态
-                }
-            
+                }            
                 calcuForBms(entity,fee);
             } catch (Exception e) {
                 // TODO: handle exception
@@ -416,6 +415,12 @@ public class ProductCalcuJob extends BmsContractBase implements ICalcuService<Bi
 		sw.stop();
 		logger.info("taskId={} 更新仓储费用行数【{}】 耗时【{}】",taskVo.getTaskId(),feeList.size(),sw.getLastTaskTimeMillis());
 	}
+
+    @Override
+    public void calcuForStand(BizProductStorageEntity entity, FeesReceiveStorageEntity fee) {
+        // TODO Auto-generated method stub
+        
+    }
 	
 	
 }

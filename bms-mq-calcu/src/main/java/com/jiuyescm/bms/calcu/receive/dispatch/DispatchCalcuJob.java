@@ -137,7 +137,11 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
                 calcuForContract(entity,fee);
                 //如果返回的是合同缺失，则继续BMS计算
                 if("CONTRACT_LIST_NULL".equals(errorMap.get("code"))){
-                    calcuForBms(entity,fee);
+                    calcuForBms(entity,fee); 
+                    //报价缺失或者未订购服务的走标准报价
+                    if("4".equals(fee.getIsCalculated()) || "7".equals(fee.getIsCalculated())){
+                        calcuForStand(entity, fee);
+                    }
                 }
             } catch (Exception e) {
                 // TODO: handle exception
@@ -656,8 +660,34 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 			fee.setIsCalculated(errorMap.get("is_calculated").toString());
 			fee.setCalcuMsg(errorMap.get("msg").toString());
 		}
+		if(errorMap.get("isStandard")!=null){
+		      fee.setContractAttr("3");
+		}
 	}
 
+    @Override
+    public void calcuForStand(BizDispatchBillEntity entity, FeesReceiveDispatchEntity fee) {
+        // TODO Auto-generated method stub
+        fee.setContractAttr("3");
+        ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
+        contractCalcuService.calcuForStand(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
+        if("succ".equals(errorMap.get("success").toString())){
+            fee.setIsCalculated(CalculateState.Finish.getCode());
+            if(fee.getAmount()>0){
+                fee.setCalcuMsg("标准报价计算成功");
+                logger.info("标准报价计算成功，费用【{}】",fee.getAmount());
+            }
+            else{
+                logger.info("标准报价计算不成功，费用【{}】",fee.getAmount());
+                fee.setCalcuMsg("标准报价单价配置为0或者计费数量/重量为0");
+            }
+        }
+        else{
+            fee.setIsCalculated(errorMap.get("is_calculated").toString());
+            fee.setCalcuMsg(errorMap.get("msg").toString());
+        }
+    }
+	
 	@Override
 	public ContractQuoteQueryInfoVo getCtConditon(BizDispatchBillEntity entity) {
 		ContractQuoteQueryInfoVo queryVo = new ContractQuoteQueryInfoVo();
@@ -1125,4 +1155,6 @@ public class DispatchCalcuJob  extends BmsContractBase implements ICalcuService<
 				logger.error("更新任务统计信息异常",e);
 			}
 		}
+
+
 }

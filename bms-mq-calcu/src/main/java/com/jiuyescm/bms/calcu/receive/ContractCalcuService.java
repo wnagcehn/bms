@@ -62,7 +62,11 @@ public class ContractCalcuService {
             logger.info("taskId={} 费用编号={} 查询出的合同在线结果【{}】", vo.getTaskId(), feesNo, JSONObject.fromObject(cqVo));
 
         } catch (BizException ex) {
-            logger.info("taskId={} 费用编号={} 合同在线合同缺失 {}", vo.getTaskId(), feesNo, ex.getMessage());
+            logger.info("taskId={} 费用编号={} 合同在线合同缺失 {} 异常code{}", vo.getTaskId(), feesNo, ex.getMessage(),ex.getCode());
+            if(ex.getCode().equals("CONTRACT_SUBJECT_NULL")){
+                //未发布标准报价
+                errorMap.put("isStandard", "1");
+            }
             errorMap.put("success", "fail");
             errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
             errorMap.put("msg", ex.getMessage());
@@ -75,13 +79,7 @@ public class ContractCalcuService {
             return;
         }
 
-        Map<String, String> contractMap = new HashMap<>();
-        contractMap.put("contractNo", cqVo.getQuoteVo().getContractNo());// 合同编号
-        contractMap.put("serviceOrderNo", cqVo.getQuoteVo().getServiceOrderNo());// 订购号
-        contractMap.put("version", cqVo.getQuoteVo().getVersion());// 合同版本
-        contractMap.put("ruleCode", cqVo.getQuoteVo().getRuleCode());// 规则编号
-
-        logger.info("taskId={} contractInfo={}", vo.getTaskId(), contractMap);
+        logger.info("taskId={} contractInfo={}", vo.getTaskId(), JSONObject.fromObject(cqVo));
         if (StringUtil.isEmpty(cqVo.getRuleCode())) {
             logger.info("taskId={} 费用编号={} 合同在线规则未绑定", vo.getTaskId(), feesNo);
             errorMap.put("success", "fail");
@@ -116,17 +114,29 @@ public class ContractCalcuService {
                 }
                 logger.info("taskId={} 费用编号={} 查询报价报价参数{}", vo.getTaskId(), feesNo, JSONObject.fromObject(cqVo));
                 rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(cqVo, cond);
-            } catch (BizException e) {
-                String msg = "获取合同在线报价异常:" + e.getMessage();
-                logger.info("taskId={}  费用编号={} 获取合同在线报价异常{}", vo.getTaskId(), feesNo, msg);
+            } catch (BizException e) {                
+                logger.info("taskId={}  费用编号={} 获取合同在线报价异常{} 异常code{}", vo.getTaskId(), feesNo, e.getMessage(),e.getCode());
+     
+                if(e.getCode().equals("CONTRACT_QUOTES_NULL") && cqVo.getQuoteVo().getIsStandardService()==1){
+                    //查找标准报价未查到结果
+                    errorMap.put("isStandard", "1");
+                }              
                 errorMap.put("success", "fail");
                 errorMap.put("is_calculated", CalculateState.Quote_Miss.getCode());
-                errorMap.put("msg", msg);
+                errorMap.put("msg", e.getMessage());
                 return;
             }
 
+         
+            
             logger.info("taskId={} 费用编号={} 获取合同在线报价结果{}", vo.getTaskId(), feesNo, JSONObject.fromObject(rtnQuoteInfoVo));
 
+            //判断是否使用了合同在线标准报价
+            if(rtnQuoteInfoVo!=null &&  rtnQuoteInfoVo.getQuoteVo()!=null && rtnQuoteInfoVo.getQuoteVo().getIsStandardService()==1){
+                errorMap.put("isStandard", "1");
+            }
+           
+            
             if (null == rtnQuoteInfoVo || null == rtnQuoteInfoVo.getQuoteMaps()
                     || 0 == rtnQuoteInfoVo.getQuoteMaps().size()) {
                 logger.info("taskId={} 费用编号={} 合同在线报价缺失 ", vo.getTaskId(), feesNo);
@@ -179,6 +189,129 @@ public class ContractCalcuService {
             return;
         }
     }
+    
+    
+    public void calcuForStand(Object entity, Object fee, BmsCalcuTaskVo vo, Map<String, Object> errorMap,
+            ContractQuoteQueryInfoVo queryVo, CalcuBaseInfoVo cbiVo, String feesNo) {
+        logger.info("taskId={} 标准报价合同在线查询参数：{}", vo.getTaskId(), JSONObject.fromObject(queryVo));
+        ContractQuoteInfoVo cqVo = null;
+        try {
+            cqVo = contractQuoteInfoService.queryStandardUniqueColumns(queryVo);
+            logger.info("taskId={} 费用编号={} 标准报价查询出的合同在线结果【{}】", vo.getTaskId(), feesNo, JSONObject.fromObject(cqVo));
+
+        } catch (BizException ex) {
+            logger.info("taskId={} 费用编号={} 标准报价合同在线合同缺失 {}", vo.getTaskId(), feesNo, ex.getMessage());
+            errorMap.put("success", "fail");
+            errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
+            errorMap.put("msg", ex.getMessage());
+            errorMap.put("code", ex.getCode());
+            //对返回的错误特殊处理
+            hand(vo,entity,fee,errorMap);
+            return;
+        }
+        if (cqVo == null) {
+            return;
+        }
+
+        logger.info("taskId={} contractInfo={}", vo.getTaskId(), JSONObject.fromObject(cqVo));
+        if (StringUtil.isEmpty(cqVo.getRuleCode())) {
+            logger.info("taskId={} 费用编号={} 标准报价合同在线规则未绑定", vo.getTaskId(), feesNo);
+            errorMap.put("success", "fail");
+            errorMap.put("is_calculated", CalculateState.Quote_Miss.getCode());
+            errorMap.put("msg", "标准报价合同在线规则未绑定");
+            return;
+        }
+        try {
+            Map<String, Object> con = new HashMap<>();
+            con.put("quotationNo", cqVo.getRuleCode());
+            BillRuleReceiveEntity ruleEntity = receiveRuleRepository.queryOne(con);
+            if (null == ruleEntity) {
+                String msg = "规则【" + cqVo.getRuleCode() + "】不存在";
+                logger.info("taskId={} {}", vo.getTaskId(), msg);
+                errorMap.put("success", "fail");
+                errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
+                errorMap.put("msg", msg);
+                return;
+            }
+            // 获取合同在线查询条件
+            Map<String, Object> cond = new HashMap<String, Object>();
+            feesCalcuService.ContractCalcuService(entity, cond, ruleEntity.getRule(), ruleEntity.getQuotationNo());
+            logger.info("taskId={} 费用编号={} 标准报价获取合同在线报价参数：{}", vo.getTaskId(), feesNo, cond);
+            ContractQuoteInfoVo rtnQuoteInfoVo = null;
+            try {
+                if (cond == null || cond.size() == 0) {
+                    logger.info("taskId={} 费用编号={} 标准报价规则引擎拼接条件异常", vo.getTaskId(), feesNo);
+                    errorMap.put("success", "fail");
+                    errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
+                    errorMap.put("msg", "标准报价规则引擎拼接条件异常");
+                    return;
+                }
+                logger.info("taskId={} 费用编号={} 标准报价查询报价报价参数{}", vo.getTaskId(), feesNo, JSONObject.fromObject(cqVo));
+                rtnQuoteInfoVo = contractQuoteInfoService.queryQuotes(cqVo, cond);
+            } catch (BizException e) {
+                String msg = "标准报价获取合同在线报价异常:" + e.getMessage();
+                logger.info("taskId={}  费用编号={} 标准报价获取合同在线报价异常{}", vo.getTaskId(), feesNo, msg);
+                errorMap.put("success", "fail");
+                errorMap.put("is_calculated", CalculateState.Quote_Miss.getCode());
+                errorMap.put("msg", msg);
+                return;
+            }
+      
+            logger.info("taskId={} 费用编号={} 标准报价获取合同在线报价结果{}", vo.getTaskId(), feesNo, JSONObject.fromObject(rtnQuoteInfoVo));
+           
+            if (null == rtnQuoteInfoVo || null == rtnQuoteInfoVo.getQuoteMaps()
+                    || 0 == rtnQuoteInfoVo.getQuoteMaps().size()) {
+                logger.info("taskId={} 费用编号={} 标准报价合同在线报价缺失 ", vo.getTaskId(), feesNo);
+                errorMap.put("success", "fail");
+                errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
+                errorMap.put("msg", "合同在线报价缺失");
+                return;
+            }
+
+            if (rtnQuoteInfoVo.getQuoteMaps().size() > 1) {
+            
+                //非耗材和非配送
+                if(!"wh_material_use".equals(vo.getSubjectCode()) && !"de_delivery_amount".equals(vo.getSubjectCode()) && !"wh_stand_material_use".equals(vo.getSubjectCode())){
+                    logger.info("taskId={} 费用编号={} 标准报价合同在线匹配多条报价，不进行计算，系统错误 ", vo.getTaskId(), feesNo);
+                    errorMap.put("success", "fail");
+                    errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
+                    errorMap.put("msg", "标准报价合同在线匹配多条报价");
+                    return;
+                }              
+                //如果是配送，要做地址筛选
+                if("de_delivery_amount".equals(vo.getSubjectCode())){
+                    List<Map<String, String>> priceList=QuoteFilter(rtnQuoteInfoVo,fee);
+                    if(priceList.size()==0){
+                        logger.info("taskId={} 费用编号={} 标准报价合同在线报价缺失 ", vo.getTaskId(), feesNo);
+                        errorMap.put("success", "fail");
+                        errorMap.put("is_calculated", CalculateState.Contract_Miss.getCode());
+                        errorMap.put("msg", "标准报价合同在线报价缺失");
+                        return;
+                    }else if(priceList.size()>1){
+                        logger.info("taskId={} 费用编号={} 标准报价合同在线匹配多条报价，不进行计算，系统错误 ", vo.getTaskId(), feesNo);
+                        errorMap.put("success", "fail");
+                        errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
+                        errorMap.put("msg", "标准报价合同在线匹配多条报价");
+                        return;
+                    }else{
+                        rtnQuoteInfoVo.setQuoteMaps(priceList);
+                    }
+                }
+            }
+
+            // 调用规则计算费用
+            feesCalcuService.ContractCalcuService(fee, rtnQuoteInfoVo.getQuoteMaps(), ruleEntity.getRule(),
+                    ruleEntity.getQuotationNo());
+            errorMap.put("success", "succ");
+        } catch (Exception ex) {
+            logger.info("taskId={} 费用编号={} 标准报价系统异常{}", vo.getTaskId(), feesNo, ex);
+            errorMap.put("success", "fail");
+            errorMap.put("is_calculated", CalculateState.Sys_Error.getCode());
+            errorMap.put("msg", ex.getMessage());
+            return;
+        }
+    }
+    
     
     
     private List<Map<String, String>> QuoteFilter(ContractQuoteInfoVo rtnQuoteInfoVo,Object fee){
