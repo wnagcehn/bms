@@ -199,22 +199,78 @@
 		group by a.customer_id,a.customer_name
     </select>
     
+     <select id="queryMainSe" parameterType="java.util.Map"
+    	resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
+    	select a.customer_id,a.customer_name,a.cre_month
+		from bms_asyn_calcu_task a
+		where a.cre_month = #{creMonth}
+		<if test="(customerId != null and customerId!='')">
+			and a.customer_id = #{customerId}
+		</if>	
+		group by a.customer_id
+    </select>
+    
+    <select id="queryMainSeCount" parameterType="java.util.Map"
+    	resultType="int">
+    	select count(1) from (
+    	select 1
+		from bms_asyn_calcu_task a
+		where a.cre_month = #{creMonth}
+		<if test="(customerIds != null and customerIds!='')">
+			and a.customer_id in (${customerIds})
+		</if>	
+		group by a.customer_id ) aa
+    </select>
+    
     <select id="queryInfoByCustomerId" parameterType="java.util.Map"
     	resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
-    	select customer_id,customer_name,cre_month,max(subject_status) as customerStatus,count(0) as subjectNum from 
-		(select customer_id,customer_name,cre_month,task_status,
-			case 
-			when calcu_status = 0 then '3'
-			when calcu_status = 1 then '1'
-			when calcu_status = 2 then '2'
-			end subject_status
-			from bms_asyn_calcu_task 
-			where cre_month = #{creMonth}
-		) t
-		group by t.customer_id,t.customer_name
+    	SELECT 
+			    customer_id,
+			    customer_name,
+			    cre_month,
+			    MAX(IF(calcu_status = 0, 3, calcu_status)) AS customerStatus,
+			    COUNT(0) AS subjectNum
+			FROM
+			    bms_asyn_calcu_task
+			WHERE
+			    cre_month = #{creMonth}
+			    <if test="(customerIds != null and customerIds!='')">
+				and customer_id in
+				<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+					#{item}
+			    </foreach>
+			</if>  
+			GROUP BY customer_id
 		<if test="customerStatus != null and customerStatus !='' and customerStatus != 'ALL' ">
 			HAVING customerStatus=#{customerStatus}
 		</if>
+	
+    </select>
+    
+    
+    <select id="queryInfoByCustomerIdSe" parameterType="java.util.Map"
+    	resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
+    	SELECT 
+			    customer_id,
+			    customer_name,
+			    cre_month,
+			    MAX(IF(calcu_status = 0, 3, calcu_status)) AS customerStatus,
+			    COUNT(0) AS subjectNum
+			FROM
+			    bms_asyn_calcu_task
+			WHERE
+			    cre_month = #{creMonth}
+			    <if test="customerIds != null and customerIds!=''">
+				and customer_id in
+				(
+				${customerIds}
+				)
+			</if>  
+			GROUP BY customer_id
+		<if test="customerStatus != null and customerStatus !='' and customerStatus != 'ALL' ">
+			HAVING customerStatus=#{customerStatus}
+		</if>
+	
     </select>
     
     <select id="queryDetail" parameterType="java.util.Map"
