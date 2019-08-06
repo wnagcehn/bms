@@ -86,6 +86,13 @@ public class BmsAsynCalcuTaskRepositoryimpl extends MyBatisDao<BmsAsynCalcuTaskE
 		return list;
 	}
 	
+	
+	@Override
+	public List<BmsAsynCalcuTaskEntity> queryInfoByCustomerIdSe(Map<String, Object> map){
+		List<BmsAsynCalcuTaskEntity> list = selectList("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryInfoByCustomerIdSe", map);
+		return list;
+	}
+	
 	@Override
 	public List<BmsAsynCalcuTaskEntity> queryDetail(Map<String, Object> map){
 		List<BmsAsynCalcuTaskEntity> list = selectList("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryDetail", map);
@@ -102,5 +109,29 @@ public class BmsAsynCalcuTaskRepositoryimpl extends MyBatisDao<BmsAsynCalcuTaskE
 	public BmsAsynCalcuTaskEntity updateByTaskId(BmsAsynCalcuTaskEntity entity) {
 		update("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.updateByTaskId", entity);
         return entity;
+	}
+
+	@Override
+	public List<BmsAsynCalcuTaskEntity> queryGroupCustomer(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		List<BmsAsynCalcuTaskEntity> list = selectList("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryMain", condition, new RowBounds(
+                pageNo, pageSize));
+		return list;
+	}
+
+	@Override
+	public List<BmsAsynCalcuTaskEntity> queryMainSe(
+			Map<String, Object> condition, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		List<BmsAsynCalcuTaskEntity> list = selectList("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryMainSe", condition, new RowBounds(
+                pageNo, pageSize));
+		return list;
+	}
+
+	@Override
+	public long queryMainSeCount(Map<String, Object> condition, int pageNo,
+			int pageSize) {
+		// TODO Auto-generated method stub
+		return (long)(selectOneForInt("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryMainSeCount", condition));
 	}
 }
