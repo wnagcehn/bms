@@ -206,7 +206,7 @@
 		where a.cre_month = #{creMonth}
 		<if test="(customerId != null and customerId!='')">
 			and a.customer_id = #{customerId}
-		</if>	
+		</if>
 		group by a.customer_id
     </select>
     
@@ -216,9 +216,12 @@
     	select 1
 		from bms_asyn_calcu_task a
 		where a.cre_month = #{creMonth}
-		<if test="(customerIds != null and customerIds!='')">
-			and a.customer_id in (${customerIds})
-		</if>	
+		<if test="customerIds != null and customerIds!=''">
+			and customer_id in
+			<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		    </foreach>
+			</if>  
 		group by a.customer_id ) aa
     </select>
     
@@ -260,11 +263,11 @@
 			    bms_asyn_calcu_task
 			WHERE
 			    cre_month = #{creMonth}
-			    <if test="customerIds != null and customerIds!=''">
-				and customer_id in
-				(
-				${customerIds}
-				)
+			<if test="customerIds != null and customerIds!=''">
+			and customer_id in
+			<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+		    </foreach>
 			</if>  
 			GROUP BY customer_id
 		<if test="customerStatus != null and customerStatus !='' and customerStatus != 'ALL' ">
@@ -292,7 +295,7 @@
     
         <update id="updateByTaskId" parameterType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
         update bms_asyn_calcu_task 
-		<set >
+		<trim prefix="set" suffixOverrides="," >
 			<if test="taskStatus != null" >task_status=#{taskStatus,jdbcType=TINYINT},</if>
 			<if test="feesCount != null" >fees_count=#{feesCount,jdbcType=INTEGER},</if>
 			<if test="uncalcuCount != null" >uncalcu_count=#{uncalcuCount,jdbcType=INTEGER},</if>
@@ -309,7 +312,9 @@
 			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 			<if test="newid != null" >task_id=#{newid,jdbcType=VARCHAR},</if>
 			<if test="totalAmount != null" >total_amount=#{totalAmount,jdbcType=DECIMAL},</if>
-		</set>
+			<if test="finTimeIsNull != null and finTimeIsNull!=''" >finish_time = null,</if>
+			<if test="procTimeIsNull != null and procTimeIsNull!=''" >process_time = null,</if>
+		</trim>
         where task_id=#{taskId}
     </update>
 </mapper>

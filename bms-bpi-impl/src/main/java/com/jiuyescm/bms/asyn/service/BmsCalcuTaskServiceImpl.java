@@ -1,7 +1,9 @@
 package com.jiuyescm.bms.asyn.service;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +109,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 		try {
 			List<BmsAsynCalcuTaskEntity> master = bmsAsynCalcuTaskRepositoryimpl
 					.queryMainSe(condition, pageNo, pageSize);
-			String masterId = master.stream().map(BmsAsynCalcuTaskEntity::getCustomerId).collect(Collectors.joining(","));
+			List<String> masterId = master.stream().map(BmsAsynCalcuTaskEntity::getCustomerId).collect(Collectors.toList());;
 			condition.put("customerIds", masterId);
 			PageInfo<BmsAsynCalcuTaskEntity> pageInfo =new  PageInfo(bmsAsynCalcuTaskRepositoryimpl
 					.queryInfoByCustomerIdSe(condition));
@@ -212,6 +214,7 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 				} else if (20 == calTaskStatus || 30 == calTaskStatus
 						|| 50 == calTaskStatus) {
 					// 保存任务：更新状态为0,task_id改变
+					Date now=new Date();
 					BmsAsynCalcuTaskEntity entity = new BmsAsynCalcuTaskEntity();
 					entity.setFinishCount(0);
 					entity.setCalcuStatus(0);
@@ -228,6 +231,9 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 					entity.setTaskId(calEntity.getTaskId());
 					entity.setNewid(vo.getTaskId());
 					entity.setTotalAmount(BigDecimal.ZERO);
+					entity.setCreTime(new Timestamp(now.getTime()));
+					entity.setFinTimeIsNull("null");
+					entity.setProcTimeIsNull("null");
 					bmsAsynCalcuTaskRepositoryimpl.updateByTaskId(entity);
 					// 写入日志表
 					saveTaskLog(vo);
