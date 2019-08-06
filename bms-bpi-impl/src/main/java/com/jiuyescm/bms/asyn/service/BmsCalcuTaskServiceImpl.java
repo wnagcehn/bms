@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -89,7 +90,6 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 	@Override
 	public PageInfo<BmsCalcuTaskVo> query(Map<String, Object> condition,
 			int pageNo, int pageSize) throws BizException {
-		List<String> customerIds = new ArrayList<String>();
 		// 日期拼接
 		String creMonth = "";
 		if (Integer.valueOf(condition.get("createMonth").toString()) < 10) {
@@ -100,36 +100,19 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 					+ condition.get("createMonth");
 		}
 		condition.put("creMonth", creMonth);
+		condition.put("pageNo", pageNo);
+		condition.put("pageSize", pageSize);
+		
 		PageInfo<BmsCalcuTaskVo> pageVoInfo = new PageInfo<BmsCalcuTaskVo>();
 		try {
-			/*PageInfo<BmsAsynCalcuTaskEntity> pageInfo = bmsAsynCalcuTaskRepositoryimpl
-					.queryMain(condition, pageNo, pageSize);
-			PropertyUtils.copyProperties(pageVoInfo, pageInfo);
-			if (pageInfo != null && pageInfo.getList().size() > 0) {
-				for (BmsAsynCalcuTaskEntity entity : pageInfo.getList()) {
-					customerIds.add(entity.getCustomerId());
-				}
-				condition.put("customerIds", customerIds);
-				List<BmsAsynCalcuTaskEntity> taskList = bmsAsynCalcuTaskRepositoryimpl
-						.queryInfoByCustomerId(condition);
-				List<BmsCalcuTaskVo> list = new ArrayList<BmsCalcuTaskVo>();
-				for (BmsAsynCalcuTaskEntity entity : pageInfo.getList()) {
-					BmsCalcuTaskVo voEntity = new BmsCalcuTaskVo();
-					PropertyUtils.copyProperties(voEntity, entity);
-					for (BmsAsynCalcuTaskEntity vo : taskList) {
-						if (voEntity.getCustomerId().equals(vo.getCustomerId())
-								&& (voEntity.getCreMonth().intValue() == vo
-										.getCreMonth().intValue())) {
-							voEntity.setCustomerStatus(vo.getCustomerStatus());
-							voEntity.setSubjectNum(vo.getSubjectNum());
-							list.add(voEntity);
-							break;
-						}
-					}
-				}*/
+			List<BmsAsynCalcuTaskEntity> master = bmsAsynCalcuTaskRepositoryimpl
+					.queryMainSe(condition, pageNo, pageSize);
+			String masterId = master.stream().map(BmsAsynCalcuTaskEntity::getCustomerId).collect(Collectors.joining(","));
+			condition.put("customerIds", masterId);
 			PageInfo<BmsAsynCalcuTaskEntity> pageInfo =new  PageInfo(bmsAsynCalcuTaskRepositoryimpl
-					.queryInfoByCustomerId(condition));
-		
+					.queryInfoByCustomerIdSe(condition));
+			PropertyUtils.copyProperties(pageVoInfo, pageInfo);
+			pageVoInfo.setTotal(bmsAsynCalcuTaskRepositoryimpl.queryMainSeCount(condition, pageNo, pageSize));
 		} catch (Exception e) {
 			logger.error("查询计算任务异常", e);
 			throw new BizException("查询计算任务异常");
