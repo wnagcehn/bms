@@ -35,6 +35,8 @@ public interface ICalcuService<T,F> {
 	
 	public void calcuForContract(T entity,F fee);
 	
+	public void calcuForStand(T entity,F fee);
+	
 	public ContractQuoteQueryInfoVo getCtConditon(T entity);
 	
 	public void updateBatch(List<T> bizList,List<F> feeList);
