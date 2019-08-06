@@ -17,7 +17,7 @@ public class MaterailOutReportVo  implements IEntity{
     private static final long serialVersionUID = 3929832830250945903L;
     
     @ExcelField(title = "月份", num = 1)
-    private String  createMonth;    //月份 
+    private String  billMonth;    //月份 
     private String customerId;
     @ExcelField(title = "商家名称", num = 2)
     private String customerName; 
@@ -27,17 +27,17 @@ public class MaterailOutReportVo  implements IEntity{
     @ExcelField(title = "订单数", num = 4)
     private Integer orderCount;     //订单数
     @ExcelField(title = "九曳1号泡沫箱", num = 5)
-    private Integer platicBoxJY01;  //九曳1号泡沫箱
+    private Integer jyPmx01;  //九曳1号泡沫箱
     @ExcelField(title = "九曳2号泡沫箱", num = 6)
-    private Integer platicBoxJY02;  //九曳2号泡沫箱
+    private Integer jyPmx02;  //九曳2号泡沫箱
     @ExcelField(title = "九曳3号泡沫箱", num = 7)
-    private Integer platicBoxJY03;  //九曳3号泡沫箱
+    private Integer jyPmx03;  //九曳3号泡沫箱
     @ExcelField(title = "九曳4号泡沫箱", num = 8)
-    private Integer platicBoxJY04;  //九曳4号泡沫箱
+    private Integer jyPmx04;  //九曳4号泡沫箱
     @ExcelField(title = "昆明1号泡沫箱", num = 9)
-    private Integer platicBoxKM01;  //昆明1号泡沫箱
+    private Integer kmPmx001;  //昆明1号泡沫箱
     @ExcelField(title = "水果箱", num = 10)
-    private Integer platicBoxKM02;  //水果箱
+    private Integer kmPmx002;  //水果箱
     
     private Integer platicBox;          //泡沫箱
     @ExcelField(title = "缓冲材料", num = 11)
@@ -144,89 +144,6 @@ public class MaterailOutReportVo  implements IEntity{
         this.orderCount = orderCount;
     }
     
-    /**
-     * 九曳1号泡沫箱
-     */
-    public Integer getPlaticBoxJY01() {
-        return platicBoxJY01;
-    }
-    
-    /**
-     * 九曳1号泡沫箱
-     */
-    public void setPlaticBoxJY01(Integer platicBoxJY01) {
-        this.platicBoxJY01 = platicBoxJY01;
-    }
-    
-    /**
-     * 九曳2号泡沫箱
-     */
-    public Integer getPlaticBoxJY02() {
-        return platicBoxJY02;
-    }
-    
-    /**
-     * 九曳2号泡沫箱
-     */
-    public void setPlaticBoxJY02(Integer platicBoxJY02) {
-        this.platicBoxJY02 = platicBoxJY02;
-    }
-    
-    /**
-     * 九曳3号泡沫箱
-     */
-    public Integer getPlaticBoxJY03() {
-        return platicBoxJY03;
-    }
-    
-    /**
-     * 九曳3号泡沫箱
-     */
-    public void setPlaticBoxJY03(Integer platicBoxJY03) {
-        this.platicBoxJY03 = platicBoxJY03;
-    }
-    
-    /**
-     * 九曳4号泡沫箱
-     */
-    public Integer getPlaticBoxJY04() {
-        return platicBoxJY04;
-    }
-    
-    /**
-     * 九曳4号泡沫箱
-     */
-    public void setPlaticBoxJY04(Integer platicBoxJY04) {
-        this.platicBoxJY04 = platicBoxJY04;
-    }
-    
-    /**
-     * 昆明1号泡沫箱
-     */
-    public Integer getPlaticBoxKM01() {
-        return platicBoxKM01;
-    }
-    
-    /**
-     * 昆明1号泡沫箱
-     */
-    public void setPlaticBoxKM01(Integer platicBoxKM01) {
-        this.platicBoxKM01 = platicBoxKM01;
-    }
-    
-    /**
-     * 水果箱
-     */
-    public Integer getPlaticBoxKM02() {
-        return platicBoxKM02;
-    }
-    
-    /**
-     * 水果箱
-     */
-    public void setPlaticBoxKM02(Integer platicBoxKM02) {
-        this.platicBoxKM02 = platicBoxKM02;
-    }
     
     /**
      * 泡沫箱
@@ -458,15 +375,105 @@ public class MaterailOutReportVo  implements IEntity{
         this.blockingBox = blockingBox;
     }
 
-    public String getCreateMonth() {
-        return createMonth;
+
+    /**
+     * 月份
+     */
+    public String getBillMonth() {
+        return billMonth;
     }
 
-    public void setCreateMonth(String createMonth) {
-        this.createMonth = createMonth;
+    /**
+     * 月份
+     */
+    public void setBillMonth(String billMonth) {
+        this.billMonth = billMonth;
     }
+
     
+    /**
+     * 九曳1号泡沫箱
+     */
+    public Integer getJyPmx01() {
+        return jyPmx01;
+    }
 
+    /**
+     * 九曳1号泡沫箱
+     */
+    public void setJyPmx01(Integer jyPmx01) {
+        this.jyPmx01 = jyPmx01;
+    }
+
+    /**
+     * 九曳2号泡沫箱
+     */
+    public Integer getJyPmx02() {
+        return jyPmx02;
+    }
+
+    /**
+     * 九曳2号泡沫箱
+     */
+    public void setJyPmx02(Integer jyPmx02) {
+        this.jyPmx02 = jyPmx02;
+    }
+
+    /**
+     * 九曳3号泡沫箱
+     */
+    public Integer getJyPmx03() {
+        return jyPmx03;
+    }
+
+    /**
+     * 九曳3号泡沫箱
+     */
+    public void setJyPmx03(Integer jyPmx03) {
+        this.jyPmx03 = jyPmx03;
+    }
+
+    /**
+     * 九曳4号泡沫箱
+     */
+    public Integer getJyPmx04() {
+        return jyPmx04;
+    }
+
+    /**
+     * 九曳4号泡沫箱
+     */
+    public void setJyPmx04(Integer jyPmx04) {
+        this.jyPmx04 = jyPmx04;
+    }
+
+    /**
+     * 昆明1号泡沫箱
+     */
+    public Integer getKmPmx001() {
+        return kmPmx001;
+    }
+
+    /**
+     * 昆明1号泡沫箱
+     */
+    public void setKmPmx001(Integer kmPmx001) {
+        this.kmPmx001 = kmPmx001;
+    }
+
+    /**
+     * 昆明2号泡沫箱
+     */
+    public Integer getKmPmx002() {
+        return kmPmx002;
+    }
+
+    /**
+     * 昆明2号泡沫箱
+     */
+    public void setKmPmx002(Integer kmPmx002) {
+        this.kmPmx002 = kmPmx002;
+    }
 }
 
 
