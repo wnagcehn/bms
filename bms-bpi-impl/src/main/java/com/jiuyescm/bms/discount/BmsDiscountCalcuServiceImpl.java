@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,16 +184,23 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                 for(BmsDiscountAccountEntity en:accountList){
                     accountMap.put(en.getServiceTypeCode(), en);
                 }
+                
+                logger.info(task.getTaskId()+"物流产品类型对应得单量、金额"+JSONObject.fromObject(accountMap));
+
             }
 
-            
+        
             //如果折扣报价中有物流产品类型为空时，需要统计除特殊物流物流产品类型以外的总单量、总金额
             if(flag){
                 map.put("serviceList", null);
                 map.put("notServiceList", specialServiceType);
                 BmsDiscountAccountEntity discountAccountVo=bmsDiscountRepository.queryAccount(map);
                 accountMap.put("", discountAccountVo);
+                logger.info(task.getTaskId()+"物流商对应得单量、金额"+JSONObject.fromObject(accountMap));
             }
+            
+            logger.info(task.getTaskId()+"所有物流产品类型对应得总单量、总金额"+JSONObject.fromObject(accountMap));
+
       
             //循环所有折扣报价，拼接新的折扣报价
             for(ContractDiscountConfigVo discount:discountList){
@@ -199,6 +208,8 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                 //判断是否有统计记录
                 if(accountMap.containsKey(serviceTypeCode)){
                     BmsDiscountAccountEntity account=accountMap.get(serviceTypeCode);
+                    logger.info(task.getTaskId()+"物流商产品类型"+serviceTypeCode+"对应得单量、金额"+JSONObject.fromObject(account));
+
                     //判断折扣方式
                     BigDecimal count=new BigDecimal(0d);
                     if("MONTH_COUNT".equals(task.getDiscountType())){
@@ -207,7 +218,8 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                         count=new BigDecimal(account.getAmount());
                     }
                     //如果匹配了
-                    if(count.compareTo(discount.getLowerLimit())>=0 && discount.getUpperLimit().compareTo(count)>0){                        
+                    if(count.compareTo(discount.getLowerLimit())>=0 && discount.getUpperLimit().compareTo(count)>0){  
+                        logger.info(task.getTaskId()+"物流商产品类型"+serviceTypeCode+"满足条件");
                         DiscountQuoteVo quotevo=new DiscountQuoteVo();
                         quotevo.setId(discount.getId());
                         if(discount.getTotalDiscountPrice()!=null){
@@ -235,6 +247,7 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                                 vo.getQuotes().add(quotevo);
                             }
                         }else{
+                            logger.info(task.getTaskId()+"物流商产品类型"+serviceTypeCode+"满足条件加入新报价"+JSONObject.fromObject(quotevo));
                             DiscountDispatchReportVo vo=new DiscountDispatchReportVo();   
                             vo.setServiceTypeCode(serviceTypeCode);                       
                             List<DiscountQuoteVo> quotes=new ArrayList<DiscountQuoteVo>();
