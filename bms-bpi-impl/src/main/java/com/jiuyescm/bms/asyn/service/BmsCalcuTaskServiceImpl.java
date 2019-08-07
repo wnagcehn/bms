@@ -114,12 +114,15 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 			for(BmsAsynCalcuTaskEntity entity:master){
 				masterId.add(entity.getCustomerId());
 			}
+			pageVoInfo.setTotal(bmsAsynCalcuTaskRepositoryimpl.queryMainSeCount(condition, pageNo, pageSize));			
 			condition.put("customerIds", masterId);
 			PageInfo<BmsAsynCalcuTaskEntity> pageInfo =new  PageInfo(bmsAsynCalcuTaskRepositoryimpl
 					.queryInfoByCustomerIdSe(condition));
+			pageInfo.setPageNum(pageNo);
+			pageInfo.setPageSize(pageSize);
+			pageInfo.setTotal(pageVoInfo.getTotal());
 			PropertyUtils.copyProperties(pageVoInfo, pageInfo);
-			pageVoInfo.setTotal(bmsAsynCalcuTaskRepositoryimpl.queryMainSeCount(condition, pageNo, pageSize));
-		} catch (Exception e) {
+			} catch (Exception e) {
 			logger.error("查询计算任务异常", e);
 			throw new BizException("查询计算任务异常");
 		}

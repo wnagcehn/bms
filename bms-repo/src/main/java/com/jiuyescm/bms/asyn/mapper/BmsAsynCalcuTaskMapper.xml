@@ -29,10 +29,11 @@
 	    <result column="process_time" property="processTime" jdbcType="TIMESTAMP" />
 	    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
     </resultMap>
   
     <sql id="baseColumns">
-        id, task_id, customer_id,customer_name, subject_code,subject_name,fees_type, cre_month, task_status, fees_count, uncalcu_count, calcu_count, begin_count, finish_count, sys_error_count, contract_miss_count,no_dinggou_count, quote_miss_count, no_exe_count, task_rate, cre_person, cre_person_id, cre_time, process_time, finish_time,calcu_status, remark
+        id, task_id, customer_id,customer_name, subject_code,subject_name,fees_type, cre_month, task_status, fees_count, uncalcu_count, calcu_count, begin_count, finish_count, sys_error_count, contract_miss_count,no_dinggou_count, quote_miss_count, no_exe_count, task_rate, cre_person, cre_person_id, cre_time, process_time, finish_time,calcu_status,total_amount, remark
     </sql>
 	
 	<sql id="baseSelectColumns">

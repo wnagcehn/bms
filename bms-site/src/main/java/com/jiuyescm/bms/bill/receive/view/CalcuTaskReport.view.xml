@@ -217,6 +217,50 @@
         <Property></Property>
         <Property name="label">账期</Property>
       </PropertyDef>
+      <PropertyDef name="feesCount">
+        <Property></Property>
+        <Property name="label">费用总数</Property>
+      </PropertyDef>
+      <PropertyDef name="uncalcuCount">
+        <Property></Property>
+        <Property name="label">本次任务需要计算的费用总数</Property>
+      </PropertyDef>
+      <PropertyDef name="calcuCount">
+        <Property></Property>
+        <Property name="label">本次任务计算完成的费用总数</Property>
+      </PropertyDef>
+      <PropertyDef name="beginCount">
+        <Property></Property>
+        <Property name="label">未计算费用总数</Property>
+      </PropertyDef>
+      <PropertyDef name="finishCount">
+        <Property></Property>
+        <Property name="label">计算成功总数</Property>
+      </PropertyDef>
+      <PropertyDef name="sysErrorCount">
+        <Property></Property>
+        <Property name="label">系统错误用总数</Property>
+      </PropertyDef>
+      <PropertyDef name="contractMissCount">
+        <Property></Property>
+        <Property name="label">合同缺失总数</Property>
+      </PropertyDef>
+      <PropertyDef name="quoteMissCount">
+        <Property></Property>
+        <Property name="label">报价缺失总数</Property>
+      </PropertyDef>
+      <PropertyDef name="noExeCount">
+        <Property></Property>
+        <Property name="label">未计算费用总数</Property>
+      </PropertyDef>
+      <PropertyDef name="totalAmount">
+        <Property></Property>
+        <Property name="label">总费用</Property>
+      </PropertyDef>
+      <PropertyDef name="noDinggouCount">
+        <Property></Property>
+        <Property name="label">未订购服务总数</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="dtFileExportTaskEntity">
       <Property name="creationType">com.jiuyescm.bms.base.file.entity.FileExportTaskEntity</Property>
@@ -556,6 +600,61 @@ view.get(&quot;#formCondition.entity&quot;).set({&#xD;
         <Property name="property">creMonth</Property>
         <Property name="width">100</Property>
         <Property name="name">creMonth</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">feesCount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">feesCount</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">uncalcuCount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">uncalcuCount</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">calcuCount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">calcuCount</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">beginCount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">beginCount</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">finishCount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">finishCount</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">sysErrorCount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">sysErrorCount</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">contractMissCount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">contractMissCount</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">quoteMissCount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">quoteMissCount</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">noExeCount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">noExeCount</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">totalAmount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">totalAmount</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">noDinggouCount</Property>
+        <Property name="width">100</Property>
+        <Property name="name">noDinggouCount</Property>
       </DataColumn>
     </DataGrid>
     <Trigger id="triggerCustomer">
