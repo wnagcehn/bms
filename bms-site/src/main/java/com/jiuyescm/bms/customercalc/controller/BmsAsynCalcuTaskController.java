@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.Expose;
@@ -161,4 +162,34 @@ public class BmsAsynCalcuTaskController {
 	    return "操作成功! 正在重算...";
 	}
 	
+	
+	/**
+	 * 分页查询
+	 * @param page
+	 * @param param
+	 */
+	@DataProvider
+	public void queryTask(Page<BmsCalcuTaskVo> page, Map<String, Object> param) {
+		logger.info("查询任务日志:"+param.toString());
+		genParam(param);
+		try {
+			PageInfo<BmsCalcuTaskVo> pageInfo = bmsAsynCalcuTaskService.queryTask(param, page.getPageNo(), page.getPageSize());
+			if (pageInfo != null) {
+				page.setEntities(pageInfo.getList());
+				page.setEntityCount((int) pageInfo.getTotal());
+			}
+		} catch (Exception e) {
+			throw new BizException(e.getMessage());
+		}	
+	}
+	
+	public void genParam(Map<String, Object> param){
+		if(param.get("processAlarm")!=null){
+			param.put("processAlarm", Long.parseLong(param.get("processAlarm").toString())*60);
+		}
+		if(param.get("finishAlarm")!=null){
+			param.put("finishAlarm", Long.parseLong(param.get("finishAlarm").toString())*60);
+		}
+		
+	}
 }

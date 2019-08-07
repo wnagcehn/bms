@@ -269,4 +269,12 @@ public class BmsGroupCustomerServiceImpl implements IBmsGroupCustomerService {
     }
 
 
+	@Override
+	public List<String> queryCustomerByGroupCodeAndCustomerId(String groupCode,
+			String bizType, String customerId) {
+		// TODO Auto-generated method stub
+		return bmsGroupCustomerRepository.queryCustomerByGroupCodeAndCustomerId(groupCode, bizType, customerId);
+	}
+
+
 }

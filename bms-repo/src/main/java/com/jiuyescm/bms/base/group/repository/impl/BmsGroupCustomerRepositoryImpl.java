@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.base.group.repository.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,8 +74,21 @@ public class BmsGroupCustomerRepositoryImpl extends MyBatisDao<BmsGroupCustomerE
     public List<String> queryCustomerByGroupCode(String groupCode) {
         // TODO Auto-generated method stub
         SqlSession session = getSqlSessionTemplate();
-        return session.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupCustomerMapper.queryCustomerByGroupCode", groupCode);
+        Map<String,Object> condition=new HashMap<>();
+        condition.put("groupCode", "groupCode");
+        return session.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupCustomerMapper.queryCustomerByGroupCode", condition);
     
     }
+
+	@Override
+	public List<String> queryCustomerByGroupCodeAndCustomerId(String groupCode,
+			String bizType, String customerId) {
+		Map<String,Object> condition=new HashMap<>();
+		condition.put("groupCode", groupCode);
+		condition.put("bizType", bizType);
+		condition.put("customerId", customerId);
+		SqlSession session = getSqlSessionTemplate();
+		return session.selectList("com.jiuyescm.bms.base.group.mapper.BmsGroupCustomerMapper.queryCustomerByGroupCodeAndCustomerId", condition);
+	}
 
 }

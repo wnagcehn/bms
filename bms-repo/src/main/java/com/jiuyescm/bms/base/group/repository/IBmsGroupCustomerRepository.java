@@ -25,4 +25,6 @@ public interface IBmsGroupCustomerRepository {
 	List<String> queryCustomerByGroupId(int groupId);
 	
 	List<String> queryCustomerByGroupCode(String groupCode);
+	
+	List<String> queryCustomerByGroupCodeAndCustomerId(String groupCode,String bizType,String customerId);
 }
