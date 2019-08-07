@@ -23,10 +23,28 @@
 		select customerid from bms_group_customer where group_id=#{groupId} and ifnull(del_flag,'0')='0'
 	</select>
 	
-	<select id="queryCustomerByGroupCode" resultType="String" parameterType="String">
-		select b.customerid from bms_group a
+	
+	<select id="queryCustomerByGroupCodeAndCustomerId" resultType="String" parameterType="java.util.Map">
+		select b.customerid as customerId from bms_group a
 		INNER JOIN bms_group_customer b on a.id=b.group_id
-		where b.del_flag='0' and a.group_code=#{groupCode}
+		where b.del_flag='0' 
+		<if test='groupCode!=null and groupCode!=""'>
+		and a.group_code=#{groupCode}
+		</if>
+		<if test='bizType!=null and bizType!=""'>
+		and a.biz_type=#{bizType}
+		</if>
+		 <if test='customerId!=null and customerId!=""'>
+		and b.customerid=#{customerId} 
+		 </if>
+	</select>
+	<select id="queryCustomerByGroupCode" resultType="String" parameterType="java.util.Map">
+		select b.customerid as customerId from bms_group a
+		INNER JOIN bms_group_customer b on a.id=b.group_id
+		where b.del_flag='0' 
+		<if test='groupCode!=null and groupCode!=""'>
+		and a.group_code=#{groupCode}
+		</if>
 	</select>
 	
 	<select id="queryGroupSubject" parameterType="com.jiuyescm.bms.base.group.BmsGroupCustomerEntity" resultType="com.jiuyescm.bms.base.group.BmsGroupCustomerEntity">

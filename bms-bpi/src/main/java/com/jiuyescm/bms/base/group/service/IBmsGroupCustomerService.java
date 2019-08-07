@@ -17,10 +17,12 @@ public interface IBmsGroupCustomerService {
 	int queryCustomerCountByGroupId(int id);
 	List<String> queryCustomerByGroupId(int groupId);
 	List<String> queryCustomerByGroupCode(String groupCode);
-	
+	List<String> queryCustomerByGroupCodeAndCustomerId(String groupCode,String bizType,String customerId);
 	//作废商家业务数据
 	int cancalCustomerBiz(List<BmsGroupCustomerVo> customerVoList);
 	//恢复商家业务数据
 	int restoreCustomerBiz(String customerId);
+	
+	
 	
 }

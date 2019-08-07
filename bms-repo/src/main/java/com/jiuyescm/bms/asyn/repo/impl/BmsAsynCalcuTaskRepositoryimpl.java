@@ -22,6 +22,7 @@ public class BmsAsynCalcuTaskRepositoryimpl extends MyBatisDao<BmsAsynCalcuTaskE
         return pageInfo;
 	}
 	
+	
 	@Override
 	public BmsAsynCalcuTaskEntity queryOne(String taskId) {
 		BmsAsynCalcuTaskEntity entity = selectOne("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryOne", taskId);

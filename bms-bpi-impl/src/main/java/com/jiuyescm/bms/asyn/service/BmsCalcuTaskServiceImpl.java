@@ -1,5 +1,6 @@
 package com.jiuyescm.bms.asyn.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -110,8 +111,8 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 			List<BmsAsynCalcuTaskEntity> master = bmsAsynCalcuTaskRepositoryimpl
 					.queryMainSe(condition, pageNo, pageSize);
 			List<String> masterId = new ArrayList<>();
-			for(String id:masterId){
-				masterId.add(id);
+			for(BmsAsynCalcuTaskEntity entity:master){
+				masterId.add(entity.getCustomerId());
 			}
 			condition.put("customerIds", masterId);
 			PageInfo<BmsAsynCalcuTaskEntity> pageInfo =new  PageInfo(bmsAsynCalcuTaskRepositoryimpl
@@ -677,6 +678,21 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 	    allTasks.addAll(palletTasks);
 	    
 	    return allTasks;
+	}
+
+	
+	@Override
+	public PageInfo<BmsCalcuTaskVo> queryTask(Map<String, Object> param,
+			int pageNo, int pageSize) {
+		PageInfo<BmsCalcuTaskVo> pageVoInfo = new PageInfo<BmsCalcuTaskVo>();
+		try {
+		PageInfo<BmsAsynCalcuTaskEntity> page= bmsAsynCalcuTaskRepositoryimpl.query(param, pageNo, pageSize);
+		PropertyUtils.copyProperties(pageVoInfo, page);
+		} catch (Exception e) {
+			logger.info("查询任务列表错误:"+e);
+		}
+		
+		return pageVoInfo;
 	}
 	
 }

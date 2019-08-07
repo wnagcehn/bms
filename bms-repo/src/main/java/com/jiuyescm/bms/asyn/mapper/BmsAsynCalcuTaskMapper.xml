@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper" >
-    <resultMap id="baseResultMap" type="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity" >
+    <resultMap id="BaseResultMap" type="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity" >
         <id column="id" property="id" jdbcType="BIGINT" />
 	    <result column="id" property="id" jdbcType="BIGINT" />
 	    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
@@ -32,7 +32,7 @@
     </resultMap>
   
     <sql id="baseColumns">
-        id, task_id, customer_id,customer_name, subject_code,subject_name,fees_type, cre_month, task_status, fees_count, uncalcu_count, calcu_count, begin_count, finish_count, sys_error_count, contract_miss_count,no_dinggou_count, quote_miss_count, no_exe_count, task_rate, cre_person, cre_person_id, cre_time, process_time, finish_time, remark
+        id, task_id, customer_id,customer_name, subject_code,subject_name,fees_type, cre_month, task_status, fees_count, uncalcu_count, calcu_count, begin_count, finish_count, sys_error_count, contract_miss_count,no_dinggou_count, quote_miss_count, no_exe_count, task_rate, cre_person, cre_person_id, cre_time, process_time, finish_time,calcu_status, remark
     </sql>
 	
 	<sql id="baseSelectColumns">
@@ -66,16 +66,24 @@
     </sql>
 	  
     <select id="query" parameterType="java.util.Map"
-        resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">
+        resultMap="BaseResultMap">
         select
         <include refid="baseColumns" />
         from bms_asyn_calcu_task
         where 1=1
 		<include refid="baseSelectColumns" />
+		<if test='processAlarm!=null and processAlarm!=""'>
+		and  ((process_time-cre_time)&gt;#{processAlarm} or process_time is null)
+		</if>
+		<if test='finishAlarm!=null and finishAlarm!=""'>
+		and  ((finish_time-cre_time)&gt;#{finishAlarm} or finish_time is null)
+		</if>
 		<if test="(queryCus != null and queryCus !='')" >
 				group by customer_id
 		</if>
     </select>
+    
+    
     
     <select id="queryOne" parameterType="java.lang.String"
         resultType="com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskEntity">

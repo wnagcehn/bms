@@ -78,12 +78,12 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 	
 	private PriceGeneralQuotationEntity quoTemplete = null;
 	private Map<String, Object> errorMap = null;
-	private List<String> cusList=null;         
+/*	private List<String> cusList=null;         
 	private List<String> cusNames = null;            //使用导入商品托数的商家
 	private List<String> materialCusNames=null;      //使用导入耗材托数的商家
 	private List<String> instockCusNames=null;       //使用导入入库托数的商家
 	private List<String> outstockCusNames=null;       //使用导入出库托数的商家
-	private List<BizPalletInfoEntity> bizList=null;
+*/	private List<BizPalletInfoEntity> bizList=null;
 	private List<FeesReceiveStorageEntity> fees=null;
 
 	public void process(BmsCalcuTaskVo taskVo,String contractAttr){
@@ -183,7 +183,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 	
 	@Override
 	public void initConf() {
-		//使用商品导入托数的商家
+		/*//使用商品导入托数的商家
        cusNames = ObtainBussiness("Product_Pallet","group_customer");
 		
 		//指定的商家
@@ -196,7 +196,7 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
        instockCusNames=ObtainBussiness("instock_pallet","group_customer");
        
        //使用导入出库托数的商家
-       outstockCusNames=ObtainBussiness("outtock_pallet","group_customer");
+       outstockCusNames=ObtainBussiness("outtock_pallet","group_customer");*/
         
 	}
 	
@@ -217,6 +217,13 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		BmsGroupVo bmsGroup=bmsGroupService.queryOne(map);
 		return bmsGroup==null?null:bmsGroupCustomerService.queryCustomerByGroupId(bmsGroup.getId());
 	}
+	
+	public boolean ObtainBussinessSe(String groupCode,
+			String bizType, String customerId){
+		return CollectionUtils.isEmpty(
+				bmsGroupCustomerService.queryCustomerByGroupCodeAndCustomerId(groupCode,bizType,customerId));
+	}
+	
 
 	@Override
 	public FeesReceiveStorageEntity initFee(BizPalletInfoEntity entity) {
@@ -225,13 +232,13 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		//如果托数类型是商品托数，如果商家在《使用导入商品托数的商家》,更新计费来源是导入,同时使用导入托数计费
 		//**** 以上逻辑可以放在定时任务中
 		double num = 0d;
-		if ("product".equals(entity.getBizType()) && (CollectionUtils.isEmpty(cusNames)||!cusNames.contains(entity.getCustomerId()))) {
+		if ("product".equals(entity.getBizType()) && !ObtainBussinessSe("Product_Pallet","group_customer",entity.getCustomerId())) {
 		    entity.setChargeSource("system");	
-		}else if ("material".equals(entity.getBizType())&&(CollectionUtils.isEmpty(materialCusNames)||!materialCusNames.contains(entity.getCustomerId()))) {
+		}else if ("material".equals(entity.getBizType())&&!ObtainBussinessSe("Material_Pallet","group_customer",entity.getCustomerId())){
             entity.setChargeSource("system");   
-        }else if("instock".equals(entity.getBizType())&&(CollectionUtils.isEmpty(instockCusNames)||!instockCusNames.contains(entity.getCustomerId()))) { 
+        }else if("instock".equals(entity.getBizType())&&!ObtainBussinessSe("instock_pallet","group_customer",entity.getCustomerId())) { 
         	entity.setChargeSource("system");  
-	    }else if("outstock".equals(entity.getBizType()) &&(CollectionUtils.isEmpty(outstockCusNames)||!outstockCusNames.contains(entity.getCustomerId()))){ 
+	    }else if("outstock".equals(entity.getBizType()) &&!ObtainBussinessSe("outstock_pallet","group_customer",entity.getCustomerId())){ 
 	    	entity.setChargeSource("system");  
 		}else{
 		    entity.setChargeSource("import");
@@ -272,8 +279,8 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		}
 		//2.商家已经按件收取存储费,按托存储不计费
 		if ("product".equals(entity.getBizType())) {
-			//如果商家已经按件收取存储费，则按托存储不计费
-			if(cusList.size()>0 && cusList.contains(entity.getCustomerId())){
+			//如果商家已经按件收取存储费，则按托存储不计费  
+			if(ObtainBussinessSe("customer_unit","group_customer",entity.getCustomerId())){
 				fee.setIsCalculated(CalculateState.No_Exe.getCode());
 				fee.setCalcuMsg("商家已经按件收取存储费,按托存储不计费");
 				return true;

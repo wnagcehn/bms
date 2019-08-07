@@ -118,4 +118,19 @@ public interface IBmsCalcuTaskService {
      * @return
      */
     List<BmsCalcuTaskVo> queryAllSubjectTask(Map<String, Object> param);
+
+    /**
+     * 计算任务日志监控
+     * <功能描述>
+     * 
+     * @author zhangyuanzheng
+     * @date 2019年8月6日 下午3:39:01
+     *
+     * @param param
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+	PageInfo<BmsCalcuTaskVo> queryTask(Map<String, Object> param, int pageNo,
+			int pageSize);
 }

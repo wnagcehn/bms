@@ -106,5 +106,6 @@ public interface IBmsAsynCalcuTaskRepository {
 			int pageSize);
 
 	List<BmsAsynCalcuTaskEntity> queryInfoByCustomerIdSe(Map<String, Object> map);
+
 	
 }

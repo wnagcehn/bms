@@ -7,7 +7,8 @@
         http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         ">
 	<dubbo:application name="bmstimer" />
-	<dubbo:registry protocol="zookeeper" address="${legacy.dubbo.registry}" />
+	<dubbo:registry protocol="zookeeper" address="${legacy.dubbo.registry}" default="true" />
+	<dubbo:registry id="registry" protocol="zookeeper" address="${dubbo.registry}" check ="false" />
 	<dubbo:consumer version="1.0.0" timeout="1200000" retries="0" cluster="failfast" />
 	
 	<import resource="classpath:dubbo/DubboClient-bms.xml" />
