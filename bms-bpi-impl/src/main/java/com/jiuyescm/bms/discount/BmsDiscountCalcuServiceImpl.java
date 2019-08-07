@@ -157,6 +157,11 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
         Map<String,DiscountDispatchReportVo> reportMap=new HashMap<String,DiscountDispatchReportVo>();
         try {   
             Map<String,Object> map=new HashMap<>();
+            map.put("startTime", task.getStartDate());
+            map.put("endTime", task.getEndDate());
+            map.put("customerId", task.getCustomerId());
+            map.put("carrierId", task.getCarrierId());
+            
             List<DiscountDispatchReportVo> newDiscountList=new ArrayList<>();
             //特殊物流产品类型
             List<String> specialServiceType=getService(task.getCarrierId());
@@ -175,18 +180,11 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
             //所有需要折扣的物流产品类型对应得总单量、总金额
             Map<String,BmsDiscountAccountEntity> accountMap=new HashMap<>();
             if(serviceList.size()>0){
-                map.put("startTime", task.getStartDate());
-                map.put("endTime", task.getEndDate());
-                map.put("customerId", task.getCustomerId());
-                map.put("carrierId", task.getCarrierId());
                 map.put("serviceList", serviceList);
                 List<BmsDiscountAccountEntity> accountList=bmsDiscountRepository.queryServiceAccount(map);
                 for(BmsDiscountAccountEntity en:accountList){
                     accountMap.put(en.getServiceTypeCode(), en);
                 }
-                
-                logger.info(task.getTaskId()+"物流产品类型对应得单量、金额"+JSONObject.fromObject(accountMap));
-
             }
 
         
@@ -196,7 +194,6 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                 map.put("notServiceList", specialServiceType);
                 BmsDiscountAccountEntity discountAccountVo=bmsDiscountRepository.queryAccount(map);
                 accountMap.put("", discountAccountVo);
-                logger.info(task.getTaskId()+"物流商对应得单量、金额"+JSONObject.fromObject(accountMap));
             }
             
             logger.info(task.getTaskId()+"所有物流产品类型对应得总单量、总金额"+JSONObject.fromObject(accountMap));
@@ -208,8 +205,6 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                 //判断是否有统计记录
                 if(accountMap.containsKey(serviceTypeCode)){
                     BmsDiscountAccountEntity account=accountMap.get(serviceTypeCode);
-                    logger.info(task.getTaskId()+"物流商产品类型"+serviceTypeCode+"对应得单量、金额"+JSONObject.fromObject(account));
-
                     //判断折扣方式
                     BigDecimal count=new BigDecimal(0d);
                     if("MONTH_COUNT".equals(task.getDiscountType())){
@@ -219,7 +214,6 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                     }
                     //如果匹配了
                     if(count.compareTo(discount.getLowerLimit())>=0 && discount.getUpperLimit().compareTo(count)>0){  
-                        logger.info(task.getTaskId()+"物流商产品类型"+serviceTypeCode+"满足条件");
                         DiscountQuoteVo quotevo=new DiscountQuoteVo();
                         quotevo.setId(discount.getId());
                         if(discount.getTotalDiscountPrice()!=null){
@@ -247,7 +241,6 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                                 vo.getQuotes().add(quotevo);
                             }
                         }else{
-                            logger.info(task.getTaskId()+"物流商产品类型"+serviceTypeCode+"满足条件加入新报价"+JSONObject.fromObject(quotevo));
                             DiscountDispatchReportVo vo=new DiscountDispatchReportVo();   
                             vo.setServiceTypeCode(serviceTypeCode);                       
                             List<DiscountQuoteVo> quotes=new ArrayList<DiscountQuoteVo>();
