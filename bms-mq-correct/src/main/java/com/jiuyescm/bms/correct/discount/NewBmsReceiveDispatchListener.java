@@ -552,8 +552,9 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
 				for(BmsQuoteDiscountDetailEntity en:discountList){
 				    specialService.add(en.getServiceTypeCode());
 				}
-		        
+                logger.info(taskId+"查询合同在线折扣报价结果"+JSONArray.fromObject(discountList));
 				discountReportMap=bmsDiscountCalcuService.discountDispatchBms(task, discountList,template);	
+                logger.info(taskId+"筛选后在线折扣报价结果"+JSONObject.fromObject(discountReportMap));
 		        if(discountReportMap==null){
                     logger.info(taskId+"bms获取折扣报价失败");
                     task.setRemark("bms获取折扣报价失败");
@@ -597,6 +598,7 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
                     
                     logger.info(taskId+"查询合同在线折扣报价结果"+JSONArray.fromObject(configVo));
                     discountReportMap=bmsDiscountCalcuService.discountDispatchContract(task, configVo); 
+                    logger.info(taskId+"筛选后在线折扣报价结果"+JSONObject.fromObject(discountReportMap));
                     if(discountReportMap==null){
                         logger.info(taskId+"合同在线获取折扣报价失败");
                         task.setRemark("合同在线获取折扣报价失败");
@@ -840,8 +842,10 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
                 
                 //物流产品类型
                 String serviceTypeCode=StringUtils.isNotBlank(discountVo.getAdjustServiceTypeCode())?discountVo.getAdjustServiceTypeCode():discountVo.getServiceTypeCode();
-              //特殊物流产品类型，如果报价里面就没有，则直接提示不纠正
+                logger.info(discountVo.getWaybillNo()+"物流产品类型"+serviceTypeCode);
+                //特殊物流产品类型，如果报价里面就没有，则直接提示不纠正
                 if(specialServiceList.contains(serviceTypeCode) && !serviceTypeList.contains(serviceTypeCode)){
+                    logger.info(discountVo.getWaybillNo()+"满足特殊物流产品类型"+serviceTypeCode);
                     discountVo.setRemark("不折扣");
                     discountVo.setIsCalculated(CalculateState.No_Exe.getCode());
                     fee.setDerateAmount(0d);
@@ -849,11 +853,12 @@ public class NewBmsReceiveDispatchListener implements MessageListener{
                     continue;
                 }
                 DiscountDispatchReportVo discountDispatchReportVo=discountReportMap.get(serviceTypeCode);
-                
+                logger.info(discountVo.getWaybillNo()+"根据物流物流产品类型得到的报价"+JSONObject.fromObject(discountDispatchReportVo));
                 
               //如果是特殊物流产品类型，判断有没有对应得折扣报价，没有则没有
                 //如果不是特殊物流产品类型，判断有没有对应得折扣报价，没有则取物流产品类型为空的折扣报价
                 if(!specialServiceList.contains(serviceTypeCode)){
+                    logger.info(discountVo.getWaybillNo()+"非特殊物流产品类型"+serviceTypeCode);
                     //不是特殊物流产品类型
                     if(discountDispatchReportVo==null){
                         discountDispatchReportVo=discountReportMap.get("");
