@@ -424,12 +424,16 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
 		}
 		if(errorMap.get("isStandard")!=null){
             fee.setContractAttr("3");
+            if("succ".equals(errorMap.get("success").toString()) && fee.getCost().compareTo(BigDecimal.ZERO) == 1){     
+                fee.setCalcuMsg("采用标准报价计费");
+                logger.info("采用标准报价计费计算成功，费用【{}】",fee.getCost());                 
+            }
 		}
 	}
 	
 	@Override
     public void calcuForStand(BizPalletInfoEntity entity,FeesReceiveStorageEntity fee) {
-        fee.setContractAttr("3");
+        fee.setContractAttr("1");
         ContractQuoteQueryInfoVo queryVo = getCtConditon(entity);
         contractCalcuService.calcuForStand(entity, fee, taskVo, errorMap, queryVo,cbiVo,fee.getFeesNo());
         if("succ".equals(errorMap.get("success").toString())){
@@ -438,8 +442,8 @@ public class PalletCalcuJob extends BmsContractBase implements ICalcuService<Biz
                 fee.setCalcuMsg("标准报价计算成功");
                 logger.info("标准报价计算成功，费用【{}】",fee.getCost());
             }else{
-                logger.info("标准报价计算不成功，费用【{}】",fee.getCost());
-                fee.setCalcuMsg("标准报价单价配置为0或者计费数量/重量为0");
+                logger.info("计算不成功，费用【{}】",fee.getCost());
+                fee.setCalcuMsg("单价配置为0或者计费数量/重量为0");
             }
         }
         else{
