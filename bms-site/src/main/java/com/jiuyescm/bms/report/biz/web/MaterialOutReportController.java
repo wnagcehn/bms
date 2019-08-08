@@ -4,16 +4,17 @@
  */
 package com.jiuyescm.bms.report.biz.web;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.slf4j.Logger;
@@ -31,7 +32,6 @@ import com.jiuyescm.bms.base.dictionary.service.ISystemCodeService;
 import com.jiuyescm.bms.base.file.entity.FileExportTaskEntity;
 import com.jiuyescm.bms.base.file.service.IFileExportTaskService;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuExceptionService;
-import com.jiuyescm.bms.calculate.vo.ExceptionDetailVo;
 import com.jiuyescm.bms.common.constants.ExceptionConstant;
 import com.jiuyescm.bms.common.constants.FileConstant;
 import com.jiuyescm.bms.common.constants.MessageConstant;
@@ -43,10 +43,13 @@ import com.jiuyescm.bms.common.sequence.service.SequenceService;
 import com.jiuyescm.bms.excel.constants.ExportConstants;
 import com.jiuyescm.bms.excel.write.ExcelExporterFactory;
 import com.jiuyescm.bms.excel.write.IExcelExporter;
+import com.jiuyescm.bms.report.service.IMaterialReportService;
 import com.jiuyescm.bms.report.vo.MaterailOutReportVo;
 import com.jiuyescm.cfm.common.JAppContext;
 import com.jiuyescm.common.ConstantInterface;
 import com.jiuyescm.exception.BizException;
+import com.jiuyescm.framework.fastdfs.client.StorageClient;
+import com.jiuyescm.framework.fastdfs.model.StorePath;
 
 /**
  * 计算异常数据监控
@@ -70,7 +73,10 @@ public class MaterialOutReportController {
     private ISystemCodeService systemCodeService;
     @Autowired
     private SequenceService sequenceService;
-    
+    @Autowired
+    private IMaterialReportService materialReportService;
+    @Autowired
+    private StorageClient storageClient;
     /**
      * 分页查询
      * @param page
@@ -83,20 +89,18 @@ public class MaterialOutReportController {
             param = new HashMap<String, Object>();
         }
        
-      
-    
-       /* PageInfo<ExceptionDetailVo> pageInfo = bmsCalcuExceptionService.query(param, page.getPageNo(), page.getPageSize());
+        PageInfo<MaterailOutReportVo> pageInfo = materialReportService.query(param, page.getPageNo(), page.getPageSize());
         if (pageInfo != null) {
             page.setEntities(pageInfo.getList());
             page.setEntityCount((int) pageInfo.getTotal());
-        }*/
+        }
     }
     
     /**
      * 导出
      * <功能描述>
      * 
-     * @author wangchen870
+     * @author
      * @date 2019年6月4日 下午5:36:49
      *
      * @param param
@@ -107,40 +111,27 @@ public class MaterialOutReportController {
         if (null == param) {
             return MessageConstant.QUERY_PARAM_NULL_MSG;
         }
-        if (param.get("startDate") == null) {
-            return "创建时间不能为空!";
+        if(param.get("year")==null){
+            return "年份不能为空";
         }
-        if (param.get("endDate") == null) {
-            return "结束时间不能为空!";
+        if(param.get("month")==null){
+            return "月份不能为空";
         }
-        
-        String today = "";
-        //给结束日期加一天
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat sd = new SimpleDateFormat("yyyyMMdd");
-            today = sd.format(new Date());
-            Calendar c1 = Calendar.getInstance();
-            Calendar c2 = Calendar.getInstance();
-            c1.setTime((Date) param.get("startDate"));
-            c2.setTime((Date) param.get("endDate"));
-            c2.add(Calendar.DAY_OF_MONTH, 1);
-            param.put("startDate", sdf.format(c1.getTime()));
-            param.put("endDate", sdf.format(c2.getTime()));
-        } catch (Exception e) {
-            logger.error("日期转换异常：", e);
-            throw new BizException("日期转换异常!");
-        }
-        
         try {
             FileExportTaskEntity entity = new FileExportTaskEntity();
-            entity.setStartTime(Timestamp.valueOf(param.get("startDate") + " 00:00:00"));
-            entity.setEndTime(Timestamp.valueOf(param.get("endDate")+ " 23:59:59"));
+            String year = param.get("year").toString();
+            String month = param.get("month").toString();
+            if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(month)) {
+                String startDateStr = year + "-" + month + "-01 00:00:00";
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date startDate = sdf.parse(startDateStr);
+                Date endDate = DateUtils.addMonths(startDate, 1);
+                entity.setStartTime(new Timestamp(startDate.getTime()));
+                entity.setEndTime(new Timestamp(endDate.getTime()));
+            }
+            entity.setTaskName(param.get("year").toString()+"年"+param.get("month").toString()+"月耗材统计");
             
-            String taskName = sequenceService.getBillNoOne(today, today, "000");
-            entity.setTaskName(taskName);
-            
-            entity.setTaskType(FileTaskTypeEnum.Calcu_Error.getCode());
+            entity.setTaskType(FileTaskTypeEnum.MATERIAL_OUT.getCode());
             entity.setTaskState(FileTaskStateEnum.BEGIN.getCode());
             entity.setProgress(0d);
             entity.setCreator(JAppContext.currentUserName());
@@ -201,21 +192,13 @@ public class MaterialOutReportController {
         String path = "";
         StopWatch sw = new StopWatch();
         sw.start();
-        
-        //如果存放上传文件的目录不存在就新建
-        SystemCodeEntity sc = getSystemCode("GLOABL_PARAM","EXPORT_CALCU_ERROR");
-        File storeFolder=new File(sc.getExtattr1());
-        if(!storeFolder.exists()){
-            storeFolder.mkdirs();
-        }
-        
-        logger.info("====计费异常数据导出：写入Excel begin.");
+            
+        logger.info("====耗材统计数据导出：写入Excel begin.");
         fileExportTaskService.updateExportTask(taskId, null, 30);
        
-        fileExportTaskService.updateExportTask(taskId, null, 70);
         // 计费异常数据导出
         try {
-            path = handBiz(param);
+            path = handBiz(param,taskId);
         } catch (Exception e) {
            logger.error(e.getMessage());
         }
@@ -241,35 +224,68 @@ public class MaterialOutReportController {
      * @param myparam
      * @throws Exception
      */
-    private String handBiz(Map<String, Object> myparam)throws Exception{
-        
+    private String handBiz(Map<String, Object> myparam,String taskId)throws Exception{
+        fileExportTaskService.updateExportTask(taskId,"", 40);
+
         IExcelExporter exporter = ExcelExporterFactory.createExporter(ExportConstants.SXSSF);
-        Sheet sheet =exporter.createSheetByAnno("计费异常数据",1,ExceptionDetailVo.class);
-
-        int pageNo = 1;
-        boolean doLoop = true;
-        while (doLoop) {            
-            PageInfo<ExceptionDetailVo> pageInfo = bmsCalcuExceptionService.query(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
-            if (null != pageInfo && pageInfo.getList().size() > 0) {
-                if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
-                    doLoop = false;
+        Sheet sheet =exporter.createSheetByAnno("耗材出库统计数据",1,MaterailOutReportVo.class);
+        
+        try {
+            int pageNo = 1;
+            boolean doLoop = true;
+            while (doLoop) {            
+                PageInfo<MaterailOutReportVo> pageInfo = materialReportService.query(myparam, pageNo, FileConstant.EXPORTPAGESIZE);
+                if (null != pageInfo && pageInfo.getList().size() > 0) {
+                    if (pageInfo.getList().size() < FileConstant.EXPORTPAGESIZE) {
+                        doLoop = false;
+                    }else {
+                        pageNo += 1; 
+                    }
                 }else {
-                    pageNo += 1; 
+                    doLoop = false;
                 }
-            }else {
-                doLoop = false;
-            }
-            
-            /*
-             * 新Excel塞数据方式
-             */
-            if (null != pageInfo && pageInfo.getList().size() > 0) { 
-                exporter.writeContentByAnno(sheet, pageInfo.getList());
-            }
-        }  
+                
+                /*
+                 * 新Excel塞数据方式
+                 */
+                if (null != pageInfo && pageInfo.getList().size() > 0) { 
+                    exporter.writeContentByAnno(sheet, pageInfo.getList());
+                }
+            }  
+        } catch (Exception e) {
+            // TODO: handle exception
+            logger.error("查询异常",e);
+        }
+        
+       
 
-        SystemCodeEntity sc = getSystemCode("GLOABL_PARAM","EXPORT_CALCU_ERROR");
-        return exporter.saveFile(sc.getExtattr1(), UUID.randomUUID().toString()+".xlsx");
+        fileExportTaskService.updateExportTask(taskId,null, 70);
+
+        //上传到Fastdfs
+        String filePath = "";
+        InputStream inputStream = null;
+        ByteArrayOutputStream out = null;
+
+        try {
+            out = new ByteArrayOutputStream();
+            exporter.getWorkBook().write(out);
+            inputStream = new ByteArrayInputStream(out.toByteArray());
+            StorePath storePath = storageClient.uploadFile(inputStream, inputStream.available(), "xlsx");
+            filePath = storePath.getFullPath();
+        } catch (Exception e) {
+            logger.error("上传到Fastdfs失败", e);
+            fileExportTaskService.updateExportTask(taskId,FileTaskStateEnum.FAIL.getCode(), 99);
+            return "";
+        } finally {
+            if (null != inputStream) {
+                inputStream.close();
+            }
+            if (null != out) {
+                out.close();
+            }
+        }
+        fileExportTaskService.updateExportTask(taskId,null, 80);
+        return filePath;
     }
     
     /**
