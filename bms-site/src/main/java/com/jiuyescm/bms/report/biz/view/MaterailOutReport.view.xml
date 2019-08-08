@@ -39,48 +39,48 @@
     <DataType name="dtMaterailOutReportVo">
       <Property name="creationType">com.jiuyescm.bms.report.vo.MaterailOutReportVo</Property>
       <PropertyDef name="customerId">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="customerName">
-        <Property/>
+        <Property></Property>
         <Property name="label">商家名称</Property>
       </PropertyDef>
       <PropertyDef name="warehouseCode">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="warehouseName">
-        <Property/>
+        <Property></Property>
         <Property name="label">仓库</Property>
       </PropertyDef>
       <PropertyDef name="orderCount">
         <Property name="dataType">Integer</Property>
         <Property name="label">订单数</Property>
       </PropertyDef>
-      <PropertyDef name="createMonth">
-        <Property/>
+      <PropertyDef name="billMonth">
+        <Property></Property>
         <Property name="label">月份</Property>
       </PropertyDef>
-      <PropertyDef name="platicBoxJY01">
+      <PropertyDef name="jyPmx01">
         <Property name="dataType">Integer</Property>
         <Property name="label">九曳1号泡沫箱</Property>
       </PropertyDef>
-      <PropertyDef name="platicBoxJY02">
+      <PropertyDef name="jyPmx02">
         <Property name="dataType">Integer</Property>
         <Property name="label">九曳2号泡沫箱</Property>
       </PropertyDef>
-      <PropertyDef name="platicBoxJY03">
+      <PropertyDef name="jyPmx03">
         <Property name="dataType">Integer</Property>
         <Property name="label">九曳3号泡沫箱</Property>
       </PropertyDef>
-      <PropertyDef name="platicBoxJY04">
+      <PropertyDef name="jyPmx04">
         <Property name="dataType">Integer</Property>
         <Property name="label">九曳4号泡沫箱</Property>
       </PropertyDef>
-      <PropertyDef name="platicBoxKM01">
+      <PropertyDef name="kmPmx001">
         <Property name="dataType">Integer</Property>
         <Property name="label">昆明1号泡沫箱</Property>
       </PropertyDef>
-      <PropertyDef name="platicBoxKM02">
+      <PropertyDef name="kmPmx002">
         <Property name="dataType">Integer</Property>
         <Property name="label">水果箱</Property>
       </PropertyDef>
@@ -251,51 +251,56 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onReady">var date=new Date;  &#xD;
+var year=date.getFullYear();  &#xD;
+var month=date.getMonth();&#xD;
+if(month==0){&#xD;
+	month=12;&#xD;
+	year=year-1;&#xD;
+}&#xD;
+view.get(&quot;#formCondition.entity&quot;).set(&quot;year&quot;,year);&#xD;
+view.get(&quot;#formCondition.entity&quot;).set(&quot;month&quot;,month);</ClientEvent>
     <ToolBar>
       <DataPilot>
         <Property name="dataSet">dsMaterailOutReportVo</Property>
         <Property name="itemCodes">pages,pageSize</Property>
       </DataPilot>
       <ToolBarButton id="btnQuery">
-        <ClientEvent name="onClick">var data = view.get(&quot;#dsCalcuExceptionQuery.data&quot;).current;&#xD;
-var startDate = data.get(&quot;startDate&quot;).getFullYear() + &quot;-&quot; + data.get(&quot;startDate&quot;).getMonth();&#xD;
-var endDate = data.get(&quot;endDate&quot;).getFullYear() + &quot;-&quot; + data.get(&quot;endDate&quot;).getMonth();&#xD;
-if(data.get(&quot;startDate&quot;) > data.get(&quot;endDate&quot;)){&#xD;
-	dorado.MessageBox.alert(&quot;开始日期不能大于结束日期!&quot;);&#xD;
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+if(isNullOrEmpty(data.get(&quot;year&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;年份不能为空!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-if(startDate != endDate){&#xD;
-	dorado.MessageBox.alert(&quot;请查询同一月份的数据!&quot;);&#xD;
+if(isNullOrEmpty(data.get(&quot;month&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;月份不能为空!&quot;);&#xD;
 	return;&#xD;
-}else{&#xD;
-	with (view.get(&quot;#dsCalcuExceptionEntity&quot;)){&#xD;
-		set(&quot;parameter&quot;, data);&#xD;
-		flushAsync();&#xD;
-	}&#xD;
-}</ClientEvent>
+}&#xD;
+&#xD;
+with (view.get(&quot;#dsMaterailOutReportVo&quot;)){&#xD;
+	set(&quot;parameter&quot;, data);&#xD;
+	flushAsync();&#xD;
+}	</ClientEvent>
         <Property name="caption">查询</Property>
         <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
       </ToolBarButton>
       <Separator/>
       <ToolBarButton id="btnExport">
-        <ClientEvent name="onClick">var data = view.get(&quot;#dsCalcuExceptionQuery.data&quot;).current;&#xD;
-var startDate = data.get(&quot;startDate&quot;).getFullYear() + &quot;-&quot; + data.get(&quot;startDate&quot;).getMonth();&#xD;
-var endDate = data.get(&quot;endDate&quot;).getFullYear() + &quot;-&quot; + data.get(&quot;endDate&quot;).getMonth();&#xD;
-if(data.get(&quot;startDate&quot;) > data.get(&quot;endDate&quot;)){&#xD;
-	dorado.MessageBox.alert(&quot;开始日期不能大于结束日期!&quot;);&#xD;
+        <ClientEvent name="onClick">var data = view.get(&quot;#dsCondition.data&quot;).current;&#xD;
+if(isNullOrEmpty(data.get(&quot;year&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;年份不能为空!&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-if(startDate != endDate){&#xD;
-	dorado.MessageBox.alert(&quot;请导出同一月份的数据!&quot;);&#xD;
+if(isNullOrEmpty(data.get(&quot;month&quot;))){&#xD;
+	dorado.MessageBox.alert(&quot;月份不能为空!&quot;);&#xD;
 	return;&#xD;
-}else{&#xD;
-	var data = view.get(&quot;#dsCalcuExceptionQuery.data&quot;).current;&#xD;
-	view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,data).execute(&#xD;
-		function(result){&#xD;
-			dorado.MessageBox.alert(result);&#xD;
-		}&#xD;
-	);&#xD;
-}</ClientEvent>
+}&#xD;
+&#xD;
+&#xD;
+view.get(&quot;#bizDownAction&quot;).set(&quot;parameter&quot;,data).execute(&#xD;
+	function(result){&#xD;
+		dorado.MessageBox.alert(result);&#xD;
+	}&#xD;
+);</ClientEvent>
         <Property name="caption">导出</Property>
         <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
       </ToolBarButton>
@@ -303,7 +308,7 @@ if(startDate != endDate){&#xD;
         <ClientEvent name="onClick">with (view.get(&quot;#dsFileExportTaskList&quot;)){&#xD;
 	//定义查询条件json结构&#xD;
 	var queryJson={&#xD;
-		taskType:'calcu_error'&#xD;
+		taskType:'material_out'&#xD;
 	};&#xD;
 	set(&quot;parameter&quot;, queryJson);&#xD;
 	flushAsync();&#xD;
@@ -370,9 +375,10 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
         <Property name="readOnly">true</Property>
         <IndicatorColumn/>
         <RowNumColumn/>
-        <DataColumn name="createMonth">
-          <Property name="property">createMonth</Property>
+        <DataColumn>
+          <Property name="property">billMonth</Property>
           <Property name="width">70</Property>
+          <Property name="name">billMonth</Property>
         </DataColumn>
         <DataColumn name="customerName">
           <Property name="property">customerName</Property>
@@ -386,29 +392,35 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
           <Property name="property">orderCount</Property>
           <Property name="width">80</Property>
         </DataColumn>
-        <DataColumn name="platicBoxJY01">
-          <Property name="property">platicBoxJY01</Property>
+        <DataColumn>
+          <Property name="property">jyPmx01</Property>
           <Property name="width">100</Property>
+          <Property name="name">jyPmx01</Property>
         </DataColumn>
-        <DataColumn name="platicBoxJY02">
-          <Property name="property">platicBoxJY02</Property>
+        <DataColumn>
+          <Property name="property">jyPmx02</Property>
           <Property name="width">100</Property>
+          <Property name="name">jyPmx02</Property>
         </DataColumn>
-        <DataColumn name="platicBoxJY03">
-          <Property name="property">platicBoxJY03</Property>
+        <DataColumn>
+          <Property name="property">jyPmx03</Property>
           <Property name="width">100</Property>
+          <Property name="name">jyPmx03</Property>
         </DataColumn>
-        <DataColumn name="platicBoxJY04">
-          <Property name="property">platicBoxJY04</Property>
+        <DataColumn>
+          <Property name="property">jyPmx04</Property>
           <Property name="width">100</Property>
+          <Property name="name">jyPmx04</Property>
         </DataColumn>
-        <DataColumn name="platicBoxKM01">
-          <Property name="property">platicBoxKM01</Property>
+        <DataColumn>
+          <Property name="property">kmPmx001</Property>
           <Property name="width">100</Property>
+          <Property name="name">kmPmx001</Property>
         </DataColumn>
-        <DataColumn name="platicBoxKM02">
-          <Property name="property">platicBoxKM02</Property>
+        <DataColumn>
+          <Property name="property">kmPmx002</Property>
           <Property name="width">100</Property>
+          <Property name="name">kmPmx002</Property>
         </DataColumn>
         <DataColumn name="cushioningMaterial">
           <Property name="property">cushioningMaterial</Property>
@@ -664,7 +676,7 @@ if(taskState==2){&#xD;
       <Tools/>
     </Dialog>
     <DownloadAction id="fileExportDownAction">
-      <Property name="fileProvider">fileExportTaskController#exportDetail</Property>
+      <Property name="fileProvider">fileExportTaskController#exportForFastdfs</Property>
       <Property name="caption">导出</Property>
     </DownloadAction>
     <UpdateAction id="delExportTaskAction">
