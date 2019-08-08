@@ -272,6 +272,9 @@
 			    bms_asyn_calcu_task
 			WHERE
 			    cre_month = #{creMonth}
+			 <if test="customerId != null and customerId!=''">
+			 and customer_id=#{customerId}
+			 </if>   
 			<if test="customerIds != null and customerIds!=''">
 			and customer_id in
 			<foreach collection="customerIds" index="index" item="item" open="(" separator="," close=")">
@@ -316,10 +319,13 @@
 			<if test="quoteMissCount != null" >quote_miss_count=#{quoteMissCount,jdbcType=INTEGER},</if>
 			<if test="noExeCount != null" >no_exe_count=#{noExeCount,jdbcType=INTEGER},</if>
 			<if test="taskRate != null" >task_rate=#{taskRate,jdbcType=INTEGER},</if>
+			<if test="creTime != null" >cre_time=#{creTime,jdbcType=TIMESTAMP},</if>
 			<if test="processTime != null" >process_time=#{processTime,jdbcType=TIMESTAMP},</if>
 			<if test="finishTime != null" >finish_time=#{finishTime,jdbcType=TIMESTAMP},</if>
 			<if test="remark != null" >remark=#{remark,jdbcType=VARCHAR},</if>
 			<if test="newid != null" >task_id=#{newid,jdbcType=VARCHAR},</if>
+			<if test="crePerson != null" >cre_person=#{crePerson,jdbcType=VARCHAR},</if>
+			<if test="crePersonId != null" >cre_person_id=#{crePersonId,jdbcType=VARCHAR},</if>
 			<if test="totalAmount != null" >total_amount=#{totalAmount,jdbcType=DECIMAL},</if>
 			<if test="finTimeIsNull != null and finTimeIsNull!=''" >finish_time = null,</if>
 			<if test="procTimeIsNull != null and procTimeIsNull!=''" >process_time = null,</if>
