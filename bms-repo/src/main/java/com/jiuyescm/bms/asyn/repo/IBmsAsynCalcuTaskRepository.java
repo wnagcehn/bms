@@ -105,7 +105,7 @@ public interface IBmsAsynCalcuTaskRepository {
 	long queryMainSeCount(Map<String, Object> condition, int pageNo,
 			int pageSize);
 
-	List<BmsAsynCalcuTaskEntity> queryInfoByCustomerIdSe(Map<String, Object> map);
+	PageInfo <BmsAsynCalcuTaskEntity> queryInfoByCustomerIdSe(Map<String, Object> map,int pageNo, int pageSize);
 
 	
 }

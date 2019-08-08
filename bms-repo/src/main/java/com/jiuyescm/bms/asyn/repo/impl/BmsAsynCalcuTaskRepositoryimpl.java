@@ -89,9 +89,12 @@ public class BmsAsynCalcuTaskRepositoryimpl extends MyBatisDao<BmsAsynCalcuTaskE
 	
 	
 	@Override
-	public List<BmsAsynCalcuTaskEntity> queryInfoByCustomerIdSe(Map<String, Object> map){
-		List<BmsAsynCalcuTaskEntity> list = selectList("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryInfoByCustomerIdSe", map);
-		return list;
+	public PageInfo<BmsAsynCalcuTaskEntity> queryInfoByCustomerIdSe(Map<String, Object> map,int pageNo, int pageSize){
+		List<BmsAsynCalcuTaskEntity> list = selectList("com.jiuyescm.bms.asyn.entity.BmsAsynCalcuTaskMapper.queryInfoByCustomerIdSe", map,new RowBounds(
+                pageNo, pageSize));
+		PageInfo<BmsAsynCalcuTaskEntity> page=new PageInfo<BmsAsynCalcuTaskEntity>(list);
+		
+		return page;
 	}
 	
 	@Override
