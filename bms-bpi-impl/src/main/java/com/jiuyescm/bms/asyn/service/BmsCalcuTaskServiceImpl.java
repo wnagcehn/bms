@@ -228,6 +228,8 @@ public class BmsCalcuTaskServiceImpl implements IBmsCalcuTaskService {
 					entity.setCreTime(new Timestamp(now.getTime()));
 					entity.setFinTimeIsNull("null");
 					entity.setProcTimeIsNull("null");
+					entity.setCrePerson(vo.getCrePerson());
+					entity.setCrePersonId(vo.getCrePersonId());
 					bmsAsynCalcuTaskRepositoryimpl.updateByTaskId(entity);
 					// 写入日志表
 					saveTaskLog(vo);
