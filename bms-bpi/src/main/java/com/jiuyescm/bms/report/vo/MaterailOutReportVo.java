@@ -55,13 +55,13 @@ public class MaterailOutReportVo  implements IEntity{
     @ExcelField(title = "防水袋", num = 17)
     private Integer waterproofBox;      //防水袋
     @ExcelField(title = "保温袋", num = 18)
-    private Integer warnBox;            //保温袋
+    private Integer warmBox;            //保温袋
     @ExcelField(title = "快递袋", num = 19)
     private Integer expressBox;         //快递袋
     @ExcelField(title = "好字帖", num = 20)
     private Integer goodCharacter;      //好字帖
     @ExcelField(title = "胶带", num = 21)
-    private Integer adhesiveType;       //胶带
+    private Integer adhesiveTape;       //胶带
     @ExcelField(title = "问候卡", num = 22)
     private Integer greetingCard;       //问候卡
     @ExcelField(title = "面单", num = 23)
@@ -256,19 +256,6 @@ public class MaterailOutReportVo  implements IEntity{
         this.waterproofBox = waterproofBox;
     }
     
-    /**
-     * 保温袋
-     */
-    public Integer getWarnBox() {
-        return warnBox;
-    }
-    
-    /**
-     * 保温袋
-     */
-    public void setWarnBox(Integer warnBox) {
-        this.warnBox = warnBox;
-    }
     
     /**
      * 快递袋
@@ -296,20 +283,6 @@ public class MaterailOutReportVo  implements IEntity{
      */
     public void setGoodCharacter(Integer goodCharacter) {
         this.goodCharacter = goodCharacter;
-    }
-    
-    /**
-     * 胶带
-     */
-    public Integer getAdhesiveType() {
-        return adhesiveType;
-    }
-    
-    /**
-     * 胶带
-     */
-    public void setAdhesiveType(Integer adhesiveType) {
-        this.adhesiveType = adhesiveType;
     }
     
     /**
@@ -474,6 +447,24 @@ public class MaterailOutReportVo  implements IEntity{
     public void setKmPmx002(Integer kmPmx002) {
         this.kmPmx002 = kmPmx002;
     }
+
+    public Integer getWarmBox() {
+        return warmBox;
+    }
+
+    public void setWarmBox(Integer warmBox) {
+        this.warmBox = warmBox;
+    }
+
+    public Integer getAdhesiveTape() {
+        return adhesiveTape;
+    }
+
+    public void setAdhesiveTape(Integer adhesiveTape) {
+        this.adhesiveTape = adhesiveTape;
+    }
+    
+    
 }
 
 

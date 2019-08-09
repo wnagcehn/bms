@@ -55,8 +55,8 @@ import com.jiuyescm.framework.fastdfs.model.StorePath;
  * 计算异常数据监控
  * <功能描述>
  * 
- * @author wangchen870
- * @date 2019年6月4日 上午11:01:39
+ * @author zhaofeng
+ * @date 2019年8月9日 上午11:01:39
  */
 @Controller("materialOutReportController")
 public class MaterialOutReportController {
@@ -172,7 +172,7 @@ public class MaterialOutReportController {
             return ExceptionConstant.ASYN_BIZ_EXCEL_EX_MSG;
         }
 
-        return FileTaskTypeEnum.Calcu_Error.getDesc() + MessageConstant.EXPORT_TASK_BIZ_MSG;
+        return FileTaskTypeEnum.MATERIAL_OUT.getDesc() + MessageConstant.EXPORT_TASK_BIZ_MSG;
     }
     
     /**

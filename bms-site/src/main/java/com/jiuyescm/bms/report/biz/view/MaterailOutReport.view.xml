@@ -112,7 +112,7 @@
         <Property name="dataType">Integer</Property>
         <Property name="label">防水袋</Property>
       </PropertyDef>
-      <PropertyDef name="warnBox">
+      <PropertyDef name="warmBox">
         <Property name="dataType">Integer</Property>
         <Property name="label">保温袋</Property>
       </PropertyDef>
@@ -124,7 +124,7 @@
         <Property name="dataType">Integer</Property>
         <Property name="label">好字帖</Property>
       </PropertyDef>
-      <PropertyDef name="adhesiveType">
+      <PropertyDef name="adhesiveTape">
         <Property name="dataType">Integer</Property>
         <Property name="label">胶带</Property>
       </PropertyDef>
@@ -450,8 +450,8 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
           <Property name="property">waterproofBox</Property>
           <Property name="width">80</Property>
         </DataColumn>
-        <DataColumn name="warnBox">
-          <Property name="property">warnBox</Property>
+        <DataColumn name="warmBox">
+          <Property name="property">warmBox</Property>
           <Property name="width">80</Property>
         </DataColumn>
         <DataColumn name="expressBox">
@@ -462,8 +462,8 @@ view.get(&quot;#fileExportTaskDialog&quot;).show();</ClientEvent>
           <Property name="property">goodCharacter</Property>
           <Property name="width">80</Property>
         </DataColumn>
-        <DataColumn name="adhesiveType">
-          <Property name="property">adhesiveType</Property>
+        <DataColumn name="adhesiveTape">
+          <Property name="property">adhesiveTape</Property>
           <Property name="width">80</Property>
         </DataColumn>
         <DataColumn name="greetingCard">
