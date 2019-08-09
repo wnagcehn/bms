@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+			
+		<dubbo:reference id="bmsProductsMaterialService" interface="com.jiuyescm.bms.correct.service.IBmsProductsMaterialService"/>
+		<dubbo:reference id="bmsProductsWeightService" interface="com.jiuyescm.bms.correct.service.IBmsProductsWeightService"/>		 
+		<dubbo:reference id="bmsCorrectAsynTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsCorrectAsynTaskService"/>
+		<dubbo:reference id="bmsDiscountAsynTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsDiscountAsynTaskService"/>
+		<dubbo:reference id="bmsDiscountService" interface="com.jiuyescm.bms.discount.service.IBmsDiscountService"/>	 
+		<dubbo:reference id="bmsQuoteDispatchDetailService" interface="com.jiuyescm.bms.quotation.dispatch.service.IBmsQuoteDispatchDetailService"/>
+		<dubbo:reference id="bmsCalcuTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService"/>
+		<dubbo:reference id="bmsDiscountCalcuService" interface="com.jiuyescm.bms.calculate.api.IBmsDiscountCalcuService"/>
+</beans> 

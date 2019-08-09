@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.baidu.disconf.client.usertools.DisconfDataGetter;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
-import com.jiuyescm.bms.appconfig.DruidConfig;
 import com.jiuyescm.bms.appconfig.TenantConfig;
 import com.jiuyescm.bms.calculate.api.IBmsCalcuExceptionService;
 import com.jiuyescm.bms.calculate.vo.ExceptionDetailVo;
@@ -32,14 +32,13 @@ import com.jiuyescm.exception.BizException;
 public class BmsCalcuExceptionServiceImpl implements IBmsCalcuExceptionService {
 
     private Logger logger = LoggerFactory.getLogger(BmsCalcuExceptionServiceImpl.class);
-    
-    @Autowired private DruidConfig druidConfig;
-    
+        
     @Autowired private TenantConfig tenantConfig;
     
     @Override
     public PageInfo<ExceptionDetailVo> query(Map<String, Object> condition, int pageNo, int pageSize) throws BizException {
-        String url = druidConfig.getUrl();
+        Map<String, Object> disconf=DisconfDataGetter.getByFile("druid.properties");      
+        String url = (String) disconf.get("druid.materailout.url");
         condition.put("pageNo", pageNo);
         condition.put("pageSize", pageSize);
         String json = JSON.toJSONString(condition);

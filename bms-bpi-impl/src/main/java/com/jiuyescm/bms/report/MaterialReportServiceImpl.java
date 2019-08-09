@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.baidu.disconf.client.usertools.DisconfDataGetter;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.jiuyescm.bms.report.month.entity.MaterialImportReportEntity;
@@ -133,7 +134,10 @@ public class MaterialReportServiceImpl implements IMaterialReportService {
 
     @Override
     public PageInfo<MaterailOutReportVo> query(Map<String, Object> condition, int pageNo, int pageSize) throws BizException {
-        String url = "http://192.168.17.39:8080/bms_materail/query_list";
+        
+        Map<String, Object> disconf=DisconfDataGetter.getByFile("druid.properties");
+        
+        String url = (String) disconf.get("druid.materailout.url");
         condition.put("pageNo", pageNo);
         condition.put("pageSize", pageSize);
         Integer billYear = Integer.valueOf(condition.get("year").toString());
