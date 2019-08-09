@@ -97,30 +97,11 @@
 			<groupId>com.github.pagehelper</groupId>
 			<artifactId>pagehelper</artifactId>
 		</dependency>
-		<!-- Dorado -->
+		<!-- jackson -->
 		<dependency>
-			<groupId>com.bstek.dorado</groupId>
-			<artifactId>dorado-uploader</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-jcl</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>slf4j-jdk14</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.bstek.dorado</groupId>
-			<artifactId>dorado-core</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>javassist</artifactId>
-					<groupId>javassist</groupId>
-				</exclusion>
-			</exclusions>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>xml-apis</groupId>
@@ -402,7 +383,7 @@
 		<resources>
 			<resource>
 				<targetPath>${project.build.directory}/classes</targetPath>
-				<directory>src/main/resources</directory>
+				<directory>src/main/resources/conf</directory>
 				<excludes>
 					<exclude>dev/*</exclude>
 					<exclude>qa/*</exclude>
@@ -411,7 +392,14 @@
 				</excludes>
 			</resource>
 			<resource>
-				<directory>src/main/resources/${profiles.active}</directory>
+				<directory>src/main/resources/conf/${profiles.active}</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>spring/*</include>
+					<include>dubbo/*</include>
+				</includes>
 			</resource>
 		</resources>
 		<plugins>

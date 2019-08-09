@@ -55,7 +55,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.jiuyescm.framework</groupId>
+			<artifactId>disconf-client-ext</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 		  <groupId>com.jiuyescm.mdm</groupId>
 		  <artifactId>mdm-customer-api</artifactId>
