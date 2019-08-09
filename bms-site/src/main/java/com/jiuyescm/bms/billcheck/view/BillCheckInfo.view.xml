@@ -3443,8 +3443,8 @@ if(data.succ!=null){&#xD;
       <Tools/>
     </Dialog>
     <Dialog id="returnFollowDialog">
-      <ClientEvent name="onClose">view.id(&quot;dsReceiptFollow&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
-      <ClientEvent name="onHide">view.id(&quot;dsReceiptFollow&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+      <ClientEvent name="onClose">view.id(&quot;dsReceiptFollow&quot;).getData(&quot;#&quot;).cancel();&#xD;
+</ClientEvent>
       <Property name="caption">回款反馈</Property>
       <Property name="width">400</Property>
       <Property name="height">400</Property>
@@ -3490,7 +3490,8 @@ view.get(&quot;#returnFollowAction&quot;).execute(function(result){&#xD;
           <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
         </Button>
         <Button>
-          <ClientEvent name="onClick">view.get(&quot;#returnFollowDialog&quot;).hide();</ClientEvent>
+          <ClientEvent name="onClick">view.id(&quot;dsReceiptFollow&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.get(&quot;#returnFollowDialog&quot;).hide();</ClientEvent>
           <Property name="caption">取消</Property>
           <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
         </Button>
