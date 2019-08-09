@@ -45,7 +45,7 @@ public enum FileTaskTypeEnum {
 	Calcu_Error("calcu_error", "计费异常数据下载"),
 	BIZ_BMS_OUTSTOCK("biz_bms_outstock","BMS原始出库数据"),
 	FEES_CLAIM("fees_claim","理赔费用"),
-	MATERIAL_OUT("material_out", "耗材出库统计数据下载"),
+	MATERIAL_OUT("material_out", "耗材出库统计"),
 	BIZ_WMS_OUTSTOCK("biz_wms_outstock","WMS原始结算数据");
 	private String code;
 	private String desc;
