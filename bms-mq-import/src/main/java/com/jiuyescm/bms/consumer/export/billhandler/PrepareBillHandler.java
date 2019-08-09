@@ -2261,80 +2261,87 @@ public class PrepareBillHandler {
             }
             if (flag) {
                 // 检查耗材类型
-                String marterialType = getMaterialType(materialInfoList,
-                        materialEntity.getProductNo());
-                if (matchMap.containsKey(marterialType + "_name")) {
-                    matchMap.put(marterialType + "_name",
-                            matchMap.get(marterialType + "_name") 
-                                    + (materialEntity.getProductName() == null ? ""
-                                    : ","+materialEntity.getProductName()));
-                    
-                    matchMap.put(marterialType + "_code",
-                            matchMap.get(marterialType + "_code") 
-                            + (materialEntity.getProductNo() == null ? ""
-                            : ","+materialEntity.getProductNo()));
-                    matchMap.put(marterialType + "_type",
-                            matchMap.get(marterialType + "_type") 
-                            + (materialEntity.getSpecDesc() == null ? ""
-                            : ","+materialEntity.getSpecDesc()));
-                    matchMap.put(marterialType + "_unitprice",
-                            matchMap.get(marterialType + "_unitprice") 
-                            + (materialEntity.getUnitPrice() == null ? ""
-                            : ","+Double.valueOf(materialEntity.getUnitPrice())));
-                    if (materialEntity.getProductNo().contains("GB")) {
-                        matchMap.put(
-                                marterialType + "_count",
-                                matchMap.get(marterialType + "_count")
-                                         + (materialEntity.getWeight() == null ? ""
-                                        : ","+ Double.valueOf(materialEntity.getWeight())));
-                    } else {
-                        matchMap.put(
-                                marterialType + "_count",
-                                matchMap.get(marterialType + "_count")
-                                        + (materialEntity.getQuantity() == null ? ""
-                                        : ","+Double.valueOf(materialEntity.getQuantity())));
-                    }
-                    matchMap.put(marterialType + "_cost",
-                            matchMap.get(marterialType + "_cost")
-                                    + (materialEntity.getCost() == null ? ""
-                                    : ","+Double.valueOf(materialEntity.getCost())));
-                    double totleCost = matchMap.get("totalCost") == null ? 0d
-                            : Double.parseDouble(matchMap.get("totalCost")
-                                    .toString());
-                    totleCost += materialEntity.getCost() == null ? 0d
-                            : Double.valueOf(materialEntity.getCost());
-                    matchMap.put("totalCost", totleCost);// 金额
-                } else {
-                    matchMap.put(marterialType + "_name",
-                            materialEntity.getProductName() == null ? ""
-                                    : materialEntity.getProductName());
-                    if (StringUtils.isNotBlank(materialEntity.getProductNo())) {
+                //包材组编号或标准包装方案编号不为空，则不显示状态5耗材
+                //包材方案编号或包材组编号均为空时，显示状态5耗材
+                if((StringUtils.isNotBlank(materialEntity.getPackPlanNo()) || StringUtils.isNotBlank(materialEntity.getPackGroupNo())) 
+                        && "5".equals(materialEntity.getIsCalculated())){
+
+                }else{  
+                    String marterialType = getMaterialType(materialInfoList,
+                            materialEntity.getProductNo());
+                    if (matchMap.containsKey(marterialType + "_name")) {
+                        matchMap.put(marterialType + "_name",
+                                matchMap.get(marterialType + "_name") 
+                                        + (materialEntity.getProductName() == null ? ""
+                                        : ","+materialEntity.getProductName()));
+                        
+                        matchMap.put(marterialType + "_code",
+                                matchMap.get(marterialType + "_code") 
+                                + (materialEntity.getProductNo() == null ? ""
+                                : ","+materialEntity.getProductNo()));
+                        matchMap.put(marterialType + "_type",
+                                matchMap.get(marterialType + "_type") 
+                                + (materialEntity.getSpecDesc() == null ? ""
+                                : ","+materialEntity.getSpecDesc()));
+                        matchMap.put(marterialType + "_unitprice",
+                                matchMap.get(marterialType + "_unitprice") 
+                                + (materialEntity.getUnitPrice() == null ? ""
+                                : ","+Double.valueOf(materialEntity.getUnitPrice())));
                         if (materialEntity.getProductNo().contains("GB")) {
-                            matchMap.put(marterialType + "_count",
-                                    materialEntity.getWeight() == null ? ""
-                                            : Double.valueOf(materialEntity.getWeight()));
+                            matchMap.put(
+                                    marterialType + "_count",
+                                    matchMap.get(marterialType + "_count")
+                                             + (materialEntity.getWeight() == null ? ""
+                                            : ","+ Double.valueOf(materialEntity.getWeight())));
                         } else {
-                            matchMap.put(marterialType + "_count",
-                                    materialEntity.getQuantity() == null ? ""
-                                            : Double.valueOf(materialEntity.getQuantity()));
+                            matchMap.put(
+                                    marterialType + "_count",
+                                    matchMap.get(marterialType + "_count")
+                                            + (materialEntity.getQuantity() == null ? ""
+                                            : ","+Double.valueOf(materialEntity.getQuantity())));
                         }
-                    }   
-                    matchMap.put(marterialType + "_code",
-                            materialEntity.getProductNo() == null?"":materialEntity.getProductNo());
-                    matchMap.put(marterialType + "_type",
-                            materialEntity.getSpecDesc());
-                    matchMap.put(marterialType + "_unitprice",
-                            materialEntity.getUnitPrice() == null ? ""
-                                    : Double.valueOf(materialEntity.getUnitPrice()));
-                    matchMap.put(marterialType + "_cost", materialEntity
-                            .getCost() == null ? "" : Double.valueOf(materialEntity.getCost()));
-                    double totleCost = matchMap.get("totalCost") == null ? 0d
-                            : Double.parseDouble(matchMap.get("totalCost")
-                                    .toString());
-                    totleCost += materialEntity.getCost() == null ? 0d
-                            : materialEntity.getCost();
-                    matchMap.put("totalCost", totleCost);// 金额
-                }
+                        matchMap.put(marterialType + "_cost",
+                                matchMap.get(marterialType + "_cost")
+                                        + (materialEntity.getCost() == null ? ""
+                                        : ","+Double.valueOf(materialEntity.getCost())));
+                        double totleCost = matchMap.get("totalCost") == null ? 0d
+                                : Double.parseDouble(matchMap.get("totalCost")
+                                        .toString());
+                        totleCost += materialEntity.getCost() == null ? 0d
+                                : Double.valueOf(materialEntity.getCost());
+                        matchMap.put("totalCost", totleCost);// 金额
+                    } else {
+                        matchMap.put(marterialType + "_name",
+                                materialEntity.getProductName() == null ? ""
+                                        : materialEntity.getProductName());
+                        if (StringUtils.isNotBlank(materialEntity.getProductNo())) {
+                            if (materialEntity.getProductNo().contains("GB")) {
+                                matchMap.put(marterialType + "_count",
+                                        materialEntity.getWeight() == null ? ""
+                                                : Double.valueOf(materialEntity.getWeight()));
+                            } else {
+                                matchMap.put(marterialType + "_count",
+                                        materialEntity.getQuantity() == null ? ""
+                                                : Double.valueOf(materialEntity.getQuantity()));
+                            }
+                        }   
+                        matchMap.put(marterialType + "_code",
+                                materialEntity.getProductNo() == null?"":materialEntity.getProductNo());
+                        matchMap.put(marterialType + "_type",
+                                materialEntity.getSpecDesc());
+                        matchMap.put(marterialType + "_unitprice",
+                                materialEntity.getUnitPrice() == null ? ""
+                                        : Double.valueOf(materialEntity.getUnitPrice()));
+                        matchMap.put(marterialType + "_cost", materialEntity
+                                .getCost() == null ? "" : Double.valueOf(materialEntity.getCost()));
+                        double totleCost = matchMap.get("totalCost") == null ? 0d
+                                : Double.parseDouble(matchMap.get("totalCost")
+                                        .toString());
+                        totleCost += materialEntity.getCost() == null ? 0d
+                                : materialEntity.getCost();
+                        matchMap.put("totalCost", totleCost);// 金额
+                    }
+                }          
             } else {
                 Map<String, Object> dataItem = new HashMap<String, Object>();
                 dataItem.put("warehouseName",

@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,6 +157,11 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
         Map<String,DiscountDispatchReportVo> reportMap=new HashMap<String,DiscountDispatchReportVo>();
         try {   
             Map<String,Object> map=new HashMap<>();
+            map.put("startTime", task.getStartDate());
+            map.put("endTime", task.getEndDate());
+            map.put("customerId", task.getCustomerId());
+            map.put("carrierId", task.getCarrierId());
+            
             List<DiscountDispatchReportVo> newDiscountList=new ArrayList<>();
             //特殊物流产品类型
             List<String> specialServiceType=getService(task.getCarrierId());
@@ -173,10 +180,6 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
             //所有需要折扣的物流产品类型对应得总单量、总金额
             Map<String,BmsDiscountAccountEntity> accountMap=new HashMap<>();
             if(serviceList.size()>0){
-                map.put("startTime", task.getStartDate());
-                map.put("endTime", task.getEndDate());
-                map.put("customerId", task.getCustomerId());
-                map.put("carrierId", task.getCarrierId());
                 map.put("serviceList", serviceList);
                 List<BmsDiscountAccountEntity> accountList=bmsDiscountRepository.queryServiceAccount(map);
                 for(BmsDiscountAccountEntity en:accountList){
@@ -184,7 +187,7 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                 }
             }
 
-            
+        
             //如果折扣报价中有物流产品类型为空时，需要统计除特殊物流物流产品类型以外的总单量、总金额
             if(flag){
                 map.put("serviceList", null);
@@ -192,6 +195,9 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                 BmsDiscountAccountEntity discountAccountVo=bmsDiscountRepository.queryAccount(map);
                 accountMap.put("", discountAccountVo);
             }
+            
+            logger.info(task.getTaskId()+"所有物流产品类型对应得总单量、总金额"+JSONObject.fromObject(accountMap));
+
       
             //循环所有折扣报价，拼接新的折扣报价
             for(ContractDiscountConfigVo discount:discountList){
@@ -207,7 +213,7 @@ public class BmsDiscountCalcuServiceImpl implements IBmsDiscountCalcuService {
                         count=new BigDecimal(account.getAmount());
                     }
                     //如果匹配了
-                    if(count.compareTo(discount.getLowerLimit())>=0 && discount.getUpperLimit().compareTo(count)>0){                        
+                    if(count.compareTo(discount.getLowerLimit())>=0 && discount.getUpperLimit().compareTo(count)>0){  
                         DiscountQuoteVo quotevo=new DiscountQuoteVo();
                         quotevo.setId(discount.getId());
                         if(discount.getTotalDiscountPrice()!=null){

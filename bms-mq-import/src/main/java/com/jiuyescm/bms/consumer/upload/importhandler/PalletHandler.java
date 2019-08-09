@@ -109,6 +109,8 @@ public class PalletHandler {
     List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
     private int roNo = 1;
     
+    //抬头校验标识
+    private boolean titleCheck = true;    
     
     public void handImportFile(final String taskId) throws Exception{
         //开始处理，更新状态
@@ -167,6 +169,7 @@ public class PalletHandler {
                         }
                         logger.info(msg);
                         bmsMaterialImportTaskCommon.setTaskStatus(taskId, 35, FileAsynTaskStatusEnum.FAIL.getCode(), msg);
+                        titleCheck = false;
                         return;
                     }
                     logger.info("任务ID【{}】 -> 表头校验完成，准备读取Excel内容……",taskId); 
@@ -175,6 +178,9 @@ public class PalletHandler {
 
                 @Override
                 public void read(DataRow dr) {
+                    if (!titleCheck) {
+                        return;
+                    }
                     //行错误信息
                     String errorMsg=""; 
                     
@@ -212,6 +218,9 @@ public class PalletHandler {
 
                 @Override
                 public void finish() {  
+                    if (!titleCheck) {
+                        return;
+                    }
                     bmsMaterialImportTaskCommon.setTaskProcess(taskId, 75);
                     //保存数据到临时表
                     if(errorMap.size()==0){
@@ -224,11 +233,16 @@ public class PalletHandler {
 
                 @Override
                 public void error(Exception ex) {
-                    // TODO Auto-generated method stub
-                    
+                    if (!titleCheck) {
+                        return;
+                    }
                 }
                 
             });
+            
+            if (!titleCheck) {
+                return;
+            }
             
             //更新文件读取行数
             if(sheet.getRowCount()<=0){

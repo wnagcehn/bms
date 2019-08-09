@@ -248,7 +248,7 @@ public class BmsDiscountAsynTaskServiceImpl implements IBmsDiscountAsynTaskServi
         
         //创建时间
         PubCustomerVo customer = customerDictService.queryById(customerId);
-        if(customer.getContractAttr()==2){
+        if(customer!=null && customer.getContractAttr()==2){
             try {
                 ContractDiscountQueryVo queryVo=new ContractDiscountQueryVo();
                 queryVo.setCustomerId(customerId);
