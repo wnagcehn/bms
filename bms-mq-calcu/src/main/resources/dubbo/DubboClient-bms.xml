@@ -7,32 +7,19 @@
         http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         ">
         
-		<dubbo:reference interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService"
-				version="1.0.0" id="bmsCalcuTaskService" timeout="1200000" check="false"/>
-				
-		<dubbo:reference interface="com.jiuyescm.bms.calculate.api.IBmsCalcuService"
-				version="1.0.0" id="bmsCalcuService" timeout="1200000" check="false"/>
-				
-		<dubbo:reference id="bmsGroupService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupService" 
-		 version="1.0.0"/>
-		<dubbo:reference id="bmsGroupUserService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupUserService" 
-		 version="1.0.0"/>
-	    <dubbo:reference id="reportCustomerDailyIncomeService" interface="com.jiuyescm.bms.report.service.IReportCustomerDailyIncomeService" 
-		 version="1.0.0"/>
-	    <dubbo:reference id="bmsGroupSubjectService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService" 
-		 version="1.0.0"/>
-		<dubbo:reference id="bmsGroupCustomerService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService" 
-		 version="1.0.0"/>
-		<dubbo:reference id="bmsGroupChargeunitService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupChargeunitService" 
-		 version="1.0.0"/>
-		<dubbo:reference id="bmsWarehouseConfigService" interface="com.jiuyescm.bms.base.config.service.IBmsWarehouseConfigService" 
-		 version="1.0.0"/>
-		<dubbo:reference id="whAddValueService" interface="com.jiuyescm.bms.whAddValue.service.IWhAddValueService" 
-		 version="1.0.0"/>
-		 <dubbo:reference id="materialDictService" interface="com.jiuyescm.bms.base.dict.api.IMaterialDictService" 
-		 version="1.0.0"/>
-		 <dubbo:reference id="pubMonthFeeCountService" interface="com.jiuyescm.bms.base.monthFeeCount.service.IPubMonthFeeCountService" 
-		 version="1.0.0"/>	
-		 <dubbo:reference id="pubPackageDictService" interface="com.jiuyescm.bms.base.dict.api.IPubPackageDictService" version="1.0.0"/> 
-		 <dubbo:reference id="bmsSubjectInfoService" interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService" version="1.0.0"/>	
+   
+		<dubbo:reference id="bmsCalcuTaskService" interface="com.jiuyescm.bms.asyn.service.IBmsCalcuTaskService" />     
+        <dubbo:reference id="bmsCalcuService" interface="com.jiuyescm.bms.calculate.api.IBmsCalcuService" />
+		<dubbo:reference id="bmsGroupService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupService" />
+		<dubbo:reference id="bmsGroupUserService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupUserService" />
+	    <dubbo:reference id="reportCustomerDailyIncomeService" interface="com.jiuyescm.bms.report.service.IReportCustomerDailyIncomeService" />
+	    <dubbo:reference id="bmsGroupSubjectService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupSubjectService" />
+		<dubbo:reference id="bmsGroupCustomerService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupCustomerService" />
+		<dubbo:reference id="bmsGroupChargeunitService" interface="com.jiuyescm.bms.base.group.service.IBmsGroupChargeunitService" />
+		<dubbo:reference id="bmsWarehouseConfigService" interface="com.jiuyescm.bms.base.config.service.IBmsWarehouseConfigService" />
+		<dubbo:reference id="whAddValueService" interface="com.jiuyescm.bms.whAddValue.service.IWhAddValueService" />
+		<dubbo:reference id="materialDictService" interface="com.jiuyescm.bms.base.dict.api.IMaterialDictService" />
+		<dubbo:reference id="pubMonthFeeCountService" interface="com.jiuyescm.bms.base.monthFeeCount.service.IPubMonthFeeCountService" />	
+		<dubbo:reference id="pubPackageDictService" interface="com.jiuyescm.bms.base.dict.api.IPubPackageDictService"/> 
+		<dubbo:reference id="bmsSubjectInfoService" interface="com.jiuyescm.bms.subject.service.IBmsSubjectInfoService"/>	
 </beans> 
